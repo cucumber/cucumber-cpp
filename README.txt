@@ -7,9 +7,11 @@ Cucumber Website: http://cukes.info/
 
 
 The current library is header-only, so it doesn't need to be compiled
-separately, but it needs the following libraries at link time:
+separately, but it needs the following libraries when compiling the
+step definitions:
 
  * Boost 1.40 or later - http://www.boost.org/
+   (required libraries are thread, system, regex, and date_time)
  * GTest 1.4 or later - http://code.google.com/p/googletest/
 
 This header-only library is included in the source code:
