@@ -21,10 +21,10 @@ const int ManualStep::cukeRegId = ::cukebins::internal::registerStep(MANUAL_STEP
 #define WHEN_MATCHER "when matcher"
 #define THEN_MATCHER "then matcher"
 
-CUKE_CONTEXT(EmptyContext){};
-GIVEN(EmptyContext, GivenStep, GIVEN_MATCHER) {}
-WHEN(EmptyContext, WhenStep, WHEN_MATCHER) {}
-THEN(EmptyContext, ThenStep, THEN_MATCHER) {}
+struct EmptyContext {};
+GIVEN(EmptyContext, GIVEN_MATCHER) {}
+WHEN(EmptyContext, WHEN_MATCHER) {}
+THEN(EmptyContext, THEN_MATCHER) {}
 
 TEST(StepRegistrationTest, manualRegistration) {
     StepManager stepManager;

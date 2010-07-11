@@ -13,6 +13,10 @@ namespace internal {
 
 struct InvokeResult {
     bool success;
+
+    InvokeResult() {
+        success = false;
+    }
 };
 
 class AbstractCommands {
@@ -21,15 +25,16 @@ public:
 
 private:
     static shared_ptr<args_type> invokeArgsPtr;
+    static args_type::size_type currentArgIndex;
 
 protected:
     StepManager stepManager;
     ContextManager contextManager;
 
-    virtual InvokeResult invokeNoArgs(StepInfo::id_type id) = 0;
+    virtual const InvokeResult invokeNoArgs(StepInfo::id_type id) = 0;
 public:
     virtual void beginScenario() = 0;
-    //	virtual void snippetText() = 0;
+    //virtual void snippetText() = 0;
 
     MatchResult stepMatches(const std::string description) {
         return stepManager.stepMatches(description);
@@ -37,8 +42,10 @@ public:
     // don't override! virtual for testin purpose
     virtual InvokeResult invoke(StepInfo::id_type id, shared_ptr<args_type> args) {
         invokeArgsPtr = args;
+        currentArgIndex = 0;
         InvokeResult result = invokeNoArgs(id);
         invokeArgsPtr.reset();
+        currentArgIndex = -1;
         return result;
     }
     void endScenario() {
@@ -48,6 +55,9 @@ public:
 private:
     template<class T>
     friend T getInvokeArg(args_type::size_type i);
+
+    template<class T>
+    friend T getInvokeArg();
 };
 
 template<class T>
@@ -70,15 +80,19 @@ std::string toString(T arg) {
 
 template<class T>
 T getInvokeArg(AbstractCommands::args_type::size_type i) {
-    if (!AbstractCommands::invokeArgsPtr || i > AbstractCommands::invokeArgsPtr->size()) {
+    if (!AbstractCommands::invokeArgsPtr || i >= AbstractCommands::invokeArgsPtr->size()) {
         throw std::invalid_argument("Parameter not found");
     }
-    return fromString<T> (AbstractCommands::invokeArgsPtr->at(i - 1));
+    return fromString<T> (AbstractCommands::invokeArgsPtr->at(i));
+}
+
+template<class T>
+T getInvokeArg() {
+    return getInvokeArg<T>(AbstractCommands::currentArgIndex++);
 }
 
 shared_ptr<AbstractCommands::args_type> AbstractCommands::invokeArgsPtr;
-
-#define CUKE_PARAM(index, type, name) type name = ::cukebins::internal::getInvokeArg<type>(index)
+AbstractCommands::args_type::size_type AbstractCommands::currentArgIndex = -1;
 
 }
 }

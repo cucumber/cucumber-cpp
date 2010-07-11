@@ -32,7 +32,7 @@ public:
         testMethods.testAfterInvoke();
         return result;
     }
-    InvokeResult invokeNoArgs(StepInfo::id_type id) {
+    const InvokeResult invokeNoArgs(StepInfo::id_type id) {
         testMethods.testOnInvoke();
         return CukeCommands::invokeNoArgs(id);
     }

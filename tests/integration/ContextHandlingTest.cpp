@@ -20,14 +20,11 @@ private:
         contextManager.purgeContexts();
     }
 };
-CUKE_CONTEXT(Context1)
-{
-};
-CUKE_CONTEXT(Context2)
-{
-};
 
-CUKE_FIXTURE(Context1Fixture1, Context1) {
+struct Context1 {};
+struct Context2 {};
+
+class Context1Fixture1 : public ::cukebins::internal::CukeFixture<Context1> {
 public:
     bool hasValidContext() {
         return !contextReference.expired();
@@ -35,10 +32,6 @@ public:
     void freeTheContextAsItWasDestroyed() {
         context.reset();
     }
-};
-CUKE_FIXTURE(Context1Fixture2, Context1) {
-};
-CUKE_FIXTURE(Context2Fixture3, Context2) {
 };
 
 TEST_F(ContextHandlingTest, fixturesHaveValidContextsTillPurged) {
@@ -50,6 +43,9 @@ TEST_F(ContextHandlingTest, fixturesHaveValidContextsTillPurged) {
     contextManager.purgeContexts();
     EXPECT_FALSE(test1.hasValidContext());
 }
+
+class Context1Fixture2 : public ::cukebins::internal::CukeFixture<Context1> {};
+class Context2Fixture3 : public ::cukebins::internal::CukeFixture<Context2> {};
 
 TEST_F(ContextHandlingTest, theSameContextIsNotCreatedTwice) {
     ASSERT_EQ(0, contextManager.countContexts());
