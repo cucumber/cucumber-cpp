@@ -123,7 +123,7 @@ TEST_F(JSONCommandsTest, handlesEndScenario) {
 }
 
 TEST_F(JSONCommandsTest, handlesStepMatches) {
-    stepManager.addStepDefinitionWithId(100, "match the number (\\d+)", "");
+    stepManager.addStepDefinitionWithId(100, "match the number (\\d+)");
     EXPECT_EQ("[\"success\",[{\"args\":[{\"pos\":17,\"val\":\"1\"}],\"id\":\"100\"}]]", processCommand("[\"step_matches\",{\"name_to_match\":\"match the number 1\"}]"));
     EXPECT_EQ("[\"success\",[]]", processCommand("[\"step_matches\",{\"name_to_match\":\"match the number one\"}]"));
 
@@ -134,7 +134,7 @@ TEST_F(JSONCommandsTest, handlesStepMatches) {
 }
 
 TEST_F(JSONCommandsTest, handlesInvoke) {
-    stepManager.addStepDefinitionWithId(101, "match the numbers (\\d+) and (\\d+)", "");
+    stepManager.addStepDefinitionWithId(101, "match the numbers (\\d+) and (\\d+)");
     EXPECT_EQ(success, processCommand("[\"invoke\",{\"args\":[\"27\",\"72\"],\"id\":\"101\"}]"));
 
     EXPECT_EQ(fail, processCommand("[\"invoke\"]"));

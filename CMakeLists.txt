@@ -26,3 +26,4 @@ include_directories(${CUKE_INCLUDE_DIRS})
 
 add_subdirectory(tests)
 add_subdirectory(examples)
+

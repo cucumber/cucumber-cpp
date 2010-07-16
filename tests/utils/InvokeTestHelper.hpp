@@ -9,9 +9,7 @@ namespace internal {
 
 class InvokeTestHelper {
 public:
-    typedef AbstractCommands::args_type args_type;
-public:
-    virtual args_type *buildInvokeArgs() = 0;
+    virtual command_args_type *buildInvokeArgs() = 0;
     virtual void testBeforeInvoke() = 0;
     virtual void testOnInvoke() = 0;
     virtual void testAfterInvoke() = 0;
@@ -21,7 +19,7 @@ template<class T>
 class CukeCommandsTestInjector : public CukeCommands {
 private:
     T testMethods;
-    shared_ptr<args_type> args;
+    shared_ptr<command_args_type> args;
 public:
     CukeCommandsTestInjector() :
         args(testMethods.buildInvokeArgs()) {
@@ -32,7 +30,7 @@ public:
         testMethods.testAfterInvoke();
         return result;
     }
-    const InvokeResult invokeNoArgs(StepInfo::id_type id) {
+    const InvokeResult invokeNoArgs(step_id_type id) {
         testMethods.testOnInvoke();
         return CukeCommands::invokeNoArgs(id);
     }

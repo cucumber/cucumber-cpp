@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <cukebins/internal/PPMacros.hpp>
+#include <cukebins/internal/Macros.hpp>
 #include <cukebins/internal/CukeCommands.hpp>
 #include <cukebins/internal/drivers/FakeDriver.hpp>
 
@@ -26,8 +26,8 @@ public:
         arg_2_string = "fortytwo";
     }
 
-    args_type *buildInvokeArgs() {
-        args_type *mixed_args = new args_type;
+    command_args_type *buildInvokeArgs() {
+        command_args_type *mixed_args = new command_args_type;
         mixed_args->push_back(toString(arg_0_int));
         mixed_args->push_back(toString(arg_1_double));
         mixed_args->push_back(toString(arg_2_string));

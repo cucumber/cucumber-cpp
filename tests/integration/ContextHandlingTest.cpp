@@ -9,51 +9,56 @@ using namespace cukebins::internal;
 
 class ContextHandlingTest : public ::testing::Test {
 public:
-    ContextManagerTestDouble contextManager;
-
     ContextHandlingTest() :
         contextManager() {
     }
 protected:
+    ContextManagerTestDouble contextManager;
+
 private:
     void TearDown() {
         contextManager.purgeContexts();
     }
 };
 
-struct Context1 {};
+struct Context1 {
+    int i;
+};
 struct Context2 {};
 
-class Context1Fixture1 : public ::cukebins::internal::CukeFixture<Context1> {
-public:
-    bool hasValidContext() {
-        return !contextReference.expired();
-    }
-    void freeTheContextAsItWasDestroyed() {
-        context.reset();
-    }
-};
-
-TEST_F(ContextHandlingTest, fixturesHaveValidContextsTillPurged) {
+TEST_F(ContextHandlingTest, contextsAreCreatedWhenNeeded) {
     ASSERT_EQ(0, contextManager.countContexts());
-    Context1Fixture1 test1;
+    ::cukebins::internal::SessionContextPtr<Context1> context1;
     ASSERT_EQ(1, contextManager.countContexts());
-    EXPECT_TRUE(test1.hasValidContext());
-    test1.freeTheContextAsItWasDestroyed();
-    contextManager.purgeContexts();
-    EXPECT_FALSE(test1.hasValidContext());
+    ::cukebins::internal::SessionContextPtr<Context2> context2;
+    ASSERT_EQ(2, contextManager.countContexts());
 }
 
-class Context1Fixture2 : public ::cukebins::internal::CukeFixture<Context1> {};
-class Context2Fixture3 : public ::cukebins::internal::CukeFixture<Context2> {};
+TEST_F(ContextHandlingTest, sameContextTypesShareTheSamePointer) {
+    ::cukebins::internal::SessionContextPtr<Context1> context1_a;
+    ::cukebins::internal::SessionContextPtr<Context1> context1_b;
+    context1_a->i = 42;
+    ASSERT_EQ(context1_a->i, context1_b->i);
+}
 
 TEST_F(ContextHandlingTest, theSameContextIsNotCreatedTwice) {
     ASSERT_EQ(0, contextManager.countContexts());
-    Context1Fixture1 test1_a;
-    Context1Fixture1 test1_b;
+    ::cukebins::internal::SessionContextPtr<Context1> context1_a;
     ASSERT_EQ(1, contextManager.countContexts());
-    Context1Fixture2 test2;
+    ::cukebins::internal::SessionContextPtr<Context1> context1_b;
     ASSERT_EQ(1, contextManager.countContexts());
-    Context2Fixture3 test3;
-    ASSERT_EQ(2, contextManager.countContexts());
 }
+
+TEST_F(ContextHandlingTest, contextsArePurgedExplicitlyOnly) {
+    ASSERT_EQ(0, contextManager.countContexts());
+    ::cukebins::internal::SessionContextPtr<Context1> context1_a;
+    ASSERT_EQ(1, contextManager.countContexts());
+    ::cukebins::internal::SessionContextPtr<Context2> *context1_b =
+        new ::cukebins::internal::SessionContextPtr<Context2>();
+    ASSERT_EQ(2, contextManager.countContexts());
+    delete context1_b;
+    ASSERT_EQ(2, contextManager.countContexts());
+    contextManager.purgeContexts();
+    ASSERT_EQ(0, contextManager.countContexts());
+}
+

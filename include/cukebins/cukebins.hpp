@@ -5,7 +5,7 @@
 #include "internal/ContextManager.hpp"
 #include "internal/CukeCommands.hpp"
 
-#include "internal/PPMacros.hpp"
+#include "internal/Macros.hpp"
 
 #ifdef GTEST_INCLUDE_GTEST_GTEST_H_
 #include "internal/drivers/GTestDriver.hpp"

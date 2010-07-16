@@ -11,20 +11,22 @@ using namespace cukebins::internal;
 /*
  * This is the base for step registration
  */
-class ManualStep {
+class ManualStep  : public ::cukebins::internal::Step {
+public:
+	void invoke();
 private:
     static const int cukeRegId;
 };
-const int ManualStep::cukeRegId = ::cukebins::internal::registerStep(MANUAL_STEP_MATCHER, "");
+const int ManualStep::cukeRegId = ::cukebins::internal::registerStep<ManualStep>(MANUAL_STEP_MATCHER);
+void ManualStep ::invoke() {};
 
 #define GIVEN_MATCHER "given matcher"
 #define WHEN_MATCHER "when matcher"
 #define THEN_MATCHER "then matcher"
 
-struct EmptyContext {};
-GIVEN(EmptyContext, GIVEN_MATCHER) {}
-WHEN(EmptyContext, WHEN_MATCHER) {}
-THEN(EmptyContext, THEN_MATCHER) {}
+GIVEN(GIVEN_MATCHER) {}
+WHEN(WHEN_MATCHER) {}
+THEN(THEN_MATCHER) {}
 
 TEST(StepRegistrationTest, manualRegistration) {
     StepManager stepManager;

@@ -10,19 +10,77 @@
 namespace cukebins {
 namespace internal {
 
+class Match;
+struct SubExpression;
+
+typedef unsigned int step_id_type;
+typedef boost::regex step_regex_type;
+typedef std::vector<Match> match_results_type;
+typedef std::vector<SubExpression> match_subexpressions_type;
+
+class StepInfo {
+public:
+    step_id_type id;
+    step_regex_type regex;
+
+    StepInfo(const std::string &stepMatcher) :
+        regex(stepMatcher.c_str()) {
+        static step_id_type currentId = 0;
+        id = ++currentId;
+    }
+
+    Match matches(const std::string &stepDescription);
+
+    virtual void invokeStep() = 0;
+};
+
+class Step {
+   virtual void invoke() = 0;
+};
+
+template<class T>
+class StepInvoker : public StepInfo {
+public:
+   StepInvoker(const std::string &stepMatcher) : StepInfo(stepMatcher) {}
+
+   void invokeStep() {
+       T t;
+       t.invoke();
+   }
+};
+
+class Match {
+public:
+    step_id_type id;
+    match_subexpressions_type subExpressions;
+
+    Match() :
+        id(0) {
+    }
+
+    Match(const Match &match) :
+        id(match.id), subExpressions(match.subExpressions) {
+    }
+
+    Match & operator =(const Match &match) {
+        id = match.id;
+        subExpressions = match.subExpressions;
+        return *this;
+    }
+
+    operator void *() {
+        return (void *) id;
+    }
+};
+
 struct SubExpression {
     std::string value;
     int position;
 };
 
-class Match;
-
 class MatchResult {
-public:
-    typedef std::vector<Match> results_type;
-
 private:
-    results_type resultSet;
+    match_results_type resultSet;
 
 public:
     operator void *() {
@@ -33,64 +91,11 @@ public:
         return !resultSet.empty();
     }
 
-    const results_type getResultSet() {
+    const match_results_type getResultSet() {
         return resultSet;
     }
 
     void addMatch(Match match);
-};
-
-class StepInfo {
-public:
-    typedef unsigned int id_type;
-    typedef boost::regex regex_type;
-
-    id_type id;
-    regex_type regex;
-    std::string testName;
-
-    StepInfo() :
-        id(0) {
-    }
-    ;
-    StepInfo(const std::string &stepMatcher, const std::string &testName) :
-        regex(stepMatcher.c_str()), testName(testName) {
-        static id_type currentId = 0;
-        id = ++currentId;
-    }
-    ;
-    StepInfo(const StepInfo &stepInfo) :
-        regex(stepInfo.regex), id(stepInfo.id), testName(stepInfo.testName) {
-    }
-    ;
-
-    Match matches(const std::string &stepDescription);
-};
-
-class Match {
-public:
-    typedef std::vector<SubExpression> subexpressions_type;
-
-    StepInfo::id_type id;
-    subexpressions_type subExpressions;
-
-    Match() :
-        id(0) {
-    }
-    ;
-    Match(const Match &match) :
-        id(match.id), subExpressions(match.subExpressions) {
-    }
-    ;
-    Match & operator =(const Match &match) {
-        id = match.id;
-        subExpressions = match.subExpressions;
-        return *this;
-    }
-
-    operator void *() {
-        return (void *) id;
-    }
 };
 
 void MatchResult::addMatch(Match match) {
@@ -114,27 +119,21 @@ Match StepInfo::matches(const std::string &stepDescription) {
 
 class StepManager {
 protected:
-    typedef std::map<StepInfo::id_type, StepInfo> steps_type;
+    typedef std::map<step_id_type, StepInfo *> steps_type;
     steps_type& steps();
 
-    void addStep(StepInfo &stepInfo) {
-        steps().insert(std::make_pair(stepInfo.id, stepInfo));
-    }
 public:
     virtual ~StepManager() {
     }
-    ;
 
-    StepInfo::id_type addStepDefinition(const std::string &stepMatcher, const std::string &testName) {
-        StepInfo stepInfo(stepMatcher, testName);
-        addStep(stepInfo);
-        return stepInfo.id;
+    void addStep(StepInfo *stepInfo) {
+        steps().insert(std::make_pair(stepInfo->id, stepInfo));
     }
 
     MatchResult stepMatches(const std::string &stepDescription) {
         MatchResult matchResult;
         for (steps_type::iterator iter = steps().begin(); iter != steps().end(); ++iter) {
-            StepInfo *stepInfo = &(iter->second);
+            StepInfo *stepInfo = iter->second;
             Match currentMatch = stepInfo->matches(stepDescription);
             if (currentMatch) {
                 matchResult.addMatch(currentMatch);
@@ -143,7 +142,7 @@ public:
         return matchResult;
     }
 
-    StepInfo getStep(StepInfo::id_type id) {
+    StepInfo *getStep(step_id_type id) {
         return steps()[id];
     }
 };
@@ -157,9 +156,12 @@ inline StepManager::steps_type& StepManager::steps() {
     return *steps;
 }
 
-static int registerStep(const std::string &stepMatcher, const std::string &testName) {
-    StepManager s;
-    return s.addStepDefinition(stepMatcher, testName);
+template<class T>
+static int registerStep(const std::string &stepMatcher) {
+   StepManager s;
+   StepInfo *stepInfo = new StepInvoker<T>(stepMatcher);
+   s.addStep(stepInfo);
+   return stepInfo->id;
 }
 
 }

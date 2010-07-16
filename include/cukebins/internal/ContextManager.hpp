@@ -14,10 +14,10 @@ namespace internal {
 using boost::shared_ptr;
 using boost::weak_ptr;
 
+typedef std::vector<shared_ptr<void> > contexts_type;
+
 class ContextManager {
 public:
-    typedef std::vector<shared_ptr<void> > contexts_type;
-
     void purgeContexts() {
         contexts.clear();
     }
@@ -33,7 +33,30 @@ protected:
     static contexts_type contexts;
 };
 
-ContextManager::contexts_type ContextManager::contexts = ContextManager::contexts_type();
+contexts_type ContextManager::contexts = contexts_type();
+
+
+template<class T>
+class SessionContextPtr {
+public:
+    SessionContextPtr() {
+		 if (contextReference.expired()) {
+			  contextReference = contextManager.addContext<T> ();
+		 }
+		 context = contextReference.lock();
+    }
+
+    T& operator*() { return *(context.get()); }
+    T* operator->() { return (context.get()); }
+
+private:
+    shared_ptr<T> context;
+    static weak_ptr<T> contextReference;
+
+    ContextManager contextManager;
+};
+
+template<class T> weak_ptr<T> SessionContextPtr<T>::contextReference;
 
 }
 }

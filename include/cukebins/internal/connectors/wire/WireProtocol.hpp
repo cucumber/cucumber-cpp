@@ -83,12 +83,12 @@ private:
     mValue formatResponse(MatchResult matchResult) {
         mValue response = success_response();
         mArray matches;
-        MatchResult::results_type resultSet = matchResult.getResultSet();
-        for (MatchResult::results_type::iterator i = resultSet.begin(); i != resultSet.end(); ++i) {
+        match_results_type resultSet = matchResult.getResultSet();
+        for (match_results_type::iterator i = resultSet.begin(); i != resultSet.end(); ++i) {
             mObject match;
             match.insert(make_pair("id", mValue(toString(i->id))));
             mArray matchArgs;
-            for (Match::subexpressions_type::iterator j = i->subExpressions.begin(); j != i->subExpressions.end(); ++j) {
+            for (match_subexpressions_type::iterator j = i->subExpressions.begin(); j != i->subExpressions.end(); ++j) {
                 mObject arg;
                 arg.insert(make_pair("val", mValue(j->value)));
                 arg.insert(make_pair("pos", mValue(j->position)));
@@ -106,18 +106,18 @@ private:
 class InvokeCommand : public JSONCommand {
 public:
     mValue run(mValue &jsonArgs) {
-        StepInfo::id_type id = getInvokeId(jsonArgs);
-        shared_ptr<AbstractCommands::args_type> args(getInvokeArgs(jsonArgs));
+        step_id_type id = getInvokeId(jsonArgs);
+        shared_ptr<command_args_type> args(getInvokeArgs(jsonArgs));
         return formatResponse(commands.invoke(id, args));
     }
 private:
-    StepInfo::id_type getInvokeId(mValue &jsonArgs) {
+    step_id_type getInvokeId(mValue &jsonArgs) {
         std::string idString(jsonArgs.get_obj()["id"].get_str());
-        return fromString<StepInfo::id_type> (idString);
+        return fromString<step_id_type> (idString);
     }
 
-    AbstractCommands::args_type *getInvokeArgs(mValue &jsonArgs) {
-        AbstractCommands::args_type *args = new AbstractCommands::args_type;
+    command_args_type *getInvokeArgs(mValue &jsonArgs) {
+        command_args_type *args = new command_args_type;
         mArray &argsArray = jsonArgs.get_obj()["args"].get_array();
         for (mArray::const_iterator i = argsArray.begin(); i != argsArray.end(); ++i) {
             std::string arg = i->get_str();

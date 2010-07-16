@@ -8,20 +8,25 @@ struct CalcCtx {
     double result;
 };
 
-GIVEN(CalcCtx, "^I have entered (\\d+) into the calculator$") {
+GIVEN("^I have entered (\\d+) into the calculator$") {
     REGEX_PARAM(double, n);
+    USING_CONTEXT(CalcCtx, context);
     context->calc.push(n);
 }
 
-WHEN(CalcCtx, "^I press add") {
+WHEN("^I press add") {
+    USING_CONTEXT(CalcCtx, context);
     context->result = context->calc.add();
 }
 
-WHEN(CalcCtx, "^I press divide") {
+WHEN("^I press divide") {
+    USING_CONTEXT(CalcCtx, context);
     context->result = context->calc.divide();
 }
 
-THEN(CalcCtx, "^the result should be (.*) on the screen$") {
+THEN("^the result should be (.*) on the screen$") {
     REGEX_PARAM(double, expected);
+    USING_CONTEXT(CalcCtx, context);
     EXPECT_EQ(expected, context->result);
 }
+

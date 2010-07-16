@@ -6,6 +6,12 @@
 namespace cukebins {
 namespace internal {
 
+class StepInfoNoOp : public StepInfo {
+public:
+	StepInfoNoOp(const std::string &stepMatcher) : StepInfo(stepMatcher) {}
+	void invokeStep() {}
+};
+
 class StepManagerTestDouble : public StepManager {
 public:
     void clearSteps() {
@@ -14,10 +20,14 @@ public:
     steps_type::size_type count() {
         return steps().size();
     }
-    void addStepDefinitionWithId(StepInfo::id_type desiredId, const std::string &stepMatcher,
-            const std::string &testName) {
-        StepInfo stepInfo(stepMatcher, testName);
-        stepInfo.id = desiredId;
+    step_id_type addStepDefinition(const std::string &stepMatcher) {
+        StepInfo *stepInfo = new StepInfoNoOp(stepMatcher);
+        addStep(stepInfo);
+        return stepInfo->id;
+    }
+    void addStepDefinitionWithId(step_id_type desiredId, const std::string &stepMatcher) {
+        StepInfo *stepInfo = new StepInfoNoOp(stepMatcher);
+        stepInfo->id = desiredId;
         addStep(stepInfo);
     }
 };

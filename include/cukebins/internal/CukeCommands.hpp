@@ -19,19 +19,18 @@ struct InvokeResult {
     }
 };
 
-class AbstractCommands {
-public:
-    typedef std::vector<std::string> args_type;
+typedef std::vector<std::string> command_args_type;
 
+class AbstractCommands {
 private:
-    static shared_ptr<args_type> invokeArgsPtr;
-    static args_type::size_type currentArgIndex;
+    static shared_ptr<command_args_type> invokeArgsPtr;
+    static command_args_type::size_type currentArgIndex;
 
 protected:
     StepManager stepManager;
     ContextManager contextManager;
 
-    virtual const InvokeResult invokeNoArgs(StepInfo::id_type id) = 0;
+    virtual const InvokeResult invokeNoArgs(step_id_type id) = 0;
 public:
     virtual void beginScenario() = 0;
     //virtual void snippetText() = 0;
@@ -40,7 +39,7 @@ public:
         return stepManager.stepMatches(description);
     }
     // don't override! virtual for testin purpose
-    virtual InvokeResult invoke(StepInfo::id_type id, shared_ptr<args_type> args) {
+    virtual InvokeResult invoke(step_id_type id, shared_ptr<command_args_type> args) {
         invokeArgsPtr = args;
         currentArgIndex = 0;
         InvokeResult result = invokeNoArgs(id);
@@ -54,7 +53,7 @@ public:
 
 private:
     template<class T>
-    friend T getInvokeArg(args_type::size_type i);
+    friend T getInvokeArg(command_args_type::size_type i);
 
     template<class T>
     friend T getInvokeArg();
@@ -79,7 +78,7 @@ std::string toString(T arg) {
 }
 
 template<class T>
-T getInvokeArg(AbstractCommands::args_type::size_type i) {
+T getInvokeArg(command_args_type::size_type i) {
     if (!AbstractCommands::invokeArgsPtr || i >= AbstractCommands::invokeArgsPtr->size()) {
         throw std::invalid_argument("Parameter not found");
     }
@@ -91,8 +90,8 @@ T getInvokeArg() {
     return getInvokeArg<T>(AbstractCommands::currentArgIndex++);
 }
 
-shared_ptr<AbstractCommands::args_type> AbstractCommands::invokeArgsPtr;
-AbstractCommands::args_type::size_type AbstractCommands::currentArgIndex = -1;
+shared_ptr<command_args_type> AbstractCommands::invokeArgsPtr;
+command_args_type::size_type AbstractCommands::currentArgIndex = -1;
 
 }
 }
