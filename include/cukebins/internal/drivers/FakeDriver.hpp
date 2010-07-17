@@ -7,17 +7,15 @@ namespace cukebins {
 namespace internal {
 
 class CukeCommands : public AbstractCommands {
-public:
-    void beginScenario() {
-    }
-
 protected:
-    const InvokeResult invokeNoArgs(step_id_type id) {
+    const InvokeResult invokeNoArgs(StepInfo *stepInfo) {
         InvokeResult result;
         result.success = true;
         return result;
     }
 };
+
+#define STEP_INHERITANCE(step_name) ::cukebins::internal::BasicStep
 
 }
 }

@@ -1,5 +1,5 @@
-#ifndef CUKEBINS_INVOKETEST_HPP_
-#define CUKEBINS_INVOKETEST_HPP_
+#ifndef CUKEBINS_INVOKETESTHELPER_HPP_
+#define CUKEBINS_INVOKETESTHELPER_HPP_
 
 #include <cukebins/internal/CukeCommands.hpp>
 #include <cukebins/internal/drivers/FakeDriver.hpp>
@@ -39,4 +39,4 @@ public:
 }
 }
 
-#endif /* CUKEBINS_INVOKETEST_HPP_ */
+#endif /* CUKEBINS_INVOKETESTHELPER_HPP_ */

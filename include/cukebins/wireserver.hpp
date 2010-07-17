@@ -13,7 +13,7 @@ void acceptWireProtocol(int port) {
 }
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
     try {
         int port = 3902;
         if (argc > 1) {

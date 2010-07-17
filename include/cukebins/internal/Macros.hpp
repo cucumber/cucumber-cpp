@@ -8,6 +8,8 @@
 #ifdef __COUNTER__
 #define CUKE_GEN_STEP_NAME_ BOOST_JOIN(CukeStep, __COUNTER__)
 #else
+// Use a counter to be incremented every time cukebins is included
+// in case this does not suffice (possible with multiple files only)
 #define CUKE_GEN_STEP_NAME_ BOOST_JOIN(CukeStep, __LINE__)
 #endif
 
@@ -20,7 +22,7 @@ CUKE_STEP_WITH_NAME_(CUKE_GEN_STEP_NAME_, step_matcher) \
 /**/
 
 #define CUKE_STEP_WITH_NAME_(step_name, step_matcher)              \
-class step_name : public ::cukebins::internal::Step {              \
+class step_name : public STEP_INHERITANCE(step_name) {             \
 public:                                                            \
     void invoke();                                                 \
 private:                                                           \

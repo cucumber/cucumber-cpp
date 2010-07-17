@@ -7,11 +7,12 @@
 
 #include "internal/Macros.hpp"
 
-#ifdef GTEST_INCLUDE_GTEST_GTEST_H_
+#if defined(GTEST_INCLUDE_GTEST_GTEST_H_)
 #include "internal/drivers/GTestDriver.hpp"
+#elif defined(CPPSPEC_H_)
+#include "internal/drivers/CppSpecDriver.hpp"
 #else // No test framework
 #include "internal/drivers/FakeDriver.hpp"
 #endif
-
 
 #endif /* CUKEBINS_HPP_ */

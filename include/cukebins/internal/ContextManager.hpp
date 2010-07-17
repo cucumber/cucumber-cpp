@@ -40,10 +40,10 @@ template<class T>
 class SessionContextPtr {
 public:
     SessionContextPtr() {
-		 if (contextReference.expired()) {
-			  contextReference = contextManager.addContext<T> ();
-		 }
-		 context = contextReference.lock();
+         if (contextReference.expired()) {
+              contextReference = contextManager.addContext<T> ();
+         }
+         context = contextReference.lock();
     }
 
     T& operator*() { return *(context.get()); }

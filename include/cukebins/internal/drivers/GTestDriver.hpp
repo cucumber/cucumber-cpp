@@ -34,8 +34,7 @@ public:
     }
 
 protected:
-    const InvokeResult invokeNoArgs(step_id_type id) {
-        StepInfo *stepInfo = stepManager.getStep(id);
+    const InvokeResult invokeNoArgs(StepInfo *stepInfo) {
         InvokeResult result;
         if (stepInfo) {
             try {
@@ -51,6 +50,7 @@ protected:
 bool GTestCommands::initialized = false;
 
 typedef GTestCommands CukeCommands;
+#define STEP_INHERITANCE(step_name) ::cukebins::internal::BasicStep
 
 }
 }

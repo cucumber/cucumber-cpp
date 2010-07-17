@@ -30,19 +30,25 @@ protected:
     StepManager stepManager;
     ContextManager contextManager;
 
-    virtual const InvokeResult invokeNoArgs(step_id_type id) = 0;
+    virtual const InvokeResult invokeNoArgs(StepInfo *stepInfo) = 0;
 public:
-    virtual void beginScenario() = 0;
+    virtual void beginScenario() {}
+
     //virtual void snippetText() = 0;
 
     MatchResult stepMatches(const std::string description) {
         return stepManager.stepMatches(description);
     }
+
     // don't override! virtual for testin purpose
     virtual InvokeResult invoke(step_id_type id, shared_ptr<command_args_type> args) {
         invokeArgsPtr = args;
         currentArgIndex = 0;
-        InvokeResult result = invokeNoArgs(id);
+        StepInfo *stepInfo = stepManager.getStep(id);
+        InvokeResult result;
+        if (stepInfo) {
+            result = invokeNoArgs(stepInfo);
+        }
         invokeArgsPtr.reset();
         currentArgIndex = -1;
         return result;

@@ -34,7 +34,10 @@ public:
     virtual void invokeStep() = 0;
 };
 
-class Step {
+/**
+ * Used when the steps do not need inheritance
+ */
+class BasicStep {
    virtual void invoke() = 0;
 };
 

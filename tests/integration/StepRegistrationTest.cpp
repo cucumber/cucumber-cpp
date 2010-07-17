@@ -8,17 +8,18 @@ using namespace cukebins::internal;
 
 #define MANUAL_STEP_MATCHER "manual step"
 
-/*
- * This is the base for step registration
- */
-class ManualStep  : public ::cukebins::internal::Step {
+class ManualStep {
 public:
-	void invoke();
+    void invoke() {};
 private:
     static const int cukeRegId;
 };
 const int ManualStep::cukeRegId = ::cukebins::internal::registerStep<ManualStep>(MANUAL_STEP_MATCHER);
-void ManualStep ::invoke() {};
+
+TEST(StepRegistrationTest, manualRegistration) {
+    StepManager stepManager;
+    EXPECT_TRUE(stepManager.stepMatches(MANUAL_STEP_MATCHER));
+}
 
 #define GIVEN_MATCHER "given matcher"
 #define WHEN_MATCHER "when matcher"
@@ -27,11 +28,6 @@ void ManualStep ::invoke() {};
 GIVEN(GIVEN_MATCHER) {}
 WHEN(WHEN_MATCHER) {}
 THEN(THEN_MATCHER) {}
-
-TEST(StepRegistrationTest, manualRegistration) {
-    StepManager stepManager;
-    EXPECT_TRUE(stepManager.stepMatches(MANUAL_STEP_MATCHER));
-}
 
 TEST(StepRegistrationTest, macroRegistration) {
     StepManager stepManager;
