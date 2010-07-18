@@ -36,12 +36,10 @@ public:
 protected:
     const InvokeResult invokeNoArgs(StepInfo *stepInfo) {
         InvokeResult result;
-        if (stepInfo) {
-            try {
-                stepInfo->invokeStep();
-                result.success = true;
-            } catch (...) {
-            }
+        try {
+            stepInfo->invokeStep();
+            result.success = true;
+        } catch (...) {
         }
         return result;
     }
