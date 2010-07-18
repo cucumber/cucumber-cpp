@@ -1,15 +1,17 @@
 #include <CppSpec/CppSpec.h>
 #include <cukebins/cukebins.hpp>
 
-THEN("Succeed!") {
+#include "../../utils/DriverTestRunner.hpp"
+
+THEN(SUCCEED_MATCHER) {
+    USING_CONTEXT(cukebins::internal::SomeContext, ctx);
     specify(true, should.equal(true));
 }
 
-THEN("Fail!") {
+THEN(FAIL_MATCHER) {
+    USING_CONTEXT(cukebins::internal::SomeContext, ctx);
     specify(true, should.equal(false));
 }
-
-#include "../../utils/DriverTestRunner.hpp"
 
 using namespace cukebins::internal;
 

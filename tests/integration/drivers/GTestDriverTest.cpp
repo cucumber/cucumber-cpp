@@ -1,15 +1,17 @@
 #include <gtest/gtest.h>
 #include <cukebins/cukebins.hpp>
 
-THEN("Succeed!") {
+#include "../../utils/DriverTestRunner.hpp"
+
+THEN(SUCCEED_MATCHER) {
+    USING_CONTEXT(cukebins::internal::SomeContext, ctx);
     ASSERT_TRUE(true);
 }
 
-THEN("Fail!") {
+THEN(FAIL_MATCHER) {
+    USING_CONTEXT(cukebins::internal::SomeContext, ctx);
     ASSERT_TRUE(false);
 }
-
-#include "../../utils/DriverTestRunner.hpp"
 
 using namespace cukebins::internal;
 
@@ -31,6 +33,7 @@ private:
     void beginScenarioInitsGTest() {
         cukeCommands.beginScenario();
         expectTrue(cukeCommands.isInitialized());
+        cukeCommands.endScenario();
     }
 };
 

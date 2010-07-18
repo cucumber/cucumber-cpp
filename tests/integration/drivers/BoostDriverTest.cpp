@@ -1,15 +1,17 @@
 #include <boost/test/unit_test.hpp>
 #include <cukebins/cukebins.hpp>
 
-THEN("Succeed!") {
+#include "../../utils/DriverTestRunner.hpp"
+
+THEN(SUCCEED_MATCHER) {
+    USING_CONTEXT(cukebins::internal::SomeContext, ctx);
     BOOST_CHECK(true);
 }
 
-THEN("Fail!") {
+THEN(FAIL_MATCHER) {
+    USING_CONTEXT(cukebins::internal::SomeContext, ctx);
     BOOST_CHECK(false);
 }
-
-#include "../../utils/DriverTestRunner.hpp"
 
 using namespace cukebins::internal;
 
