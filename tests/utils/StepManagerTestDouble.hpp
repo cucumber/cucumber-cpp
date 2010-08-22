@@ -35,12 +35,15 @@ public:
     }
 
     const step_id_type getStepId(const std::string &stepMatcher) {
+        step_id_type id = 0;
         for (steps_type::const_iterator i = steps().begin(); i != steps().end(); ++i) {
             StepInfo *stepInfo = i->second;
             if (stepInfo->regex.str() == stepMatcher) {
-                return stepInfo->id;
+                id = stepInfo->id;
+                break;
             }
         }
+        return id;
     }
 };
 

@@ -37,9 +37,9 @@ void step_name ::invoke()                                          \
 // **************               GIVEN/WHEN/THEN                ************** //
 // ************************************************************************** //
 
-#define GIVEN(step_matcher) CUKE_STEP_(step_matcher)
-#define WHEN(step_matcher) CUKE_STEP_(step_matcher)
-#define THEN(step_matcher) CUKE_STEP_(step_matcher)
+#define GIVEN CUKE_STEP_
+#define WHEN CUKE_STEP_
+#define THEN CUKE_STEP_
 
 // ************************************************************************** //
 // **************                 REGEX_PARAM                  ************** //

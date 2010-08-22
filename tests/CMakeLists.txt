@@ -1,8 +1,8 @@
-function(cuke_add_driver_test TEST_FILE TEST_FRAMEWORK_LIBRARY)
+function(cuke_add_driver_test TEST_FILE)
     get_filename_component(TEST_NAME ${TEST_FILE} NAME)
     message(STATUS "Adding " ${TEST_NAME})
     add_executable(${TEST_NAME} ${TEST_FILE}.cpp)
-    target_link_libraries(${TEST_NAME} ${TEST_FRAMEWORK_LIBRARY} ${CUKEBINS_LIBRARIES} ${ARGN})
+    target_link_libraries(${TEST_NAME} ${CUKEBINS_LIBRARIES} ${ARGN})
     add_test(${TEST_NAME} ${TEST_NAME})
 endfunction()
 

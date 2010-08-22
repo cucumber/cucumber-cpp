@@ -27,7 +27,7 @@ protected:
         return result;
     }
 private:
-    bool runWithMasterSuite(StepInfo *stepInfo) {
+    void runWithMasterSuite(StepInfo *stepInfo) {
         using namespace boost::unit_test;
         test_case *tc = BOOST_TEST_CASE(boost::bind(&StepInfo::invokeStep, stepInfo));
         initBoostTest();
