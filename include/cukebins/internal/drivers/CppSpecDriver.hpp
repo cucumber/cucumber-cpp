@@ -8,19 +8,22 @@ namespace internal {
 
 class CppSpecCommands : public AbstractCommands {
 protected:
-    const InvokeResult invokeNoArgs(StepInfo *stepInfo) {
-        InvokeResult result;
-        try {
-            stepInfo->invokeStep();
-            result.success = true;
-        } catch (...) {
-        }
-        return result;
-    }
+    const InvokeResult invokeNoArgs(StepInfo *stepInfo);
 };
 
 typedef CppSpecCommands CukeCommands;
 #define STEP_INHERITANCE(step_name) CppSpec::Specification<void, step_name >
+
+
+const InvokeResult CppSpecCommands::invokeNoArgs(StepInfo *stepInfo) {
+    InvokeResult result;
+    try {
+        stepInfo->invokeStep();
+        result.success = true;
+    } catch (...) {
+    }
+    return result;
+}
 
 }
 }

@@ -18,45 +18,63 @@ typedef std::vector<shared_ptr<void> > contexts_type;
 
 class ContextManager {
 public:
-    void purgeContexts() {
-        contexts.clear();
-    }
-
-    template<class T>
-    weak_ptr<T> addContext() {
-        shared_ptr<T> shared(new T);
-        contexts.push_back(shared);
-        return weak_ptr<T> (shared);
-    }
+    void purgeContexts();
+    template<class T> weak_ptr<T> addContext();
 
 protected:
     static contexts_type contexts;
 };
 
-contexts_type ContextManager::contexts = contexts_type();
-
-
 template<class T>
 class SessionContextPtr {
 public:
-    SessionContextPtr() {
-         if (contextReference.expired()) {
-              contextReference = contextManager.addContext<T> ();
-         }
-         context = contextReference.lock();
-    }
+    SessionContextPtr();
 
-    T& operator*() { return *(context.get()); }
-    T* operator->() { return (context.get()); }
+    T& operator*();
+    T* operator->();
 
 private:
+    ContextManager contextManager;
     shared_ptr<T> context;
     static weak_ptr<T> contextReference;
-
-    ContextManager contextManager;
 };
 
-template<class T> weak_ptr<T> SessionContextPtr<T>::contextReference;
+
+template<class T>
+weak_ptr<T> ContextManager::addContext() {
+    shared_ptr<T> shared(new T);
+    contexts.push_back(shared);
+    return weak_ptr<T> (shared);
+}
+
+template<class T>
+weak_ptr<T> SessionContextPtr<T>::contextReference;
+
+template<class T>
+SessionContextPtr<T>::SessionContextPtr() {
+     if (contextReference.expired()) {
+          contextReference = contextManager.addContext<T> ();
+     }
+     context = contextReference.lock();
+}
+
+template<class T>
+T& SessionContextPtr<T>::operator*() {
+    return *(context.get());
+}
+
+template<class T>
+T* SessionContextPtr<T>::operator->() {
+    return (context.get());
+}
+
+
+contexts_type ContextManager::contexts;
+
+void ContextManager::purgeContexts() {
+    contexts.clear();
+}
+
 
 }
 }

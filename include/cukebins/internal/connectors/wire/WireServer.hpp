@@ -20,26 +20,34 @@ using namespace boost::asio::ip;
 
 template<class T>
 class SocketServer {
+public:
+    SocketServer(const short port);
+
+    void accept();
+
+private:
     T protocol;
     tcp::endpoint endpoint;
     io_service ios;
     tcp::acceptor acceptor;
-
-public:
-    SocketServer(const short port) :
-        endpoint(tcp::v4(), port), acceptor(ios) {
-        acceptor.open(endpoint.protocol());
-        acceptor.set_option(tcp::acceptor::reuse_address(true));
-        acceptor.bind(endpoint);
-        acceptor.listen(1);
-    }
-
-    void accept() {
-        tcp::iostream stream;
-        acceptor.accept(*stream.rdbuf());
-        protocol.processStream(stream);
-    }
 };
+
+
+template<class T>
+SocketServer<T>::SocketServer(const short port) :
+    endpoint(tcp::v4(), port), acceptor(ios) {
+    acceptor.open(endpoint.protocol());
+    acceptor.set_option(tcp::acceptor::reuse_address(true));
+    acceptor.bind(endpoint);
+    acceptor.listen(1);
+}
+
+template<class T>
+void SocketServer<T>::accept() {
+    tcp::iostream stream;
+    acceptor.accept(*stream.rdbuf());
+    protocol.processStream(stream);
+}
 
 }
 }
