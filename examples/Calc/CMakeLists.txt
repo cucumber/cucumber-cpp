@@ -17,6 +17,7 @@ if(CPPSPEC_FOUND)
 endif()
 
 if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
     add_executable(BoostCalculatorSteps CalcFeatures/BoostCalculatorSteps)
     target_link_libraries(BoostCalculatorSteps Calc ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${CUKEBINS_LIBRARIES})
 endif()

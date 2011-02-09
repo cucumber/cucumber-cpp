@@ -1,20 +1,20 @@
 #ifndef CUKEBINS_FAKEDRIVER_HPP_
 #define CUKEBINS_FAKEDRIVER_HPP_
 
-#include <cukebins/internal/CukeCommands.hpp>
+#include <cukebins/internal/StepManager.hpp>
 
 namespace cukebins {
 namespace internal {
 
-class CukeCommands : public AbstractCommands {
+class FakeStep : public BasicStep {
 protected:
-    const InvokeResult invokeNoArgs(StepInfo *stepInfo);
+    const InvokeResult invokeStepBody();
 };
 
-#define STEP_INHERITANCE(step_name) ::cukebins::internal::BasicStep
+#define STEP_INHERITANCE(step_name) ::cukebins::internal::FakeStep
 
 
-const InvokeResult CukeCommands::invokeNoArgs(StepInfo *stepInfo) {
+const InvokeResult FakeStep::invokeStepBody() {
     InvokeResult result;
     result.success = true;
     return result;

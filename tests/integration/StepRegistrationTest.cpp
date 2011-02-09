@@ -8,9 +8,9 @@ using namespace cukebins::internal;
 
 #define MANUAL_STEP_MATCHER "manual step"
 
-class ManualStep {
+class ManualStep : public FakeStep {
 public:
-    void invoke() {};
+    void stepBody() {};
 private:
     static const int cukeRegId;
 };

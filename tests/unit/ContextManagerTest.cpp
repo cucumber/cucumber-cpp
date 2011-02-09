@@ -4,7 +4,6 @@
 
 #include <boost/weak_ptr.hpp>
 
-using namespace std;
 using namespace cukebins::internal;
 using boost::weak_ptr;
 

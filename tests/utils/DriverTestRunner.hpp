@@ -28,7 +28,7 @@ public:
     void reset() {
         createdContexts = 0;
         destroyedContexts = 0;
-    };
+    }
 };
 
 int ContextListener::createdContexts = 0;
@@ -52,7 +52,6 @@ public:
 #define FAIL_MATCHER    "Fail!"
 
 
-template<class T>
 class DriverTest {
 public:
     int run() {
@@ -81,7 +80,7 @@ protected:
         contextConstructorAndDesctructorGetCalled();
     }
 
-    T cukeCommands;
+    CukeCommands cukeCommands;
 private:
     StepManagerTestDouble stepManager;
     ContextListener listener;

@@ -24,13 +24,13 @@ CUKE_STEP_WITH_NAME_(CUKE_GEN_STEP_NAME_, step_matcher) \
 #define CUKE_STEP_WITH_NAME_(step_name, step_matcher)              \
 class step_name : public STEP_INHERITANCE(step_name) {             \
 public:                                                            \
-    void invoke();                                                 \
+    void stepBody();                                               \
 private:                                                           \
     static const int cukeRegId;                                    \
 };                                                                 \
 const int step_name ::cukeRegId =                                  \
     ::cukebins::internal::registerStep< step_name >(step_matcher); \
-void step_name ::invoke()                                          \
+void step_name ::stepBody()                                        \
 /**/
 
 // ************************************************************************** //
@@ -45,7 +45,7 @@ void step_name ::invoke()                                          \
 // **************                 REGEX_PARAM                  ************** //
 // ************************************************************************** //
 
-#define REGEX_PARAM(type, name) type name = ::cukebins::internal::getInvokeArg<type>()
+#define REGEX_PARAM(type, name) type name = getInvokeArg<type>()
 
 // ************************************************************************** //
 // **************                USING_CONTEXT                 ************** //

@@ -1,29 +1,17 @@
 #ifndef CUKEBINS_CPPSPECDRIVER_HPP_
 #define CUKEBINS_CPPSPECDRIVER_HPP_
 
-#include <cukebins/internal/CukeCommands.hpp>
+#include <cukebins/internal/StepManager.hpp>
 
 namespace cukebins {
 namespace internal {
 
-class CppSpecCommands : public AbstractCommands {
+class CppSpecStep : public BasicStep {
 protected:
-    const InvokeResult invokeNoArgs(StepInfo *stepInfo);
+    const InvokeResult invokeStepBody();
 };
 
-typedef CppSpecCommands CukeCommands;
-#define STEP_INHERITANCE(step_name) CppSpec::Specification<void, step_name >
-
-
-const InvokeResult CppSpecCommands::invokeNoArgs(StepInfo *stepInfo) {
-    InvokeResult result;
-    try {
-        stepInfo->invokeStep();
-        result.success = true;
-    } catch (...) {
-    }
-    return result;
-}
+#define STEP_INHERITANCE(step_name) ::cukebins::internal::CppSpecStep, CppSpec::Specification<void, step_name >
 
 }
 }

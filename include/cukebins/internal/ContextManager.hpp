@@ -2,8 +2,6 @@
 #define CUKEBINS_CONTEXTMANAGER_HPP_
 
 #include <vector>
-#include <sstream>
-#include <stdexcept>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
@@ -67,14 +65,6 @@ template<class T>
 T* SessionContextPtr<T>::operator->() {
     return (context.get());
 }
-
-
-contexts_type ContextManager::contexts;
-
-void ContextManager::purgeContexts() {
-    contexts.clear();
-}
-
 
 }
 }

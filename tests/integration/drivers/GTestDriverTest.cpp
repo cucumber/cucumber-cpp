@@ -15,25 +15,32 @@ THEN(FAIL_MATCHER) {
 
 using namespace cukebins::internal;
 
-class GTestCommandsDouble : public GTestCommands {
+class GTestStepDouble : public GTestStep {
 public:
     bool isInitialized() {
-        return initialized;
+        return GTestStep::initialized;
     }
+
+    const InvokeResult invokeStepBody() {
+        return GTestStep::invokeStepBody();
+    };
+
+    void stepBody() {};
 };
 
-class GTestDriverTest : public DriverTest<GTestCommandsDouble> {
+class GTestDriverTest : public DriverTest {
 public:
     virtual void runAllTests() {
-        beginScenarioInitsGTest();
-        DriverTest<GTestCommandsDouble>::runAllTests();
+        stepInvocationInitsGTest();
+        DriverTest::runAllTests();
     }
 
 private:
-    void beginScenarioInitsGTest() {
-        cukeCommands.beginScenario();
-        expectTrue(cukeCommands.isInitialized());
-        cukeCommands.endScenario();
+    void stepInvocationInitsGTest() {
+        GTestStepDouble step;
+	expectFalse(step.isInitialized());
+	step.invokeStepBody();
+        expectTrue(step.isInitialized());
     }
 };
 

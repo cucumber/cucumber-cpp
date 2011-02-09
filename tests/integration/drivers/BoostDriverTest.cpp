@@ -15,6 +15,33 @@ THEN(FAIL_MATCHER) {
 
 using namespace cukebins::internal;
 
+class BoostStepDouble : public BoostStep {
+public:
+    const InvokeResult invokeStepBody() {
+        return BoostStep::invokeStepBody();
+    };
+
+    void stepBody() {};
+};
+
+class BoostDriverTest : public DriverTest {
+public:
+    virtual void runAllTests() {
+        stepInvocationInitsBoostTest();
+        DriverTest::runAllTests();
+    }
+
+private:
+    void stepInvocationInitsBoostTest() {
+        using namespace boost::unit_test;
+        BoostStepDouble step;
+	expectFalse(framework::is_initialized());
+	step.invokeStepBody();
+        expectTrue(framework::is_initialized());
+    }
+};
+
 int main(int argc, char **argv) {
-    return DriverTest<BoostCommands>().run();
+    BoostDriverTest test;
+    return test.run();
 }

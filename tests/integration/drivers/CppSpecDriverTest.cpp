@@ -16,5 +16,5 @@ THEN(FAIL_MATCHER) {
 using namespace cukebins::internal;
 
 int main(int argc, char **argv) {
-    return DriverTest<CppSpecCommands>().run();
+    return DriverTest().run();
 }
