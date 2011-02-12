@@ -114,6 +114,8 @@ TEST_F(StepManagerTest, extractsParamsFromRegExMatchers) {
     EXPECT_TRUE(extractedParamsAre("match no params", no_params));
     stepManager.addStepDefinition("match the (\\w+) param");
     EXPECT_TRUE(extractedParamsAre("match the first param", map_list_of(10, "first")));
+    stepManager.addStepDefinition("match a (.+)$");
+    EXPECT_TRUE(extractedParamsAre("match a  string  with  spaces  ", map_list_of(8, " string  with  spaces  ")));
     stepManager.addStepDefinition("match params (\\w+), (\\w+) and (\\w+)");
     EXPECT_TRUE(extractedParamsAre("match params A, B and C", map_list_of(13, "A")(16, "B")(22, "C")));
 }

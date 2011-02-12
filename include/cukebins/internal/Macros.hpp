@@ -45,7 +45,7 @@ void step_name ::stepBody()                                        \
 // **************                 REGEX_PARAM                  ************** //
 // ************************************************************************** //
 
-#define REGEX_PARAM(type, name) type name = getInvokeArg<type>()
+#define REGEX_PARAM(type, name) type name(getInvokeArg<type>())
 
 // ************************************************************************** //
 // **************                USING_CONTEXT                 ************** //

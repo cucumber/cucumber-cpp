@@ -16,6 +16,8 @@ protected:
 
 const InvokeResult FakeStep::invokeStepBody() {
     InvokeResult result;
+    // No try/catch block to throw the original exceptions to the testing framework
+    stepBody();
     result.success = true;
     return result;
 }

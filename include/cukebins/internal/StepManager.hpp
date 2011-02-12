@@ -123,7 +123,7 @@ static int registerStep(const std::string &stepMatcher) {
    return stepInfo->id;
 }
 
-template<class T>
+template<typename T>
 T fromString(const std::string& s) {
     std::istringstream stream(s);
     T t;
@@ -134,22 +134,27 @@ T fromString(const std::string& s) {
     return t;
 }
 
-template<class T>
+template<>
+inline std::string fromString(const std::string& s) {
+    return s;
+}
+
+template<typename T>
 std::string toString(T arg) {
     std::stringstream s;
     s << arg;
     return s.str();
 }
 
-template<class T>
+template<typename T>
 T BasicStep::getInvokeArg(command_args_type::size_type i) {
     if (!invokeArgsPtr || i >= invokeArgsPtr->size()) {
         throw std::invalid_argument("Parameter not found");
     }
-    return fromString<T> (invokeArgsPtr->at(i));
+    return fromString<T>(invokeArgsPtr->at(i));
 }
 
-template<class T>
+template<typename T>
 T BasicStep::getInvokeArg() {
     return getInvokeArg<T>(currentArgIndex++);
 }
