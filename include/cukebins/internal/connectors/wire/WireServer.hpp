@@ -21,7 +21,7 @@ using namespace boost::asio::ip;
 template<class T>
 class SocketServer {
 public:
-    SocketServer(const short port);
+    SocketServer(const unsigned short port);
 
     void accept();
 
@@ -34,7 +34,7 @@ private:
 
 
 template<class T>
-SocketServer<T>::SocketServer(const short port) :
+SocketServer<T>::SocketServer(const unsigned short port) :
     endpoint(tcp::v4(), port), acceptor(ios) {
     acceptor.open(endpoint.protocol());
     acceptor.set_option(tcp::acceptor::reuse_address(true));
