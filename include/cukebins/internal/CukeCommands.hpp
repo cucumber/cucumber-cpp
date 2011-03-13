@@ -2,6 +2,7 @@
 #define CUKEBINS_CUKECOMMANDS_HPP_
 
 #include "step/StepManager.hpp"
+#include "hook/HookRegistrar.hpp"
 #include "ContextManager.hpp"
 
 #include <map>
@@ -25,6 +26,7 @@ public:
 
 private:
     StepManager stepManager;
+    HookRegistrar hookRegistrar;
     ContextManager contextManager;
 };
 

@@ -4,10 +4,12 @@ namespace cukebins {
 namespace internal {
 
 void CukeCommands::beginScenario() {
+    hookRegistrar.execBeforeHooks();
 }
 
 void CukeCommands::endScenario() {
     contextManager.purgeContexts();
+    hookRegistrar.execAfterHooks();
 }
 
 MatchResult CukeCommands::stepMatches(const std::string description) {
@@ -20,6 +22,7 @@ InvokeResult CukeCommands::invoke(step_id_type id, shared_ptr<command_args_type>
     if (stepInfo) {
         result = stepInfo->invokeStep(args);
     }
+    hookRegistrar.execAfterStepHooks();
     return result;
 }
 

@@ -2,6 +2,7 @@
 #define CUKEBINS_HPP_
 
 #include "internal/step/StepManager.hpp"
+#include "internal/hook/HookRegistrar.hpp"
 #include "internal/ContextManager.hpp"
 #include "internal/CukeCommands.hpp"
 

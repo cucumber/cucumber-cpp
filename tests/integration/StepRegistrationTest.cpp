@@ -1,8 +1,8 @@
-#include <cukebins/cukebins.hpp>
-
-// GTest needs to be included after cukebins to trigger the Null Framework
-// registration behaviour. Otherwise it would register GTest tests!
 #include <gtest/gtest.h>
+
+#include <cukebins/internal/step/StepManager.hpp>
+#include <cukebins/internal/step/StepMacros.hpp>
+#include <cukebins/internal/drivers/FakeDriver.hpp>
 
 using namespace cukebins::internal;
 

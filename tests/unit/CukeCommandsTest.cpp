@@ -1,20 +1,18 @@
 #include <gtest/gtest.h>
 
-#include <cukebins/internal/CukeCommands.hpp>
-#include <cukebins/internal/Macros.hpp>
-#include <cukebins/internal/drivers/FakeDriver.hpp>
-
-#include "../utils/StepManagerTestDouble.hpp"
-
-#include <boost/shared_ptr.hpp>
+#include <cukebins/internal/step/StepMacros.hpp>
+#include "../utils/CukeCommandsFixture.hpp"
 
 using namespace cukebins::internal;
 
 using std::string;
 using boost::shared_ptr;
 
-class EmptyStep : public FakeStep {
-    void body() {}
+class CukeCommandsTest : public CukeCommandsFixture {
+protected:
+    void addStepWithMatcher(const std::string &matcher) {
+        addStepToManager<EmptyStep>(matcher);
+    }
 };
 
 class CheckAllParameters : public FakeStep {
@@ -83,39 +81,8 @@ public:
     }
 };
 
-const string STATIC_MATCHER("MATCHER");
-
-class CukeCommandsTest : public ::testing::Test {
-    StepManagerTestDouble stepManager;
-
-protected:
-    CukeCommands cukeCommands;
-    shared_ptr<StepInfo> stepInfoPtr;
-
-    template<class T>
-    void runStepBodyTest() {
-        addStepToManager<T>(STATIC_MATCHER);
-        cukeCommands.invoke(stepInfoPtr->id, T::buildInvokeArgs());
-    }
-
-    void addStepWithStaticMatcher(const string &matcher) {
-        addStepToManager<EmptyStep>(matcher);
-    }
-
-    virtual void TearDown() {
-        stepManager.clearSteps();
-    }
-
-private:
-    template<class T>
-    void addStepToManager(const string &matcher) {
-        stepInfoPtr = shared_ptr<StepInfo>(new StepInvoker<T>(matcher));
-        stepManager.addStep(stepInfoPtr.get());
-    }
-};
-
 TEST_F(CukeCommandsTest, matchesCorrectly) {
-    addStepWithStaticMatcher(STATIC_MATCHER);
+    addStepWithMatcher(STATIC_MATCHER);
     MatchResult result = cukeCommands.stepMatches(STATIC_MATCHER);
     EXPECT_EQ(stepInfoPtr->id, result.getResultSet().at(0).id);
 }

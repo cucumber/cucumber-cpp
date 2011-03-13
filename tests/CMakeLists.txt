@@ -19,6 +19,7 @@ if(GTEST_FOUND)
 
     cuke_add_test(integration/ContextHandlingTest)
     cuke_add_test(integration/StepRegistrationTest)
+    cuke_add_test(integration/HookRegistrationTest)
     cuke_add_test(integration/WireServerTest)
     cuke_add_test(unit/ContextManagerTest)
     cuke_add_test(unit/CukeCommandsTest)

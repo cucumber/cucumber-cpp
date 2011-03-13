@@ -2,6 +2,7 @@ set(CUKEBINS_SOURCES
     ContextManager.cpp
     CukeCommands.cpp
     StepManager.cpp
+    HookRegistrar.cpp
 )
 
 if(GTEST_FOUND)

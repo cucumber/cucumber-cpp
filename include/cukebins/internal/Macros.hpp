@@ -3,5 +3,6 @@
 
 #include "RegistrationMacros.hpp"
 #include "step/StepMacros.hpp"
+#include "hook/HookMacros.hpp"
 
 #endif /* CUKEBINS_MACROS_HPP_ */
