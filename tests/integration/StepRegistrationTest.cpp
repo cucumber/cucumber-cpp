@@ -10,7 +10,7 @@ using namespace cukebins::internal;
 
 class ManualStep : public FakeStep {
 public:
-    void stepBody() {};
+    void body() {};
 private:
     static const int cukeRegId;
 };

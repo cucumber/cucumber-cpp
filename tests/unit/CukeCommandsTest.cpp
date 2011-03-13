@@ -14,7 +14,7 @@ using std::string;
 using boost::shared_ptr;
 
 class EmptyStep : public FakeStep {
-    void stepBody() {}
+    void body() {}
 };
 
 class CheckAllParameters : public FakeStep {
@@ -47,7 +47,7 @@ private:
     string string_arg;
 
 public:
-    void stepBody() {
+    void body() {
         EXPECT_EQ(arg_0_int, getInvokeArg<int>(0));
         EXPECT_EQ((double)arg_0_int, getInvokeArg<double>(0));
         EXPECT_NO_THROW(getInvokeArg<string>(0));
@@ -68,7 +68,7 @@ public:
 
 class CheckAllParametersWithMacro : public CheckAllParameters {
 public:
-    void stepBody() {
+    void body() {
         REGEX_PARAM(int, got_arg_0_int);
         EXPECT_EQ(arg_0_int, got_arg_0_int);
 
@@ -121,11 +121,11 @@ TEST_F(CukeCommandsTest, matchesCorrectly) {
 }
 
 TEST_F(CukeCommandsTest, invokeHandlesParametersWithoutMacro) {
-    // The real test is in CheckAllParameters::stepBody()
+    // The real test is in CheckAllParameters::body()
     runStepBodyTest<CheckAllParametersWithoutMacro>();
 }
 
 TEST_F(CukeCommandsTest, invokeHandlesParametersWithMacro) {
-    // The real test is in CheckAllParameters::stepBody()
+    // The real test is in CheckAllParameters::body()
     runStepBodyTest<CheckAllParametersWithMacro>();
 }

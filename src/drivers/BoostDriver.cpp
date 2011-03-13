@@ -63,7 +63,7 @@ void BoostStep::initBoostTest() {
 void BoostStep::runWithMasterSuite() {
     using namespace boost::unit_test;
     initBoostTest();
-    test_case *tc = BOOST_TEST_CASE(boost::bind(&BoostStep::stepBody, this));
+    test_case *tc = BOOST_TEST_CASE(boost::bind(&BoostStep::body, this));
     framework::master_test_suite().add(tc);
     framework::run(tc, false);
     framework::master_test_suite().remove(tc->p_id);

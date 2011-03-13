@@ -1,7 +1,7 @@
 #ifndef CUKEBINS_FAKEDRIVER_HPP_
 #define CUKEBINS_FAKEDRIVER_HPP_
 
-#include <cukebins/internal/StepManager.hpp>
+#include <cukebins/internal/step/StepManager.hpp>
 
 namespace cukebins {
 namespace internal {
@@ -17,7 +17,7 @@ protected:
 const InvokeResult FakeStep::invokeStepBody() {
     InvokeResult result;
     // No try/catch block to throw the original exceptions to the testing framework
-    stepBody();
+    body();
     result.success = true;
     return result;
 }

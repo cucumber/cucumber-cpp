@@ -1,7 +1,7 @@
 #ifndef CUKEBINS_STEPMANAGERTESTDOUBLE_HPP_
 #define CUKEBINS_STEPMANAGERTESTDOUBLE_HPP_
 
-#include <cukebins/internal/StepManager.hpp>
+#include <cukebins/internal/step/StepManager.hpp>
 
 namespace cukebins {
 namespace internal {

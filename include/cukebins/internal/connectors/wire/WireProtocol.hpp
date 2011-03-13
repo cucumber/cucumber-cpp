@@ -3,7 +3,7 @@
 
 #include <json_spirit/json_spirit_reader_template.h>
 #include <json_spirit/json_spirit_writer_template.h>
-#include <cukebins/internal/StepManager.hpp>
+#include <cukebins/internal/step/StepManager.hpp>
 #include <cukebins/internal/CukeCommands.hpp>
 
 #include <string>

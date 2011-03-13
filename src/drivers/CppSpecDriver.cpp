@@ -8,7 +8,7 @@ namespace internal {
 const InvokeResult CppSpecStep::invokeStepBody() {
     InvokeResult result;
     try {
-        stepBody();
+        body();
         result.success = true;
     } catch (...) {
     }

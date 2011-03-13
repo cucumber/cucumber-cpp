@@ -21,7 +21,7 @@ public:
         return BoostStep::invokeStepBody();
     };
 
-    void stepBody() {};
+    void body() {};
 };
 
 class BoostDriverTest : public DriverTest {

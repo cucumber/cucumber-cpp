@@ -1,7 +1,7 @@
 #ifndef CUKEBINS_CUKECOMMANDS_HPP_
 #define CUKEBINS_CUKECOMMANDS_HPP_
 
-#include "StepManager.hpp"
+#include "step/StepManager.hpp"
 #include "ContextManager.hpp"
 
 #include <map>

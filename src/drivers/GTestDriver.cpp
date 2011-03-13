@@ -14,7 +14,7 @@ const InvokeResult GTestStep::invokeStepBody() {
         initFlags();
     }
     try {
-        stepBody();
+        body();
         result.success = true;
     } catch (...) {
     }

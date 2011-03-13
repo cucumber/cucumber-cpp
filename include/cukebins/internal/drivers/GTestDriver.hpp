@@ -1,7 +1,7 @@
 #ifndef CUKEBINS_GTESTDRIVER_HPP_
 #define CUKEBINS_GTESTDRIVER_HPP_
 
-#include <cukebins/internal/StepManager.hpp>
+#include <cukebins/internal/step/StepManager.hpp>
 
 #include <iostream>
 

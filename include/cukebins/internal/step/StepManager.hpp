@@ -51,7 +51,7 @@ public:
 
 protected:
     virtual const InvokeResult invokeStepBody() = 0;
-    virtual void stepBody() = 0;
+    virtual void body() = 0;
 
     template<class T> T getInvokeArg(command_args_type::size_type i);
     template<class T> T getInvokeArg();

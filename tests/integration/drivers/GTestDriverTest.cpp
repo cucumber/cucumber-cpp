@@ -25,7 +25,7 @@ public:
         return GTestStep::invokeStepBody();
     };
 
-    void stepBody() {};
+    void body() {};
 };
 
 class GTestDriverTest : public DriverTest {
