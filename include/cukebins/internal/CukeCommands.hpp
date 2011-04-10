@@ -22,7 +22,7 @@ public:
     void endScenario();
     //virtual void snippetText() = 0;
     MatchResult stepMatches(const std::string description);
-    InvokeResult invoke(step_id_type id, shared_ptr<command_args_type> args);
+    InvokeResult invoke(step_id_type id, command_args_type *args);
 
 private:
     StepManager stepManager;

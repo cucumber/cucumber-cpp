@@ -92,7 +92,7 @@ StepManager::steps_type& StepManager::steps() {
 }
 
 
-InvokeResult BasicStep::invoke(shared_ptr<command_args_type> args) {
+InvokeResult BasicStep::invoke(command_args_type *args) {
     invokeArgsPtr = args;
     currentArgIndex = 0;
     return invokeStepBody();

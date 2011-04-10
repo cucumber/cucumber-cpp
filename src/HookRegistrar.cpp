@@ -7,6 +7,13 @@ void Hook::invokeHook() {
     this->body();
 }
 
+
+void AroundStepHook::invokeHook(CallableStep *step) {
+    this->step = step;
+    this->body();
+}
+
+
 HookRegistrar::~HookRegistrar() {
 }
 
@@ -21,6 +28,21 @@ HookRegistrar::hook_list_type& HookRegistrar::beforeHooks() {
 
 void HookRegistrar::execBeforeHooks() {
     execHooks(beforeHooks());
+}
+
+
+void HookRegistrar::addAroundStepHook(AroundStepHook *aroundStepHook) {
+    aroundStepHooks().push_front(aroundStepHook);
+}
+
+HookRegistrar::aroundhook_list_type& HookRegistrar::aroundStepHooks() {
+    static aroundhook_list_type *aroundStepHooks = new aroundhook_list_type();
+    return *aroundStepHooks;
+}
+
+InvokeResult HookRegistrar::execStepChain(StepInfo *stepInfo, command_args_type *args) {
+    StepCallChain scc(stepInfo, args, aroundStepHooks());
+    return scc.exec();
 }
 
 
@@ -57,6 +79,48 @@ void HookRegistrar::execHooks(HookRegistrar::hook_list_type &hookList) {
         (*hook)->invokeHook();
     }
 }
+
+
+StepCallChain::StepCallChain(
+    StepInfo *stepInfo,
+    command_args_type *stepArgs,
+    HookRegistrar::aroundhook_list_type &aroundHooks
+) :
+    stepInfo(stepInfo),
+    stepArgs(stepArgs)
+{
+    nextHook = aroundHooks.begin();
+    hookEnd = aroundHooks.end();
+}
+
+InvokeResult StepCallChain::exec() {
+    execNext();
+    return result;
+}
+
+void StepCallChain::execNext() {
+    if (nextHook == hookEnd) {
+        execStep();
+    } else {
+        HookRegistrar::aroundhook_list_type::iterator currentHook = nextHook++;
+        CallableStepChain callableStepChain(this);
+        (*currentHook)->invokeHook(&callableStepChain);
+    }
+}
+
+void StepCallChain::execStep() {
+    if (stepInfo) {
+        result = stepInfo->invokeStep(stepArgs);
+    }
+}
+
+
+CallableStepChain::CallableStepChain(StepCallChain *scc) : scc(scc) {};
+
+void CallableStepChain::call() {
+    scc->execNext();
+}
+
 
 }
 }

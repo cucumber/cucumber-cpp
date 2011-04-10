@@ -9,7 +9,7 @@ namespace internal {
 class StepInfoNoOp : public StepInfo {
 public:
     StepInfoNoOp(const std::string &stepMatcher) : StepInfo(stepMatcher) {}
-    InvokeResult invokeStep(shared_ptr<command_args_type> args) {
+    InvokeResult invokeStep(command_args_type *args) {
 		InvokeResult result;
 		result.success = true;
 		return result;

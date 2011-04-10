@@ -16,12 +16,9 @@ MatchResult CukeCommands::stepMatches(const std::string description) {
     return stepManager.stepMatches(description);
 }
 
-InvokeResult CukeCommands::invoke(step_id_type id, shared_ptr<command_args_type> args) {
+InvokeResult CukeCommands::invoke(step_id_type id, command_args_type *args) {
     StepInfo *stepInfo = stepManager.getStep(id);
-    InvokeResult result;
-    if (stepInfo) {
-        result = stepInfo->invokeStep(args);
-    }
+    InvokeResult result = hookRegistrar.execStepChain(stepInfo, args);
     hookRegistrar.execAfterStepHooks();
     return result;
 }

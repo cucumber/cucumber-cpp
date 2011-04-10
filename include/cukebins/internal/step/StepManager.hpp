@@ -38,7 +38,7 @@ class StepInfo {
 public:
     StepInfo(const std::string &stepMatcher);
     Match matches(const std::string &stepDescription);
-    virtual InvokeResult invokeStep(shared_ptr<command_args_type> args) = 0;
+    virtual InvokeResult invokeStep(command_args_type *args) = 0;
 
     step_id_type id;
     step_regex_type regex;
@@ -47,7 +47,7 @@ public:
 
 class BasicStep {
 public:
-    InvokeResult invoke(shared_ptr<command_args_type> args);
+    InvokeResult invoke(command_args_type *args);
 
 protected:
     virtual const InvokeResult invokeStepBody() = 0;
@@ -57,7 +57,7 @@ protected:
     template<class T> T getInvokeArg();
 
 private:
-    shared_ptr<command_args_type> invokeArgsPtr;
+    command_args_type *invokeArgsPtr;
     command_args_type::size_type currentArgIndex; // TODO init to 0
 };
 
@@ -67,7 +67,7 @@ class StepInvoker : public StepInfo {
 public:
     StepInvoker(const std::string &stepMatcher);
 
-    InvokeResult invokeStep(shared_ptr<command_args_type> args);
+    InvokeResult invokeStep(command_args_type *args);
 };
 
 
@@ -166,7 +166,7 @@ StepInvoker<T>::StepInvoker(const std::string &stepMatcher) :
 }
 
 template<class T>
-InvokeResult StepInvoker<T>::invokeStep(shared_ptr<command_args_type> args) {
+InvokeResult StepInvoker<T>::invokeStep(command_args_type *args) {
     T t;
     return t.invoke(args);
 }

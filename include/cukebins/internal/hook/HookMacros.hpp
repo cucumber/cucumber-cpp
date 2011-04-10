@@ -24,6 +24,26 @@ CUKE_OBJECT_(                            \
 /**/
 
 // ************************************************************************** //
+// **************              AROUND_STEP HOOK                ************** //
+// ************************************************************************** //
+
+#define AROUND_STEP                           \
+AROUND_STEP_WITH_NAME_(CUKE_GEN_OBJECT_NAME_) \
+/**/
+
+#define AROUND_STEP_WITH_NAME_(step_name)     \
+CUKE_OBJECT_(                                 \
+    step_name,                                \
+    AroundStepHook,                           \
+    AROUND_STEP_HOOK_REGISTRATION_(step_name) \
+)                                             \
+/**/
+
+#define AROUND_STEP_HOOK_REGISTRATION_(step_name)        \
+::cukebins::internal::registerAroundStepHook<step_name>() \
+/**/
+
+// ************************************************************************** //
 // **************               AFTER_STEP HOOK                ************** //
 // ************************************************************************** //
 

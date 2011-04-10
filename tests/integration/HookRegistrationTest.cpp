@@ -11,17 +11,17 @@ using namespace cukebins::internal;
 
 namespace {
     std::stringstream beforeHookCallMarker;
-    std::stringstream afterStepHookCallMarker;
+    std::stringstream stepHookCallMarker;
     std::stringstream afterHookCallMarker;
 
     void clearHookCallMarkers() {
         beforeHookCallMarker.str("");
-        afterStepHookCallMarker.str("");
+        stepHookCallMarker.str("");
         afterHookCallMarker.str("");
     }
 
     std::string getHookCallMarkers() {
-       return beforeHookCallMarker.str() + afterHookCallMarker.str() + afterStepHookCallMarker.str();
+       return beforeHookCallMarker.str() + afterHookCallMarker.str() + stepHookCallMarker.str();
     }
 }
 
@@ -53,7 +53,7 @@ protected:
 
     void invokeStep() {
         shared_ptr<command_args_type> no_args;
-        cukeCommands.invoke(stepInfoPtr->id, no_args);
+        cukeCommands.invoke(stepInfoPtr->id, no_args.get());
     }
 
     void endScenario() {
@@ -79,13 +79,40 @@ BEFORE { beforeHookCallMarker << BEFORE_MARKER_1; }
 BEFORE { beforeHookCallMarker << BEFORE_MARKER_2; }
 BEFORE { beforeHookCallMarker << BEFORE_MARKER_3; }
 
+#define AROUND_STEP_MARKER_BEFORE_1 "X"
+#define AROUND_STEP_MARKER_BEFORE_2 "Y"
+#define AROUND_STEP_MARKER_BEFORE_3 "Z"
+#define AROUND_STEP_MARKER_AFTER_3  "z"
+#define AROUND_STEP_MARKER_AFTER_2  "y"
+#define AROUND_STEP_MARKER_AFTER_1  "x"
+#define AROUND_STEP_MARKER_ORDER                                                        \
+    AROUND_STEP_MARKER_BEFORE_1 AROUND_STEP_MARKER_BEFORE_2 AROUND_STEP_MARKER_BEFORE_3 \
+    AROUND_STEP_MARKER_AFTER_3 AROUND_STEP_MARKER_AFTER_2 AROUND_STEP_MARKER_AFTER_1
+AROUND_STEP {
+    stepHookCallMarker << AROUND_STEP_MARKER_BEFORE_1;
+    step->call();
+    stepHookCallMarker << AROUND_STEP_MARKER_AFTER_1;
+}
+AROUND_STEP {
+    stepHookCallMarker << AROUND_STEP_MARKER_BEFORE_2;
+    step->call();
+    stepHookCallMarker << AROUND_STEP_MARKER_AFTER_2;
+}
+AROUND_STEP {
+    stepHookCallMarker << AROUND_STEP_MARKER_BEFORE_3;
+    step->call();
+    stepHookCallMarker << AROUND_STEP_MARKER_AFTER_3;
+}
+
 #define AFTER_STEP_MARKER_1 "as1"
 #define AFTER_STEP_MARKER_2 "as2"
 #define AFTER_STEP_MARKER_3 "as3"
 #define AFTER_STEP_MARKER_ORDER AFTER_STEP_MARKER_3 AFTER_STEP_MARKER_2 AFTER_STEP_MARKER_1
-AFTER_STEP { afterStepHookCallMarker << AFTER_STEP_MARKER_1; }
-AFTER_STEP { afterStepHookCallMarker << AFTER_STEP_MARKER_2; }
-AFTER_STEP { afterStepHookCallMarker << AFTER_STEP_MARKER_3; }
+AFTER_STEP { stepHookCallMarker << AFTER_STEP_MARKER_1; }
+AFTER_STEP { stepHookCallMarker << AFTER_STEP_MARKER_2; }
+AFTER_STEP { stepHookCallMarker << AFTER_STEP_MARKER_3; }
+
+#define STEP_MARKER_ORDER AROUND_STEP_MARKER_ORDER AFTER_STEP_MARKER_ORDER
 
 #define AFTER_MARKER_1 "a1"
 #define AFTER_MARKER_2 "a2"
@@ -96,39 +123,38 @@ AFTER { afterHookCallMarker << AFTER_MARKER_2; }
 AFTER { afterHookCallMarker << AFTER_MARKER_3; }
 
 
-TEST_F(HookRegistrationTest, hooksAreRegisteredInTheCorrectOrder) {
+TEST_F(HookRegistrationTest, hooksAreRegisteredInTheDeclaredOrder) {
     EXPECT_EQ(BEFORE_MARKER_ORDER, beforeHookOrder());
     EXPECT_EQ(AFTER_STEP_MARKER_ORDER, afterStepHookOrder());
     EXPECT_EQ(AFTER_MARKER_ORDER, afterHookOrder());
 }
 
-TEST_F(HookRegistrationTest, hooksAreInvokedCorrectly) {
-
+TEST_F(HookRegistrationTest, hooksAreInvokedInTheOrderInWhichTheyWereRegistered) {
     EXPECT_EQ("", beforeHookCallMarker.str());
-    EXPECT_EQ("", afterStepHookCallMarker.str());
+    EXPECT_EQ("", stepHookCallMarker.str());
     EXPECT_EQ("", afterHookCallMarker.str());
 
     beginScenario();
 
     EXPECT_EQ(BEFORE_MARKER_ORDER, beforeHookCallMarker.str());
-    EXPECT_EQ("", afterStepHookCallMarker.str());
+    EXPECT_EQ("", stepHookCallMarker.str());
     EXPECT_EQ("", afterHookCallMarker.str());
 
     invokeStep();
 
     EXPECT_EQ(BEFORE_MARKER_ORDER, beforeHookCallMarker.str());
-    EXPECT_EQ(AFTER_STEP_MARKER_ORDER, afterStepHookCallMarker.str());
+    EXPECT_EQ(STEP_MARKER_ORDER, stepHookCallMarker.str());
     EXPECT_EQ("", afterHookCallMarker.str());
 
     invokeStep();
 
     EXPECT_EQ(BEFORE_MARKER_ORDER, beforeHookCallMarker.str());
-    EXPECT_EQ(AFTER_STEP_MARKER_ORDER AFTER_STEP_MARKER_ORDER, afterStepHookCallMarker.str());
+    EXPECT_EQ(STEP_MARKER_ORDER STEP_MARKER_ORDER, stepHookCallMarker.str());
     EXPECT_EQ("", afterHookCallMarker.str());
 
     endScenario();
 
     EXPECT_EQ(BEFORE_MARKER_ORDER, beforeHookCallMarker.str());
-    EXPECT_EQ(AFTER_STEP_MARKER_ORDER AFTER_STEP_MARKER_ORDER, afterStepHookCallMarker.str());
+    EXPECT_EQ(STEP_MARKER_ORDER STEP_MARKER_ORDER, stepHookCallMarker.str());
     EXPECT_EQ(AFTER_MARKER_ORDER, afterHookCallMarker.str());
 }

@@ -99,9 +99,9 @@ private:
 
     void invokeRunsTests() {
         cukeCommands.beginScenario();
-        expectTrue(cukeCommands.invoke(getStepIdFromMatcher(SUCCEED_MATCHER), no_args).success);
-        expectFalse(cukeCommands.invoke(42, no_args).success);
-        expectFalse(cukeCommands.invoke(getStepIdFromMatcher(FAIL_MATCHER), no_args).success);
+        expectTrue(cukeCommands.invoke(getStepIdFromMatcher(SUCCEED_MATCHER), no_args.get()).success);
+        expectFalse(cukeCommands.invoke(42, no_args.get()).success);
+        expectFalse(cukeCommands.invoke(getStepIdFromMatcher(FAIL_MATCHER), no_args.get()).success);
         cukeCommands.endScenario();
     }
 
@@ -113,7 +113,7 @@ private:
     void contextConstructorAndDesctructorGetCalledOn(const std::string stepMatcher) {
         listener.reset();
         cukeCommands.beginScenario();
-        cukeCommands.invoke(getStepIdFromMatcher(stepMatcher), no_args);
+        cukeCommands.invoke(getStepIdFromMatcher(stepMatcher), no_args.get());
         expectEqual(1, listener.getCreatedContexts());
         expectEqual(0, listener.getDestroyedContexts());
         cukeCommands.endScenario();

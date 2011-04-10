@@ -146,7 +146,7 @@ mValue StepMatchesCommand::formatResponse(MatchResult matchResult) {
 mValue InvokeCommand::run(mValue &jsonArgs) {
     step_id_type id = getInvokeId(jsonArgs);
     shared_ptr<command_args_type> args(getInvokeArgs(jsonArgs));
-    return formatResponse(commands.invoke(id, args));
+    return formatResponse(commands.invoke(id, args.get()));
 }
 
 step_id_type InvokeCommand::getInvokeId(mValue &jsonArgs) {
