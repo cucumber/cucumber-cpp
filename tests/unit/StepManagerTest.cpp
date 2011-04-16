@@ -24,7 +24,7 @@ protected:
     const map<int, string> no_params;
 
     int getUniqueMatchIdOrZeroFor(const string &stepMatch) {
-        match_results_type resultSet = getResultSetFor(stepMatch);
+        MatchResult::match_results_type resultSet = getResultSetFor(stepMatch);
         if (resultSet.size() != 1) {
             return 0;
         } else {
@@ -45,16 +45,16 @@ protected:
     }
 
     bool extractedParamsAre(const string stepMatch, map<int, string> params) {
-        match_results_type resultSet = getResultSetFor(stepMatch);
+        MatchResult::match_results_type resultSet = getResultSetFor(stepMatch);
         if (resultSet.size() != 1) {
             return false; // more than one match
         }
-        Match match = resultSet.front();
-        if (params.size() != match.subExpressions.size()) {
+        SingleStepMatch match = resultSet.front();
+        if (params.size() != match.submatches.size()) {
             return false;
         }
-        std::vector<SubExpression>::const_iterator rsi;
-        for (rsi = match.subExpressions.begin(); rsi != match.subExpressions.end(); ++rsi) {
+        SingleStepMatch::submatches_type::const_iterator rsi;
+        for (rsi = match.submatches.begin(); rsi != match.submatches.end(); ++rsi) {
             if (params.find(rsi->position) == params.end())
                 return false;
             if (rsi->value != params[rsi->position]) {
@@ -64,7 +64,7 @@ protected:
         return true;
     }
 private:
-    match_results_type getResultSetFor(const string &stepMatch) {
+    MatchResult::match_results_type getResultSetFor(const string &stepMatch) {
         return stepManager.stepMatches(stepMatch).getResultSet();
     }
     void TearDown() {

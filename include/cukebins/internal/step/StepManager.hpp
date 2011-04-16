@@ -7,23 +7,43 @@
 #include <string>
 #include <vector>
 
-#include <boost/regex.hpp>
-#include <boost/shared_ptr.hpp>
+#include "../utils/Regex.hpp"
 
 namespace cukebins {
 namespace internal {
 
-using boost::shared_ptr;
-
-class Match;
-struct SubExpression;
-
 typedef unsigned int step_id_type;
-typedef boost::regex step_regex_type;
-typedef std::vector<Match> match_results_type;
-typedef std::vector<SubExpression> match_subexpressions_type;
 
 typedef std::vector<std::string> command_args_type; // TODO Rename
+
+
+class SingleStepMatch {
+public:
+    typedef RegexMatch::submatches_type submatches_type;
+
+    SingleStepMatch();
+    SingleStepMatch(const SingleStepMatch &match);
+
+    SingleStepMatch & operator =(const SingleStepMatch &match);
+    operator void *();
+
+    step_id_type id;
+    submatches_type submatches;
+};
+
+class MatchResult {
+public:
+    typedef std::vector<SingleStepMatch> match_results_type;
+
+    const match_results_type getResultSet();
+    void addMatch(SingleStepMatch match);
+
+    operator void *();
+    operator bool();
+
+private:
+    match_results_type resultSet;
+};
 
 
 // FIXME
@@ -37,11 +57,11 @@ struct InvokeResult {
 class StepInfo {
 public:
     StepInfo(const std::string &stepMatcher);
-    Match matches(const std::string &stepDescription);
+    SingleStepMatch matches(const std::string &stepDescription);
     virtual InvokeResult invokeStep(command_args_type *args) = 0;
 
     step_id_type id;
-    step_regex_type regex;
+    Regex regex;
 };
 
 
@@ -70,35 +90,6 @@ public:
     InvokeResult invokeStep(command_args_type *args);
 };
 
-
-class Match {
-public:
-    Match();
-    Match(const Match &match);
-
-    Match & operator =(const Match &match);
-    operator void *();
-
-    step_id_type id;
-    match_subexpressions_type subExpressions;
-};
-
-struct SubExpression {
-    std::string value;
-    int position;
-};
-
-class MatchResult {
-public:
-    const match_results_type getResultSet();
-    void addMatch(Match match);
-
-    operator void *();
-    operator bool();
-
-private:
-    match_results_type resultSet;
-};
 
 class StepManager {
 protected:

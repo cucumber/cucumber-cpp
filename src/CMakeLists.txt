@@ -3,6 +3,7 @@ set(CUKEBINS_SOURCES
     CukeCommands.cpp
     StepManager.cpp
     HookRegistrar.cpp
+    Regex.cpp
 )
 
 if(GTEST_FOUND)

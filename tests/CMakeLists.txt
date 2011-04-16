@@ -23,6 +23,7 @@ if(GTEST_FOUND)
     cuke_add_test(integration/WireServerTest)
     cuke_add_test(unit/ContextManagerTest)
     cuke_add_test(unit/CukeCommandsTest)
+    cuke_add_test(unit/RegexTest)
     cuke_add_test(unit/StepCallChainTest)
     cuke_add_test(unit/StepManagerTest)
 

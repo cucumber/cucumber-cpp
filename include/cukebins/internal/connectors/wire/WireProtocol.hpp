@@ -125,12 +125,12 @@ std::string StepMatchesCommand::getStepMatchesMatcher(mValue &jsonArgs) {
 mValue StepMatchesCommand::formatResponse(MatchResult matchResult) {
     mValue response = success_response();
     mArray matches;
-    match_results_type resultSet = matchResult.getResultSet();
-    for (match_results_type::iterator i = resultSet.begin(); i != resultSet.end(); ++i) {
+    MatchResult::match_results_type resultSet = matchResult.getResultSet();
+    for (MatchResult::match_results_type::iterator i = resultSet.begin(); i != resultSet.end(); ++i) {
         mObject match;
         match.insert(make_pair("id", mValue(toString(i->id))));
         mArray matchArgs;
-        for (match_subexpressions_type::iterator j = i->subExpressions.begin(); j != i->subExpressions.end(); ++j) {
+        for (SingleStepMatch::submatches_type::iterator j = i->submatches.begin(); j != i->submatches.end(); ++j) {
             mObject arg;
             arg.insert(make_pair("val", mValue(j->value)));
             arg.insert(make_pair("pos", mValue(j->position)));

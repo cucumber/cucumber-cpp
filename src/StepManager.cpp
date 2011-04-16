@@ -4,42 +4,37 @@ namespace cukebins {
 namespace internal {
 
 StepInfo::StepInfo(const std::string &stepMatcher) :
-    regex(stepMatcher.c_str()) {
+    regex(stepMatcher) {
     static step_id_type currentId = 0;
     id = ++currentId;
 }
 
-Match StepInfo::matches(const std::string &stepDescription) {
-    Match currentMatch;
-    boost::cmatch matchResults;
-    if (boost::regex_search(stepDescription.c_str(), matchResults, regex)) {
-        currentMatch.id = id;
-        for (boost::cmatch::size_type i = 1; i < matchResults.size(); ++i) {
-            SubExpression s;
-            s.value = matchResults.str(i);
-            s.position = matchResults.position(i);
-            currentMatch.subExpressions.push_back(s);
-        }
+SingleStepMatch StepInfo::matches(const std::string &stepDescription) {
+    SingleStepMatch stepMatch;
+    RegexMatch regexMatch = regex.find(stepDescription);
+    if (regexMatch.matches()) {
+        stepMatch.id = id;
+        stepMatch.submatches = regexMatch.getSubmatches();
     }
-    return currentMatch;
+    return stepMatch;
 }
 
-Match::Match() :
+SingleStepMatch::SingleStepMatch() :
     id(0) {
 }
 
-Match::Match(const Match &match) :
+SingleStepMatch::SingleStepMatch(const SingleStepMatch &match) :
     id(match.id),
-    subExpressions(match.subExpressions) {
+    submatches(match.submatches) {
 }
 
-Match & Match::operator =(const Match &match) {
+SingleStepMatch & SingleStepMatch::operator =(const SingleStepMatch &match) {
     id = match.id;
-    subExpressions = match.subExpressions;
+    submatches = match.submatches;
     return *this;
 }
 
-Match::operator void *() {
+SingleStepMatch::operator void *() {
     return (void *) id;
 }
 
@@ -51,11 +46,11 @@ MatchResult::operator bool() {
     return !resultSet.empty();
 }
 
-const match_results_type MatchResult::getResultSet() {
+const MatchResult::match_results_type MatchResult::getResultSet() {
     return resultSet;
 }
 
-void MatchResult::addMatch(Match match) {
+void MatchResult::addMatch(SingleStepMatch match) {
     resultSet.push_back(match);
 }
 
@@ -70,7 +65,7 @@ MatchResult StepManager::stepMatches(const std::string &stepDescription) {
     MatchResult matchResult;
     for (steps_type::iterator iter = steps().begin(); iter != steps().end(); ++iter) {
         StepInfo *stepInfo = iter->second;
-        Match currentMatch = stepInfo->matches(stepDescription);
+        SingleStepMatch currentMatch = stepInfo->matches(stepDescription);
         if (currentMatch) {
             matchResult.addMatch(currentMatch);
         }
