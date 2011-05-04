@@ -93,16 +93,20 @@ mValue JSONCommand::fail_response() {
 }
 
 mValue BeginScenarioCommand::run(mValue &jsonArgs) {
-    if (jsonArgs.is_null()) {
-        commands.beginScenario();
-        return success_response();
-    } else {
-        return fail_response();
+    TagExpression::tag_list *tags = new TagExpression::tag_list;
+    if (!jsonArgs.is_null()) {
+        mArray &jsonTags = jsonArgs.get_obj()["tags"].get_array();
+        for (mArray::const_iterator i = jsonTags.begin(); i != jsonTags.end(); ++i) {
+            std::string tag = i->get_str();
+            tags->push_back(tag);
+        }
     }
+    commands.beginScenario(tags);
+    return success_response();
 }
 
 mValue EndScenarioCommand::run(mValue &jsonArgs) {
-    if (jsonArgs.is_null()) {
+    if (jsonArgs.is_null() || !jsonArgs.get_obj()["tags"].is_null()) {
         commands.endScenario();
         return success_response();
     } else {

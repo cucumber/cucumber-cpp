@@ -4,6 +4,8 @@ set(CUKEBINS_SOURCES
     StepManager.cpp
     HookRegistrar.cpp
     Regex.cpp
+    Scenario.cpp
+    Tag.cpp
 )
 
 if(GTEST_FOUND)

@@ -104,13 +104,30 @@ protected:
         stepManager.clearSteps();
     }
 };
+
 string JSONCommandsTest::success = "[\"success\"]";
 string JSONCommandsTest::fail = "[\"fail\"]";
 string JSONCommandsTest::empty = "";
 
+
+/*
+ * TODO: There is no point in testing the protocol this way! Refactor those
+ *       tests using googlemock and test if the commands get called with
+ *       the expected arguments and fake the returning of a result.
+ */
+
+TEST_F(JSONCommandsTest, failsGracefullyOnUnknownOrMalformed) {
+    EXPECT_EQ(fail, processCommand("[\"unknown_command\"]"));
+
+    EXPECT_EQ(empty, processCommand(""));
+    EXPECT_EQ(empty, processCommand("{\"malformed_command\"}"));
+    EXPECT_EQ(fail, processCommand("[42]"));
+}
+
 TEST_F(JSONCommandsTest, handlesBeginScenario) {
     EXPECT_EQ(success, processCommand("[\"begin_scenario\"]"));
     EXPECT_EQ(success, processCommand("[\"begin_scenario\",null]"));
+    EXPECT_EQ(success, processCommand("[\"begin_scenario\",{\"tags\":[\"bar\",\"baz\",\"foo\"]}]"));
 
     EXPECT_EQ(fail, processCommand("[\"begin_scenario\",\"something else\"]"));
 }
@@ -118,6 +135,7 @@ TEST_F(JSONCommandsTest, handlesBeginScenario) {
 TEST_F(JSONCommandsTest, handlesEndScenario) {
     EXPECT_EQ(success, processCommand("[\"end_scenario\"]"));
     EXPECT_EQ(success, processCommand("[\"end_scenario\",null]"));
+    EXPECT_EQ(success, processCommand("[\"end_scenario\",{\"tags\":[\"bar\",\"baz\",\"foo\"]}]"));
 
     EXPECT_EQ(fail, processCommand("[\"end_scenario\",\"something else\"]"));
 }
@@ -148,12 +166,4 @@ TEST_F(JSONCommandsTest, doesNotHandleSnippetText) {
 
     EXPECT_EQ(fail, processCommand("[\"snippet_text\"]"));
     EXPECT_EQ(fail, processCommand("[\"snippet_text\",null]"));
-}
-
-TEST_F(JSONCommandsTest, failsGracefullyOnUnknownOrMalformed) {
-    EXPECT_EQ(fail, processCommand("[\"unknown_command\"]"));
-
-    EXPECT_EQ(empty, processCommand(""));
-    EXPECT_EQ(empty, processCommand("{\"malformed_command\"}"));
-    EXPECT_EQ(fail, processCommand("[42]"));
 }

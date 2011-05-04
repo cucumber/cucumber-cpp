@@ -80,7 +80,7 @@ protected:
     InvokeResult execStep(bool succeedingStep) {
         FakeStepInfo step(&markers);
         command_args_type args;
-        StepCallChain scc(&step, &args, aroundHooks);
+        StepCallChain scc(0, &step, &args, aroundHooks);
         step.setShouldSucceed(succeedingStep);
         return scc.exec();
     }
@@ -89,14 +89,14 @@ protected:
         InvokeResult result;
 
         result = execStep(true);
-        EXPECT_EQ(true, result.success);
+        EXPECT_TRUE(result.success);
         result = execStep(false);
-        EXPECT_EQ(false, result.success);
+        EXPECT_FALSE(result.success);
     }
 };
 
 TEST_F(StepCallChainTest, failsIfNoStep) {
-    StepCallChain scc(0, 0, aroundHooks);
+    StepCallChain scc(0, 0, 0, aroundHooks);
     InvokeResult res = scc.exec();
     EXPECT_FALSE(res.success);
     EXPECT_EQ("", markers.str());
@@ -135,7 +135,7 @@ TEST_F(StepCallChainTest, aroundHooksAreInvokedInTheCorrectOrder) {
 TEST_F(StepCallChainTest, argsArePassedToTheStep) {
     FakeStepInfo step(&markers);
     command_args_type args;
-    StepCallChain scc(&step, &args, aroundHooks);
+    StepCallChain scc(0, &step, &args, aroundHooks);
 
     EXPECT_NE(&args, step.getLatestArgsPassed());
     scc.exec();

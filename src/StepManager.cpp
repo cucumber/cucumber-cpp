@@ -1,5 +1,8 @@
 #include "cukebins/internal/step/StepManager.hpp"
 
+#include <boost/shared_ptr.hpp>
+using boost::shared_ptr;
+
 namespace cukebins {
 namespace internal {
 
@@ -11,10 +14,10 @@ StepInfo::StepInfo(const std::string &stepMatcher) :
 
 SingleStepMatch StepInfo::matches(const std::string &stepDescription) {
     SingleStepMatch stepMatch;
-    RegexMatch regexMatch = regex.find(stepDescription);
-    if (regexMatch.matches()) {
+    shared_ptr<RegexMatch> regexMatch(regex.find(stepDescription));
+    if (regexMatch->matches()) {
         stepMatch.id = id;
-        stepMatch.submatches = regexMatch.getSubmatches();
+        stepMatch.submatches = regexMatch->getSubmatches();
     }
     return stepMatch;
 }

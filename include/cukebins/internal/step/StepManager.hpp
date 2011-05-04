@@ -46,7 +46,11 @@ private:
 };
 
 
-// FIXME
+/*
+ * FIXME
+ * It should hold something other than a success
+ * result and it should not be a struct
+ */
 struct InvokeResult {
     InvokeResult() : success(false) {}
 

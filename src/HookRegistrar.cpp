@@ -1,16 +1,36 @@
 #include <cukebins/internal/hook/HookRegistrar.hpp>
 
+#include <cukebins/internal/CukeCommands.hpp>
+
 namespace cukebins {
 namespace internal {
 
-void Hook::invokeHook() {
-    this->body();
+void Hook::invokeHook(Scenario *scenario) {
+    if (tagsMatch(scenario)) {
+        body();
+    } else {
+        skipHook();
+    }
 }
 
+void Hook::skipHook() {
+}
 
-void AroundStepHook::invokeHook(CallableStep *step) {
+void Hook::setTags(const std::string &csvTagNotation) {
+    tagExpression = shared_ptr<TagExpression>(new AndTagExpression(csvTagNotation));
+}
+
+bool Hook::tagsMatch(Scenario *scenario) {
+    return !scenario || tagExpression->matches(scenario->getTags());
+}
+
+void AroundStepHook::invokeHook(Scenario *scenario, CallableStep *step) {
     this->step = step;
-    this->body();
+    Hook::invokeHook(scenario);
+}
+
+void AroundStepHook::skipHook() {
+    step->call();
 }
 
 
@@ -26,8 +46,8 @@ HookRegistrar::hook_list_type& HookRegistrar::beforeHooks() {
     return *beforeHooks;
 }
 
-void HookRegistrar::execBeforeHooks() {
-    execHooks(beforeHooks());
+void HookRegistrar::execBeforeHooks(Scenario *scenario) {
+    execHooks(beforeHooks(), scenario);
 }
 
 
@@ -40,8 +60,8 @@ HookRegistrar::aroundhook_list_type& HookRegistrar::aroundStepHooks() {
     return *aroundStepHooks;
 }
 
-InvokeResult HookRegistrar::execStepChain(StepInfo *stepInfo, command_args_type *args) {
-    StepCallChain scc(stepInfo, args, aroundStepHooks());
+InvokeResult HookRegistrar::execStepChain(Scenario *scenario, StepInfo *stepInfo, command_args_type *args) {
+    StepCallChain scc(scenario, stepInfo, args, aroundStepHooks());
     return scc.exec();
 }
 
@@ -55,8 +75,8 @@ HookRegistrar::hook_list_type& HookRegistrar::afterStepHooks() {
     return *afterStepHooks;
 }
 
-void HookRegistrar::execAfterStepHooks() {
-    execHooks(afterStepHooks());
+void HookRegistrar::execAfterStepHooks(Scenario *scenario) {
+    execHooks(afterStepHooks(), scenario);
 }
 
 
@@ -69,23 +89,25 @@ HookRegistrar::hook_list_type& HookRegistrar::afterHooks() {
     return *afterHooks;
 }
 
-void HookRegistrar::execAfterHooks() {
-    execHooks(afterHooks());
+void HookRegistrar::execAfterHooks(Scenario *scenario) {
+    execHooks(afterHooks(), scenario);
 }
 
 
-void HookRegistrar::execHooks(HookRegistrar::hook_list_type &hookList) {
+void HookRegistrar::execHooks(HookRegistrar::hook_list_type &hookList, Scenario *scenario) {
     for (HookRegistrar::hook_list_type::iterator hook = hookList.begin(); hook != hookList.end(); ++hook) {
-        (*hook)->invokeHook();
+        (*hook)->invokeHook(scenario);
     }
 }
 
 
 StepCallChain::StepCallChain(
+    Scenario *scenario,
     StepInfo *stepInfo,
     command_args_type *stepArgs,
     HookRegistrar::aroundhook_list_type &aroundHooks
 ) :
+    scenario(scenario),
     stepInfo(stepInfo),
     stepArgs(stepArgs)
 {
@@ -104,7 +126,7 @@ void StepCallChain::execNext() {
     } else {
         HookRegistrar::aroundhook_list_type::iterator currentHook = nextHook++;
         CallableStepChain callableStepChain(this);
-        (*currentHook)->invokeHook(&callableStepChain);
+        (*currentHook)->invokeHook(scenario, &callableStepChain);
     }
 }
 

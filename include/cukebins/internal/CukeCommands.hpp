@@ -4,6 +4,7 @@
 #include "step/StepManager.hpp"
 #include "hook/HookRegistrar.hpp"
 #include "ContextManager.hpp"
+#include "Scenario.hpp"
 
 #include <map>
 #include <string>
@@ -18,7 +19,7 @@ using boost::shared_ptr;
 
 class CukeCommands {
 public:
-    void beginScenario();
+    void beginScenario(const TagExpression::tag_list *tags);
     void endScenario();
     //virtual void snippetText() = 0;
     MatchResult stepMatches(const std::string description);
@@ -28,6 +29,9 @@ private:
     StepManager stepManager;
     HookRegistrar hookRegistrar;
     ContextManager contextManager;
+
+private:
+    static shared_ptr<Scenario> currentScenario;
 };
 
 }

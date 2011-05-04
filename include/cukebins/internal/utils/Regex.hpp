@@ -13,19 +13,31 @@ struct RegexSubmatch {
     int position;
 };
 
+
 class RegexMatch {
 public:
     typedef std::vector<RegexSubmatch> submatches_type;
 
-    RegexMatch(const boost::regex &regexImpl, const std::string &expression);
+    virtual ~RegexMatch() {};
 
     bool matches();
-    submatches_type getSubmatches();
+    const submatches_type & getSubmatches();
 
-private:
+protected:
     bool regexMatched;
     submatches_type submatches;
 };
+
+class FindRegexMatch : public RegexMatch {
+public:
+    FindRegexMatch(const boost::regex &regexImpl, const std::string &expression);
+};
+
+class FindAllRegexMatch : public RegexMatch {
+public:
+    FindAllRegexMatch(const boost::regex &regexImpl, const std::string &expression);
+};
+
 
 class Regex {
 private:
@@ -34,7 +46,8 @@ private:
 public:
     Regex(std::string expr);
 
-    RegexMatch find(const std::string &expression);
+    RegexMatch *find(const std::string &expression);
+    RegexMatch *findAll(const std::string &expression);
 
     std::string str();
 };

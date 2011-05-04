@@ -1,8 +1,14 @@
 #ifndef CUKEBINS_HOOKREGISTRAR_HPP_
 #define CUKEBINS_HOOKREGISTRAR_HPP_
 
-#include <list>
 #include <cukebins/internal/step/StepManager.hpp>
+#include <cukebins/internal/hook/Tag.hpp>
+#include "../Scenario.hpp"
+
+#include <boost/smart_ptr.hpp>
+using boost::shared_ptr;
+
+#include <list>
 
 namespace cukebins {
 namespace internal {
@@ -14,17 +20,23 @@ public:
 
 class Hook {
 public:
-    virtual void invokeHook();
+    void setTags(const std::string &csvTagNotation);
+    virtual void invokeHook(Scenario *scenario);
+    virtual void skipHook();
     virtual void body() = 0;
+protected:
+    bool tagsMatch(Scenario *scenario);
+private:
+    shared_ptr<TagExpression> tagExpression;
 };
 
 class BeforeHook : public Hook {
 };
 
-class AroundStepHook {
+class AroundStepHook : public Hook {
 public:
-    virtual void invokeHook(CallableStep *step);
-    virtual void body() = 0;
+    virtual void invokeHook(Scenario *scenario, CallableStep *step);
+    virtual void skipHook();
 protected:
     CallableStep *step;
 };
@@ -44,20 +56,21 @@ public:
     virtual ~HookRegistrar();
 
     void addBeforeHook(BeforeHook *afterHook);
-    void execBeforeHooks();
+    void execBeforeHooks(Scenario *scenario);
 
     void addAroundStepHook(AroundStepHook *aroundStepHook);
-    InvokeResult execStepChain(StepInfo *stepInfo, command_args_type *args);
+    InvokeResult execStepChain(Scenario *scenario, StepInfo *stepInfo, command_args_type *args);
 
     void addAfterStepHook(AfterStepHook *afterStepHook);
-    void execAfterStepHooks();
+    void execAfterStepHooks(Scenario *scenario);
 
     void addAfterHook(AfterHook *afterHook);
-    void execAfterHooks();
+    void execAfterHooks(Scenario *scenario);
 
 private:
-    void execHooks(HookRegistrar::hook_list_type &hookList);
+    void execHooks(HookRegistrar::hook_list_type &hookList, Scenario *scenario);
 
+protected:
     hook_list_type& beforeHooks();
     aroundhook_list_type& aroundStepHooks();
     hook_list_type& afterStepHooks();
@@ -67,12 +80,13 @@ private:
 
 class StepCallChain {
 public:
-    StepCallChain(StepInfo *stepInfo, command_args_type *stepArgs, HookRegistrar::aroundhook_list_type &aroundHooks);
+    StepCallChain(Scenario *scenario, StepInfo *stepInfo, command_args_type *stepArgs, HookRegistrar::aroundhook_list_type &aroundHooks);
     InvokeResult exec();
     void execNext();
 private:
     void execStep();
 
+    Scenario *scenario;
     StepInfo *stepInfo;
     command_args_type *stepArgs;
 
@@ -91,30 +105,38 @@ private:
 
 
 template<class T>
-static int registerBeforeHook() {
+static int registerBeforeHook(const std::string &csvTagNotation) {
    HookRegistrar reg;
-   reg.addBeforeHook(new T);
+   T *hook = new T;
+   hook->setTags(csvTagNotation);
+   reg.addBeforeHook(hook);
    return 0; // We are not interested in the ID at this time
 }
 
 template<class T>
-static int registerAroundStepHook() {
+static int registerAroundStepHook(const std::string &csvTagNotation) {
    HookRegistrar reg;
-   reg.addAroundStepHook(new T);
+   T *hook = new T;
+   hook->setTags(csvTagNotation);
+   reg.addAroundStepHook(hook);
    return 0;
 }
 
 template<class T>
-static int registerAfterStepHook() {
+static int registerAfterStepHook(const std::string &csvTagNotation) {
    HookRegistrar reg;
-   reg.addAfterStepHook(new T);
+   T *hook = new T;
+   hook->setTags(csvTagNotation);
+   reg.addAfterStepHook(hook);
    return 0;
 }
 
 template<class T>
-static int registerAfterHook() {
+static int registerAfterHook(const std::string &csvTagNotation) {
    HookRegistrar reg;
-   reg.addAfterHook(new T);
+   T *hook = new T;
+   hook->setTags(csvTagNotation);
+   reg.addAfterHook(hook);
    return 0;
 }
 
