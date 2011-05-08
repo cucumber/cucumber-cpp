@@ -58,7 +58,7 @@ public:
 private:
     step_id_type getInvokeId(mValue &jsonArgs);
     command_args_type *getInvokeArgs(mValue &jsonArgs);
-    mValue formatResponse(InvokeResult result);
+    mValue formatResponse(const InvokeResult &result);
 };
 
 class WireProtocol : public NetworkProtocol {
@@ -116,7 +116,6 @@ mValue EndScenarioCommand::run(mValue &jsonArgs) {
 
 mValue StepMatchesCommand::run(mValue &jsonArgs) {
     std::string matcher = getStepMatchesMatcher(jsonArgs);
-    mValue v;
     return formatResponse(commands.stepMatches(matcher));
 }
 
@@ -168,12 +167,14 @@ command_args_type *InvokeCommand::getInvokeArgs(mValue &jsonArgs) {
     return args;
 }
 
-mValue InvokeCommand::formatResponse(InvokeResult result) {
-    if (result.success) {
-        return success_response();
-    } else {
-        return fail_response();
+mValue InvokeCommand::formatResponse(const InvokeResult &result) {
+    mArray a;
+    a.push_back(result.getType());
+    const char *description = result.getDescription();
+    if (description) {
+        a.push_back(description);
     }
+    return mValue(a);
 }
 
 void WireProtocol::processStream(std::iostream &stream) {

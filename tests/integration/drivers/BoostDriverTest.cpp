@@ -13,6 +13,14 @@ THEN(FAIL_MATCHER) {
     BOOST_CHECK(false);
 }
 
+THEN(PENDING_MATCHER_1) {
+    pending();
+}
+
+THEN(PENDING_MATCHER_2) {
+    pending(PENDING_DESCRIPTION);
+}
+
 using namespace cukebins::internal;
 
 class BoostStepDouble : public BoostStep {

@@ -7,27 +7,27 @@ namespace internal {
 
 class BoostTestObserver : public ::boost::unit_test::test_observer {
 public:
-    const bool lastTestSucceded();
+    const InvokeResult getResult();
 
 private:
-    void test_start(boost::unit_test::counter_t amount);
+    void test_start(::boost::unit_test::counter_t amount);
     void assertion_result(bool passed);
 
-    unsigned int failureCount;
+    InvokeResult result;
 };
 
-void BoostTestObserver::test_start(boost::unit_test::counter_t amount) {
-    failureCount = 0;
+void BoostTestObserver::test_start(::boost::unit_test::counter_t amount) {
+    result = InvokeResult::success();
 }
 
 void BoostTestObserver::assertion_result(bool passed) {
     if (!passed) {
-        ++failureCount;
+        result = InvokeResult::failure();
     }
 }
 
-const bool BoostTestObserver::lastTestSucceded() {
-    return (failureCount == 0);
+const InvokeResult BoostTestObserver::getResult() {
+    return result;
 }
 
 BoostTestObserver BoostStep::boostTestObserver;
@@ -41,17 +41,12 @@ bool boost_test_init() {
 }
 
 const InvokeResult BoostStep::invokeStepBody() {
-    InvokeResult result;
-    try {
-        runWithMasterSuite();
-        result.success = boostTestObserver.lastTestSucceded();
-    } catch (...) {
-    }
-    return result;
+    runWithMasterSuite();
+    return boostTestObserver.getResult();
 }
 
 void BoostStep::initBoostTest() {
-    using namespace boost::unit_test;
+    using namespace ::boost::unit_test;
     if (!framework::is_initialized()) {
         int argc = 2;
         char *argv[] = { (char *) "", (char *) "--log_level=nothing" };
@@ -61,7 +56,7 @@ void BoostStep::initBoostTest() {
 }
 
 void BoostStep::runWithMasterSuite() {
-    using namespace boost::unit_test;
+    using namespace ::boost::unit_test;
     initBoostTest();
     test_case *tc = BOOST_TEST_CASE(boost::bind(&BoostStep::body, this));
     framework::master_test_suite().add(tc);

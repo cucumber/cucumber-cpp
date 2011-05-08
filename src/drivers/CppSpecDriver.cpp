@@ -6,13 +6,12 @@ namespace cukebins {
 namespace internal {
 
 const InvokeResult CppSpecStep::invokeStepBody() {
-    InvokeResult result;
     try {
         body();
-        result.success = true;
-    } catch (...) {
+        return InvokeResult::success();
+    } catch (const ::CppSpec::SpecifyFailedException &e) {
+        return InvokeResult::failure();
     }
-    return result;
 }
 
 }

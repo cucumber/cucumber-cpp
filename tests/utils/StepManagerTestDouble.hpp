@@ -10,11 +10,24 @@ class StepInfoNoOp : public StepInfo {
 public:
     StepInfoNoOp(const std::string &stepMatcher) : StepInfo(stepMatcher) {}
     InvokeResult invokeStep(command_args_type *args) {
-		InvokeResult result;
-		result.success = true;
-		return result;
-	}
+        return InvokeResult::success();
+    }
 };
+
+class StepInfoPending : public StepInfo {
+private:
+    const char *description;
+public:
+    StepInfoPending(const std::string &stepMatcher, const char *description) :
+        StepInfo(stepMatcher),
+        description(description) {
+    }
+
+    InvokeResult invokeStep(command_args_type *args) {
+        return InvokeResult::pending(description);
+    }
+};
+
 
 class StepManagerTestDouble : public StepManager {
 public:
@@ -34,6 +47,17 @@ public:
 
     void addStepDefinitionWithId(step_id_type desiredId, const std::string &stepMatcher) {
         StepInfo *stepInfo = new StepInfoNoOp(stepMatcher);
+        stepInfo->id = desiredId;
+        addStep(stepInfo);
+    }
+
+    void addPendingStepDefinitionWithId(step_id_type desiredId, const std::string &stepMatcher) {
+        addPendingStepDefinitionWithId(desiredId, stepMatcher, 0);
+    }
+
+    void addPendingStepDefinitionWithId(step_id_type desiredId,
+            const std::string &stepMatcher, const char *description) {
+        StepInfo *stepInfo = new StepInfoPending(stepMatcher, description);
         stepInfo->id = desiredId;
         addStep(stepInfo);
     }

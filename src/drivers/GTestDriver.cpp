@@ -8,17 +8,17 @@ namespace internal {
 bool GTestStep::initialized(false);
 
 const InvokeResult GTestStep::invokeStepBody() {
-    InvokeResult result;
     if (!initialized) {
         initGTest();
         initFlags();
     }
     try {
         body();
-        result.success = true;
-    } catch (...) {
+        return InvokeResult::success();
+    } catch (const ::std::runtime_error &e) {
+        // ::testing::GoogleTestFailureException inherits from ::std::runtime_error
+        return InvokeResult::failure();
     }
-    return result;
 }
 
 void GTestStep::initGTest() {

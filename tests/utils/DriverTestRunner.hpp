@@ -48,9 +48,13 @@ public:
 };
 
 
-#define SUCCEED_MATCHER "Succeed!"
-#define FAIL_MATCHER    "Fail!"
+#define SUCCEED_MATCHER   "Succeed!"
+#define FAIL_MATCHER      "Fail!"
+#define PENDING_MATCHER_1 "Pending without description"
+#define PENDING_MATCHER_2 "Pending with description"
 
+#define PENDING_DESCRIPTION    "Describe me!"
+#define NO_PENDING_DESCRIPTION (const char *) 0
 
 class DriverTest {
 public:
@@ -71,7 +75,8 @@ protected:
         updateState(!condition);
     }
 
-    void expectEqual(int val1, int val2) {
+    template<typename T>
+    void expectEqual(T val1, T val2) {
         updateState(val1 == val2);
     }
 
@@ -98,10 +103,28 @@ private:
     }
 
     void invokeRunsTests() {
+        InvokeResult result;
+
         cukeCommands.beginScenario(0);
-        expectTrue(cukeCommands.invoke(getStepIdFromMatcher(SUCCEED_MATCHER), no_args.get()).success);
-        expectFalse(cukeCommands.invoke(42, no_args.get()).success);
-        expectFalse(cukeCommands.invoke(getStepIdFromMatcher(FAIL_MATCHER), no_args.get()).success);
+
+        result = cukeCommands.invoke(getStepIdFromMatcher(SUCCEED_MATCHER), no_args.get());
+        expectTrue(result.isSuccess());
+
+        result = cukeCommands.invoke(getStepIdFromMatcher(FAIL_MATCHER), no_args.get());
+        expectFalse(result.isSuccess());
+        expectFalse(result.isPending());
+
+        result = cukeCommands.invoke(getStepIdFromMatcher(PENDING_MATCHER_1), no_args.get());
+        expectTrue(result.isPending());
+        expectEqual(NO_PENDING_DESCRIPTION, result.getDescription());
+
+        result = cukeCommands.invoke(getStepIdFromMatcher(PENDING_MATCHER_2), no_args.get());
+        expectTrue(result.isPending());
+        expectEqual(PENDING_DESCRIPTION, result.getDescription());
+
+        result = cukeCommands.invoke(42, no_args.get());
+        expectFalse(result.isSuccess());
+
         cukeCommands.endScenario();
     }
 

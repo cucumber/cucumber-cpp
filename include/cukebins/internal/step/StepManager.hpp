@@ -45,16 +45,33 @@ private:
     match_results_type resultSet;
 };
 
+namespace {
+    enum InvokeResultType {
+        SUCCESS,
+        FAILURE,
+        PENDING
+    };
+}
 
-/*
- * FIXME
- * It should hold something other than a success
- * result and it should not be a struct
- */
-struct InvokeResult {
-    InvokeResult() : success(false) {}
+class InvokeResult {
+private:
+    InvokeResultType type;
+    const char *description;
 
-    bool success;
+    InvokeResult(const InvokeResultType type, const char *description);
+public:
+    InvokeResult();
+    InvokeResult(const InvokeResult &ir);
+    InvokeResult& operator= (const InvokeResult& rhs);
+
+    static InvokeResult success();
+    static InvokeResult failure();
+    static InvokeResult pending(const char *description);
+
+    bool isSuccess();
+    bool isPending();
+    const char *getType() const;
+    const char *getDescription() const;
 };
 
 
@@ -76,6 +93,9 @@ public:
 protected:
     virtual const InvokeResult invokeStepBody() = 0;
     virtual void body() = 0;
+
+    void pending(const char *description);
+    void pending();
 
     template<class T> T getInvokeArg(command_args_type::size_type i);
     template<class T> T getInvokeArg();

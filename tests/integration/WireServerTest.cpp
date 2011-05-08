@@ -155,6 +155,12 @@ TEST_F(JSONCommandsTest, handlesInvoke) {
     stepManager.addStepDefinitionWithId(101, "match the numbers (\\d+) and (\\d+)");
     EXPECT_EQ(success, processCommand("[\"invoke\",{\"args\":[\"27\",\"72\"],\"id\":\"101\"}]"));
 
+    stepManager.addPendingStepDefinitionWithId(102, "a regular pending step");
+    EXPECT_EQ("[\"pending\"]", processCommand("[\"invoke\",{\"args\":[],\"id\":\"102\"}]"));
+
+    stepManager.addPendingStepDefinitionWithId(103, "a pending step with description", "cuke!");
+    EXPECT_EQ("[\"pending\",\"cuke!\"]", processCommand("[\"invoke\",{\"args\":[],\"id\":\"103\"}]"));
+
     EXPECT_EQ(fail, processCommand("[\"invoke\"]"));
     EXPECT_EQ(fail, processCommand("[\"invoke\",null]"));
     EXPECT_EQ(fail, processCommand("[\"invoke\",{\"id\":\"42\"}]"));

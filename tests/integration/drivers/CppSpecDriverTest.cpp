@@ -13,6 +13,14 @@ THEN(FAIL_MATCHER) {
     specify(true, should.equal(false));
 }
 
+THEN(PENDING_MATCHER_1) {
+    pending();
+}
+
+THEN(PENDING_MATCHER_2) {
+    pending(PENDING_DESCRIPTION);
+}
+
 using namespace cukebins::internal;
 
 int main(int argc, char **argv) {

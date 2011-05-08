@@ -9,6 +9,7 @@ using namespace std;
 using namespace boost::assign;
 using namespace cukebins::internal;
 
+
 class StepManagerTest : public ::testing::Test {
 public:
     StepManagerTestDouble stepManager;
@@ -134,4 +135,3 @@ TEST_F(StepManagerTest, matchesStepsWithNonAsciiMatchers) {
     EXPECT_FALSE(matchesAtLeastOnce("огурец"));
     EXPECT_FALSE(matchesAtLeastOnce("黄瓜"));
 }
-

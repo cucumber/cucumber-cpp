@@ -6,24 +6,16 @@ using namespace cukebins::internal;
 
 class FakeStepInfo : public StepInfo {
 public:
-    FakeStepInfo(
-        std::stringstream *markersPtr
-    ) :
+    FakeStepInfo(std::stringstream *markersPtr, const InvokeResult &result) :
         StepInfo("FAKE"),
         markersPtr(markersPtr),
-        shouldSucceed(false) {
+        result(result) {
     }
 
     InvokeResult invokeStep(command_args_type *args) {
         latestArgsPtr = args;
-        InvokeResult res;
-        res.success = shouldSucceed;
         (*markersPtr) << "S";
-        return res;
-    }
-
-    void setShouldSucceed(bool shouldSucceed) {
-        this->shouldSucceed = shouldSucceed;
+        return result;
     }
 
     command_args_type *getLatestArgsPassed() {
@@ -33,7 +25,7 @@ public:
 private:
     command_args_type *latestArgsPtr;
     std::stringstream *markersPtr;
-    bool shouldSucceed;
+    const InvokeResult result;
 };
 
 class MarkingAroundStepHook : public AroundStepHook {
@@ -77,28 +69,25 @@ protected:
     HookRegistrar::aroundhook_list_type aroundHooks;
     std::stringstream markers;
 
-    InvokeResult execStep(bool succeedingStep) {
-        FakeStepInfo step(&markers);
+    InvokeResult execStep(const InvokeResult &result) {
+        FakeStepInfo step(&markers, result);
         command_args_type args;
         StepCallChain scc(0, &step, &args, aroundHooks);
-        step.setShouldSucceed(succeedingStep);
         return scc.exec();
     }
 
     void execStepAndCheckSuccess() {
         InvokeResult result;
-
-        result = execStep(true);
-        EXPECT_TRUE(result.success);
-        result = execStep(false);
-        EXPECT_FALSE(result.success);
+        result = execStep(InvokeResult::success());
+        EXPECT_TRUE(result.isSuccess());
+        result = execStep(InvokeResult::failure());
+        EXPECT_FALSE(result.isSuccess());
     }
 };
 
 TEST_F(StepCallChainTest, failsIfNoStep) {
     StepCallChain scc(0, 0, 0, aroundHooks);
-    InvokeResult res = scc.exec();
-    EXPECT_FALSE(res.success);
+    EXPECT_FALSE(scc.exec().isSuccess());
     EXPECT_EQ("", markers.str());
 }
 
@@ -126,14 +115,13 @@ TEST_F(StepCallChainTest, aroundHooksAreInvokedInTheCorrectOrder) {
     aroundHooks.push_back(&hook2);
     aroundHooks.push_back(&hook3);
 
-    InvokeResult result = execStep(true);
+    execStep(InvokeResult::success());
 
-    EXPECT_TRUE(result.success);
     EXPECT_EQ("B1B2B3SA3A2A1", markers.str());
 }
 
 TEST_F(StepCallChainTest, argsArePassedToTheStep) {
-    FakeStepInfo step(&markers);
+    FakeStepInfo step(&markers, InvokeResult::success());
     command_args_type args;
     StepCallChain scc(0, &step, &args, aroundHooks);
 
@@ -151,8 +139,7 @@ TEST_F(StepCallChainTest, aroundHooksCanStopTheCallChain) {
     aroundHooks.push_back(&hook2);
     aroundHooks.push_back(&hook3);
 
-    InvokeResult result = execStep(true);
+    execStep(InvokeResult::success());
 
-    EXPECT_FALSE(result.success);
     EXPECT_EQ("B1B2A2A1", markers.str());
 }
