@@ -7,22 +7,6 @@ namespace cukebins {
 namespace internal {
 
 
-// declared here because it should not be used outside
-class PendingStep {
-    const char *description;
-
-public:
-    PendingStep(const char *description) :
-        description(description) {
-    }
-
-    const char *getDescription() {
-        return description;
-    }
-};
-
-
-
 StepInfo::StepInfo(const std::string &stepMatcher) :
     regex(stepMatcher) {
     static step_id_type currentId = 0;
@@ -167,13 +151,16 @@ StepManager::steps_type& StepManager::steps() {
 
 
 InvokeResult BasicStep::invoke(command_args_type *args) {
+    currentResult = InvokeResult::success();
     invokeArgsPtr = args;
     currentArgIndex = 0;
     try {
-        return invokeStepBody();
-    } catch (PendingStep &e) {
-        const char * d = e.getDescription();
-        return InvokeResult::pending(d);
+        InvokeResult returnedResult = invokeStepBody();
+        if (currentResult.isPending()) {
+            return currentResult;
+        } else {
+            return returnedResult;
+        }
     } catch (...) {
         return InvokeResult::failure();
     }
@@ -184,7 +171,7 @@ void BasicStep::pending() {
 }
 
 void BasicStep::pending(const char *description) {
-    throw PendingStep(description);
+    currentResult = InvokeResult::pending(description);
 }
 
 

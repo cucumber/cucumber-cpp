@@ -101,6 +101,9 @@ protected:
     template<class T> T getInvokeArg();
 
 private:
+    // FIXME: awful hack because of Boost
+    InvokeResult currentResult;
+
     command_args_type *invokeArgsPtr;
     command_args_type::size_type currentArgIndex; // TODO init to 0
 };
