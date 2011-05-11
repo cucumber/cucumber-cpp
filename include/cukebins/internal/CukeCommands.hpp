@@ -21,7 +21,7 @@ class CukeCommands {
 public:
     void beginScenario(const TagExpression::tag_list *tags);
     void endScenario();
-    //virtual void snippetText() = 0;
+    const std::string snippetText(const std::string stepKeyword, const std::string stepName) const;
     MatchResult stepMatches(const std::string description);
     InvokeResult invoke(step_id_type id, command_args_type *args);
 

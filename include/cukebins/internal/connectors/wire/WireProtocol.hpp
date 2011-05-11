@@ -44,6 +44,13 @@ public:
     mValue run(mValue &jsonArgs);
 };
 
+class SnippetTextCommand : public JSONCommand {
+public:
+    mValue run(mValue &jsonArgs);
+private:
+    mValue formatResponse(const std::string snippetText);
+};
+
 class StepMatchesCommand : public JSONCommand {
 public:
     mValue run(mValue &jsonArgs);
@@ -72,12 +79,12 @@ private:
     static std::map<std::string, boost::shared_ptr<JSONCommand> > jsonCommands;
 };
 
-
 std::map<std::string, boost::shared_ptr<JSONCommand> > WireProtocol::jsonCommands = boost::assign::map_list_of
     ("begin_scenario", shared_ptr<JSONCommand> (new BeginScenarioCommand))
     ("end_scenario", shared_ptr<JSONCommand> (new EndScenarioCommand))
     ("step_matches", shared_ptr<JSONCommand> (new StepMatchesCommand))
-    ("invoke",shared_ptr<JSONCommand> (new InvokeCommand));
+    ("invoke",shared_ptr<JSONCommand> (new InvokeCommand))
+    ("snippet_text",shared_ptr<JSONCommand> (new SnippetTextCommand));
 
 
 mValue JSONCommand::success_response() {
@@ -147,6 +154,21 @@ mValue StepMatchesCommand::formatResponse(MatchResult matchResult) {
     response.get_array().push_back(matches);
     return response;
 }
+
+
+mValue SnippetTextCommand::run(mValue &jsonArgs) {
+    mObject args = jsonArgs.get_obj();
+    const std::string stepKeyword(args["step_keyword"].get_str());
+    const std::string stepName(args["step_name"].get_str());
+    return formatResponse(commands.snippetText(stepKeyword, stepName));
+}
+
+mValue SnippetTextCommand::formatResponse(const std::string snippetText) {
+    mValue response = success_response();
+    response.get_array().push_back(snippetText);
+    return response;
+}
+
 
 mValue InvokeCommand::run(mValue &jsonArgs) {
     step_id_type id = getInvokeId(jsonArgs);

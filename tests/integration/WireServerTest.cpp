@@ -97,7 +97,7 @@ protected:
         string output;
         stream << input << endl;
         wireProtocol.processOneRequest(stream);
-        stream >> output;
+        std::getline(stream, output);
         return output;
     }
     void TearDown() {
@@ -167,9 +167,12 @@ TEST_F(JSONCommandsTest, handlesInvoke) {
     EXPECT_EQ(fail, processCommand("[\"invoke\",{\"id\":\"not_a_number\"}]"));
 }
 
-TEST_F(JSONCommandsTest, doesNotHandleSnippetText) {
-    EXPECT_EQ(fail, processCommand("[\"snippet_text\",{\"step_keyword\":\"Given\",\"multiline_arg_class\":\"\",\"step_name\":\"name\"}]"));
-
-    EXPECT_EQ(fail, processCommand("[\"snippet_text\"]"));
-    EXPECT_EQ(fail, processCommand("[\"snippet_text\",null]"));
+TEST_F(JSONCommandsTest, handlesSnippetText) {
+    EXPECT_EQ("[\"success\",\"GIVEN(\\\"^name$\\\") {\\n    pending();\\n}\\n\"]",
+        processCommand("[\"snippet_text\",{\"step_keyword\":\"Given\",\"multiline_arg_class\":\"\",\"step_name\":\"name\"}]"));
+    EXPECT_EQ("[\"success\",\"WHEN(\\\"^a name with spaces$\\\") {\\n    pending();\\n}\\n\"]",
+        processCommand("[\"snippet_text\",{\"step_keyword\":\"When\",\"multiline_arg_class\":\"\",\"step_name\":\"a name with spaces\"}]"));
+    // TODO Perhaps we should add the code to handle table paramters if passed
+    EXPECT_EQ("[\"success\",\"THEN(\\\"^multiline$\\\") {\\n    pending();\\n}\\n\"]",
+        processCommand("[\"snippet_text\",{\"step_keyword\":\"Then\",\"multiline_arg_class\":\"Cucumber::Ast::Table\",\"step_name\":\"multiline\"}]"));
 }

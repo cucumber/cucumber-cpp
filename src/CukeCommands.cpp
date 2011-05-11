@@ -1,5 +1,8 @@
 #include "cukebins/internal/CukeCommands.hpp"
 
+#include <sstream>
+#include <boost/algorithm/string.hpp>
+
 namespace cukebins {
 namespace internal {
 
@@ -14,6 +17,14 @@ void CukeCommands::endScenario() {
     contextManager.purgeContexts();
     hookRegistrar.execAfterHooks(currentScenario.get());
     currentScenario.reset();
+}
+
+const std::string CukeCommands::snippetText(const std::string stepKeyword, const std::string stepName) const {
+    std::stringstream snippetText; // TODO Escape stepName
+    snippetText << boost::to_upper_copy(stepKeyword) << "(\"^" << stepName << "$\") {" << std::endl;
+    snippetText << "    pending();" << std::endl;
+    snippetText << "}" << std::endl;
+    return snippetText.str();
 }
 
 MatchResult CukeCommands::stepMatches(const std::string description) {
