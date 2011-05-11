@@ -31,7 +31,7 @@ protected:
 
     template<class T>
     void addStepToManager(const std::string &matcher) {
-        stepInfoPtr = shared_ptr<StepInfo>(new StepInvoker<T>(matcher));
+        stepInfoPtr = shared_ptr<StepInfo>(new StepInvoker<T>(matcher, ""));
         stepManager.addStep(stepInfoPtr.get());
     }
 

@@ -29,7 +29,7 @@ protected:
         if (resultSet.size() != 1) {
             return 0;
         } else {
-            return resultSet.begin()->id;
+            return resultSet.begin()->stepInfo->id;
         }
     }
 

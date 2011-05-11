@@ -131,7 +131,8 @@ mValue StepMatchesCommand::formatResponse(MatchResult matchResult) {
     MatchResult::match_results_type resultSet = matchResult.getResultSet();
     for (MatchResult::match_results_type::iterator i = resultSet.begin(); i != resultSet.end(); ++i) {
         mObject match;
-        match.insert(make_pair("id", mValue(toString(i->id))));
+        const StepInfo *stepInfo = i->stepInfo;
+        match.insert(make_pair("id", mValue(toString(stepInfo->id))));
         mArray matchArgs;
         for (SingleStepMatch::submatches_type::iterator j = i->submatches.begin(); j != i->submatches.end(); ++j) {
             mObject arg;
@@ -140,6 +141,7 @@ mValue StepMatchesCommand::formatResponse(MatchResult matchResult) {
             matchArgs.push_back(arg);
         }
         match.insert(make_pair("args", mValue(matchArgs)));
+        match.insert(make_pair("source", mValue(stepInfo->source)));
         matches.push_back(match);
     }
     response.get_array().push_back(matches);

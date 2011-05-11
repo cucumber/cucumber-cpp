@@ -7,8 +7,9 @@ namespace cukebins {
 namespace internal {
 
 
-StepInfo::StepInfo(const std::string &stepMatcher) :
-    regex(stepMatcher) {
+StepInfo::StepInfo(const std::string &stepMatcher, const std::string source) :
+    regex(stepMatcher),
+    source(source) {
     static step_id_type currentId = 0;
     id = ++currentId;
 }
@@ -17,29 +18,29 @@ SingleStepMatch StepInfo::matches(const std::string &stepDescription) {
     SingleStepMatch stepMatch;
     shared_ptr<RegexMatch> regexMatch(regex.find(stepDescription));
     if (regexMatch->matches()) {
-        stepMatch.id = id;
+        stepMatch.stepInfo = this;
         stepMatch.submatches = regexMatch->getSubmatches();
     }
     return stepMatch;
 }
 
 SingleStepMatch::SingleStepMatch() :
-    id(0) {
+    stepInfo(0) {
 }
 
 SingleStepMatch::SingleStepMatch(const SingleStepMatch &match) :
-    id(match.id),
+    stepInfo(match.stepInfo),
     submatches(match.submatches) {
 }
 
 SingleStepMatch & SingleStepMatch::operator =(const SingleStepMatch &match) {
-    id = match.id;
+    stepInfo = match.stepInfo;
     submatches = match.submatches;
     return *this;
 }
 
 SingleStepMatch::operator void *() {
-    return (void *) id;
+    return (void *) stepInfo;
 }
 
 MatchResult::operator void *() {

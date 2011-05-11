@@ -7,7 +7,7 @@ using namespace cukebins::internal;
 class FakeStepInfo : public StepInfo {
 public:
     FakeStepInfo(std::stringstream *markersPtr, const InvokeResult &result) :
-        StepInfo("FAKE"),
+        StepInfo("FAKE", ""),
         markersPtr(markersPtr),
         result(result) {
     }

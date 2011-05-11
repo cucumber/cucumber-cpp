@@ -19,8 +19,10 @@ CUKE_OBJECT_(                                         \
 )                                                     \
 /**/
 
-#define CUKE_STEP_REGISTRATION_(step_name, step_matcher)      \
-::cukebins::internal::registerStep< step_name >(step_matcher) \
+#define CUKE_STEP_REGISTRATION_(step_name, step_matcher) \
+::cukebins::internal::registerStep< step_name >(         \
+    step_matcher, __FILE__, __LINE__                     \
+)                                                        \
 /**/
 
 // ************************************************************************** //

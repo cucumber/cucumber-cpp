@@ -141,8 +141,8 @@ TEST_F(JSONCommandsTest, handlesEndScenario) {
 }
 
 TEST_F(JSONCommandsTest, handlesStepMatches) {
-    stepManager.addStepDefinitionWithId(100, "match the number (\\d+)");
-    EXPECT_EQ("[\"success\",[{\"args\":[{\"pos\":17,\"val\":\"1\"}],\"id\":\"100\"}]]", processCommand("[\"step_matches\",{\"name_to_match\":\"match the number 1\"}]"));
+    stepManager.addStepDefinitionWithId(100, "match the number (\\d+)", "Filename.cpp:22");
+    EXPECT_EQ("[\"success\",[{\"args\":[{\"pos\":17,\"val\":\"1\"}],\"id\":\"100\",\"source\":\"Filename.cpp:22\"}]]", processCommand("[\"step_matches\",{\"name_to_match\":\"match the number 1\"}]"));
     EXPECT_EQ("[\"success\",[]]", processCommand("[\"step_matches\",{\"name_to_match\":\"match the number one\"}]"));
 
     EXPECT_EQ(fail, processCommand("[\"step_matches\"]"));
@@ -152,14 +152,14 @@ TEST_F(JSONCommandsTest, handlesStepMatches) {
 }
 
 TEST_F(JSONCommandsTest, handlesInvoke) {
-    stepManager.addStepDefinitionWithId(101, "match the numbers (\\d+) and (\\d+)");
-    EXPECT_EQ(success, processCommand("[\"invoke\",{\"args\":[\"27\",\"72\"],\"id\":\"101\"}]"));
+    stepManager.addStepDefinitionWithId(110, "match the numbers (\\d+) and (\\d+)");
+    EXPECT_EQ(success, processCommand("[\"invoke\",{\"args\":[\"27\",\"72\"],\"id\":\"110\"}]"));
 
-    stepManager.addPendingStepDefinitionWithId(102, "a regular pending step");
-    EXPECT_EQ("[\"pending\"]", processCommand("[\"invoke\",{\"args\":[],\"id\":\"102\"}]"));
+    stepManager.addPendingStepDefinitionWithId(111, "a regular pending step");
+    EXPECT_EQ("[\"pending\"]", processCommand("[\"invoke\",{\"args\":[],\"id\":\"111\"}]"));
 
-    stepManager.addPendingStepDefinitionWithId(103, "a pending step with description", "cuke!");
-    EXPECT_EQ("[\"pending\",\"cuke!\"]", processCommand("[\"invoke\",{\"args\":[],\"id\":\"103\"}]"));
+    stepManager.addPendingStepDefinitionWithId(112, "a pending step with description", "cuke!");
+    EXPECT_EQ("[\"pending\",\"cuke!\"]", processCommand("[\"invoke\",{\"args\":[],\"id\":\"112\"}]"));
 
     EXPECT_EQ(fail, processCommand("[\"invoke\"]"));
     EXPECT_EQ(fail, processCommand("[\"invoke\",null]"));

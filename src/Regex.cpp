@@ -15,7 +15,7 @@ const RegexMatch::submatches_type & RegexMatch::getSubmatches() {
     return submatches;
 }
 
-std::string Regex::str() {
+std::string Regex::str() const {
     return regexImpl.str();
 }
 

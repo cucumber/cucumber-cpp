@@ -84,7 +84,7 @@ public:
 TEST_F(CukeCommandsTest, matchesCorrectly) {
     addStepWithMatcher(STATIC_MATCHER);
     MatchResult result = cukeCommands.stepMatches(STATIC_MATCHER);
-    EXPECT_EQ(stepInfoPtr->id, result.getResultSet().at(0).id);
+    EXPECT_EQ(stepInfoPtr->id, result.getResultSet().at(0).stepInfo->id);
 }
 
 TEST_F(CukeCommandsTest, invokeHandlesParametersWithoutMacro) {

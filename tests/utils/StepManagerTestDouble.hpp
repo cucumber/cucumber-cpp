@@ -8,7 +8,7 @@ namespace internal {
 
 class StepInfoNoOp : public StepInfo {
 public:
-    StepInfoNoOp(const std::string &stepMatcher) : StepInfo(stepMatcher) {}
+    StepInfoNoOp(const std::string &stepMatcher, const std::string source) : StepInfo(stepMatcher, source) {}
     InvokeResult invokeStep(command_args_type *args) {
         return InvokeResult::success();
     }
@@ -19,7 +19,7 @@ private:
     const char *description;
 public:
     StepInfoPending(const std::string &stepMatcher, const char *description) :
-        StepInfo(stepMatcher),
+        StepInfo(stepMatcher, ""),
         description(description) {
     }
 
@@ -40,13 +40,18 @@ public:
     }
 
     step_id_type addStepDefinition(const std::string &stepMatcher) {
-        StepInfo *stepInfo = new StepInfoNoOp(stepMatcher);
+        StepInfo *stepInfo = new StepInfoNoOp(stepMatcher, "");
         addStep(stepInfo);
         return stepInfo->id;
     }
 
     void addStepDefinitionWithId(step_id_type desiredId, const std::string &stepMatcher) {
-        StepInfo *stepInfo = new StepInfoNoOp(stepMatcher);
+        addStepDefinitionWithId(desiredId, stepMatcher, "");
+    }
+
+    void addStepDefinitionWithId(step_id_type desiredId, const std::string &stepMatcher,
+            const std::string source) {
+        StepInfo *stepInfo = new StepInfoNoOp(stepMatcher, source);
         stepInfo->id = desiredId;
         addStep(stepInfo);
     }

@@ -49,7 +49,7 @@ public:
     RegexMatch *find(const std::string &expression);
     RegexMatch *findAll(const std::string &expression);
 
-    std::string str();
+    std::string str() const;
 };
 
 }

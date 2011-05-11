@@ -17,6 +17,9 @@ typedef unsigned int step_id_type;
 typedef std::vector<std::string> command_args_type; // TODO Rename
 
 
+class StepInfo;
+
+
 class SingleStepMatch {
 public:
     typedef RegexMatch::submatches_type submatches_type;
@@ -27,9 +30,10 @@ public:
     SingleStepMatch & operator =(const SingleStepMatch &match);
     operator void *();
 
-    step_id_type id;
+    const StepInfo *stepInfo;
     submatches_type submatches;
 };
+
 
 class MatchResult {
 public:
@@ -44,6 +48,7 @@ public:
 private:
     match_results_type resultSet;
 };
+
 
 namespace {
     enum InvokeResultType {
@@ -77,12 +82,13 @@ public:
 
 class StepInfo {
 public:
-    StepInfo(const std::string &stepMatcher);
+    StepInfo(const std::string &stepMatcher, const std::string source);
     SingleStepMatch matches(const std::string &stepDescription);
     virtual InvokeResult invokeStep(command_args_type *args) = 0;
 
     step_id_type id;
     Regex regex;
+    const std::string source;
 };
 
 
@@ -112,7 +118,7 @@ private:
 template<class T>
 class StepInvoker : public StepInfo {
 public:
-    StepInvoker(const std::string &stepMatcher);
+    StepInvoker(const std::string &stepMatcher, const std::string source);
 
     InvokeResult invokeStep(command_args_type *args);
 };
@@ -133,10 +139,24 @@ protected:
 };
 
 
+static std::string toSourceString(const char *filePath, const int line) {
+    using namespace std;
+    stringstream s;
+    string file(filePath);
+    string::size_type pos = file.find_last_of("/\\");
+    if (pos == string::npos) {
+        s << file;
+    } else {
+       s << file.substr(++pos);
+    }
+    s << ":" << line;
+    return s.str();
+}
+
 template<class T>
-static int registerStep(const std::string &stepMatcher) {
+static int registerStep(const std::string &stepMatcher, const char *file, const int line) {
    StepManager s;
-   StepInfo *stepInfo = new StepInvoker<T>(stepMatcher);
+   StepInfo *stepInfo = new StepInvoker<T>(stepMatcher, toSourceString(file, line));
    s.addStep(stepInfo);
    return stepInfo->id;
 }
@@ -179,8 +199,8 @@ T BasicStep::getInvokeArg() {
 
 
 template<class T>
-StepInvoker<T>::StepInvoker(const std::string &stepMatcher) :
-    StepInfo(stepMatcher) {
+StepInvoker<T>::StepInvoker(const std::string &stepMatcher, const std::string source) :
+    StepInfo(stepMatcher, source) {
 }
 
 template<class T>

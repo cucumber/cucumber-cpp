@@ -11,14 +11,15 @@ using namespace cukebins::internal;
 class ManualStep : public FakeStep {
 public:
     void body() {};
-private:
+//private:
     static const int cukeRegId;
 };
-const int ManualStep::cukeRegId = ::cukebins::internal::registerStep<ManualStep>(MANUAL_STEP_MATCHER);
+const int ManualStep::cukeRegId = ::cukebins::internal::registerStep<ManualStep>(MANUAL_STEP_MATCHER, "C:\\Path\\With/Barward/And\\Forward/Slashes.cpp", 42);
 
 TEST(StepRegistrationTest, manualRegistration) {
     StepManager stepManager;
     EXPECT_TRUE(stepManager.stepMatches(MANUAL_STEP_MATCHER));
+    EXPECT_EQ("Slashes.cpp:42", stepManager.getStep(ManualStep::cukeRegId)->source);
 }
 
 #define GIVEN_MATCHER "given matcher"
