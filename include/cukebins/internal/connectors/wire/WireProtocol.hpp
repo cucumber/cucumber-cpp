@@ -64,7 +64,8 @@ public:
     mValue run(mValue &jsonArgs);
 private:
     step_id_type getInvokeId(mValue &jsonArgs);
-    command_args_type *getInvokeArgs(mValue &jsonArgs);
+    const InvokeArgs *getInvokeArgs(mValue &jsonArgs);
+    void fillTableArg(Table & tableArg, const mArray &tableArray);
     mValue formatResponse(const InvokeResult &result);
 };
 
@@ -172,8 +173,8 @@ mValue SnippetTextCommand::formatResponse(const std::string snippetText) {
 
 mValue InvokeCommand::run(mValue &jsonArgs) {
     step_id_type id = getInvokeId(jsonArgs);
-    shared_ptr<command_args_type> args(getInvokeArgs(jsonArgs));
-    return formatResponse(commands.invoke(id, args.get()));
+    shared_ptr<const InvokeArgs> spArgs(getInvokeArgs(jsonArgs));
+    return formatResponse(commands.invoke(id, spArgs.get()));
 }
 
 step_id_type InvokeCommand::getInvokeId(mValue &jsonArgs) {
@@ -181,14 +182,35 @@ step_id_type InvokeCommand::getInvokeId(mValue &jsonArgs) {
     return fromString<step_id_type> (idString);
 }
 
-command_args_type *InvokeCommand::getInvokeArgs(mValue &jsonArgs) {
-    command_args_type *args = new command_args_type;
-    mArray &argsArray = jsonArgs.get_obj()["args"].get_array();
+const InvokeArgs *InvokeCommand::getInvokeArgs(mValue &jsonArgs) {
+    InvokeArgs *args = new InvokeArgs;
+    const mArray &argsArray = jsonArgs.get_obj()["args"].get_array();
     for (mArray::const_iterator i = argsArray.begin(); i != argsArray.end(); ++i) {
-        std::string arg = i->get_str();
-        args->push_back(arg);
+        try {
+            const std::string arg = i->get_str();
+            args->addArg(arg);
+        } catch (...) {
+            fillTableArg(args->getVariableTableArg(), i->get_array());
+        }
     }
     return args;
+}
+
+void InvokeCommand::fillTableArg(Table & tableArg, const mArray &tableArray) {
+    for (mArray::const_iterator i = tableArray.begin(); i != tableArray.end(); ++i) {
+        const mArray rowArray = i->get_array();
+        if (i == tableArray.begin()) { // the first row are the columns
+            for (mArray::const_iterator j = rowArray.begin(); j != rowArray.end(); ++j) {
+                tableArg.addColumn(j->get_str());
+            }
+        } else {
+            Table::row_type row;
+            for (mArray::const_iterator j = rowArray.begin(); j != rowArray.end(); ++j) {
+                row.push_back(j->get_str());
+            }
+            tableArg.addRow(row);
+        }
+    }
 }
 
 mValue InvokeCommand::formatResponse(const InvokeResult &result) {

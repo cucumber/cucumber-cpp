@@ -23,13 +23,13 @@ protected:
     static const string arg_3_string_with_spaces;
 
 public:
-    static shared_ptr<command_args_type> buildInvokeArgs() {
-        shared_ptr<command_args_type> mixed_args(new command_args_type);
-        mixed_args->push_back(toString(arg_0_int));
-        mixed_args->push_back(toString(arg_1_double));
-        mixed_args->push_back(toString(arg_2_string));
-        mixed_args->push_back(toString(arg_3_string_with_spaces));
-        return mixed_args;
+    static InvokeArgs *buildInvokeArgs() {
+        InvokeArgs *mixedArgs = new InvokeArgs;
+        mixedArgs->addArg(toString(arg_0_int));
+        mixedArgs->addArg(toString(arg_1_double));
+        mixedArgs->addArg(toString(arg_2_string));
+        mixedArgs->addArg(toString(arg_3_string_with_spaces));
+        return mixedArgs;
     }
 };
 
@@ -46,21 +46,21 @@ private:
 
 public:
     void body() {
-        EXPECT_EQ(arg_0_int, getInvokeArg<int>(0));
-        EXPECT_EQ((double)arg_0_int, getInvokeArg<double>(0));
-        EXPECT_NO_THROW(getInvokeArg<string>(0));
+        EXPECT_EQ(arg_0_int, getArgs()->getInvokeArg<int>(0));
+        EXPECT_EQ((double)arg_0_int, getArgs()->getInvokeArg<double>(0));
+        EXPECT_NO_THROW(getArgs()->getInvokeArg<string>(0));
 
-        EXPECT_EQ((int)arg_1_double, getInvokeArg<int>(1));
-        EXPECT_EQ(arg_1_double, getInvokeArg<double>(1));
-        EXPECT_NO_THROW(getInvokeArg<string>(1));
+        EXPECT_EQ((int)arg_1_double, getArgs()->getInvokeArg<int>(1));
+        EXPECT_EQ(arg_1_double, getArgs()->getInvokeArg<double>(1));
+        EXPECT_NO_THROW(getArgs()->getInvokeArg<string>(1));
 
-        EXPECT_THROW(getInvokeArg<int>(2), std::invalid_argument);
-        EXPECT_THROW(getInvokeArg<double>(2), std::invalid_argument);
-        EXPECT_EQ(arg_2_string, getInvokeArg<string>(2));
+        EXPECT_THROW(getArgs()->getInvokeArg<int>(2), std::invalid_argument);
+        EXPECT_THROW(getArgs()->getInvokeArg<double>(2), std::invalid_argument);
+        EXPECT_EQ(arg_2_string, getArgs()->getInvokeArg<string>(2));
 
-        EXPECT_THROW(getInvokeArg<int>(3), std::invalid_argument);
-        EXPECT_THROW(getInvokeArg<double>(3), std::invalid_argument);
-        EXPECT_EQ(arg_3_string_with_spaces, getInvokeArg<string>(3));
+        EXPECT_THROW(getArgs()->getInvokeArg<int>(3), std::invalid_argument);
+        EXPECT_THROW(getArgs()->getInvokeArg<double>(3), std::invalid_argument);
+        EXPECT_EQ(arg_3_string_with_spaces, getArgs()->getInvokeArg<string>(3));
     }
 };
 

@@ -51,6 +51,8 @@ public:
     }
 };
 
+static const InvokeArgs NO_INVOKE_ARGS;
+
 class HookRegistrationTest : public CukeCommandsFixture {
 protected:
     HookRegistrarDouble hookRegistrar;
@@ -98,8 +100,7 @@ protected:
     }
 
     void invokeStep() {
-        shared_ptr<command_args_type> no_args;
-        cukeCommands.invoke(stepInfoPtr->id, no_args.get());
+        cukeCommands.invoke(stepInfoPtr->id, &NO_INVOKE_ARGS);
     }
 
     void endScenario() {

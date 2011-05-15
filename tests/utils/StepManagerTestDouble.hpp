@@ -6,10 +6,11 @@
 namespace cukebins {
 namespace internal {
 
+
 class StepInfoNoOp : public StepInfo {
 public:
     StepInfoNoOp(const std::string &stepMatcher, const std::string source) : StepInfo(stepMatcher, source) {}
-    InvokeResult invokeStep(command_args_type *args) {
+    InvokeResult invokeStep(const InvokeArgs *pArgs) {
         return InvokeResult::success();
     }
 };
@@ -23,8 +24,28 @@ public:
         description(description) {
     }
 
-    InvokeResult invokeStep(command_args_type *args) {
+    InvokeResult invokeStep(const InvokeArgs *pArgs) {
         return InvokeResult::pending(description);
+    }
+};
+
+/*
+ * FIXME This should be a mock testing it receives a table argument
+ */
+class StepInfoWithTableArg : public StepInfo {
+    const unsigned short expectedSize;
+public:
+    StepInfoWithTableArg(const std::string &stepMatcher, const unsigned short expectedSize) :
+        StepInfo(stepMatcher, ""),
+        expectedSize(expectedSize) {
+    }
+
+    InvokeResult invokeStep(const InvokeArgs *pArgs) {
+        if (pArgs->getTableArg().hashes().size() == expectedSize) {
+            return InvokeResult::success();
+        } else {
+            return InvokeResult::failure();
+        }
     }
 };
 
@@ -63,6 +84,12 @@ public:
     void addPendingStepDefinitionWithId(step_id_type desiredId,
             const std::string &stepMatcher, const char *description) {
         StepInfo *stepInfo = new StepInfoPending(stepMatcher, description);
+        stepInfo->id = desiredId;
+        addStep(stepInfo);
+    }
+
+    void addTableStepDefinitionWithId(step_id_type desiredId, const std::string &stepMatcher, const unsigned short expectedSize) {
+        StepInfo *stepInfo = new StepInfoWithTableArg(stepMatcher, expectedSize);
         stepInfo->id = desiredId;
         addStep(stepInfo);
     }

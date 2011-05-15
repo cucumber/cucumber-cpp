@@ -37,7 +37,9 @@ CUKE_OBJECT_(                                         \
 // **************                 REGEX_PARAM                  ************** //
 // ************************************************************************** //
 
-#define REGEX_PARAM(type, name) type name(getInvokeArg<type>())
+#define REGEX_PARAM(type, name) const type name(getInvokeArg<type>())
+#define TABLE_PARAM(name) const ::cukebins::internal::Table & name = \
+    getArgs()->getTableArg()
 
 // ************************************************************************** //
 // **************                USING_CONTEXT                 ************** //

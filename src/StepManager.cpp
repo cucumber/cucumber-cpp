@@ -1,8 +1,5 @@
 #include "cukebins/internal/step/StepManager.hpp"
 
-#include <boost/shared_ptr.hpp>
-using boost::shared_ptr;
-
 namespace cukebins {
 namespace internal {
 
@@ -57,6 +54,19 @@ const MatchResult::match_results_type MatchResult::getResultSet() {
 
 void MatchResult::addMatch(SingleStepMatch match) {
     resultSet.push_back(match);
+}
+
+
+void InvokeArgs::addArg(const std::string arg) {
+    args.push_back(arg);
+}
+
+const Table & InvokeArgs::getTableArg() const {
+    return tableArg;
+}
+
+Table & InvokeArgs::getVariableTableArg() {
+    return tableArg;
 }
 
 
@@ -151,10 +161,10 @@ StepManager::steps_type& StepManager::steps() {
 }
 
 
-InvokeResult BasicStep::invoke(command_args_type *args) {
-    currentResult = InvokeResult::success();
-    invokeArgsPtr = args;
+InvokeResult BasicStep::invoke(const InvokeArgs *pArgs) {
+    this->pArgs = pArgs;
     currentArgIndex = 0;
+    currentResult = InvokeResult::success();
     try {
         InvokeResult returnedResult = invokeStepBody();
         if (currentResult.isPending()) {
@@ -175,6 +185,9 @@ void BasicStep::pending(const char *description) {
     currentResult = InvokeResult::pending(description);
 }
 
+const InvokeArgs *BasicStep::getArgs() {
+    return pArgs;
+}
 
 }
 }

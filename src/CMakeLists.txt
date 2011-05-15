@@ -5,6 +5,7 @@ set(CUKEBINS_SOURCES
     HookRegistrar.cpp
     Regex.cpp
     Scenario.cpp
+    Table.cpp
     Tag.cpp
 )
 

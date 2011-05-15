@@ -47,6 +47,7 @@ public:
     }
 };
 
+static const InvokeArgs NO_INVOKE_ARGS;
 
 #define SUCCEED_MATCHER   "Succeed!"
 #define FAIL_MATCHER      "Fail!"
@@ -90,7 +91,6 @@ private:
     StepManagerTestDouble stepManager;
     ContextListener listener;
 
-    shared_ptr<command_args_type> no_args;
     int failedTests;
 
     void updateState(bool testSuccessState) {
@@ -107,22 +107,22 @@ private:
 
         cukeCommands.beginScenario(0);
 
-        result = cukeCommands.invoke(getStepIdFromMatcher(SUCCEED_MATCHER), no_args.get());
+        result = cukeCommands.invoke(getStepIdFromMatcher(SUCCEED_MATCHER), &NO_INVOKE_ARGS);
         expectTrue(result.isSuccess());
 
-        result = cukeCommands.invoke(getStepIdFromMatcher(FAIL_MATCHER), no_args.get());
+        result = cukeCommands.invoke(getStepIdFromMatcher(FAIL_MATCHER), &NO_INVOKE_ARGS);
         expectFalse(result.isSuccess());
         expectFalse(result.isPending());
 
-        result = cukeCommands.invoke(getStepIdFromMatcher(PENDING_MATCHER_1), no_args.get());
+        result = cukeCommands.invoke(getStepIdFromMatcher(PENDING_MATCHER_1), &NO_INVOKE_ARGS);
         expectTrue(result.isPending());
         expectEqual(NO_PENDING_DESCRIPTION, result.getDescription());
 
-        result = cukeCommands.invoke(getStepIdFromMatcher(PENDING_MATCHER_2), no_args.get());
+        result = cukeCommands.invoke(getStepIdFromMatcher(PENDING_MATCHER_2), &NO_INVOKE_ARGS);
         expectTrue(result.isPending());
         expectEqual(PENDING_DESCRIPTION, result.getDescription());
 
-        result = cukeCommands.invoke(42, no_args.get());
+        result = cukeCommands.invoke(42, &NO_INVOKE_ARGS);
         expectFalse(result.isSuccess());
 
         cukeCommands.endScenario();
@@ -136,7 +136,7 @@ private:
     void contextConstructorAndDesctructorGetCalledOn(const std::string stepMatcher) {
         listener.reset();
         cukeCommands.beginScenario(0);
-        cukeCommands.invoke(getStepIdFromMatcher(stepMatcher), no_args.get());
+        cukeCommands.invoke(getStepIdFromMatcher(stepMatcher), &NO_INVOKE_ARGS);
         expectEqual(1, listener.getCreatedContexts());
         expectEqual(0, listener.getDestroyedContexts());
         cukeCommands.endScenario();

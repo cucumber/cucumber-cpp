@@ -60,8 +60,8 @@ HookRegistrar::aroundhook_list_type& HookRegistrar::aroundStepHooks() {
     return *aroundStepHooks;
 }
 
-InvokeResult HookRegistrar::execStepChain(Scenario *scenario, StepInfo *stepInfo, command_args_type *args) {
-    StepCallChain scc(scenario, stepInfo, args, aroundStepHooks());
+InvokeResult HookRegistrar::execStepChain(Scenario *scenario, StepInfo *stepInfo, const InvokeArgs *pArgs) {
+    StepCallChain scc(scenario, stepInfo, pArgs, aroundStepHooks());
     return scc.exec();
 }
 
@@ -104,12 +104,12 @@ void HookRegistrar::execHooks(HookRegistrar::hook_list_type &hookList, Scenario 
 StepCallChain::StepCallChain(
     Scenario *scenario,
     StepInfo *stepInfo,
-    command_args_type *stepArgs,
+    const InvokeArgs *pStepArgs,
     HookRegistrar::aroundhook_list_type &aroundHooks
 ) :
     scenario(scenario),
     stepInfo(stepInfo),
-    stepArgs(stepArgs)
+    pStepArgs(pStepArgs)
 {
     nextHook = aroundHooks.begin();
     hookEnd = aroundHooks.end();
@@ -132,7 +132,7 @@ void StepCallChain::execNext() {
 
 void StepCallChain::execStep() {
     if (stepInfo) {
-        result = stepInfo->invokeStep(stepArgs);
+        result = stepInfo->invokeStep(pStepArgs);
     }
 }
 

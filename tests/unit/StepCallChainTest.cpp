@@ -8,22 +8,23 @@ class FakeStepInfo : public StepInfo {
 public:
     FakeStepInfo(std::stringstream *markersPtr, const InvokeResult &result) :
         StepInfo("FAKE", ""),
+        latestArgsPtr(0),
         markersPtr(markersPtr),
         result(result) {
     }
 
-    InvokeResult invokeStep(command_args_type *args) {
-        latestArgsPtr = args;
+    InvokeResult invokeStep(const InvokeArgs *pArgs) {
+        latestArgsPtr = pArgs;
         (*markersPtr) << "S";
         return result;
     }
 
-    command_args_type *getLatestArgsPassed() {
+    const InvokeArgs *getLatestArgsPassed() {
         return latestArgsPtr;
     }
 
 private:
-    command_args_type *latestArgsPtr;
+    const InvokeArgs *latestArgsPtr;
     std::stringstream *markersPtr;
     const InvokeResult result;
 };
@@ -64,6 +65,8 @@ protected:
     }
 };
 
+static const InvokeArgs NO_INVOKE_ARGS;
+
 class StepCallChainTest : public ::testing::Test {
 protected:
     HookRegistrar::aroundhook_list_type aroundHooks;
@@ -71,8 +74,7 @@ protected:
 
     InvokeResult execStep(const InvokeResult &result) {
         FakeStepInfo step(&markers, result);
-        command_args_type args;
-        StepCallChain scc(0, &step, &args, aroundHooks);
+        StepCallChain scc(0, &step, &NO_INVOKE_ARGS, aroundHooks);
         return scc.exec();
     }
 
@@ -86,7 +88,7 @@ protected:
 };
 
 TEST_F(StepCallChainTest, failsIfNoStep) {
-    StepCallChain scc(0, 0, 0, aroundHooks);
+    StepCallChain scc(0, 0, &NO_INVOKE_ARGS, aroundHooks);
     EXPECT_FALSE(scc.exec().isSuccess());
     EXPECT_EQ("", markers.str());
 }
@@ -122,12 +124,11 @@ TEST_F(StepCallChainTest, aroundHooksAreInvokedInTheCorrectOrder) {
 
 TEST_F(StepCallChainTest, argsArePassedToTheStep) {
     FakeStepInfo step(&markers, InvokeResult::success());
-    command_args_type args;
-    StepCallChain scc(0, &step, &args, aroundHooks);
+    StepCallChain scc(0, &step, &NO_INVOKE_ARGS, aroundHooks);
 
-    EXPECT_NE(&args, step.getLatestArgsPassed());
+    EXPECT_NE(&NO_INVOKE_ARGS, step.getLatestArgsPassed());
     scc.exec();
-    EXPECT_EQ(&args, step.getLatestArgsPassed());
+    EXPECT_EQ(&NO_INVOKE_ARGS, step.getLatestArgsPassed());
 }
 
 TEST_F(StepCallChainTest, aroundHooksCanStopTheCallChain) {

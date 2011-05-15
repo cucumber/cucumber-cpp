@@ -1,9 +1,9 @@
 #ifndef CUKEBINS_HOOKREGISTRAR_HPP_
 #define CUKEBINS_HOOKREGISTRAR_HPP_
 
-#include <cukebins/internal/step/StepManager.hpp>
-#include <cukebins/internal/hook/Tag.hpp>
+#include "Tag.hpp"
 #include "../Scenario.hpp"
+#include "../step/StepManager.hpp"
 
 #include <boost/smart_ptr.hpp>
 using boost::shared_ptr;
@@ -59,7 +59,7 @@ public:
     void execBeforeHooks(Scenario *scenario);
 
     void addAroundStepHook(AroundStepHook *aroundStepHook);
-    InvokeResult execStepChain(Scenario *scenario, StepInfo *stepInfo, command_args_type *args);
+    InvokeResult execStepChain(Scenario *scenario, StepInfo *stepInfo, const InvokeArgs *pArgs);
 
     void addAfterStepHook(AfterStepHook *afterStepHook);
     void execAfterStepHooks(Scenario *scenario);
@@ -80,7 +80,7 @@ protected:
 
 class StepCallChain {
 public:
-    StepCallChain(Scenario *scenario, StepInfo *stepInfo, command_args_type *stepArgs, HookRegistrar::aroundhook_list_type &aroundHooks);
+    StepCallChain(Scenario *scenario, StepInfo *stepInfo, const InvokeArgs *pStepArgs, HookRegistrar::aroundhook_list_type &aroundHooks);
     InvokeResult exec();
     void execNext();
 private:
@@ -88,7 +88,7 @@ private:
 
     Scenario *scenario;
     StepInfo *stepInfo;
-    command_args_type *stepArgs;
+    const InvokeArgs *pStepArgs;
 
     HookRegistrar::aroundhook_list_type::iterator nextHook;
     HookRegistrar::aroundhook_list_type::iterator hookEnd;

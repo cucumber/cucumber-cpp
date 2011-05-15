@@ -26,7 +26,9 @@ protected:
     template<class T>
     void runStepBodyTest() {
         addStepToManager<T>(STATIC_MATCHER);
-        cukeCommands.invoke(stepInfoPtr->id, T::buildInvokeArgs().get());
+        const InvokeArgs *pArgs = T::buildInvokeArgs();
+        shared_ptr<const InvokeArgs> spArgs(pArgs);
+        cukeCommands.invoke(stepInfoPtr->id, pArgs);
     }
 
     template<class T>

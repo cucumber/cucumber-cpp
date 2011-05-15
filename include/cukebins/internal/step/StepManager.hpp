@@ -7,6 +7,10 @@
 #include <string>
 #include <vector>
 
+#include <boost/shared_ptr.hpp>
+using boost::shared_ptr;
+
+#include "../Table.hpp"
 #include "../utils/Regex.hpp"
 
 namespace cukebins {
@@ -14,11 +18,7 @@ namespace internal {
 
 typedef unsigned int step_id_type;
 
-typedef std::vector<std::string> command_args_type; // TODO Rename
-
-
 class StepInfo;
-
 
 class SingleStepMatch {
 public:
@@ -49,6 +49,21 @@ private:
     match_results_type resultSet;
 };
 
+
+class InvokeArgs {
+    typedef std::vector<std::string> args_type;
+public:
+    typedef args_type::size_type size_type;
+
+    void addArg(const std::string arg);
+    Table & getVariableTableArg();
+
+    template<class T> T getInvokeArg(size_type i) const;
+    const Table & getTableArg() const;
+private:
+    Table tableArg;
+    args_type args;
+};
 
 namespace {
     enum InvokeResultType {
@@ -84,7 +99,7 @@ class StepInfo {
 public:
     StepInfo(const std::string &stepMatcher, const std::string source);
     SingleStepMatch matches(const std::string &stepDescription);
-    virtual InvokeResult invokeStep(command_args_type *args) = 0;
+    virtual InvokeResult invokeStep(const InvokeArgs * pArgs) = 0;
 
     step_id_type id;
     Regex regex;
@@ -94,24 +109,26 @@ public:
 
 class BasicStep {
 public:
-    InvokeResult invoke(command_args_type *args);
+    InvokeResult invoke(const InvokeArgs *pArgs);
 
 protected:
+    typedef const Table table_type;
+    typedef const Table::hashes_type table_hashes_type;
+
     virtual const InvokeResult invokeStepBody() = 0;
     virtual void body() = 0;
 
     void pending(const char *description);
     void pending();
 
-    template<class T> T getInvokeArg(command_args_type::size_type i);
-    template<class T> T getInvokeArg();
-
+    template<class T> const T getInvokeArg();
+    const InvokeArgs *getArgs();
 private:
-    // FIXME: awful hack because of Boost
+    // FIXME: awful hack because of Boost::Test
     InvokeResult currentResult;
 
-    command_args_type *invokeArgsPtr;
-    command_args_type::size_type currentArgIndex; // TODO init to 0
+    const InvokeArgs *pArgs;
+    InvokeArgs::size_type currentArgIndex;
 };
 
 
@@ -120,7 +137,7 @@ class StepInvoker : public StepInfo {
 public:
     StepInvoker(const std::string &stepMatcher, const std::string source);
 
-    InvokeResult invokeStep(command_args_type *args);
+    InvokeResult invokeStep(const InvokeArgs *args);
 };
 
 
@@ -184,17 +201,19 @@ std::string toString(T arg) {
     return s.str();
 }
 
-template<typename T>
-T BasicStep::getInvokeArg(command_args_type::size_type i) {
-    if (!invokeArgsPtr || i >= invokeArgsPtr->size()) {
-        throw std::invalid_argument("Parameter not found");
-    }
-    return fromString<T>(invokeArgsPtr->at(i));
-}
 
 template<typename T>
-T BasicStep::getInvokeArg() {
-    return getInvokeArg<T>(currentArgIndex++);
+T InvokeArgs::getInvokeArg(size_type i) const {
+    if (i >= args.size()) {
+        throw std::invalid_argument("Parameter not found");
+    }
+    return fromString<T>(args.at(i));
+}
+
+
+template<typename T>
+const T BasicStep::getInvokeArg() {
+    return pArgs->getInvokeArg<T>(currentArgIndex++);
 }
 
 
@@ -204,9 +223,9 @@ StepInvoker<T>::StepInvoker(const std::string &stepMatcher, const std::string so
 }
 
 template<class T>
-InvokeResult StepInvoker<T>::invokeStep(command_args_type *args) {
+InvokeResult StepInvoker<T>::invokeStep(const InvokeArgs *pArgs) {
     T t;
-    return t.invoke(args);
+    return t.invoke(pArgs);
 }
 
 

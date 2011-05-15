@@ -28,6 +28,7 @@ if(GTEST_FOUND)
     cuke_add_test(unit/RegexTest)
     cuke_add_test(unit/StepCallChainTest)
     cuke_add_test(unit/StepManagerTest)
+    cuke_add_test(unit/TableTest)
     cuke_add_test(unit/TagTest)
 
     cuke_add_driver_test(integration/drivers/GTestDriverTest ${GTEST_LIBRARIES})

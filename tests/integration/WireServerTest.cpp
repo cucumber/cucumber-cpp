@@ -111,9 +111,10 @@ string JSONCommandsTest::empty = "";
 
 
 /*
- * TODO: There is no point in testing the protocol this way! Refactor those
- *       tests using googlemock and test if the commands get called with
- *       the expected arguments and fake the returning of a result.
+ * TODO: This is awful! There is no point in testing the protocol this way!
+ *       Refactor those tests using googlemock and test if the commands
+ *       gets called with the expected arguments and fake the returning of
+ *       a result.
  */
 
 TEST_F(JSONCommandsTest, failsGracefullyOnUnknownOrMalformed) {
@@ -160,6 +161,10 @@ TEST_F(JSONCommandsTest, handlesInvoke) {
 
     stepManager.addPendingStepDefinitionWithId(112, "a pending step with description", "cuke!");
     EXPECT_EQ("[\"pending\",\"cuke!\"]", processCommand("[\"invoke\",{\"args\":[],\"id\":\"112\"}]"));
+
+    stepManager.addTableStepDefinitionWithId(113, "table step", 2);
+    EXPECT_EQ(fail, processCommand("[\"invoke\",{\"args\":[],\"id\":\"113\"}]"));
+    EXPECT_EQ(success, processCommand("[\"invoke\",{\"args\":[[[\"C1\",\"C2\"],[\"R11\",\"R12\"],[\"R21\",\"R22\"]]],\"id\":\"113\"}]"));
 
     EXPECT_EQ(fail, processCommand("[\"invoke\"]"));
     EXPECT_EQ(fail, processCommand("[\"invoke\",null]"));

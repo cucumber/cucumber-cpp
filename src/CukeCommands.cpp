@@ -31,9 +31,9 @@ MatchResult CukeCommands::stepMatches(const std::string description) {
     return stepManager.stepMatches(description);
 }
 
-InvokeResult CukeCommands::invoke(step_id_type id, command_args_type *args) {
+InvokeResult CukeCommands::invoke(step_id_type id, const InvokeArgs *pArgs) {
     StepInfo *stepInfo = stepManager.getStep(id);
-    InvokeResult result = hookRegistrar.execStepChain(currentScenario.get(), stepInfo, args);
+    InvokeResult result = hookRegistrar.execStepChain(currentScenario.get(), stepInfo, pArgs);
     hookRegistrar.execAfterStepHooks(currentScenario.get());
     return result;
 }
