@@ -17,7 +17,7 @@ const InvokeResult GTestStep::invokeStepBody() {
         return InvokeResult::success();
     } catch (const ::std::runtime_error &e) {
         // ::testing::GoogleTestFailureException inherits from ::std::runtime_error
-        return InvokeResult::failure();
+        return InvokeResult::failure(e.what());
     }
 }
 

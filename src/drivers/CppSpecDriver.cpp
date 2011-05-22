@@ -10,7 +10,7 @@ const InvokeResult CppSpecStep::invokeStepBody() {
         body();
         return InvokeResult::success();
     } catch (const ::CppSpec::SpecifyFailedException &e) {
-        return InvokeResult::failure();
+        return InvokeResult::failure(e.message);
     }
 }
 

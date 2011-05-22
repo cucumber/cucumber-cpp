@@ -4,6 +4,7 @@
 #include "StepManagerTestDouble.hpp"
 
 #include <iostream>
+#include <string>
 
 namespace cukebins {
 namespace internal {
@@ -49,13 +50,12 @@ public:
 
 static const InvokeArgs NO_INVOKE_ARGS;
 
-#define SUCCEED_MATCHER   "Succeed!"
-#define FAIL_MATCHER      "Fail!"
-#define PENDING_MATCHER_1 "Pending without description"
-#define PENDING_MATCHER_2 "Pending with description"
+#define SUCCEED_MATCHER   "Succeeding step"
+#define FAIL_MATCHER      "Failing step"
+#define PENDING_MATCHER_1 "Pending step without description"
+#define PENDING_MATCHER_2 "Pending step with description"
 
 #define PENDING_DESCRIPTION    "Describe me!"
-#define NO_PENDING_DESCRIPTION (const char *) 0
 
 class DriverTest {
 public:
@@ -68,17 +68,21 @@ public:
         failedTests = 0;
     }
 protected:
-    void expectTrue(bool condition) {
-        updateState(condition);
+    void expectTrue(const char *description, bool condition) {
+        updateState(description, condition);
     }
 
-    void expectFalse(bool condition) {
-        updateState(!condition);
+    void expectFalse(const char *description, bool condition) {
+        updateState(description, !condition);
     }
 
     template<typename T>
-    void expectEqual(T val1, T val2) {
-        updateState(val1 == val2);
+    void expectEqual(const char *description, T val1, T val2) {
+        updateState(description, val1 == val2);
+    }
+
+    void expectStrEqual(const char *description, const char *val1, const char *val2) {
+        updateState(description, strcmp(val1, val2) == 0);
     }
 
     virtual void runAllTests() {
@@ -93,8 +97,9 @@ private:
 
     int failedTests;
 
-    void updateState(bool testSuccessState) {
-        std::cout << (testSuccessState ? "SUCCESS" : "FAILURE") << std::endl;
+    void updateState(const char *description, bool testSuccessState) {
+        std::cout << (testSuccessState ? "SUCCESS" : "FAILURE")
+                  << " (" << description << ")" << std::endl;
         failedTests += testSuccessState ? 0 : 1;
     }
 
@@ -103,45 +108,49 @@ private:
     }
 
     void invokeRunsTests() {
+        std::cout << "= Step invocation =" << std::endl;
+
         InvokeResult result;
 
         cukeCommands.beginScenario(0);
 
         result = cukeCommands.invoke(getStepIdFromMatcher(SUCCEED_MATCHER), &NO_INVOKE_ARGS);
-        expectTrue(result.isSuccess());
+        expectTrue("Succeeding step", result.isSuccess());
 
         result = cukeCommands.invoke(getStepIdFromMatcher(FAIL_MATCHER), &NO_INVOKE_ARGS);
-        expectFalse(result.isSuccess());
-        expectFalse(result.isPending());
+        expectFalse("Failing step", result.isSuccess() || result.isPending());
+        expectFalse("Failing step has a message", result.getDescription().empty());
 
         result = cukeCommands.invoke(getStepIdFromMatcher(PENDING_MATCHER_1), &NO_INVOKE_ARGS);
-        expectTrue(result.isPending());
-        expectEqual(NO_PENDING_DESCRIPTION, result.getDescription());
+        expectTrue("Pending step with no description - result", result.isPending());
+        expectStrEqual("Pending step with no description - description", "", result.getDescription().c_str());
 
         result = cukeCommands.invoke(getStepIdFromMatcher(PENDING_MATCHER_2), &NO_INVOKE_ARGS);
-        expectTrue(result.isPending());
-        expectEqual(PENDING_DESCRIPTION, result.getDescription());
+        expectTrue("Pending step with description - result", result.isPending());
+        expectStrEqual("Pending step with description - description", PENDING_DESCRIPTION, result.getDescription().c_str());
 
         result = cukeCommands.invoke(42, &NO_INVOKE_ARGS);
-        expectFalse(result.isSuccess());
+        expectFalse("Inexistent step", result.isSuccess());
 
         cukeCommands.endScenario();
     }
 
     void contextConstructorAndDesctructorGetCalled() {
+        std::cout << "= Constructors and destructors =" << std::endl;
         contextConstructorAndDesctructorGetCalledOn(SUCCEED_MATCHER);
         contextConstructorAndDesctructorGetCalledOn(FAIL_MATCHER);
     }
 
     void contextConstructorAndDesctructorGetCalledOn(const std::string stepMatcher) {
+        std::cout << "== " << stepMatcher << " ==" << std::endl;
         listener.reset();
         cukeCommands.beginScenario(0);
         cukeCommands.invoke(getStepIdFromMatcher(stepMatcher), &NO_INVOKE_ARGS);
-        expectEqual(1, listener.getCreatedContexts());
-        expectEqual(0, listener.getDestroyedContexts());
+        expectEqual("Contexts created after invoke", 1, listener.getCreatedContexts());
+        expectEqual("Contexts destroyed after invoke", 0, listener.getDestroyedContexts());
         cukeCommands.endScenario();
-        expectEqual(1, listener.getCreatedContexts());
-        expectEqual(1, listener.getDestroyedContexts());
+        expectEqual("Contexts created after end scenario", 1, listener.getCreatedContexts());
+        expectEqual("Contexts destroyed after end scenario", 1, listener.getDestroyedContexts());
     }
 };
 

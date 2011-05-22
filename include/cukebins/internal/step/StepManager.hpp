@@ -65,18 +65,16 @@ private:
     args_type args;
 };
 
-namespace {
-    enum InvokeResultType {
-        SUCCESS,
-        FAILURE,
-        PENDING
-    };
-}
+enum InvokeResultType {
+    SUCCESS,
+    FAILURE,
+    PENDING
+};
 
 class InvokeResult {
 private:
     InvokeResultType type;
-    const char *description;
+    std::string description;
 
     InvokeResult(const InvokeResultType type, const char *description);
 public:
@@ -86,12 +84,14 @@ public:
 
     static InvokeResult success();
     static InvokeResult failure();
+    static InvokeResult failure(const char *description);
+    static InvokeResult failure(const std::string &description);
     static InvokeResult pending(const char *description);
 
-    bool isSuccess();
-    bool isPending();
-    const char *getType() const;
-    const char *getDescription() const;
+    bool isSuccess() const;
+    bool isPending() const;
+    const InvokeResultType getType() const;
+    const std::string &getDescription() const;
 };
 
 

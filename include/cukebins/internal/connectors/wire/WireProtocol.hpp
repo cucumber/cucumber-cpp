@@ -215,10 +215,22 @@ void InvokeCommand::fillTableArg(Table & tableArg, const mArray &tableArray) {
 
 mValue InvokeCommand::formatResponse(const InvokeResult &result) {
     mArray a;
-    a.push_back(result.getType());
-    const char *description = result.getDescription();
-    if (description) {
-        a.push_back(description);
+    switch (result.getType()) {
+    case SUCCESS:
+        a.push_back("success");
+        break;
+    case PENDING:
+        a.push_back("pending");
+        if (!result.getDescription().empty()) {
+            a.push_back(result.getDescription());
+        }
+        break;
+    case FAILURE:
+        mObject failSpecs;
+        a.push_back("fail");
+        failSpecs.insert(make_pair("message", mValue(result.getDescription())));
+        a.push_back(failSpecs);
+        break;
     }
     return mValue(a);
 }

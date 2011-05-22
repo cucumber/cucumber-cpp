@@ -45,10 +45,11 @@ public:
 
 private:
     void stepInvocationInitsGTest() {
-        GTestStepDouble step;
-	expectFalse(step.isInitialized());
-	step.invokeStepBody();
-        expectTrue(step.isInitialized());
+        std::cout << "= Init =" << std::endl;
+        GTestStepDouble framework;
+        expectFalse("Framework is not initialized before the first test", framework.isInitialized());
+        framework.invokeStepBody();
+        expectTrue("Framework is initialized after the first test", framework.isInitialized());
     }
 };
 

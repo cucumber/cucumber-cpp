@@ -41,11 +41,12 @@ public:
 
 private:
     void stepInvocationInitsBoostTest() {
+        std::cout << "= Init =" << std::endl;
         using namespace boost::unit_test;
         BoostStepDouble step;
-	expectFalse(framework::is_initialized());
+        expectFalse("Framework is not initialized before the first test", framework::is_initialized());
 	step.invokeStepBody();
-        expectTrue(framework::is_initialized());
+        expectTrue("Framework is initialized after the first test", framework::is_initialized());
     }
 };
 

@@ -1,13 +1,12 @@
 #ifndef CUKEBINS_BOOSTDRIVER_HPP_
 #define CUKEBINS_BOOSTDRIVER_HPP_
 
-#include <boost/bind.hpp>
 #include <cukebins/internal/step/StepManager.hpp>
 
 namespace cukebins {
 namespace internal {
 
-class BoostTestObserver;
+class CukeBoostLogInterceptor;
 
 class BoostStep : public BasicStep {
 protected:
@@ -16,8 +15,6 @@ protected:
 private:
     void initBoostTest();
     void runWithMasterSuite();
-
-    static BoostTestObserver boostTestObserver;
 };
 
 #define STEP_INHERITANCE(step_name) ::cukebins::internal::BoostStep

@@ -20,15 +20,16 @@ class PendingStepWithDescription : public FakeStep {
 
 static const InvokeArgs NO_INVOKE_ARGS;
 
-TEST(BadicStepTest, handlesPendingSteps) {
+TEST(BasicStepTest, handlesPendingSteps) {
     PendingStep pendingStep;
     PendingStepWithDescription pendingStepWithDescription;
     InvokeResult result;
 
     result = pendingStep.invoke(&NO_INVOKE_ARGS);
     ASSERT_TRUE(result.isPending());
+    ASSERT_STREQ("", result.getDescription().c_str());
 
     result = pendingStepWithDescription.invoke(&NO_INVOKE_ARGS);
     ASSERT_TRUE(result.isPending());
-    ASSERT_STREQ(PENDING_STEP_DESCRIPTION, result.getDescription());
+    ASSERT_STREQ(PENDING_STEP_DESCRIPTION, result.getDescription().c_str());
 }

@@ -71,8 +71,8 @@ Table & InvokeArgs::getVariableTableArg() {
 
 
 InvokeResult::InvokeResult(const InvokeResultType type, const char *description) :
-    type(type),
-    description(description) {
+    type(type) {
+    if (description) { this->description = description; };
 }
 
 InvokeResult::InvokeResult() :
@@ -95,35 +95,34 @@ InvokeResult InvokeResult::success() {
 }
 
 InvokeResult InvokeResult::failure() {
-    return InvokeResult(FAILURE, 0);
+    return InvokeResult::failure(0);
+}
+
+InvokeResult InvokeResult::failure(const char *description) {
+    return InvokeResult(FAILURE, description);
+}
+
+InvokeResult InvokeResult::failure(const std::string &description) {
+    return InvokeResult(FAILURE, description.c_str());
 }
 
 InvokeResult InvokeResult::pending(const char *description) {
     return InvokeResult(PENDING, description);
 }
 
-bool InvokeResult::isSuccess() {
+bool InvokeResult::isSuccess() const {
     return (type == SUCCESS);
 }
 
-bool InvokeResult::isPending() {
+bool InvokeResult::isPending() const {
     return (type == PENDING);
 }
 
-const char *InvokeResult::getType() const {
-    switch (type) {
-    case SUCCESS:
-        return "success";
-    case FAILURE:
-        return "fail";
-    case PENDING:
-        return "pending";
-    default:
-        return 0;
-    }
+const InvokeResultType InvokeResult::getType() const {
+    return type;
 }
 
-const char *InvokeResult::getDescription() const {
+const std::string &InvokeResult::getDescription() const {
     return description;
 }
 

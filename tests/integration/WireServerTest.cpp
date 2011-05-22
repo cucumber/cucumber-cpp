@@ -100,6 +100,17 @@ protected:
         std::getline(stream, output);
         return output;
     }
+
+    string invokeFail() {
+        return invokeFail("");
+    }
+
+    string invokeFail(const char *description) {
+        stringstream stream;
+        stream << "[\"fail\",{\"message\":\"" << description << "\"}]";
+        return stream.str();
+    }
+
     void TearDown() {
         stepManager.clearSteps();
     }
@@ -163,7 +174,7 @@ TEST_F(JSONCommandsTest, handlesInvoke) {
     EXPECT_EQ("[\"pending\",\"cuke!\"]", processCommand("[\"invoke\",{\"args\":[],\"id\":\"112\"}]"));
 
     stepManager.addTableStepDefinitionWithId(113, "table step", 2);
-    EXPECT_EQ(fail, processCommand("[\"invoke\",{\"args\":[],\"id\":\"113\"}]"));
+    EXPECT_EQ(invokeFail(), processCommand("[\"invoke\",{\"args\":[],\"id\":\"113\"}]"));
     EXPECT_EQ(success, processCommand("[\"invoke\",{\"args\":[[[\"C1\",\"C2\"],[\"R11\",\"R12\"],[\"R21\",\"R22\"]]],\"id\":\"113\"}]"));
 
     EXPECT_EQ(fail, processCommand("[\"invoke\"]"));
