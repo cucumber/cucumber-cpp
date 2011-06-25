@@ -2,17 +2,19 @@ CukeBins allows Cucumber to support step definitions written in C++
 
 
 CukeBins Website: http://github.com/paoloambrosio/cukebins
-CukeBins Documentation: http://wiki.github.com/paoloambrosio/cukebins/
+CukeBins Documentation: https://github.com/paoloambrosio/cukebins/wiki/
 Cucumber Website: http://cukes.info/
 
 
-The current library is header-only, so it doesn't need to be compiled
-separately, but it needs the following libraries when compiling the
-step definitions:
+The current library relies on a few libraries:
 
  * Boost 1.40 or later - http://www.boost.org/
-   (required libraries are thread, system, regex, and date_time)
+   Required libraries: thread, system, regex, and date_time
+   Optional library for Boost Test driver: test
  * GTest 1.4 or later - http://code.google.com/p/googletest/
+   Optional for CukeBins test suite and for the GTest driver
+ * CppSpec development branch - https://github.com/tpuronen/cppspec
+   Optional for the CppSpec driver
 
 This header-only library is included in the source code:
 
