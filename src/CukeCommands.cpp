@@ -14,8 +14,8 @@ void CukeCommands::beginScenario(const TagExpression::tag_list *tags) {
 }
 
 void CukeCommands::endScenario() {
-    contextManager.purgeContexts();
     hookRegistrar.execAfterHooks(currentScenario.get());
+    contextManager.purgeContexts();
     currentScenario.reset();
 }
 
