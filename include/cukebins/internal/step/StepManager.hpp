@@ -151,10 +151,10 @@ public:
     virtual ~StepManager();
 
     void addStep(StepInfo *stepInfo);
-    MatchResult stepMatches(const std::string &stepDescription);
+    MatchResult stepMatches(const std::string &stepDescription) const;
     StepInfo *getStep(step_id_type id);
 protected:
-    steps_type& steps();
+    steps_type& steps() const;
 };
 
 

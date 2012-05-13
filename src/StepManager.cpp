@@ -134,7 +134,7 @@ void StepManager::addStep(StepInfo *stepInfo) {
     steps().insert(std::make_pair(stepInfo->id, stepInfo));
 }
 
-MatchResult StepManager::stepMatches(const std::string &stepDescription) {
+MatchResult StepManager::stepMatches(const std::string &stepDescription) const {
     MatchResult matchResult;
     for (steps_type::iterator iter = steps().begin(); iter != steps().end(); ++iter) {
         StepInfo *stepInfo = iter->second;
@@ -154,7 +154,7 @@ StepInfo *StepManager::getStep(step_id_type id) {
  * Needed to fix the "static initialization order fiasco"
  * http://www.parashift.com/c++-faq-lite/ctors.html#faq-10.12
  */
-StepManager::steps_type& StepManager::steps() {
+StepManager::steps_type& StepManager::steps() const {
     static steps_type *steps = new steps_type();
     return *steps;
 }

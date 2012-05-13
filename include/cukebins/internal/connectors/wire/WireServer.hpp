@@ -1,53 +1,52 @@
 #ifndef CUKEBINS_WIRESERVER_HPP_
 #define CUKEBINS_WIRESERVER_HPP_
 
-#include "WireProtocol.hpp"
-
-#include <boost/bind.hpp>
-#include <boost/asio.hpp>
+#include "ProtocolHandler.hpp"
 
 #include <string>
-#include <fstream>
+
+#include <boost/asio.hpp>
 
 namespace cukebins {
 namespace internal {
 
-using std::string;
-using std::iostream;
-
 using namespace boost::asio;
 using namespace boost::asio::ip;
 
-template<class T>
+/**
+ * Socket server that calls a protocol handler line by line
+ */
 class SocketServer {
 public:
-    SocketServer(const unsigned short port);
+    /**
+     * Type definition for TCP port
+     */
+    typedef unsigned short port_type;
 
-    void accept();
+    /**
+      * Constructor for DI
+      */
+    SocketServer(const ProtocolHandler *protocolHandler);
+
+    /**
+     * Bind and listen to a TCP port
+     */
+    void listen(const port_type port);
+
+    /**
+     * Accept one connection
+     */
+    void acceptOnce();
+
+    ~SocketServer() {}; // Forbid inheritance
 
 private:
-    T protocol;
-    tcp::endpoint endpoint;
+    const ProtocolHandler *protocolHandler;
     io_service ios;
     tcp::acceptor acceptor;
+
+    void processStream(tcp::iostream &stream);
 };
-
-
-template<class T>
-SocketServer<T>::SocketServer(const unsigned short port) :
-    endpoint(tcp::v4(), port), acceptor(ios) {
-    acceptor.open(endpoint.protocol());
-    acceptor.set_option(tcp::acceptor::reuse_address(true));
-    acceptor.bind(endpoint);
-    acceptor.listen(1);
-}
-
-template<class T>
-void SocketServer<T>::accept() {
-    tcp::iostream stream;
-    acceptor.accept(*stream.rdbuf());
-    protocol.processStream(stream);
-}
 
 }
 }

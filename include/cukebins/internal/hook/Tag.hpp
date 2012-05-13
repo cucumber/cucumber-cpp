@@ -2,7 +2,7 @@
 #define CUKEBINS_TAG_HPP_
 
 #include <string>
-#include <list>
+#include <vector>
 
 #include <boost/shared_ptr.hpp>
 using boost::shared_ptr;
@@ -14,7 +14,7 @@ namespace internal {
 
 class TagExpression {
 public:
-    typedef std::list<std::string> tag_list;
+    typedef std::vector<std::string> tag_list;
 
     virtual bool matches(const tag_list &tags) = 0;
 };

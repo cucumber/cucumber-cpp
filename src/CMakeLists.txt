@@ -1,12 +1,17 @@
 set(CUKEBINS_SOURCES
     ContextManager.cpp
     CukeCommands.cpp
+    CukeEngine.cpp
+    CukeEngineImpl.cpp
     StepManager.cpp
     HookRegistrar.cpp
     Regex.cpp
     Scenario.cpp
     Table.cpp
     Tag.cpp
+    connectors/wire/WireServer.cpp
+    connectors/wire/WireProtocol.cpp
+    connectors/wire/WireProtocolCommands.cpp
 )
 
 if(GTEST_FOUND)

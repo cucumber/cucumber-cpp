@@ -2,14 +2,21 @@
 #define WIRESERVER_HPP_
 
 #include "cukebins.hpp"
-#include "internal/connectors/wire/WireServer.hpp"
+#include <cukebins/internal/CukeEngineImpl.hpp>
+#include <cukebins/internal/connectors/wire/WireServer.hpp>
+#include <cukebins/internal/connectors/wire/WireProtocol.hpp>
 #include <iostream>
 
 namespace cukebins {
 
 void acceptWireProtocol(int port) {
-    cukebins::internal::SocketServer<cukebins::internal::WireProtocol> server(port);
-    server.accept();
+    using namespace internal;
+    CukeEngineImpl cukeEngine;
+    JsonSpiritWireMessageCodec wireCodec;
+    WireProtocolHandler protocolHandler(&wireCodec, &cukeEngine);
+    SocketServer server(&protocolHandler);
+    server.listen(port);
+    server.acceptOnce();
 }
 }
 

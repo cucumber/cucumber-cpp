@@ -18,12 +18,15 @@ namespace internal {
 
 using boost::shared_ptr;
 
+/**
+ * Legacy class to be removed when feature #31 is complete, substituted by CukeEngineImpl.
+ */
 class CukeCommands {
 public:
     void beginScenario(const TagExpression::tag_list *tags);
     void endScenario();
     const std::string snippetText(const std::string stepKeyword, const std::string stepName) const;
-    MatchResult stepMatches(const std::string description);
+    MatchResult stepMatches(const std::string description) const;
     InvokeResult invoke(step_id_type id, const InvokeArgs * pArgs);
 
 private:

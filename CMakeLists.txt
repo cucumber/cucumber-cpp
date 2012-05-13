@@ -75,6 +75,7 @@ endif()
 
 if(NOT CUKE_DISABLE_GTEST)
     find_package(GTest)
+    find_package(GMock)
 endif()
 
 #

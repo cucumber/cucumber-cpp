@@ -27,7 +27,7 @@ const std::string CukeCommands::snippetText(const std::string stepKeyword, const
     return snippetText.str();
 }
 
-MatchResult CukeCommands::stepMatches(const std::string description) {
+MatchResult CukeCommands::stepMatches(const std::string description) const {
     return stepManager.stepMatches(description);
 }
 
