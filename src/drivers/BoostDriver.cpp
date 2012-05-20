@@ -1,4 +1,4 @@
-#include <cukebins/internal/drivers/BoostDriver.hpp>
+#include <cucumber-cpp/internal/drivers/BoostDriver.hpp>
 
 #include <sstream>
 
@@ -10,7 +10,7 @@
 using namespace ::boost::unit_test;
 using ::boost::execution_exception;
 
-namespace cukebins {
+namespace cuke {
 namespace internal {
 
 

@@ -1,5 +1,5 @@
-#include <cukebins/internal/connectors/wire/WireProtocol.hpp>
-#include <cukebins/internal/connectors/wire/WireProtocolCommands.hpp>
+#include <cucumber-cpp/internal/connectors/wire/WireProtocol.hpp>
+#include <cucumber-cpp/internal/connectors/wire/WireProtocolCommands.hpp>
 
 #include <json_spirit/json_spirit_reader_template.h>
 #include <json_spirit/json_spirit_writer_template.h>
@@ -14,7 +14,7 @@
 
 using namespace json_spirit;
 
-namespace cukebins {
+namespace cuke {
 namespace internal {
 
 

@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include <cukebins/internal/hook/HookRegistrar.hpp>
+#include <cucumber-cpp/internal/hook/HookRegistrar.hpp>
 
-using namespace cukebins::internal;
+using namespace cuke::internal;
 
 class FakeStepInfo : public StepInfo {
 public:

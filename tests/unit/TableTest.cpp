@@ -3,8 +3,8 @@
 #include <boost/assign/list_of.hpp>
 using namespace boost::assign;
 
-#include <cukebins/internal/Table.hpp>
-using namespace cukebins::internal;
+#include <cucumber-cpp/internal/Table.hpp>
+using namespace cuke::internal;
 
 TEST(TableTest, forbidsRowsNotMatchingTableColumnsSize) {
     Table t;

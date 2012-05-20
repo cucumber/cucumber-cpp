@@ -1,6 +1,6 @@
-#include "cukebins/internal/step/StepManager.hpp"
+#include "cucumber-cpp/internal/step/StepManager.hpp"
 
-namespace cukebins {
+namespace cuke {
 namespace internal {
 
 

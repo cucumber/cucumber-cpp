@@ -1,6 +1,6 @@
-#include <cukebins/internal/connectors/wire/WireProtocolCommands.hpp>
+#include <cucumber-cpp/internal/connectors/wire/WireProtocolCommands.hpp>
 
-namespace cukebins {
+namespace cuke {
 namespace internal {
 
 ScenarioCommand::ScenarioCommand(const CukeEngine::tags_type *tags) :

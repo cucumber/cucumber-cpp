@@ -1,9 +1,9 @@
-#ifndef CUKEBINS_CONTEXTMANAGERTESTDOUBLE_HPP_
-#define CUKEBINS_CONTEXTMANAGERTESTDOUBLE_HPP_
+#ifndef CUKE_CONTEXTMANAGERTESTDOUBLE_HPP_
+#define CUKE_CONTEXTMANAGERTESTDOUBLE_HPP_
 
-#include <cukebins/internal/ContextManager.hpp>
+#include <cucumber-cpp/internal/ContextManager.hpp>
 
-namespace cukebins {
+namespace cuke {
 namespace internal {
 
 class ContextManagerTestDouble : public ContextManager {
@@ -16,4 +16,4 @@ public:
 }
 }
 
-#endif /* CUKEBINS_CONTEXTMANAGERTESTDOUBLE_HPP_ */
+#endif /* CUKE_CONTEXTMANAGERTESTDOUBLE_HPP_ */

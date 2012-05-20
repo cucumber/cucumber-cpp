@@ -1,8 +1,8 @@
-#include "cukebins/internal/CukeEngineImpl.hpp"
+#include "cucumber-cpp/internal/CukeEngineImpl.hpp"
 
 #include <boost/foreach.hpp>
 
-namespace cukebins {
+namespace cuke {
 namespace internal {
 
 namespace {

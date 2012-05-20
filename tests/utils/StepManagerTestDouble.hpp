@@ -1,9 +1,9 @@
-#ifndef CUKEBINS_STEPMANAGERTESTDOUBLE_HPP_
-#define CUKEBINS_STEPMANAGERTESTDOUBLE_HPP_
+#ifndef CUKE_STEPMANAGERTESTDOUBLE_HPP_
+#define CUKE_STEPMANAGERTESTDOUBLE_HPP_
 
-#include <cukebins/internal/step/StepManager.hpp>
+#include <cucumber-cpp/internal/step/StepManager.hpp>
 
-namespace cukebins {
+namespace cuke {
 namespace internal {
 
 
@@ -110,4 +110,4 @@ public:
 }
 }
 
-#endif /* CUKEBINS_STEPMANAGERTESTDOUBLE_HPP_ */
+#endif /* CUKE_STEPMANAGERTESTDOUBLE_HPP_ */

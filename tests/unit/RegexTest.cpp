@@ -3,8 +3,8 @@
 #include <boost/assign/list_of.hpp>
 using namespace boost::assign;
 
-#include <cukebins/internal/utils/Regex.hpp>
-using namespace cukebins::internal;
+#include <cucumber-cpp/internal/utils/Regex.hpp>
+using namespace cuke::internal;
 
 #include <boost/shared_ptr.hpp>
 using boost::shared_ptr;

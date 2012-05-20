@@ -1,12 +1,12 @@
-#include <cukebins/internal/connectors/wire/WireProtocol.hpp>
-#include <cukebins/internal/connectors/wire/WireProtocolCommands.hpp>
+#include <cucumber-cpp/internal/connectors/wire/WireProtocol.hpp>
+#include <cucumber-cpp/internal/connectors/wire/WireProtocolCommands.hpp>
 
 #include <gmock/gmock.h>
 #include <boost/assign/list_of.hpp>
 
 #include <typeinfo>
 
-using namespace cukebins::internal;
+using namespace cuke::internal;
 using namespace std;
 using namespace testing;
 

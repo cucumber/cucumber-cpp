@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include <cukebins/internal/drivers/FakeDriver.hpp>
+#include <cucumber-cpp/internal/drivers/FakeDriver.hpp>
 
-using namespace cukebins::internal;
+using namespace cuke::internal;
 
 #define PENDING_STEP_DESCRIPTION "A description"
 

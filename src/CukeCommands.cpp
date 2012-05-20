@@ -1,9 +1,9 @@
-#include "cukebins/internal/CukeCommands.hpp"
+#include "cucumber-cpp/internal/CukeCommands.hpp"
 
 #include <sstream>
 #include <boost/algorithm/string.hpp>
 
-namespace cukebins {
+namespace cuke {
 namespace internal {
 
 shared_ptr<Scenario> CukeCommands::currentScenario;

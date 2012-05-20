@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include <cukebins/internal/step/StepMacros.hpp>
+#include <cucumber-cpp/internal/step/StepMacros.hpp>
 #include "../utils/CukeCommandsFixture.hpp"
 
-using namespace cukebins::internal;
+using namespace cuke::internal;
 
 using std::string;
 using boost::shared_ptr;

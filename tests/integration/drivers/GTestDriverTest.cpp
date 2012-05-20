@@ -1,15 +1,15 @@
 #include <gtest/gtest.h>
-#include <cukebins/cukebins.hpp>
+#include <cucumber-cpp/core.hpp>
 
 #include "../../utils/DriverTestRunner.hpp"
 
 THEN(SUCCEED_MATCHER) {
-    USING_CONTEXT(cukebins::internal::SomeContext, ctx);
+    USING_CONTEXT(cuke::internal::SomeContext, ctx);
     ASSERT_TRUE(true);
 }
 
 THEN(FAIL_MATCHER) {
-    USING_CONTEXT(cukebins::internal::SomeContext, ctx);
+    USING_CONTEXT(cuke::internal::SomeContext, ctx);
     ASSERT_TRUE(false);
 }
 
@@ -21,7 +21,7 @@ THEN(PENDING_MATCHER_2) {
     pending(PENDING_DESCRIPTION);
 }
 
-using namespace cukebins::internal;
+using namespace cuke::internal;
 
 class GTestStepDouble : public GTestStep {
 public:

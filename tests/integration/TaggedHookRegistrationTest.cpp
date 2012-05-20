@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "../utils/HookRegistrationFixture.hpp"
-#include <cukebins/internal/hook/HookMacros.hpp>
+#include <cucumber-cpp/internal/hook/HookMacros.hpp>
 
 #include <boost/assign.hpp>
 using boost::assign::list_of;

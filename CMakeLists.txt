@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(CukeBins)
+project(Cucumber-Cpp)
 
 set(CUKE_USE_STATIC_BOOST ${MSVC} CACHE BOOL "Statically link Boost (except boost::test)")
 set(CUKE_DISABLE_BOOST_TEST OFF CACHE BOOL "Disable boost:test")
 set(CUKE_DISABLE_CPPSPEC OFF CACHE BOOL "Disable CppSpec")
 set(CUKE_DISABLE_GTEST OFF CACHE BOOL "Disable Google Test framework")
+set(CUKE_ENABLE_EXAMPLES OFF CACHE BOOL "Enable the examples")
 
 enable_testing()
 
@@ -39,7 +40,7 @@ if(CUKE_USE_STATIC_BOOST)
 
     if(NOT MSVC)
         find_package(Threads)
-        set(CUKEBINS_EXTRA_LIBRARIES ${CUKEBINS_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+        set(CUKE_EXTRA_LIBRARIES ${CUKE_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
     endif()
 else()
     set(CUKE_DYNAMIC_BOOST_LIBS ${CUKE_CORE_BOOST_LIBS} ${CUKE_TEST_BOOST_LIBS})
@@ -58,7 +59,7 @@ endif()
 
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
-    set(CUKEBINS_EXTRA_LIBRARIES ${CUKEBINS_EXTRA_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_REGEX_LIBRARY} ${Boost_DATE_TIME_LIBRARY})
+    set(CUKE_EXTRA_LIBRARIES ${CUKE_EXTRA_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_REGEX_LIBRARY} ${Boost_DATE_TIME_LIBRARY})
 endif()
 
 #
@@ -79,16 +80,18 @@ if(NOT CUKE_DISABLE_GTEST)
 endif()
 
 #
-# CukeBins
+# Cucumber-Cpp
 #
 
-set(CUKEBINS_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(CUKE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-include_directories(${CUKEBINS_INCLUDE_DIRS})
+include_directories(${CUKE_INCLUDE_DIRS})
 
-set(CUKEBINS_LIBRARIES CukeBins ${CUKEBINS_EXTRA_LIBRARIES})
+set(CUKE_LIBRARIES cucumber-cpp ${CUKE_EXTRA_LIBRARIES})
 
 add_subdirectory(src)
 add_subdirectory(tests)
-add_subdirectory(examples)
 
+if(CUKE_ENABLE_EXAMPLES)
+    add_subdirectory(examples)
+endif()

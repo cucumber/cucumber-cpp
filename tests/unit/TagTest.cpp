@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include <cukebins/internal/hook/Tag.hpp>
+#include <cucumber-cpp/internal/hook/Tag.hpp>
 
-using namespace cukebins::internal;
+using namespace cuke::internal;
 
 #include <boost/assign/list_of.hpp>
 using namespace boost::assign;

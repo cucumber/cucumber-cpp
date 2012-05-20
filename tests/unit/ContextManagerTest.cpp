@@ -4,7 +4,7 @@
 
 #include <boost/weak_ptr.hpp>
 
-using namespace cukebins::internal;
+using namespace cuke::internal;
 using boost::weak_ptr;
 
 class ContextManagerTest : public ::testing::Test {

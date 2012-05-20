@@ -1,13 +1,13 @@
-#ifndef CUKEBINS_CUKECOMMANDSFIXTURE_HPP_ 
-#define CUKEBINS_CUKECOMMANDSFIXTURE_HPP_
+#ifndef CUKE_CUKECOMMANDSFIXTURE_HPP_ 
+#define CUKE_CUKECOMMANDSFIXTURE_HPP_
 
-#include <cukebins/internal/CukeCommands.hpp>
-#include <cukebins/internal/drivers/FakeDriver.hpp>
+#include <cucumber-cpp/internal/CukeCommands.hpp>
+#include <cucumber-cpp/internal/drivers/FakeDriver.hpp>
 #include "StepManagerTestDouble.hpp"
 
 #include <boost/shared_ptr.hpp>
 
-using namespace cukebins::internal;
+using namespace cuke::internal;
 using boost::shared_ptr;
 
 class EmptyStep : public FakeStep {
@@ -44,5 +44,5 @@ protected:
 
 const std::string CukeCommandsFixture::STATIC_MATCHER("MATCHER");
 
-#endif /* CUKEBINS_CUKECOMMANDSFIXTURE_HPP_ */
+#endif /* CUKE_CUKECOMMANDSFIXTURE_HPP_ */
 

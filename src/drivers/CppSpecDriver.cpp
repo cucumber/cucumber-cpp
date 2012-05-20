@@ -1,8 +1,8 @@
-#include <cukebins/internal/drivers/CppSpecDriver.hpp>
+#include <cucumber-cpp/internal/drivers/CppSpecDriver.hpp>
 
 #include <CppSpec/CppSpec.h>
 
-namespace cukebins {
+namespace cuke {
 namespace internal {
 
 const InvokeResult CppSpecStep::invokeStepBody() {

@@ -1,8 +1,8 @@
-#include <cukebins/internal/hook/HookRegistrar.hpp>
+#include <cucumber-cpp/internal/hook/HookRegistrar.hpp>
 
-#include <cukebins/internal/CukeCommands.hpp>
+#include <cucumber-cpp/internal/CukeCommands.hpp>
 
-namespace cukebins {
+namespace cuke {
 namespace internal {
 
 void Hook::invokeHook(Scenario *scenario) {

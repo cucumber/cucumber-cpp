@@ -1,4 +1,4 @@
-#include <cukebins/internal/connectors/wire/WireServer.hpp>
+#include <cucumber-cpp/internal/connectors/wire/WireServer.hpp>
 
 #include <gmock/gmock.h>
 
@@ -7,7 +7,7 @@
 
 #include <sstream>
 
-using namespace cukebins::internal;
+using namespace cuke::internal;
 using namespace boost::posix_time;
 using namespace boost::asio::ip;
 using namespace std;

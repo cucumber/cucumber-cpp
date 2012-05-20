@@ -1,13 +1,13 @@
-#ifndef CUKEBINS_HOOKREGISTRATIONFIXTURE_HPP_
-#define CUKEBINS_HOOKREGISTRATIONFIXTURE_HPP_
+#ifndef CUKE_HOOKREGISTRATIONFIXTURE_HPP_
+#define CUKE_HOOKREGISTRATIONFIXTURE_HPP_
 
-#include <cukebins/internal/hook/HookRegistrar.hpp>
+#include <cucumber-cpp/internal/hook/HookRegistrar.hpp>
 
 #include "CukeCommandsFixture.hpp"
 
 #include <sstream>
 
-using namespace cukebins::internal;
+using namespace cuke::internal;
 
 namespace {
 
@@ -125,4 +125,4 @@ protected:
 
 }
 
-#endif /* CUKEBINS_HOOKREGISTRATIONFIXTURE_HPP_ */
+#endif /* CUKE_HOOKREGISTRATIONFIXTURE_HPP_ */

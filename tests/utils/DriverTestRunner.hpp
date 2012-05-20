@@ -1,12 +1,12 @@
-#ifndef CUKEBINS_DRIVERTESTRUNNER_HPP_
-#define CUKEBINS_DRIVERTESTRUNNER_HPP_
+#ifndef CUKE_DRIVERTESTRUNNER_HPP_
+#define CUKE_DRIVERTESTRUNNER_HPP_
 
 #include "StepManagerTestDouble.hpp"
 
 #include <iostream>
 #include <string>
 
-namespace cukebins {
+namespace cuke {
 namespace internal {
 
 class ContextListener {
@@ -157,4 +157,4 @@ private:
 }
 }
 
-#endif /* CUKEBINS_DRIVERTESTRUNNER_HPP_ */
+#endif /* CUKE_DRIVERTESTRUNNER_HPP_ */

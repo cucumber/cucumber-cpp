@@ -1,15 +1,15 @@
 #include <boost/test/unit_test.hpp>
-#include <cukebins/cukebins.hpp>
+#include <cucumber-cpp/core.hpp>
 
 #include "../../utils/DriverTestRunner.hpp"
 
 THEN(SUCCEED_MATCHER) {
-    USING_CONTEXT(cukebins::internal::SomeContext, ctx);
+    USING_CONTEXT(cuke::internal::SomeContext, ctx);
     BOOST_CHECK(true);
 }
 
 THEN(FAIL_MATCHER) {
-    USING_CONTEXT(cukebins::internal::SomeContext, ctx);
+    USING_CONTEXT(cuke::internal::SomeContext, ctx);
     BOOST_CHECK(false);
 }
 
@@ -21,7 +21,7 @@ THEN(PENDING_MATCHER_2) {
     pending(PENDING_DESCRIPTION);
 }
 
-using namespace cukebins::internal;
+using namespace cuke::internal;
 
 class BoostStepDouble : public BoostStep {
 public:
