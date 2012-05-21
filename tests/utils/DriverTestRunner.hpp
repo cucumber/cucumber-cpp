@@ -2,6 +2,7 @@
 #define CUKE_DRIVERTESTRUNNER_HPP_
 
 #include "StepManagerTestDouble.hpp"
+#include <cucumber-cpp/internal/CukeCommands.hpp>
 
 #include <iostream>
 #include <string>

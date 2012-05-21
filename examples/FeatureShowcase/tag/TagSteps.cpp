@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <cucumber-cpp/core.hpp>
+#include <cucumber-cpp/defs.hpp>
 
 #include <iostream>
 using namespace std;

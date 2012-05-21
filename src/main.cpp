@@ -1,4 +1,3 @@
-#include <cucumber-cpp/core.hpp>
 #include <cucumber-cpp/internal/CukeEngineImpl.hpp>
 #include <cucumber-cpp/internal/connectors/wire/WireServer.hpp>
 #include <cucumber-cpp/internal/connectors/wire/WireProtocol.hpp>

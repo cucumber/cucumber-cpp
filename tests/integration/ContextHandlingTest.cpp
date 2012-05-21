@@ -1,5 +1,3 @@
-#include <cucumber-cpp/core.hpp>
-
 #include <gtest/gtest.h>
 
 #include "../utils/ContextManagerTestDouble.hpp"
