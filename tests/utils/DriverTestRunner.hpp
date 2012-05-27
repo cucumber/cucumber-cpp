@@ -89,6 +89,7 @@ protected:
     virtual void runAllTests() {
         invokeRunsTests();
         contextConstructorAndDesctructorGetCalled();
+        failureDescriptionIsResetOnEachRun();
     }
 
     CukeCommands cukeCommands;
@@ -152,6 +153,21 @@ private:
         cukeCommands.endScenario();
         expectEqual("Contexts created after end scenario", 1, listener.getCreatedContexts());
         expectEqual("Contexts destroyed after end scenario", 1, listener.getDestroyedContexts());
+    }
+
+    void failureDescriptionIsResetOnEachRun() {
+        std::cout << "= Step failure description is reset =" << std::endl;
+        InvokeResult result;
+        cukeCommands.beginScenario(0);
+
+        result = cukeCommands.invoke(getStepIdFromMatcher(FAIL_MATCHER), &NO_INVOKE_ARGS);
+        std::string failureMessage = result.getDescription();
+
+        expectFalse("Failing step description is set", failureMessage.empty());
+
+        result = cukeCommands.invoke(getStepIdFromMatcher(FAIL_MATCHER), &NO_INVOKE_ARGS);
+
+        expectEqual("Failing step description is the same", failureMessage, result.getDescription());
     }
 };
 

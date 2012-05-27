@@ -53,7 +53,7 @@ private:
 };
 
 void CukeBoostLogInterceptor::reset() {
-    description.clear();
+    description.str("");
 }
 
 /*
