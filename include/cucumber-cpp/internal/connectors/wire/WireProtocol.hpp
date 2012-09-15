@@ -150,6 +150,7 @@ public:
  */
 class JsonSpiritWireMessageCodec : public WireMessageCodec {
 public:
+    JsonSpiritWireMessageCodec();
     WireCommand *decode(const std::string &request) const throw(WireMessageCodecException);
     const std::string encode(const WireResponse *response) const;
 };

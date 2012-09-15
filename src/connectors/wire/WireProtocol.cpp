@@ -202,6 +202,8 @@ static std::map<std::string, boost::shared_ptr<CommandDecoder> > commandDecoders
     ("snippet_text", boost::shared_ptr<CommandDecoder> (new SnippetTextDecoder));
 
 
+JsonSpiritWireMessageCodec::JsonSpiritWireMessageCodec() {};
+
 WireCommand *JsonSpiritWireMessageCodec::decode(const std::string &request) const throw(WireMessageCodecException) {
     std::istringstream is(request);
     mValue json;
