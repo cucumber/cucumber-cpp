@@ -2,7 +2,7 @@
 
 #include <boost/foreach.hpp>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 namespace {

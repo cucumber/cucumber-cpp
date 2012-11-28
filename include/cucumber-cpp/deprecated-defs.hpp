@@ -6,7 +6,7 @@
 // **************                USING_CONTEXT                 ************** //
 // ************************************************************************** //
 
-#define USING_CONTEXT(type, name) ::cuke::ScenarioScope<type> name
+#define USING_CONTEXT(type, name) ::cucumber::ScenarioScope<type> name
 
 
 #endif /* CUKE_DEPRECATED_DEFS_HPP_ */

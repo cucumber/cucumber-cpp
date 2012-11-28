@@ -5,7 +5,7 @@
 
 #include <boost/regex.hpp>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 struct RegexSubmatch {

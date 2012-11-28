@@ -4,7 +4,7 @@
 using namespace boost::assign;
 
 #include <cucumber-cpp/internal/Table.hpp>
-using namespace cuke::internal;
+using namespace cucumber::internal;
 
 TEST(TableTest, forbidsRowsNotMatchingTableColumnsSize) {
     Table t;

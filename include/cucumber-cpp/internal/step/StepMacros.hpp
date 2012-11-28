@@ -20,7 +20,7 @@ CUKE_OBJECT_(                                         \
 /**/
 
 #define CUKE_STEP_REGISTRATION_(step_name, step_matcher) \
-::cuke::internal::registerStep< step_name >(         \
+::cucumber::internal::registerStep< step_name >(         \
     step_matcher, __FILE__, __LINE__                     \
 )                                                        \
 /**/
@@ -38,7 +38,7 @@ CUKE_OBJECT_(                                         \
 // ************************************************************************** //
 
 #define REGEX_PARAM(type, name) const type name(getInvokeArg<type>())
-#define TABLE_PARAM(name) const ::cuke::internal::Table & name = \
+#define TABLE_PARAM(name) const ::cucumber::internal::Table & name = \
     getArgs()->getTableArg()
 
 #endif /* CUKE_STEPMACROS_HPP_ */

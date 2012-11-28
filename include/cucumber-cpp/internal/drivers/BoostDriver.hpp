@@ -3,7 +3,7 @@
 
 #include "../step/StepManager.hpp"
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 class CukeBoostLogInterceptor;
@@ -17,7 +17,7 @@ private:
     void runWithMasterSuite();
 };
 
-#define STEP_INHERITANCE(step_name) ::cuke::internal::BoostStep
+#define STEP_INHERITANCE(step_name) ::cucumber::internal::BoostStep
 
 }
 }

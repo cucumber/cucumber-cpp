@@ -1,6 +1,6 @@
 #include "cucumber-cpp/internal/ContextManager.hpp"
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 contexts_type ContextManager::contexts;

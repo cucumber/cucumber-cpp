@@ -6,7 +6,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 
-namespace cuke {
+namespace cucumber {
 
 using boost::shared_ptr;
 using boost::weak_ptr;

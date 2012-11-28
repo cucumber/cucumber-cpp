@@ -4,7 +4,7 @@
 #include "CukeEngine.hpp"
 #include "CukeCommands.hpp"
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 /**

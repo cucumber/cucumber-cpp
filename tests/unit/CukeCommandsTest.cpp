@@ -3,7 +3,7 @@
 #include <cucumber-cpp/internal/step/StepMacros.hpp>
 #include "../utils/CukeCommandsFixture.hpp"
 
-using namespace cuke::internal;
+using namespace cucumber::internal;
 
 using std::string;
 using boost::shared_ptr;

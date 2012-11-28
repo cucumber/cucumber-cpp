@@ -4,7 +4,7 @@
 #include <cucumber-cpp/internal/step/StepMacros.hpp>
 #include <cucumber-cpp/internal/drivers/FakeDriver.hpp>
 
-using namespace cuke::internal;
+using namespace cucumber::internal;
 
 #define MANUAL_STEP_MATCHER "manual step"
 
@@ -14,7 +14,7 @@ public:
 //private:
     static const int cukeRegId;
 };
-const int ManualStep::cukeRegId = ::cuke::internal::registerStep<ManualStep>(MANUAL_STEP_MATCHER, "C:\\Path\\With/Barward/And\\Forward/Slashes.cpp", 42);
+const int ManualStep::cukeRegId = ::cucumber::internal::registerStep<ManualStep>(MANUAL_STEP_MATCHER, "C:\\Path\\With/Barward/And\\Forward/Slashes.cpp", 42);
 
 TEST(StepRegistrationTest, manualRegistration) {
     StepManager stepManager;

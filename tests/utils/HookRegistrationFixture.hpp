@@ -7,7 +7,7 @@
 
 #include <sstream>
 
-using namespace cuke::internal;
+using namespace cucumber::internal;
 
 namespace {
 

@@ -1,6 +1,6 @@
 #include <cucumber-cpp/internal/Table.hpp>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 void Table::addColumn(const std::string column) throw (std::runtime_error) {

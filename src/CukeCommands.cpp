@@ -3,7 +3,7 @@
 #include <sstream>
 #include <boost/algorithm/string.hpp>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 shared_ptr<Scenario> CukeCommands::currentScenario;

@@ -6,7 +6,7 @@
 
 #include <typeinfo>
 
-using namespace cuke::internal;
+using namespace cucumber::internal;
 using namespace std;
 using namespace testing;
 

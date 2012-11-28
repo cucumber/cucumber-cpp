@@ -2,7 +2,7 @@
 
 #include <cucumber-cpp/internal/drivers/FakeDriver.hpp>
 
-using namespace cuke::internal;
+using namespace cucumber::internal;
 
 #define PENDING_STEP_DESCRIPTION "A description"
 

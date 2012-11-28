@@ -3,7 +3,7 @@
 
 #include "../step/StepManager.hpp"
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 class FakeStep : public BasicStep {
@@ -11,7 +11,7 @@ protected:
     const InvokeResult invokeStepBody();
 };
 
-#define STEP_INHERITANCE(step_name) ::cuke::internal::FakeStep
+#define STEP_INHERITANCE(step_name) ::cucumber::internal::FakeStep
 
 
 const InvokeResult FakeStep::invokeStepBody() {

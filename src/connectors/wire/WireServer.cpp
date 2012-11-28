@@ -1,6 +1,6 @@
 #include <cucumber-cpp/internal/connectors/wire/WireServer.hpp>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 SocketServer::SocketServer(const ProtocolHandler *protocolHandler) :

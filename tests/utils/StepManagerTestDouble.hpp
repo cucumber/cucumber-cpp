@@ -3,7 +3,7 @@
 
 #include <cucumber-cpp/internal/step/StepManager.hpp>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 

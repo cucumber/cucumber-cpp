@@ -3,7 +3,9 @@
 
 #include <iostream>
 
-using namespace std;
+using std::string;
+using std::cout;
+using std::endl;
 
 
 BEFORE() {

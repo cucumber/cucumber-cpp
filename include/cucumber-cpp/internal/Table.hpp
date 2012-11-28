@@ -6,7 +6,7 @@
 #include <string>
 #include <stdexcept>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 class Table {

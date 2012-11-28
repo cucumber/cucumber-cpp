@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 
-using namespace cuke;
+using cucumber::ScenarioScope;
 
 class ActiveActors {
 public:
@@ -45,7 +45,7 @@ GIVEN("^the following actors are still active") {
     for (table_hashes_type::const_iterator ait = actors.begin(); ait != actors.end(); ++ait) {
         std::string name(ait->at("name"));
         std::string yearString(ait->at("born"));
-        const ActiveActors::actor_year_type year = ::cuke::internal::fromString<ActiveActors::actor_year_type>(yearString);
+        const ActiveActors::actor_year_type year = ::cucumber::internal::fromString<ActiveActors::actor_year_type>(yearString);
         context->addActor(name, year);
     }
 }

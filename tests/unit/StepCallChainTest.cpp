@@ -2,7 +2,7 @@
 
 #include <cucumber-cpp/internal/hook/HookRegistrar.hpp>
 
-using namespace cuke::internal;
+using namespace cucumber::internal;
 
 class FakeStepInfo : public StepInfo {
 public:

@@ -2,7 +2,7 @@
 
 #include <cucumber-cpp/internal/CukeCommands.hpp>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 void Hook::invokeHook(Scenario *scenario) {

@@ -13,7 +13,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 using boost::shared_ptr;

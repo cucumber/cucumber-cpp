@@ -3,7 +3,7 @@
 
 #include "hook/Tag.hpp"
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 class Scenario {

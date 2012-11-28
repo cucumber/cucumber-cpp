@@ -1,6 +1,6 @@
 #include <cucumber-cpp/internal/hook/Tag.hpp>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 Regex & AndTagExpression::csvTagNotationRegex() {

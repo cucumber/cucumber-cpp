@@ -13,7 +13,7 @@ using boost::shared_ptr;
 #include "../Table.hpp"
 #include "../utils/Regex.hpp"
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 typedef unsigned int step_id_type;

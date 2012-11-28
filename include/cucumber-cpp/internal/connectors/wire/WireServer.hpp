@@ -7,7 +7,7 @@
 
 #include <boost/asio.hpp>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 using namespace boost::asio;

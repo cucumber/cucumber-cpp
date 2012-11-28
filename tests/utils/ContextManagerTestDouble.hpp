@@ -3,7 +3,7 @@
 
 #include <cucumber-cpp/internal/ContextManager.hpp>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 class ContextManagerTestDouble : public ContextManager {

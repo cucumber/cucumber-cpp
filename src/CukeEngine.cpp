@@ -1,6 +1,6 @@
 #include "cucumber-cpp/internal/CukeEngine.hpp"
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 InvokeException::InvokeException(const std::string & message) :

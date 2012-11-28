@@ -7,7 +7,7 @@
 
 using namespace std;
 using namespace boost::assign;
-using namespace cuke::internal;
+using namespace cucumber::internal;
 
 
 class StepManagerTest : public ::testing::Test {

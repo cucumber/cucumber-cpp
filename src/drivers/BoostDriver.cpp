@@ -10,7 +10,7 @@
 using namespace ::boost::unit_test;
 using ::boost::execution_exception;
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 

@@ -2,7 +2,7 @@
 
 #include <CppSpec/CppSpec.h>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 const InvokeResult CppSpecStep::invokeStepBody() {

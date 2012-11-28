@@ -10,7 +10,7 @@ using boost::shared_ptr;
 
 #include <list>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 class CallableStep {

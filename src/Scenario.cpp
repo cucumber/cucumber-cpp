@@ -1,6 +1,6 @@
 #include <cucumber-cpp/internal/Scenario.hpp>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 Scenario::Scenario(const TagExpression::tag_list *pTags) :

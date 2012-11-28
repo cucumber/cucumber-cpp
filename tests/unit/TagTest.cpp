@@ -2,7 +2,7 @@
 
 #include <cucumber-cpp/internal/hook/Tag.hpp>
 
-using namespace cuke::internal;
+using namespace cucumber::internal;
 
 #include <boost/assign/list_of.hpp>
 using namespace boost::assign;

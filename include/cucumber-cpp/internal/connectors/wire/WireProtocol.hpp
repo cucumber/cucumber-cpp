@@ -4,7 +4,7 @@
 #include "ProtocolHandler.hpp"
 #include "../../CukeEngine.hpp"
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 /*

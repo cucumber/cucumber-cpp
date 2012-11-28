@@ -1,6 +1,6 @@
 #include <cucumber-cpp/internal/utils/Regex.hpp>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 Regex::Regex(std::string regularExpression) :

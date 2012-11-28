@@ -3,7 +3,7 @@
 
 #include "WireProtocol.hpp"
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 class ScenarioCommand : public WireCommand {

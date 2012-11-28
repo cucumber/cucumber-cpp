@@ -7,7 +7,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-using namespace cuke::internal;
+using namespace cucumber::internal;
 using boost::shared_ptr;
 
 class EmptyStep : public FakeStep {

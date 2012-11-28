@@ -7,7 +7,7 @@
 
 #include <sstream>
 
-using namespace cuke::internal;
+using namespace cucumber::internal;
 using namespace boost::posix_time;
 using namespace boost::asio::ip;
 using namespace std;

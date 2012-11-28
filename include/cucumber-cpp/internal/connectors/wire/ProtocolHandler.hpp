@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 /**

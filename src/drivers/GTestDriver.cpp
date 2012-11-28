@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 bool GTestStep::initialized(false);

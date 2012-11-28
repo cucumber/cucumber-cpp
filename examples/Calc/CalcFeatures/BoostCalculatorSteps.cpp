@@ -3,7 +3,7 @@
 
 #include <Calculator.h>
 
-using namespace cuke;
+using cucumber::ScenarioScope;
 
 struct CalcCtx {
     Calculator calc;

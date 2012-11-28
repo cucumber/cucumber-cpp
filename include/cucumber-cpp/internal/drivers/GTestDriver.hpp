@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 class GTestStep : public BasicStep {
@@ -20,7 +20,7 @@ protected:
     static bool initialized;
 };
 
-#define STEP_INHERITANCE(step_name) ::cuke::internal::GTestStep
+#define STEP_INHERITANCE(step_name) ::cucumber::internal::GTestStep
 
 }
 }

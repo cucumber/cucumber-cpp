@@ -3,7 +3,7 @@
 
 #include "../../utils/DriverTestRunner.hpp"
 
-using namespace cuke;
+using namespace cucumber;
 
 THEN(SUCCEED_MATCHER) {
     ScenarioScope<SomeContext> ctx;
@@ -23,7 +23,7 @@ THEN(PENDING_MATCHER_2) {
     pending(PENDING_DESCRIPTION);
 }
 
-using namespace cuke::internal;
+using namespace cucumber::internal;
 
 class BoostStepDouble : public BoostStep {
 public:

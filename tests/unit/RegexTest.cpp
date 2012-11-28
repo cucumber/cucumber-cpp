@@ -4,7 +4,7 @@
 using namespace boost::assign;
 
 #include <cucumber-cpp/internal/utils/Regex.hpp>
-using namespace cuke::internal;
+using namespace cucumber::internal;
 
 #include <boost/shared_ptr.hpp>
 using boost::shared_ptr;

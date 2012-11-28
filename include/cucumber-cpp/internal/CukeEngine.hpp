@@ -6,7 +6,7 @@
 
 #include <boost/multi_array.hpp>
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 class StepMatchArg {

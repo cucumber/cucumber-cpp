@@ -14,7 +14,7 @@
 
 using namespace json_spirit;
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 

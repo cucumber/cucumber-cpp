@@ -45,7 +45,7 @@ public:
     }
 };
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 static const InvokeArgs NO_INVOKE_ARGS;

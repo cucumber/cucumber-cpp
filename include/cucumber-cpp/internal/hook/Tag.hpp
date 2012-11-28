@@ -9,7 +9,7 @@ using boost::shared_ptr;
 
 #include "../utils/Regex.hpp"
 
-namespace cuke {
+namespace cucumber {
 namespace internal {
 
 class TagExpression {
