@@ -4,6 +4,8 @@
 #include <string>
 #include <map>
 
+using namespace cuke;
+
 class ActiveActors {
 public:
     typedef std::string actor_name_type;
@@ -37,7 +39,7 @@ public:
 
 GIVEN("^the following actors are still active") {
     TABLE_PARAM(actorsParam);
-    USING_CONTEXT(ActiveActors, context);
+    ScenarioScope<ActiveActors> context;
 
     const table_hashes_type & actors = actorsParam.hashes();
     for (table_hashes_type::const_iterator ait = actors.begin(); ait != actors.end(); ++ait) {
@@ -50,14 +52,14 @@ GIVEN("^the following actors are still active") {
 
 WHEN("^(.+) retires") {
     REGEX_PARAM(std::string, retiringActor);
-    USING_CONTEXT(ActiveActors, context);
+    ScenarioScope<ActiveActors> context;
 
     context->retireActor(retiringActor);
 }
 
 THEN("^the oldest actor should be (.+)$") {
     REGEX_PARAM(std::string, oldestActor);
-    USING_CONTEXT(ActiveActors, context);
+    ScenarioScope<ActiveActors> context;
 
     ASSERT_EQ(oldestActor, context->getOldestActor());
 }

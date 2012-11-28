@@ -3,13 +3,15 @@
 
 #include "../../utils/DriverTestRunner.hpp"
 
+using namespace cuke;
+
 THEN(SUCCEED_MATCHER) {
-    USING_CONTEXT(cuke::internal::SomeContext, ctx);
+    ScenarioScope<SomeContext> ctx;
     ASSERT_TRUE(true);
 }
 
 THEN(FAIL_MATCHER) {
-    USING_CONTEXT(cuke::internal::SomeContext, ctx);
+    ScenarioScope<SomeContext> ctx;
     ASSERT_TRUE(false);
 }
 

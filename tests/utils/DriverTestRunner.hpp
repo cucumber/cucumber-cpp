@@ -7,9 +7,6 @@
 #include <iostream>
 #include <string>
 
-namespace cuke {
-namespace internal {
-
 class ContextListener {
 private:
     static int createdContexts;
@@ -36,7 +33,6 @@ public:
 int ContextListener::createdContexts = 0;
 int ContextListener::destroyedContexts = 0;
 
-
 class SomeContext {
 private:
     ContextListener listener;
@@ -48,6 +44,9 @@ public:
         listener.notifyDestruction();
     }
 };
+
+namespace cuke {
+namespace internal {
 
 static const InvokeArgs NO_INVOKE_ARGS;
 

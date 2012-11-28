@@ -41,10 +41,4 @@ CUKE_OBJECT_(                                         \
 #define TABLE_PARAM(name) const ::cuke::internal::Table & name = \
     getArgs()->getTableArg()
 
-// ************************************************************************** //
-// **************                USING_CONTEXT                 ************** //
-// ************************************************************************** //
-
-#define USING_CONTEXT(type, name) ::cuke::internal::SessionContextPtr<type> name
-
 #endif /* CUKE_STEPMACROS_HPP_ */
