@@ -58,7 +58,7 @@ private:
 
 public:
     StepMatchesResponse(const std::vector<StepMatch> & matchingSteps);
-    const std::vector<StepMatch> getMatchingSteps() const;
+    const std::vector<StepMatch>& getMatchingSteps() const;
 
     void accept(WireResponseVisitor *visitor) const;
 };

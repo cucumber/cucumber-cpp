@@ -60,7 +60,7 @@ StepMatchesResponse::StepMatchesResponse(const std::vector<StepMatch> & matching
     : matchingSteps(matchingSteps) {
 }
 
-const std::vector<StepMatch> StepMatchesResponse::getMatchingSteps() const {
+const std::vector<StepMatch>& StepMatchesResponse::getMatchingSteps() const {
     return matchingSteps;
 }
 
