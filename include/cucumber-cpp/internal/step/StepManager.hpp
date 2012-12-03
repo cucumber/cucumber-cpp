@@ -39,7 +39,7 @@ class MatchResult {
 public:
     typedef std::vector<SingleStepMatch> match_results_type;
 
-    const match_results_type getResultSet();
+    const match_results_type& getResultSet();
     void addMatch(SingleStepMatch match);
 
     operator void *();
