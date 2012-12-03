@@ -48,7 +48,7 @@ MatchResult::operator bool() {
     return !resultSet.empty();
 }
 
-const MatchResult::match_results_type MatchResult::getResultSet() {
+const MatchResult::match_results_type& MatchResult::getResultSet() {
     return resultSet;
 }
 
