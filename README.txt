@@ -3,7 +3,14 @@ Cucumber-Cpp allows Cucumber to support step definitions written in C++
 
 Cucumber-Cpp Website: http://github.com/cucumber/cucumber-cpp
 Cucumber-Cpp Documentation: https://github.com/cucumber/cucumber-cpp/wiki/
+
 Cucumber Website: http://cukes.info/
+Cucumber Discussion Group: http://groups.google.com/group/cukes
+
+
+If you need to ask a question, don't open a ticket on GitHub! Please post
+your question on the Cucumber discussion group instead, prefixing the title
+with [CPP].
 
 
 The current library relies on a few libraries:
@@ -24,6 +31,9 @@ This header-only library is included in the source code:
 
 It might work with earlier versions of the libraries, but it was not
 tested with them.
+
+Cucumber-Cpp uses the wire protocol at the moment, so you will need
+Cucumber-Ruby installed and available in the path.
 
 
 Building tests and sample application:
