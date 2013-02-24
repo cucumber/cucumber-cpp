@@ -1,0 +1,5 @@
+language: cpp
+
+before_script: "sudo apt-get install libboost-thread-dev libboost-system-dev libboost-regex-dev libboost-date-time-dev libboost-test-dev"
+
+script: "cmake -E make_directory build && cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on .. && cmake --build build && cmake --build build --target test"
