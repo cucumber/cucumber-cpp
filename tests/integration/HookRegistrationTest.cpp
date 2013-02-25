@@ -81,7 +81,7 @@ TEST_F(HookRegistrationTest, hooksAreRegisteredByTheMacros) {
 }
 
 TEST_F(HookRegistrationTest, beforeHooksAreInvokedInAnyOrder) {
-    EXPECT_EQ("TRAVIS-TEST", beforeHookCallMarker.str());
+    EXPECT_EQ("", beforeHookCallMarker.str());
     beginScenario(0);
     EXPECT_EQ(correctBeforeOrder, sort(beforeHookCallMarker.str()));
     invokeStep();
