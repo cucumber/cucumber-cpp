@@ -27,6 +27,14 @@ endif()
 # Boost
 #
 
+if(MSVC11)
+    # Boost 1.51 fixed a bug with MSVC11
+    message(STATUS "Forcing Boost 1.51+ on MSVC11")
+    set(BOOST_MIN_VERSION "1.51")
+else()
+    set(BOOST_MIN_VERSION "1.40")
+endif()
+
 set(CUKE_CORE_BOOST_LIBS thread system regex date_time)
 if(NOT CUKE_DISABLE_BOOST_TEST)
     set(CUKE_TEST_BOOST_LIBS unit_test_framework)
@@ -49,12 +57,12 @@ endif()
 
 if(CUKE_STATIC_BOOST_LIBS)
     set(Boost_USE_STATIC_LIBS ON)
-    find_package(Boost COMPONENTS ${CUKE_STATIC_BOOST_LIBS})
+    find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS ${CUKE_STATIC_BOOST_LIBS})
 endif()
 
 if(CUKE_DYNAMIC_BOOST_LIBS)
     set(Boost_USE_STATIC_LIBS OFF)
-    find_package(Boost COMPONENTS ${CUKE_DYNAMIC_BOOST_LIBS})
+    find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS ${CUKE_DYNAMIC_BOOST_LIBS})
 endif()
 
 if(Boost_FOUND)
