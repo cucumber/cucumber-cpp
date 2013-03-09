@@ -98,9 +98,9 @@ endif()
 # Cucumber-Cpp
 #
 
-set(CUKE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(CUKE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-include_directories(${CUKE_INCLUDE_DIRS})
+include_directories(${CUKE_INCLUDE_DIR})
 
 set(CUKE_LIBRARIES cucumber-cpp ${CUKE_EXTRA_LIBRARIES})
 
