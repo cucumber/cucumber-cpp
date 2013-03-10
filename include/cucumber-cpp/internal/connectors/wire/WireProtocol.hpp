@@ -130,8 +130,10 @@ public:
      * @param One single message to decode
      *
      * @return The decoded command (ownership passed to the caller)
+     *
+     * @throws WireMessageCodecException
      */
-    virtual WireCommand *decode(const std::string &request) const throw(WireMessageCodecException) = 0;
+    virtual WireCommand *decode(const std::string &request) const = 0;
 
     /**
      * Encodes a response to wire format.
@@ -151,7 +153,7 @@ public:
 class JsonSpiritWireMessageCodec : public WireMessageCodec {
 public:
     JsonSpiritWireMessageCodec();
-    WireCommand *decode(const std::string &request) const throw(WireMessageCodecException);
+    WireCommand *decode(const std::string &request) const;
     const std::string encode(const WireResponse *response) const;
 };
 

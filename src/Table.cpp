@@ -3,7 +3,7 @@
 namespace cucumber {
 namespace internal {
 
-void Table::addColumn(const std::string column) throw (std::runtime_error) {
+void Table::addColumn(const std::string column) {
     if (rows.empty()) {
         columns.push_back(column);
     } else {
@@ -11,7 +11,7 @@ void Table::addColumn(const std::string column) throw (std::runtime_error) {
     }
 }
 
-void Table::addRow(const row_type &row) throw (std::range_error, std::runtime_error) {
+void Table::addRow(const row_type &row) {
     const basic_type::size_type colSize = columns.size();
     if (colSize == 0) {
         throw std::runtime_error("No column defined yet");

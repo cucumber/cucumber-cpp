@@ -18,8 +18,22 @@ public:
     typedef basic_type row_type;
     typedef std::vector<hash_row_type> hashes_type;
 
-    void addColumn(const std::string column) throw (std::runtime_error);
-    void addRow(const row_type &row) throw (std::range_error, std::runtime_error);
+    /**
+     * @brief addColumn
+     * @param column
+     *
+     * @throws std::runtime_error
+     */
+    void addColumn(const std::string column);
+
+    /**
+     * @brief addRow
+     * @param row
+     *
+     * @throws std::range_error
+     * @throws std::runtime_error
+     */
+    void addRow(const row_type &row);
     const hashes_type & hashes() const;
 
 private:
