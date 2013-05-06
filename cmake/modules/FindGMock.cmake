@@ -86,14 +86,14 @@ endif()
 
 set(_gmock_libpath_suffixes lib)
 if(MSVC)
-  if(GMOCK_MSVC_SEARCH STREQUAL "MD")
+  if(MSVC_VERSION GREATER 1400)
     list(APPEND _gmock_libpath_suffixes
-      msvc/gmock-md/Debug
-      msvc/gmock-md/Release)
-  elseif(GMOCK_MSVC_SEARCH STREQUAL "MT")
+      msvc/2010/Debug
+      msvc/2010/Release)
+  else()
     list(APPEND _gmock_libpath_suffixes
-      msvc/gmock/Debug
-      msvc/gmock/Release)
+      msvc/2005/Debug
+      msvc/2005/Release)
   endif()
 endif()
 
