@@ -24,7 +24,6 @@ int main(int argc, char **argv) {
             std::string firstArg(argv[1]);
             port = ::cucumber::internal::fromString<int>(firstArg);
         }
-        std::clog << "Listening on port " << port << std::endl;
         acceptWireProtocol(port);
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

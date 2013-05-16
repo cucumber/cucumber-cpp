@@ -1,4 +1,7 @@
 # Qt Creator
 CMakeLists.txt.user
 
+# Bundler
+Gemfile.lock
+
 build/
