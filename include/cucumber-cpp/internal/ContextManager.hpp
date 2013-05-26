@@ -40,6 +40,7 @@ public:
 
     T& operator*();
     T* operator->();
+    T* get();
 
 private:
     internal::ContextManager contextManager;
@@ -66,6 +67,11 @@ T& ScenarioScope<T>::operator*() {
 template<class T>
 T* ScenarioScope<T>::operator->() {
     return (context.get());
+}
+
+template<class T>
+T* ScenarioScope<T>::get() {
+    return context.get();
 }
 
 }
