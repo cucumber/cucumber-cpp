@@ -16,7 +16,7 @@ static int milliseconds = -1;
 int millisecondsToWait() {
     if (milliseconds < 0)
     {
-        char* envVariable = getenv("CUKE_CALCQT_WAIT");
+        char* envVariable = getenv("CALCQT_STEP_DELAY");
         milliseconds = (0 != envVariable) ? atoi(envVariable) : 0;
     }
     return milliseconds;
