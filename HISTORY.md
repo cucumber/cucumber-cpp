@@ -2,6 +2,7 @@
 
 ### New Features
 
+* Added CalcQt example ([#58](https://github.com/cucumber/cucumber-cpp/pull/58) Gianni Ambrosio)
 * Replaced USING_CONTEXT with ScenarioScope<T> ([27256e9](https://github.com/cucumber/cucumber-cpp/commit/27256e932c75e9d4d57d4839042317e6a04cfe46) Paolo Ambrosio)
 * Changed include name from core.hpp to defs.hpp ([5bbac06](https://github.com/cucumber/cucumber-cpp/commit/5bbac062e19dcf9de2761f4ded115aa7212c14d7) Paolo Ambrosio)
 * Project rename from CukeBins to Cucumber-Cpp ([efecfd0](https://github.com/cucumber/cucumber-cpp/commit/efecfd0813efa1b6d406c2fd0cd03d8a84bed3ff) Paolo Ambrosio)
