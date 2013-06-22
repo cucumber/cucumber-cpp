@@ -13,7 +13,7 @@ If you need to ask a question, don't open a ticket on GitHub! Please post
 your question on the Cucumber discussion group instead, prefixing the title
 with [CPP].
 
-The current library relies on a few libraries:
+It relies on a few libraries:
 
 * [Boost](http://www.boost.org/) 1.40 or later.
   Required libraries: *thread*, *system*, *regex*, and *date_time*.
@@ -24,6 +24,7 @@ The current library relies on a few libraries:
   Optional for the CppSpec driver.
 * [GMock](http://code.google.com/p/googlemock/) 1.6 or later.
   Optional for the internal test suite.
+* [Qt 4](http://qt-project.org/). Optional for the CalcQt example.
 
 This header-only library is included in the source code:
 
@@ -35,7 +36,7 @@ tested with them.
 Cucumber-Cpp uses the wire protocol at the moment, so you will need
 Cucumber-Ruby installed and available on the path.
 
-Building tests and sample application:
+Building Cucumber-Cpp with tests and samples:
 
 ```
 cmake -E make_directory build
@@ -44,17 +45,17 @@ cmake --build build
 cmake --build build --target test
 ```
 
-Running the example on Unix:
+Running the Calc example on Unix:
 
 ```
 build/examples/Calc/BoostCalculatorSteps >/dev/null &
-cucumber examples/Calc/CalcFeatures
+cucumber examples/Calc
 ```
 
-Running the example on Windows (NMake):
+Running the Calc example on Windows (NMake):
 
 ```
 start build\examples\Calc\BoostCalculatorSteps.exe
-cucumber examples\Calc\CalcFeatures
+cucumber examples\Calc
 ```
 
