@@ -1,7 +1,11 @@
 Feature: Simple Feature
 
+  This is just a simple feature meant to test the infrastructure.
+  The features in this directory should test code specific to
+  Cucumber-Cpp, like how to write hooks, the test frameworks, etc.
+
   Scenario: Simple Scenario
-    Given a feature file with:
+    Given the following feature:
       """
       Feature: Feature name
 
@@ -16,8 +20,8 @@ Feature: Simple Feature
         std::cout << "STEP RUN" << std::endl;
       }
       """
-    When I run cucumber-cpp
-    Then the output should contain:
+    When Cucumber runs the feature
+    Then the step output should contain:
       """
       STEP RUN
 
