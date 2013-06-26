@@ -86,7 +86,7 @@ if(NOT CUKE_DISABLE_GTEST)
     find_package(GTest)
     find_package(GMock)
     if(GMOCK_FOUND AND GTEST_FOUND)
-        set(CUKE_TEST_LIBRARIES ${GTEST_LIBRARY} ${GMOCK_LIBRARY} ${GMOCK_MAIN_LIBRARY})
+        set(CUKE_TEST_LIBRARIES ${GTEST_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
         if(UNIX)
             find_package(Threads) # GTest needs this and it's a static library
             set(CUKE_TEST_LIBRARIES ${CUKE_TEST_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
