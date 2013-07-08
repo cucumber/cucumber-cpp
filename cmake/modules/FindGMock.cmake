@@ -21,9 +21,6 @@
 #   GMOCK_ROOT - (as a CMake or environment variable)
 #                The root directory of the gmock install prefix
 #
-#   GMOCK_MSVC_SEARCH - If compiling with MSVC, this variable can be set to
-#                       "MD" or "MT" to enable searching a gmock build tree
-#                       (defaults: "MD")
 #
 #-----------------------
 # Example Usage:
@@ -80,20 +77,16 @@ function(_gmock_find_library _name)
 endfunction()
 
 
-if(NOT DEFINED GMOCK_MSVC_SEARCH)
-  set(GMOCK_MSVC_SEARCH MD)
-endif()
-
 set(_gmock_libpath_suffixes lib)
 if(MSVC)
-  if(GMOCK_MSVC_SEARCH STREQUAL "MD")
+  if(MSVC_VERSION GREATER 1400)
     list(APPEND _gmock_libpath_suffixes
-      msvc/gmock-md/Debug
-      msvc/gmock-md/Release)
-  elseif(GMOCK_MSVC_SEARCH STREQUAL "MT")
+      msvc/2010/Debug
+      msvc/2010/Release)
+  else()
     list(APPEND _gmock_libpath_suffixes
-      msvc/gmock/Debug
-      msvc/gmock/Release)
+      msvc/2005/Debug
+      msvc/2005/Release)
   endif()
 endif()
 
@@ -104,19 +97,10 @@ find_path(GMOCK_INCLUDE_DIR gmock/gmock.h
 )
 mark_as_advanced(GMOCK_INCLUDE_DIR)
 
-if(MSVC AND GMOCK_MSVC_SEARCH STREQUAL "MD")
-  # The provided /MD project files for Google Mock add -md suffixes to the
-  # library names.
-  _gmock_find_library(GMOCK_LIBRARY            gmock-md  gmock)
-  _gmock_find_library(GMOCK_LIBRARY_DEBUG      gmock-mdd gmockd)
-  _gmock_find_library(GMOCK_MAIN_LIBRARY       gmock_main-md  gmock_main)
-  _gmock_find_library(GMOCK_MAIN_LIBRARY_DEBUG gmock_main-mdd gmock_maind)
-else()
-  _gmock_find_library(GMOCK_LIBRARY            gmock)
-  _gmock_find_library(GMOCK_LIBRARY_DEBUG      gmockd)
-  _gmock_find_library(GMOCK_MAIN_LIBRARY       gmock_main)
-  _gmock_find_library(GMOCK_MAIN_LIBRARY_DEBUG gmock_maind)
-endif()
+_gmock_find_library(GMOCK_LIBRARY            gmock)
+_gmock_find_library(GMOCK_LIBRARY_DEBUG      gmockd)
+_gmock_find_library(GMOCK_MAIN_LIBRARY       gmock_main)
+_gmock_find_library(GMOCK_MAIN_LIBRARY_DEBUG gmock_maind)
 
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(GMock DEFAULT_MSG GMOCK_LIBRARY GMOCK_INCLUDE_DIR GMOCK_MAIN_LIBRARY)
 
