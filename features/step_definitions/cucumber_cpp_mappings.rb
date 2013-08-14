@@ -41,23 +41,88 @@ module CucumberCppMappings
   end
 
   def write_passing_hook options = {}
-    pending
+    log_string = options[:log_cycle_event_as]
+    if options[:type]
+      hook_type  = options[:type]
+      log_string ||= hook_type
+    else
+      hook_type  = "before"
+      log_string ||= "hook"
+    end
+    tags        = options[:tags] || []
+    define_hook = hook_type.upcase
+    params      = tags.any? ? '"'+tags.join('", "')+'"' : ""
+
+    if hook_type == "around"
+      # around scenario hooks not implemented
+      pending
+    else
+      append_support_code <<-EOF
+#{define_hook}(#{params}) {
+  logCycleEvent("#{log_string}");
+}
+EOF
+    end
   end
 
   def write_scenario options = {}
-    pending
+    tags = options[:with_tags] || []
+
+    @next_step_count ||= 0
+    step_name = nth_step_name @next_step_count += 1
+    tags_definition = tags.any? ? "\n  #{tags.join(' ')}" : ""
+    append_logging_step_definition(step_name)
+    append_to_feature <<-EOF
+#{tags_definition}
+  Scenario: scenario #{"tagged with " + tags.join(', ') if tags.any?}
+    Given #{step_name}
+EOF
   end
 
   def write_world_variable_with_numeric_value(value)
-    pending
+    append_support_code <<-EOF
+struct World {
+  int variable = #{value};
+};
+EOF
   end
 
   def write_world_function
-    pending
+    append_support_code <<-EOF
+struct World {
+    void someFunction() {
+        writeToFile("#{WORLD_FUNCTION_LOG_FILE}", "");
+    }
+};
+EOF
   end
 
   def write_custom_world_constructor
-    pending
+    # it does not make any sense! the scenario should be changed
+  end
+
+  def write_mapping_incrementing_world_variable_by_value(step_name, increment_value)
+    append_step_definition step_name, <<-EOF
+ScenarioScope<World> world;
+
+world->variable += #{increment_value};
+EOF
+  end
+
+  def write_mapping_logging_world_variable_value(step_name, time = "1")
+    append_step_definition step_name, <<-EOF
+ScenarioScope<World> world;
+
+writeToFile("#{WORLD_VARIABLE_LOG_FILE}.#{time}", world->variable);
+EOF
+  end
+
+  def write_mapping_calling_world_function(step_name)
+    append_step_definition step_name, <<-EOF
+ScenarioScope<World> world;
+
+world->someFunction();
+EOF
   end
 
   def assert_passing_scenario
@@ -93,12 +158,47 @@ module CucumberCppMappings
     pending
   end
 
+  def assert_executed_scenarios *scenario_offsets
+    sequence = scenario_offsets.inject([]) do |sequence, scenario_offset|
+      sequence << nth_step_name(scenario_offset)
+    end
+    assert_complete_cycle_sequence *sequence
+  end
+
+  def assert_world_variable_held_value_at_time(value, time)
+    check_exact_file_content "#{WORLD_VARIABLE_LOG_FILE}.#{time}", value
+  end
+
+  def assert_world_function_called
+    check_file_presence [WORLD_FUNCTION_LOG_FILE], true
+  end
+
+  def assert_cycle_sequence *args
+    expected_string = args.join CYCLE_SEQUENCE_SEPARATOR
+    check_file_content(CYCLE_LOG_FILE, expected_string, true)
+  end
+
+  def assert_cycle_sequence_excluding *args
+    args.each do |unexpected_string|
+      check_file_content(CYCLE_LOG_FILE, unexpected_string, false)
+    end
+  end
+
+  def assert_complete_cycle_sequence *args
+    expected_string = "#{CYCLE_SEQUENCE_SEPARATOR}#{args.join(CYCLE_SEQUENCE_SEPARATOR)}"
+    check_exact_file_content(CYCLE_LOG_FILE, expected_string)
+  end
+
   def run_feature
-    write_main_step_definitions_file
-    compile_step_definitions
-    create_wire_file
-    run_cucumber_cpp
-    run_cucumber_test_feature
+    run_feature_with_params("")
+  end
+
+  def run_feature_with_tags *tag_groups
+    params = ""
+    tag_groups.each do |tag_group|
+      params += " --tags #{tag_group}"
+    end
+    run_feature_with_params(params)
   end
 
   def failed_output
@@ -108,43 +208,96 @@ module CucumberCppMappings
 # cpp steps
 
   def append_step_definition(step_name, code) # todo params parameter?
-    append_support_code "CUKE_STEP_(\"#{step_name}\") {\n#{code}\n}\n"
+    append_support_code <<-EOF
+CUKE_STEP_("^#{step_name}$") {
+#{indent_code code}
+}
+EOF
   end
 
   def append_support_code(code)
-    @support_code ||= "#include <cucumber-cpp/defs.hpp>\n"
+    @support_code ||= <<-EOF
+#include <cucumber-cpp/defs.hpp>
+
+using cucumber::ScenarioScope;
+
+// TODO move it out in another include
+
+#include <fstream>
+
+template <typename T>
+void writeToFile(char *filename, T content) {
+  using namespace::std;
+  ofstream file;
+  file.open(filename, ios::out | ios::trunc);
+  file << content;
+  file.close();
+}
+
+void logCycleEvent(char *name) {
+  using namespace::std;
+  ofstream file;
+  file.open("#{CYCLE_LOG_FILE}", ios::out | ios::app);
+  file << "#{CYCLE_SEQUENCE_SEPARATOR}" << name;
+  file.close();
+}
+EOF
     @support_code += code
   end
 
+  TMP_DIR                      = ENV["TMP_DIR"]
+  FEATURES_DIR                 = ENV["TEST_FEATURES_DIR"]
+  STEP_DEFINITIONS_SRC         = ENV["DYNAMIC_CPP_STEPS_SRC"]
+  STEP_DEFINITIONS_EXE         = ENV["DYNAMIC_CPP_STEPS_EXE"]
+  COMPILE_STEP_DEFINITIONS_CMD = ENV["COMPILE_DYNAMIC_CPP_STEPS"]
+
+  WORLD_VARIABLE_LOG_FILE      = "#{TMP_DIR}/world_variable.log"
+  WORLD_FUNCTION_LOG_FILE      = "#{TMP_DIR}/world_function.log"
+  CYCLE_LOG_FILE               = "#{TMP_DIR}/cycle.log"
+  CYCLE_SEQUENCE_SEPARATOR     = " -> "
+
 private
 
-  FEATURES_DIR = ENV["TEST_FEATURES_DIR"]
-  STEP_DEFINITIONS_SRC = ENV["DYNAMIC_CPP_STEPS_SRC"]
-  STEP_DEFINITIONS_EXE = ENV["DYNAMIC_CPP_STEPS_EXE"]
-  COMPILE_STEP_DEFINITIONS_CMD = ENV["COMPILE_DYNAMIC_CPP_STEPS"]
+  def append_logging_step_definition(step_name)
+    append_step_definition step_name, "logCycleEvent(\"#{step_name}\");"
+  end
+
+  def nth_step_name n
+    "step #{n}"
+  end
+
+  def run_feature_with_params(params)
+    write_main_step_definitions_file
+    compile_step_definitions
+    create_wire_file
+    run_cucumber_cpp
+    run_cucumber_test_feature params
+    Process.kill(:SIGTERM, @steps_out.pid) # for when there are no scenarios
+    Process.wait @steps_out.pid
+  end
 
   def write_main_step_definitions_file
     write_file(STEP_DEFINITIONS_SRC, @support_code);
   end
 
   def compile_step_definitions
-    write_file("/tmp/badger", COMPILE_STEP_DEFINITIONS_CMD)
     compiler_output = %x[ #{COMPILE_STEP_DEFINITIONS_CMD} ]
     expect($?.success?).to eq(true)
   end
 
   def create_wire_file
-    contents = "host: localhost\nport: 3902\n"
-    filename = "#{FEATURES_DIR}/step_definitions/cucumber-cpp.wire"
-    write_file filename, contents
+    write_file "#{FEATURES_DIR}/step_definitions/cucumber-cpp.wire", <<-EOF
+host: localhost
+port: 3902
+EOF
   end
 
   def run_cucumber_cpp
-    @steps_out = IO.popen STEP_DEFINITIONS_EXE, 'r+'
+    @steps_out = IO.popen STEP_DEFINITIONS_EXE
   end
 
-  def run_cucumber_test_feature
-    run_simple "cucumber #{FEATURES_DIR}", false
+  def run_cucumber_test_feature(params)
+    run_simple "cucumber #{params} #{FEATURES_DIR}", false
   end
 end
 

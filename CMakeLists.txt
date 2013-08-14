@@ -130,7 +130,8 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
     if(CUCUMBER_RUBY)
         message(STATUS "Found Cucumber")
         set(CUKE_FEATURES_DIR ${CMAKE_SOURCE_DIR}/features)
-        set(CUKE_TEST_FEATURES_DIR ${CMAKE_BINARY_DIR}/test_features)
+        set(CUKE_FEATURES_TMP ${CMAKE_BINARY_DIR}/tmp)
+        set(CUKE_TEST_FEATURES_DIR ${CUKE_FEATURES_TMP}/test_features)
         set(CUKE_DYNAMIC_CPP_STEPS ${CUKE_TEST_FEATURES_DIR}/step_definitions/cpp_steps.cpp)
 
         file(WRITE ${CUKE_DYNAMIC_CPP_STEPS})
@@ -142,6 +143,7 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
         add_custom_target(features
             COMMAND ${CUCUMBER_RUBY}
             TEST_FEATURES_DIR=${CUKE_TEST_FEATURES_DIR}
+            TMP_DIR=${CUKE_FEATURES_TMP}
             DYNAMIC_CPP_STEPS_SRC=${CUKE_DYNAMIC_CPP_STEPS}
             DYNAMIC_CPP_STEPS_EXE=${CMAKE_BINARY_DIR}/functional-steps
             COMPILE_DYNAMIC_CPP_STEPS=${CUKE_COMPILE_DYNAMIC_CPP_STEPS}
@@ -149,9 +151,11 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
             DEPENDS cucumber-cpp
         )
 
+        # TODO refactor
         add_custom_target(wip-features
             COMMAND ${CUCUMBER_RUBY}
             TEST_FEATURES_DIR=${CUKE_TEST_FEATURES_DIR}
+            TMP_DIR=${CUKE_FEATURES_TMP}
             DYNAMIC_CPP_STEPS_SRC=${CUKE_DYNAMIC_CPP_STEPS}
             DYNAMIC_CPP_STEPS_EXE=${CMAKE_BINARY_DIR}/functional-steps
             COMPILE_DYNAMIC_CPP_STEPS=${CUKE_COMPILE_DYNAMIC_CPP_STEPS}
