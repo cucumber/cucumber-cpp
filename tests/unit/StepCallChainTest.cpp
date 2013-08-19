@@ -82,7 +82,7 @@ protected:
         InvokeResult result;
         result = execStep(InvokeResult::success());
         EXPECT_TRUE(result.isSuccess());
-        result = execStep(InvokeResult::failure());
+        result = execStep(InvokeResult::failure("Failed"));
         EXPECT_FALSE(result.isSuccess());
     }
 };
