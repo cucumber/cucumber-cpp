@@ -1,3 +1,5 @@
+require 'json'
+
 module CucumberCppMappings
 
   def features_dir
@@ -9,11 +11,11 @@ module CucumberCppMappings
   end
 
   def write_failing_mapping(step_name)
-    append_step_definition(step_name, "throw \"rotten cucumbers\";")
+    write_failing_mapping_with_message(step_name, "rotten cucumbers")
   end
 
   def write_failing_mapping_with_message(step_name, message)
-    pending
+    append_step_definition(step_name, "throw \"#{message}\";")
   end
 
   def write_pending_mapping(step_name)
@@ -21,23 +23,26 @@ module CucumberCppMappings
   end
 
   def write_calculator_code
-    pending
+    include_file "../support/RpnCalculator.cpp"
   end
 
   def write_mappings_for_calculator
-    pending
+    include_file "RpnCalculatorSteps.cpp"
   end
 
   def write_mapping_receiving_data_table_as_headless_row_array(step_name)
-    pending
+    not_implemented
   end
 
   def write_mapping_receiving_data_table_as_raw(step_name)
-    pending
+    not_implemented
   end
 
   def write_mapping_receiving_data_table_as_hashes(step_name)
-    pending
+    append_step_definition step_name, <<-EOF
+TABLE_PARAM(table);
+logTableAsHashes(table);
+EOF
   end
 
   def write_passing_hook options = {}
@@ -55,7 +60,7 @@ module CucumberCppMappings
 
     if hook_type == "around"
       # around scenario hooks not implemented
-      pending
+      not_implemented
     else
       append_support_code <<-EOF
 #{define_hook}(#{params}) {
@@ -155,7 +160,7 @@ EOF
   end
 
   def assert_suggested_step_definition_snippet(stepdef_keyword, stepdef_pattern, parameter_count = 0, doc_string = false, data_table = false)
-    pending
+    not_implemented
   end
 
   def assert_executed_scenarios *scenario_offsets
@@ -189,6 +194,15 @@ EOF
     check_exact_file_content(CYCLE_LOG_FILE, expected_string)
   end
 
+  def assert_data_table_equals_json(json)
+    prep_for_fs_check do
+      log_file_contents = IO.read(DATA_TABLE_LOG_FILE)
+      actual_array      = JSON.parse(log_file_contents)
+      expected_array    = JSON.parse(json)
+      actual_array.should == expected_array
+    end
+  end
+
   def run_feature
     run_feature_with_params("")
   end
@@ -216,30 +230,19 @@ EOF
   end
 
   def append_support_code(code)
+    helper_functions = get_absolute_path('../support/HelperFunctions.hpp');
     @support_code ||= <<-EOF
 #include <cucumber-cpp/defs.hpp>
+#include "#{helper_functions}"
 
 using cucumber::ScenarioScope;
 
-// TODO move it out in another include
-
-#include <fstream>
-
-template <typename T>
-void writeToFile(char *filename, T content) {
-  using namespace::std;
-  ofstream file;
-  file.open(filename, ios::out | ios::trunc);
-  file << content;
-  file.close();
+void logCycleEvent(const char *name) {
+    logCycleEvent(name, "#{CYCLE_LOG_FILE}", "#{CYCLE_SEQUENCE_SEPARATOR}");
 }
 
-void logCycleEvent(char *name) {
-  using namespace::std;
-  ofstream file;
-  file.open("#{CYCLE_LOG_FILE}", ios::out | ios::app);
-  file << "#{CYCLE_SEQUENCE_SEPARATOR}" << name;
-  file.close();
+void logTableAsHashes(const cucumber::internal::Table & table) {
+    logTableAsHashes(table, "#{DATA_TABLE_LOG_FILE}");
 }
 EOF
     @support_code += code
@@ -253,13 +256,29 @@ EOF
 
   WORLD_VARIABLE_LOG_FILE      = "#{TMP_DIR}/world_variable.log"
   WORLD_FUNCTION_LOG_FILE      = "#{TMP_DIR}/world_function.log"
+  DATA_TABLE_LOG_FILE          = "#{TMP_DIR}/data_table.log"
   CYCLE_LOG_FILE               = "#{TMP_DIR}/cycle.log"
   CYCLE_SEQUENCE_SEPARATOR     = " -> "
 
 private
 
+  def not_implemented
+    pending "Not yet implemented!"
+  end
+
   def append_logging_step_definition(step_name)
     append_step_definition step_name, "logCycleEvent(\"#{step_name}\");"
+  end
+
+  def include_file(relative_file_path)
+    absolute_file_path = get_absolute_path(relative_file_path)
+    append_support_code <<-EOF
+#include "#{absolute_file_path}"
+EOF
+  end
+
+  def get_absolute_path(relative_path)
+    File.expand_path(relative_path, File.dirname(__FILE__))
   end
 
   def nth_step_name n
