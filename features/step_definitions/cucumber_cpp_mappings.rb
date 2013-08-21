@@ -301,7 +301,7 @@ EOF
 
   def compile_step_definitions
     compiler_output = %x[ #{COMPILE_STEP_DEFINITIONS_CMD} ]
-    expect($?.success?).to eq(true)
+    expect($?.success?).to be_true, "Compilation failed!\n#{compiler_output}"
   end
 
   def create_wire_file
