@@ -87,7 +87,8 @@ EOF
   def write_world_variable_with_numeric_value(value)
     append_support_code <<-EOF
 struct World {
-  int variable = #{value};
+  int variable;
+  World() : variable(#{value}) {}
 };
 EOF
   end

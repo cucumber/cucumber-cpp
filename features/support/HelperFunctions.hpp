@@ -5,7 +5,7 @@
 #include <fstream>
 
 template <typename T>
-void writeToFile(char *filename, T content) {
+void writeToFile(const char *filename, T content) {
   using namespace::std;
   ofstream file;
   file.open(filename, ios::out | ios::trunc);
