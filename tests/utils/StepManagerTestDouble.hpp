@@ -44,7 +44,7 @@ public:
         if (pArgs->getTableArg().hashes().size() == expectedSize) {
             return InvokeResult::success();
         } else {
-            return InvokeResult::failure();
+            return InvokeResult::failure("Failed");
         }
     }
 };

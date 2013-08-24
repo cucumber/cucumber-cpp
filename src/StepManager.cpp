@@ -94,10 +94,6 @@ InvokeResult InvokeResult::success() {
     return InvokeResult(SUCCESS, 0);
 }
 
-InvokeResult InvokeResult::failure() {
-    return InvokeResult::failure(0);
-}
-
 InvokeResult InvokeResult::failure(const char *description) {
     return InvokeResult(FAILURE, description);
 }
@@ -171,8 +167,15 @@ InvokeResult BasicStep::invoke(const InvokeArgs *pArgs) {
         } else {
             return returnedResult;
         }
+    } catch (const std::exception& ex) {
+        return InvokeResult::failure(ex.what());
+    } catch (const std::string& ex) {
+        return InvokeResult::failure(ex);
+    } catch (const char *ex) {
+        return InvokeResult::failure(ex);
     } catch (...) {
-        return InvokeResult::failure();
+        // Cucumber needs a description here
+        return InvokeResult::failure("Unknown exception");
     }
 }
 

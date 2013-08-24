@@ -85,7 +85,6 @@ public:
     InvokeResult& operator= (const InvokeResult& rhs);
 
     static InvokeResult success();
-    static InvokeResult failure();
     static InvokeResult failure(const char *description);
     static InvokeResult failure(const std::string &description);
     static InvokeResult pending(const char *description);
