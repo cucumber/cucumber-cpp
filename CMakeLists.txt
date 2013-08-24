@@ -6,6 +6,7 @@ set(CUKE_USE_STATIC_BOOST ${MSVC} CACHE BOOL "Statically link Boost (except boos
 set(CUKE_DISABLE_BOOST_TEST OFF CACHE BOOL "Disable boost:test")
 set(CUKE_DISABLE_CPPSPEC OFF CACHE BOOL "Disable CppSpec")
 set(CUKE_DISABLE_GTEST OFF CACHE BOOL "Disable Google Test framework")
+set(CUKE_DISABLE_FUNCTIONAL OFF CACHE BOOL "Disable Functional Tests")
 set(CUKE_ENABLE_EXAMPLES OFF CACHE BOOL "Enable the examples")
 
 enable_testing()
@@ -110,3 +111,57 @@ add_subdirectory(tests)
 if(CUKE_ENABLE_EXAMPLES)
     add_subdirectory(examples)
 endif()
+
+#
+# Functional Tests
+#
+
+if(NOT CUKE_DISABLE_FUNCTIONAL)
+
+    find_program(BUNDLE bundle)
+    if(BUNDLE)
+        message(STATUS "Installing gem dependencies")
+        execute_process(COMMAND ${BUNDLE} WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+    else()
+        message(WARNING "Could not find Bundler: skipping Ruby Gem management")
+    endif()
+
+    find_program(CUCUMBER_RUBY cucumber)
+    if(CUCUMBER_RUBY)
+        message(STATUS "Found Cucumber")
+        set(CUKE_FEATURES_DIR ${CMAKE_SOURCE_DIR}/features)
+        set(CUKE_FEATURES_TMP ${CMAKE_BINARY_DIR}/tmp)
+        set(CUKE_TEST_FEATURES_DIR ${CUKE_FEATURES_TMP}/test_features)
+        set(CUKE_DYNAMIC_CPP_STEPS ${CUKE_TEST_FEATURES_DIR}/step_definitions/cpp_steps.cpp)
+
+        file(WRITE ${CUKE_DYNAMIC_CPP_STEPS})
+        add_executable(functional-steps EXCLUDE_FROM_ALL ${CUKE_DYNAMIC_CPP_STEPS})
+        target_link_libraries(functional-steps cucumber-cpp ${CUKE_LIBRARIES})
+
+        # TODO It does not escape paths
+        set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target functional-steps")
+
+        function(add_feature_target TARGET_NAME)
+            add_custom_target(${TARGET_NAME}
+                COMMAND ${CUCUMBER_RUBY}
+                TEST_FEATURES_DIR=${CUKE_TEST_FEATURES_DIR}
+                TMP_DIR=${CUKE_FEATURES_TMP}
+                DYNAMIC_CPP_STEPS_SRC=${CUKE_DYNAMIC_CPP_STEPS}
+                DYNAMIC_CPP_STEPS_EXE=${CMAKE_BINARY_DIR}/functional-steps
+                COMPILE_DYNAMIC_CPP_STEPS=${CUKE_COMPILE_DYNAMIC_CPP_STEPS}
+                ${ARGV1} ${ARGV2} ${ARGV3} ${ARGV4} ${ARGV5} ${ARGV6}
+                ${CUKE_FEATURES_DIR}
+                DEPENDS cucumber-cpp
+            )
+        endfunction(add_feature_target)
+
+        add_feature_target(features --format progress)
+        add_feature_target(features-pretty --format pretty)
+        add_feature_target(features-wip --format pretty --tags @wip)
+
+    else()
+        message(WARNING "Could not find Cucumber: skipping functional tests")
+    endif()
+
+endif()
+

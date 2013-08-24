@@ -34,7 +34,8 @@ It might work with earlier versions of the libraries, but it was not
 tested with them.
 
 Cucumber-Cpp uses the wire protocol at the moment, so you will need
-Cucumber-Ruby installed and available on the path.
+Cucumber-Ruby installed and available on the path. It is also needed
+to run the functional test suite.
 
 Building Cucumber-Cpp with tests and samples:
 
@@ -43,6 +44,7 @@ cmake -E make_directory build
 cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on ..
 cmake --build build
 cmake --build build --target test
+cmake --build build --target features
 ```
 
 Running the Calc example on Unix:
