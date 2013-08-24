@@ -138,30 +138,27 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
         add_executable(functional-steps EXCLUDE_FROM_ALL ${CUKE_DYNAMIC_CPP_STEPS})
         target_link_libraries(functional-steps cucumber-cpp ${CUKE_LIBRARIES})
 
+        # TODO It does not escape paths
         set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target functional-steps")
 
-        add_custom_target(features
-            COMMAND ${CUCUMBER_RUBY}
-            TEST_FEATURES_DIR=${CUKE_TEST_FEATURES_DIR}
-            TMP_DIR=${CUKE_FEATURES_TMP}
-            DYNAMIC_CPP_STEPS_SRC=${CUKE_DYNAMIC_CPP_STEPS}
-            DYNAMIC_CPP_STEPS_EXE=${CMAKE_BINARY_DIR}/functional-steps
-            COMPILE_DYNAMIC_CPP_STEPS=${CUKE_COMPILE_DYNAMIC_CPP_STEPS}
-            ${CUKE_FEATURES_DIR} --format pretty
-            DEPENDS cucumber-cpp
-        )
+        function(add_feature_target TARGET_NAME)
+            add_custom_target(${TARGET_NAME}
+                COMMAND ${CUCUMBER_RUBY}
+                TEST_FEATURES_DIR=${CUKE_TEST_FEATURES_DIR}
+                TMP_DIR=${CUKE_FEATURES_TMP}
+                DYNAMIC_CPP_STEPS_SRC=${CUKE_DYNAMIC_CPP_STEPS}
+                DYNAMIC_CPP_STEPS_EXE=${CMAKE_BINARY_DIR}/functional-steps
+                COMPILE_DYNAMIC_CPP_STEPS=${CUKE_COMPILE_DYNAMIC_CPP_STEPS}
+                ${ARGV1} ${ARGV2} ${ARGV3} ${ARGV4} ${ARGV5} ${ARGV6}
+                ${CUKE_FEATURES_DIR}
+                DEPENDS cucumber-cpp
+            )
+        endfunction(add_feature_target)
 
-        # TODO refactor
-        add_custom_target(wip-features
-            COMMAND ${CUCUMBER_RUBY}
-            TEST_FEATURES_DIR=${CUKE_TEST_FEATURES_DIR}
-            TMP_DIR=${CUKE_FEATURES_TMP}
-            DYNAMIC_CPP_STEPS_SRC=${CUKE_DYNAMIC_CPP_STEPS}
-            DYNAMIC_CPP_STEPS_EXE=${CMAKE_BINARY_DIR}/functional-steps
-            COMPILE_DYNAMIC_CPP_STEPS=${CUKE_COMPILE_DYNAMIC_CPP_STEPS}
-            ${CUKE_FEATURES_DIR} --format pretty --tag @wip
-            DEPENDS cucumber-cpp
-        )
+        add_feature_target(features --format progress)
+        add_feature_target(features-pretty --format pretty)
+        add_feature_target(features-wip --format pretty --tags @wip)
+
     else()
         message(WARNING "Could not find Cucumber: skipping functional tests")
     endif()

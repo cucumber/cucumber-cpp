@@ -30,6 +30,9 @@ public:
 
 
 class WireMessageCodecTest : public Test {
+public:
+    WireMessageCodecTest() {};
+
 protected:
     auto_ptr<WireCommand> commandAutoPtr;
 
