@@ -1,8 +1,8 @@
-function(cuke_add_driver_test TEST_FILE)
+function(cuke_add_driver_test TEST_FILE ADDL_LIBS)
     get_filename_component(TEST_NAME ${TEST_FILE} NAME)
     message(STATUS "Adding " ${TEST_NAME})
     add_executable(${TEST_NAME} ${TEST_FILE}.cpp)
-    target_link_libraries(${TEST_NAME} cucumber-cpp ${CUKE_LIBRARIES} ${ARGN})
+    target_link_libraries(${TEST_NAME} cucumber-cpp ${CUKE_LIBRARIES} ${ARGN} ${ADDL_LIBS})
     add_test(${TEST_NAME} ${TEST_NAME})
 endfunction()
 
@@ -36,7 +36,7 @@ if(CUKE_TEST_LIBRARIES)
     cuke_add_test(unit/TableTest)
     cuke_add_test(unit/TagTest)
 
-    cuke_add_driver_test(integration/drivers/GTestDriverTest ${GTEST_LIBRARIES})
+    cuke_add_driver_test(integration/drivers/GTestDriverTest ${GTEST_LIBRARIES} pthread)
 endif()
 
 if(CPPSPEC_FOUND)

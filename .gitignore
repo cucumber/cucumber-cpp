@@ -4,4 +4,9 @@ CMakeLists.txt.user
 # Bundler
 Gemfile.lock
 
+# rvm
+.ruby-version
+.ruby-gemset
+
+# Build artifacts
 build/
