@@ -330,7 +330,7 @@ WireProtocolHandler::WireProtocolHandler(const WireMessageCodec *codec, CukeEngi
 
 std::string WireProtocolHandler::handle(const std::string &request) const {
     std::string response;
-    // LOG request"
+    // LOG request
     try {
         const WireCommand *command = codec->decode(request);
         const WireResponse *wireResponse = command->run(engine);
