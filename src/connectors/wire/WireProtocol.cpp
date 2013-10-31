@@ -97,7 +97,7 @@ protected:
     CukeEngine::tags_type *getTags(const mValue & jsonArgs) const {
         CukeEngine::tags_type *tags = new CukeEngine::tags_type;
         if (!jsonArgs.is_null()) {
-            const mArray & jsonTags = jsonArgs.get_obj().at("tags").get_array();
+            const mArray & jsonTags = jsonArgs.get_obj().find("tags")->second.get_array();
             for (mArray::const_iterator i = jsonTags.begin(); i != jsonTags.end(); ++i) {
                 tags->push_back(i->get_str());
             }
@@ -150,7 +150,7 @@ private:
             const mObject & invokeParams,
             CukeEngine::invoke_args_type & args,
             CukeEngine::invoke_table_type & tableArg) const {
-        const mArray & jsonArgs(invokeParams.at("args").get_array());
+        const mArray & jsonArgs(invokeParams.find("args")->second.get_array());
         for (mArray::const_iterator i = jsonArgs.begin(); i != jsonArgs.end(); ++i) {
             if (i->type() == str_type) {
                 args.push_back(i->get_str());
