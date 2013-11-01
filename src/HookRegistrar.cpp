@@ -33,6 +33,9 @@ void AroundStepHook::skipHook() {
     step->call();
 }
 
+void BeforeAllHook::invokeHook(Scenario*) {
+    body();
+}
 
 HookRegistrar::~HookRegistrar() {
 }
@@ -98,6 +101,19 @@ void HookRegistrar::execHooks(HookRegistrar::hook_list_type &hookList, Scenario 
     for (HookRegistrar::hook_list_type::iterator hook = hookList.begin(); hook != hookList.end(); ++hook) {
         (*hook)->invokeHook(scenario);
     }
+}
+
+HookRegistrar::hook_list_type& HookRegistrar::beforeAllHooks() {
+    static hook_list_type *beforeAllHooks = new hook_list_type();
+    return *beforeAllHooks;
+}
+
+void HookRegistrar::addBeforeAllHook(BeforeAllHook *beforeAllHook) {
+    beforeAllHooks().push_back(beforeAllHook);
+}
+
+void HookRegistrar::execBeforeAllHooks() {
+    execHooks(beforeAllHooks(), NULL);
 }
 
 

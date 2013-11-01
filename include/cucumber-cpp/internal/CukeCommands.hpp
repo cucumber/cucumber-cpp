@@ -23,6 +23,9 @@ using boost::shared_ptr;
  */
 class CukeCommands {
 public:
+		CukeCommands();
+		virtual ~CukeCommands();
+		
     void beginScenario(const TagExpression::tag_list *tags);
     void endScenario();
     const std::string snippetText(const std::string stepKeyword, const std::string stepName) const;
@@ -33,6 +36,8 @@ private:
     StepManager stepManager;
     HookRegistrar hookRegistrar;
     ContextManager contextManager;
+
+    bool isFirstScenario;
 
 private:
     static shared_ptr<Scenario> currentScenario;

@@ -7,6 +7,15 @@ using std::string;
 using std::cout;
 using std::endl;
 
+BEFORE_ALL()
+{
+    cout << "-------------------- (Before all scenarios)" << endl;
+}
+
+AFTER_ALL()
+{
+    cout << "-------------------- (After all scenarios)" << endl;
+}
 
 BEFORE() {
     cout << "-------------------- (Before any scenario)" << endl;
