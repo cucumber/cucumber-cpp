@@ -37,8 +37,6 @@ private:
     HookRegistrar hookRegistrar;
     ContextManager contextManager;
 
-    bool isFirstScenario;
-
 private:
     static shared_ptr<Scenario> currentScenario;
 };
