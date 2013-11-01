@@ -47,14 +47,15 @@ class AfterStepHook : public Hook {
 class AfterHook : public Hook {
 };
 
-class BeforeAllHook : public Hook {
+class UnconditionalHook : public Hook {
 public:
   virtual void invokeHook(Scenario *);
 };
 
-class AfterAllHook : public Hook {
-public:
-  virtual void invokeHook(Scenario *);
+class BeforeAllHook : public UnconditionalHook {
+};
+
+class AfterAllHook : public UnconditionalHook {
 };
 
 class HookRegistrar {

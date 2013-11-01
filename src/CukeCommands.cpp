@@ -9,12 +9,10 @@ namespace internal {
 shared_ptr<Scenario> CukeCommands::currentScenario;
 
 CukeCommands::CukeCommands()
-    : isFirstScenario(true)
-{
+    : isFirstScenario(true) {
 }
 
-CukeCommands::~CukeCommands()
-{
+CukeCommands::~CukeCommands() {
     if (!isFirstScenario) {
         hookRegistrar.execAfterAllHooks();
     }

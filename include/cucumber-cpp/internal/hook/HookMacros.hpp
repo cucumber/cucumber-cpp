@@ -88,7 +88,7 @@ CUKE_OBJECT_(                                           \
 // **************                BEFORE_ALL HOOK               ************** //
 // ************************************************************************** //
 
-#define BEFORE_ALL(...)                                    \
+#define BEFORE_ALL()                                    \
 BEFORE_ALL_WITH_NAME_(CUKE_GEN_OBJECT_NAME_) \
 /**/
 
@@ -108,7 +108,7 @@ CUKE_OBJECT_(                                            \
 // **************                 AFTER_ALL HOOK               ************** //
 // ************************************************************************** //
 
-#define AFTER_ALL(...)                                    \
+#define AFTER_ALL()                                    \
 AFTER_ALL_WITH_NAME_(CUKE_GEN_OBJECT_NAME_) \
 /**/
 

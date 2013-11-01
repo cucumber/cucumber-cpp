@@ -33,11 +33,7 @@ void AroundStepHook::skipHook() {
     step->call();
 }
 
-void BeforeAllHook::invokeHook(Scenario*) {
-    body();
-}
-
-void AfterAllHook::invokeHook(Scenario*) {
+void UnconditionalHook::invokeHook(Scenario*) {
     body();
 }
 

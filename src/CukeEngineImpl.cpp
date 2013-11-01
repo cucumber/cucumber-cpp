@@ -13,7 +13,7 @@ namespace {
         return ss.str();
     }
 
-    step_id_type convertId(std::string stringid) {
+    step_id_type convertId(const std::string & stringid) {
         std::stringstream ss(stringid);
         step_id_type id;
         ss >> id;
