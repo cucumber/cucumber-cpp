@@ -15,7 +15,7 @@ CukeCommands::CukeCommands()
 
 CukeCommands::~CukeCommands()
 {
-    // execute afterAllHooks
+    // TODO: execute afterAllHooks
 }
 
 void CukeCommands::beginScenario(const TagExpression::tag_list *tags) {
