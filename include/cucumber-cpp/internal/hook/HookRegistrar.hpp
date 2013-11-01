@@ -53,6 +53,8 @@ public:
 };
 
 class AfterAllHook : public Hook {
+public:
+  virtual void invokeHook(Scenario *);
 };
 
 class HookRegistrar {
@@ -77,16 +79,19 @@ public:
     void addBeforeAllHook(BeforeAllHook *beforeAllHook);
     void execBeforeAllHooks();
 
+    void addAfterAllHook(AfterAllHook *afterAllHook);
+    void execAfterAllHooks();
+
 private:
     void execHooks(HookRegistrar::hook_list_type &hookList, Scenario *scenario);
 
 protected:
+    hook_list_type& beforeAllHooks();
     hook_list_type& beforeHooks();
     aroundhook_list_type& aroundStepHooks();
     hook_list_type& afterStepHooks();
     hook_list_type& afterHooks();
-
-    hook_list_type& beforeAllHooks();
+    hook_list_type& afterAllHooks();
 };
 
 
@@ -151,7 +156,7 @@ static int registerAfterHook(const std::string &csvTagNotation) {
    reg.addAfterHook(hook);
    return 0;
 }
-#include <iostream>
+
 template<class T>
 static int registerBeforeAllHook() {
    HookRegistrar reg;
@@ -162,7 +167,9 @@ static int registerBeforeAllHook() {
 
 template<class T>
 static int registerAfterAllHook() {
-   // TODO
+   HookRegistrar reg;
+   T *hook = new T;
+   reg.addAfterAllHook(hook);
    return 0;
 }
 

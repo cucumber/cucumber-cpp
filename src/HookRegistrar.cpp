@@ -37,6 +37,10 @@ void BeforeAllHook::invokeHook(Scenario*) {
     body();
 }
 
+void AfterAllHook::invokeHook(Scenario*) {
+    body();
+}
+
 HookRegistrar::~HookRegistrar() {
 }
 
@@ -114,6 +118,19 @@ void HookRegistrar::addBeforeAllHook(BeforeAllHook *beforeAllHook) {
 
 void HookRegistrar::execBeforeAllHooks() {
     execHooks(beforeAllHooks(), NULL);
+}
+
+HookRegistrar::hook_list_type& HookRegistrar::afterAllHooks() {
+    static hook_list_type *afterAllHooks = new hook_list_type();
+    return *afterAllHooks;
+}
+
+void HookRegistrar::addAfterAllHook(AfterAllHook *afterAllHook) {
+    afterAllHooks().push_back(afterAllHook);
+}
+
+void HookRegistrar::execAfterAllHooks() {
+    execHooks(afterAllHooks(), NULL);
 }
 
 

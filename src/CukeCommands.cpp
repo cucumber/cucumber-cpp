@@ -15,7 +15,9 @@ CukeCommands::CukeCommands()
 
 CukeCommands::~CukeCommands()
 {
-    // TODO: execute afterAllHooks
+    if (!isFirstScenario) {
+        hookRegistrar.execAfterAllHooks();
+    }
 }
 
 void CukeCommands::beginScenario(const TagExpression::tag_list *tags) {
@@ -24,7 +26,6 @@ void CukeCommands::beginScenario(const TagExpression::tag_list *tags) {
         hookRegistrar.execBeforeAllHooks();
         isFirstScenario = false;
     }
-
 
     currentScenario = shared_ptr<Scenario>(new Scenario(tags));
     hookRegistrar.execBeforeHooks(currentScenario.get());
