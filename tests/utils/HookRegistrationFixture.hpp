@@ -33,10 +33,12 @@ void clearHookCallMarkers() {
 }
 
 std::string getHookCallMarkers() {
-   return beforeHookCallMarker.str() +
+   return beforeAllHookCallMarker.str() +
+           beforeHookCallMarker.str() +
            beforeAroundStepHookCallMarker.str() +
            afterStepHookCallMarker.str() +
-           afterHookCallMarker.str();
+           afterHookCallMarker.str() +
+           afterAllHookCallMarker.str();
 }
 
 class EmptyCallableStep : public CallableStep {
