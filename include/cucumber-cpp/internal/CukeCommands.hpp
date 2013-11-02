@@ -23,8 +23,8 @@ using boost::shared_ptr;
  */
 class CukeCommands {
 public:
-		CukeCommands();
-		virtual ~CukeCommands();
+	CukeCommands();
+	virtual ~CukeCommands();
 		
     void beginScenario(const TagExpression::tag_list *tags);
     void endScenario();

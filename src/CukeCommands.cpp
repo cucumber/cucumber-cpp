@@ -17,7 +17,6 @@ CukeCommands::~CukeCommands() {
 }
 
 void CukeCommands::beginScenario(const TagExpression::tag_list *tags) {
-
     currentScenario = shared_ptr<Scenario>(new Scenario(tags));
     hookRegistrar.execBeforeHooks(currentScenario.get());
 }
