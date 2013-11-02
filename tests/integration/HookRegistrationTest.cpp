@@ -4,6 +4,12 @@
 
 #include <cucumber-cpp/internal/hook/HookMacros.hpp>
 
+#define BEFORE_ALL_MARKER_1 "0"
+#define BEFORE_ALL_MARKER_2 "1"
+#define BEFORE_ALL_MARKER_3 "2"
+BEFORE_ALL() { beforeAllHookCallMarker << BEFORE_ALL_MARKER_1; }
+BEFORE_ALL() { beforeAllHookCallMarker << BEFORE_ALL_MARKER_2; }
+BEFORE_ALL() { beforeAllHookCallMarker << BEFORE_ALL_MARKER_3; }
 
 #define BEFORE_MARKER_1 "A"
 #define BEFORE_MARKER_2 "B"
@@ -63,12 +69,21 @@ AFTER() { afterHookCallMarker << AFTER_MARKER_1; }
 AFTER() { afterHookCallMarker << AFTER_MARKER_2; }
 AFTER() { afterHookCallMarker << AFTER_MARKER_3; }
 
+#define AFTER_ALL_MARKER_1 "3"
+#define AFTER_ALL_MARKER_2 "4"
+#define AFTER_ALL_MARKER_3 "5"
+AFTER_ALL() { afterAllHookCallMarker << AFTER_ALL_MARKER_1; }
+AFTER_ALL() { afterAllHookCallMarker << AFTER_ALL_MARKER_2; }
+AFTER_ALL() { afterAllHookCallMarker << AFTER_ALL_MARKER_3; }
+
 
 const std::string correctBeforeOrder(BEFORE_MARKER_1 BEFORE_MARKER_2 BEFORE_MARKER_3);
 const std::string correctBeforeAroundStepOrder(AROUND_STEP_MARKER_BEFORE_1 AROUND_STEP_MARKER_BEFORE_2 AROUND_STEP_MARKER_BEFORE_3);
 const std::string correctAfterAroundStepOrder(AROUND_STEP_MARKER_AFTER_3 AROUND_STEP_MARKER_AFTER_2 AROUND_STEP_MARKER_AFTER_1);
 const std::string correctAfterStepOrder(AFTER_STEP_MARKER_1 AFTER_STEP_MARKER_2 AFTER_STEP_MARKER_3);
 const std::string correctAfterOrder(AFTER_MARKER_1 AFTER_MARKER_2 AFTER_MARKER_3);
+const std::string correctBeforeAllOrder(BEFORE_ALL_MARKER_1 BEFORE_ALL_MARKER_2 BEFORE_ALL_MARKER_3);
+const std::string correctAfterAllOrder(AFTER_ALL_MARKER_1 AFTER_ALL_MARKER_2 AFTER_ALL_MARKER_3);
 
 
 TEST_F(HookRegistrationTest, hooksAreRegisteredByTheMacros) {
@@ -127,4 +142,23 @@ TEST_F(HookRegistrationTest, afterStepHooksAreInvokedAfterAroundStepHooks) {
               afterStepHookCallMarker.str(),
               globalStepHookCallMarker.str());
     endScenario();
+}
+
+TEST_F(HookRegistrationTest, beforeAllHooksAreInvokedInAnyOrderDuringConstruction) {
+    clearHookCallMarkers();
+    EXPECT_EQ("", beforeAllHookCallMarker.str());
+
+    CukeCommands cukeCommands;
+    EXPECT_EQ(correctBeforeAllOrder, sort(beforeAllHookCallMarker.str()));
+}
+
+TEST_F(HookRegistrationTest, afterAllHooksAreInvokedInAnyOrderDuringDestruction) {
+    clearHookCallMarkers();
+    CukeCommands* cukeCommands = new CukeCommands;
+    EXPECT_EQ("", afterAllHookCallMarker.str());
+
+    delete cukeCommands;
+    cukeCommands = NULL;
+
+    EXPECT_EQ(correctAfterAllOrder, sort(afterAllHookCallMarker.str()));
 }

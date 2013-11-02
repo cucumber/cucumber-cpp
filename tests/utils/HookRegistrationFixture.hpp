@@ -18,6 +18,8 @@ std::stringstream afterAroundStepHookCallMarker;
 std::stringstream afterStepHookCallMarker;
 std::stringstream afterHookCallMarker;
 std::stringstream globalStepHookCallMarker;
+std::stringstream beforeAllHookCallMarker;
+std::stringstream afterAllHookCallMarker;
 
 void clearHookCallMarkers() {
     beforeHookCallMarker.str("");
@@ -26,6 +28,8 @@ void clearHookCallMarkers() {
     afterStepHookCallMarker.str("");
     afterHookCallMarker.str("");
     globalStepHookCallMarker.str("");
+    beforeAllHookCallMarker.str("");
+    afterAllHookCallMarker.str("");
 }
 
 std::string getHookCallMarkers() {
