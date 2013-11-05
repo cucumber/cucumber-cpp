@@ -1,5 +1,9 @@
 language: cpp
 
+compiler:
+  - clang
+  - gcc
+
 before_script:
   - "sudo apt-get install libboost-thread-dev libboost-system-dev libboost-regex-dev libboost-date-time-dev libboost-test-dev google-mock"
   - "cd /usr/src/gtest && sudo cmake . && sudo cmake --build . && sudo mv libg* /usr/local/lib/ ; cd -"
