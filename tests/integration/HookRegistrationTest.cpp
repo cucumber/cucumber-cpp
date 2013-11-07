@@ -144,15 +144,22 @@ TEST_F(HookRegistrationTest, afterStepHooksAreInvokedAfterAroundStepHooks) {
     endScenario();
 }
 
-TEST_F(HookRegistrationTest, beforeAllHooksAreInvokedInAnyOrderDuringConstruction) {
-    clearHookCallMarkers();
-    EXPECT_EQ("", beforeAllHookCallMarker.str());
-
-    CukeCommands cukeCommands;
+TEST_F(HookRegistrationTest, beforeAllHooksAreInvokedInAnyOrderDuringFirstScenarioOnly) {
+    EXPECT_EQ("", afterAllHookCallMarker.str());
+    beginScenario(0);
     EXPECT_EQ(correctBeforeAllOrder, sort(beforeAllHookCallMarker.str()));
+    
+    clearHookCallMarkers();
+    invokeStep();
+    endScenario();
+    EXPECT_EQ("", sort(beforeAllHookCallMarker.str()));
+    beginScenario(0);
+    invokeStep();
+    endScenario();
+    EXPECT_EQ("", sort(beforeAllHookCallMarker.str()));
 }
 
-TEST_F(HookRegistrationTest, afterAllHooksAreInvokedInAnyOrderDuringDestruction) {
+TEST_F(HookRegistrationTest, beforeAllHooksAreNotInvokedIfNoScenariosRun) {
     clearHookCallMarkers();
     CukeCommands* cukeCommands = new CukeCommands();
     EXPECT_EQ("", afterAllHookCallMarker.str());
@@ -160,22 +167,21 @@ TEST_F(HookRegistrationTest, afterAllHooksAreInvokedInAnyOrderDuringDestruction)
     delete cukeCommands;
     cukeCommands = NULL;
 
-    EXPECT_EQ(correctAfterAllOrder, sort(afterAllHookCallMarker.str()));
+    EXPECT_EQ("", beforeAllHookCallMarker.str());
 }
 
-TEST_F(HookRegistrationTest, beforeAllHooksAreOnlyInvokedOnce) {
-    EXPECT_EQ(correctBeforeAllOrder, sort(beforeAllHookCallMarker.str()));
-    beginScenario(0);
-    invokeStep();
-    endScenario();
-    EXPECT_EQ(correctBeforeAllOrder, sort(beforeAllHookCallMarker.str()));
-    beginScenario(0);
-    invokeStep();
-    endScenario();
-    EXPECT_EQ(correctBeforeAllOrder, sort(beforeAllHookCallMarker.str()));
+TEST_F(HookRegistrationTest, afterAllHooksAreNotInvokedIfNoScenariosRun) {
+    clearHookCallMarkers();
+    CukeCommands* cukeCommands = new CukeCommands();
+    EXPECT_EQ("", afterAllHookCallMarker.str());
+
+    delete cukeCommands;
+    cukeCommands = NULL;
+
+    EXPECT_EQ("", afterAllHookCallMarker.str());
 }
 
-TEST_F(HookRegistrationTest, afterAllHooksAreNotInvokedUntilDestruction) {
+TEST_F(HookRegistrationTest, afterAllHooksAreInvokedOnceDuringDestructionOnly) {
     clearHookCallMarkers();
     CukeCommands* cukeCommands = new CukeCommands();
 

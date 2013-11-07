@@ -36,6 +36,7 @@ private:
     StepManager stepManager;
     HookRegistrar hookRegistrar;
     ContextManager contextManager;
+    bool hasStarted;
 
 private:
     static shared_ptr<Scenario> currentScenario;
