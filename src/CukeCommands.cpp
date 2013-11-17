@@ -8,7 +8,21 @@ namespace internal {
 
 shared_ptr<Scenario> CukeCommands::currentScenario;
 
+CukeCommands::CukeCommands() : hasStarted(false) {
+}
+
+CukeCommands::~CukeCommands() {
+    if (hasStarted) {
+        hookRegistrar.execAfterAllHooks();
+    }
+}
+
 void CukeCommands::beginScenario(const TagExpression::tag_list *tags) {
+    if (!hasStarted) {
+        hasStarted = true;
+        hookRegistrar.execBeforeAllHooks();
+    }
+
     currentScenario = shared_ptr<Scenario>(new Scenario(tags));
     hookRegistrar.execBeforeHooks(currentScenario.get());
 }

@@ -4,20 +4,26 @@
 
 #include <cucumber-cpp/internal/hook/HookMacros.hpp>
 
+#define BEFORE_ALL_MARKER_1 "A"
+#define BEFORE_ALL_MARKER_2 "B"
+#define BEFORE_ALL_MARKER_3 "C"
+BEFORE_ALL() { beforeAllHookCallMarker << BEFORE_ALL_MARKER_1; }
+BEFORE_ALL() { beforeAllHookCallMarker << BEFORE_ALL_MARKER_2; }
+BEFORE_ALL() { beforeAllHookCallMarker << BEFORE_ALL_MARKER_3; }
 
-#define BEFORE_MARKER_1 "A"
-#define BEFORE_MARKER_2 "B"
-#define BEFORE_MARKER_3 "C"
+#define BEFORE_MARKER_1 "D"
+#define BEFORE_MARKER_2 "E"
+#define BEFORE_MARKER_3 "F"
 BEFORE() { beforeHookCallMarker << BEFORE_MARKER_1; }
 BEFORE() { beforeHookCallMarker << BEFORE_MARKER_2; }
 BEFORE() { beforeHookCallMarker << BEFORE_MARKER_3; }
 
-#define AROUND_STEP_MARKER_BEFORE_1 "D"
-#define AROUND_STEP_MARKER_BEFORE_2 "E"
-#define AROUND_STEP_MARKER_BEFORE_3 "F"
-#define AROUND_STEP_MARKER_AFTER_3  "d"
-#define AROUND_STEP_MARKER_AFTER_2  "e"
-#define AROUND_STEP_MARKER_AFTER_1  "f"
+#define AROUND_STEP_MARKER_BEFORE_1 "G"
+#define AROUND_STEP_MARKER_BEFORE_2 "H"
+#define AROUND_STEP_MARKER_BEFORE_3 "I"
+#define AROUND_STEP_MARKER_AFTER_3  "g"
+#define AROUND_STEP_MARKER_AFTER_2  "h"
+#define AROUND_STEP_MARKER_AFTER_1  "i"
 AROUND_STEP() {
     beforeAroundStepHookCallMarker << AROUND_STEP_MARKER_BEFORE_1;
     globalStepHookCallMarker << AROUND_STEP_MARKER_BEFORE_1;
@@ -40,9 +46,9 @@ AROUND_STEP() {
     afterAroundStepHookCallMarker << AROUND_STEP_MARKER_AFTER_3;
 }
 
-#define AFTER_STEP_MARKER_1 "G"
-#define AFTER_STEP_MARKER_2 "H"
-#define AFTER_STEP_MARKER_3 "I"
+#define AFTER_STEP_MARKER_1 "J"
+#define AFTER_STEP_MARKER_2 "K"
+#define AFTER_STEP_MARKER_3 "L"
 AFTER_STEP() {
     afterStepHookCallMarker << AFTER_STEP_MARKER_1;
     globalStepHookCallMarker << AFTER_STEP_MARKER_1;
@@ -56,12 +62,19 @@ AFTER_STEP() {
     globalStepHookCallMarker << AFTER_STEP_MARKER_3;
 }
 
-#define AFTER_MARKER_1 "J"
-#define AFTER_MARKER_2 "K"
-#define AFTER_MARKER_3 "L"
+#define AFTER_MARKER_1 "M"
+#define AFTER_MARKER_2 "N"
+#define AFTER_MARKER_3 "O"
 AFTER() { afterHookCallMarker << AFTER_MARKER_1; }
 AFTER() { afterHookCallMarker << AFTER_MARKER_2; }
 AFTER() { afterHookCallMarker << AFTER_MARKER_3; }
+
+#define AFTER_ALL_MARKER_1 "P"
+#define AFTER_ALL_MARKER_2 "Q"
+#define AFTER_ALL_MARKER_3 "R"
+AFTER_ALL() { afterAllHookCallMarker << AFTER_ALL_MARKER_1; }
+AFTER_ALL() { afterAllHookCallMarker << AFTER_ALL_MARKER_2; }
+AFTER_ALL() { afterAllHookCallMarker << AFTER_ALL_MARKER_3; }
 
 
 const std::string correctBeforeOrder(BEFORE_MARKER_1 BEFORE_MARKER_2 BEFORE_MARKER_3);
@@ -69,6 +82,8 @@ const std::string correctBeforeAroundStepOrder(AROUND_STEP_MARKER_BEFORE_1 AROUN
 const std::string correctAfterAroundStepOrder(AROUND_STEP_MARKER_AFTER_3 AROUND_STEP_MARKER_AFTER_2 AROUND_STEP_MARKER_AFTER_1);
 const std::string correctAfterStepOrder(AFTER_STEP_MARKER_1 AFTER_STEP_MARKER_2 AFTER_STEP_MARKER_3);
 const std::string correctAfterOrder(AFTER_MARKER_1 AFTER_MARKER_2 AFTER_MARKER_3);
+const std::string correctBeforeAllOrder(BEFORE_ALL_MARKER_1 BEFORE_ALL_MARKER_2 BEFORE_ALL_MARKER_3);
+const std::string correctAfterAllOrder(AFTER_ALL_MARKER_1 AFTER_ALL_MARKER_2 AFTER_ALL_MARKER_3);
 
 
 TEST_F(HookRegistrationTest, hooksAreRegisteredByTheMacros) {
@@ -127,4 +142,59 @@ TEST_F(HookRegistrationTest, afterStepHooksAreInvokedAfterAroundStepHooks) {
               afterStepHookCallMarker.str(),
               globalStepHookCallMarker.str());
     endScenario();
+}
+
+TEST_F(HookRegistrationTest, beforeAllHooksAreInvokedInAnyOrderDuringFirstScenarioOnly) {
+    EXPECT_EQ("", afterAllHookCallMarker.str());
+    beginScenario(0);
+    EXPECT_EQ(correctBeforeAllOrder, sort(beforeAllHookCallMarker.str()));
+    
+    clearHookCallMarkers();
+    invokeStep();
+    endScenario();
+    EXPECT_EQ("", sort(beforeAllHookCallMarker.str()));
+    beginScenario(0);
+    invokeStep();
+    endScenario();
+    EXPECT_EQ("", sort(beforeAllHookCallMarker.str()));
+}
+
+TEST_F(HookRegistrationTest, beforeAllHooksAreNotInvokedIfNoScenariosRun) {
+    clearHookCallMarkers();
+    CukeCommands* cukeCommands = new CukeCommands();
+    EXPECT_EQ("", afterAllHookCallMarker.str());
+
+    delete cukeCommands;
+    cukeCommands = NULL;
+
+    EXPECT_EQ("", beforeAllHookCallMarker.str());
+}
+
+TEST_F(HookRegistrationTest, afterAllHooksAreNotInvokedIfNoScenariosRun) {
+    clearHookCallMarkers();
+    CukeCommands* cukeCommands = new CukeCommands();
+    EXPECT_EQ("", afterAllHookCallMarker.str());
+
+    delete cukeCommands;
+    cukeCommands = NULL;
+
+    EXPECT_EQ("", afterAllHookCallMarker.str());
+}
+
+TEST_F(HookRegistrationTest, afterAllHooksAreInvokedOnceDuringDestructionOnly) {
+    clearHookCallMarkers();
+    CukeCommands* cukeCommands = new CukeCommands();
+
+    EXPECT_EQ("", afterAllHookCallMarker.str());
+    cukeCommands->beginScenario(0);
+    cukeCommands->endScenario();
+    EXPECT_EQ("", afterAllHookCallMarker.str());
+    cukeCommands->beginScenario(0);
+    cukeCommands->endScenario();
+    EXPECT_EQ("", afterAllHookCallMarker.str());
+
+    delete cukeCommands;
+    cukeCommands = NULL;
+
+    EXPECT_EQ(correctAfterAllOrder, sort(afterAllHookCallMarker.str()));
 }

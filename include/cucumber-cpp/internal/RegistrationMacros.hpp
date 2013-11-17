@@ -21,15 +21,15 @@
 // **************                 CUKE OBJECTS                 ************** //
 // ************************************************************************** //
 
-#define CUKE_OBJECT_(class_name, parent_class, registration_fn) \
+#define CUKE_OBJECT_(class_name, parent_class, registration_fn)           \
 class class_name : public parent_class {                                  \
 public:                                                                   \
-    void body();                                                      \
+    void body();                                                          \
 private:                                                                  \
     static const int cukeRegId;                                           \
 };                                                                        \
 const int class_name ::cukeRegId = registration_fn ;                      \
-void class_name ::body()                                              \
+void class_name ::body()                                                  \
 /**/
 
 #endif /* CUKE_REGISTRATIONMACROS_HPP_ */

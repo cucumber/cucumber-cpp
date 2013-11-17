@@ -84,4 +84,44 @@ CUKE_OBJECT_(                                           \
 ::cucumber::internal::registerAfterHook<step_name>(tag_expression) \
 /**/
 
+// ************************************************************************** //
+// **************                BEFORE_ALL HOOK               ************** //
+// ************************************************************************** //
+
+#define BEFORE_ALL()                                     \
+BEFORE_ALL_WITH_NAME_(CUKE_GEN_OBJECT_NAME_)             \
+/**/
+
+#define BEFORE_ALL_WITH_NAME_(step_name)                 \
+CUKE_OBJECT_(                                            \
+    step_name,                                           \
+    ::cucumber::internal::BeforeAllHook,                 \
+    BEFORE_ALL_HOOK_REGISTRATION_(step_name)             \
+)                                                        \
+/**/
+
+#define BEFORE_ALL_HOOK_REGISTRATION_(step_name)         \
+::cucumber::internal::registerBeforeAllHook<step_name>() \
+/**/
+
+// ************************************************************************** //
+// **************                 AFTER_ALL HOOK               ************** //
+// ************************************************************************** //
+
+#define AFTER_ALL()                                     \
+AFTER_ALL_WITH_NAME_(CUKE_GEN_OBJECT_NAME_)             \
+/**/
+
+#define AFTER_ALL_WITH_NAME_(step_name)                 \
+CUKE_OBJECT_(                                           \
+    step_name,                                          \
+    ::cucumber::internal::AfterAllHook,                 \
+    AFTER_ALL_HOOK_REGISTRATION_(step_name)             \
+)                                                       \
+/**/
+
+#define AFTER_ALL_HOOK_REGISTRATION_(step_name)         \
+::cucumber::internal::registerAfterAllHook<step_name>() \
+/**/
+
 #endif /* CUKE_HOOKMACROS_HPP_ */
