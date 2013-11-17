@@ -12,7 +12,6 @@ set(CUKE_SOURCES
     connectors/wire/WireServer.cpp
     connectors/wire/WireProtocol.cpp
     connectors/wire/WireProtocolCommands.cpp
-    main.cpp
 )
 
 if(GTEST_FOUND)
@@ -38,4 +37,6 @@ if(CMAKE_EXTRA_GENERATOR OR MSVC_IDE)
     list(APPEND CUKE_SOURCES ${CUKE_HEADERS})
 endif()
 
-add_library(cucumber-cpp STATIC ${CUKE_SOURCES})
+add_library(cucumber-cpp-nomain STATIC ${CUKE_SOURCES})
+add_library(cucumber-cpp STATIC ${CUKE_SOURCES} main.cpp)
+
