@@ -19,6 +19,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Weffc++")
+    # TODO: A better fix should handle ld's --as-needed flag 
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Xlinker '--no-as-needed'")
 elseif(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOMINMAX") # exclude M$ min/max macros
     #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /analyze")
@@ -136,7 +138,7 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
 
         file(WRITE ${CUKE_DYNAMIC_CPP_STEPS})
         add_executable(functional-steps EXCLUDE_FROM_ALL ${CUKE_DYNAMIC_CPP_STEPS})
-        target_link_libraries(functional-steps cucumber-cpp ${CUKE_LIBRARIES})
+        target_link_libraries(functional-steps ${CUKE_LIBRARIES})
 
         # TODO It does not escape paths
         set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target functional-steps")
