@@ -77,6 +77,17 @@ AFTER_ALL() { afterAllHookCallMarker << AFTER_ALL_MARKER_2; }
 AFTER_ALL() { afterAllHookCallMarker << AFTER_ALL_MARKER_3; }
 
 
+#define CONTEXT_MARKER "X"
+BEFORE() {
+    cucumber::ScenarioScope<std::string> context;
+    *context = CONTEXT_MARKER;
+}
+AFTER() {
+    cucumber::ScenarioScope<std::string> context;
+    contextContents = *context;
+}
+
+
 const std::string correctBeforeOrder(BEFORE_MARKER_1 BEFORE_MARKER_2 BEFORE_MARKER_3);
 const std::string correctBeforeAroundStepOrder(AROUND_STEP_MARKER_BEFORE_1 AROUND_STEP_MARKER_BEFORE_2 AROUND_STEP_MARKER_BEFORE_3);
 const std::string correctAfterAroundStepOrder(AROUND_STEP_MARKER_AFTER_3 AROUND_STEP_MARKER_AFTER_2 AROUND_STEP_MARKER_AFTER_1);
@@ -131,6 +142,12 @@ TEST_F(HookRegistrationTest, afterHooksAreInvokedInAnyOrder) {
     EXPECT_EQ("", sort(afterHookCallMarker.str()));
     endScenario();
     EXPECT_EQ(correctAfterOrder, sort(afterHookCallMarker.str()));
+}
+
+TEST_F(HookRegistrationTest, contextIsAccessibleInAfterHooks) {
+    beginScenario(0);
+    endScenario();
+    EXPECT_EQ(CONTEXT_MARKER, contextContents);
 }
 
 TEST_F(HookRegistrationTest, afterStepHooksAreInvokedAfterAroundStepHooks) {
