@@ -91,7 +91,7 @@ public:
 
     bool isSuccess() const;
     bool isPending() const;
-    const InvokeResultType getType() const;
+    InvokeResultType getType() const;
     const std::string &getDescription() const;
 };
 
