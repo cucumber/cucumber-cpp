@@ -62,6 +62,11 @@ public:
 
     template<class T> T getInvokeArg(size_type i) const;
     const Table & getTableArg() const;
+
+    size_type argsSize() const {
+      return args.size();
+    }
+
 private:
     Table tableArg;
     args_type args;
