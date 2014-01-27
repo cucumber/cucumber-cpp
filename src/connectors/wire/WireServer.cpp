@@ -4,9 +4,9 @@ namespace cucumber {
 namespace internal {
 
 SocketServer::SocketServer(const ProtocolHandler *protocolHandler) :
+    protocolHandler(protocolHandler),
     ios(),
-    acceptor(ios),
-    protocolHandler(protocolHandler) {
+    acceptor(ios) {
 }
 
 void SocketServer::listen(const port_type port) {
