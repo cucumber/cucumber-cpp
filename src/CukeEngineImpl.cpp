@@ -55,13 +55,13 @@ void CukeEngineImpl::invokeStep(const std::string & id, const invoke_args_type &
 
         if (tableArg.shape()[0] > 1 && tableArg.shape()[1] > 0) {
             Table & commandTableArg = commandArgs.getVariableTableArg();
-            for (table_index j = 0; j < tableArg.shape()[1]; ++j) {
+            for (table_index j = 0; j < table_index(tableArg.shape()[1]); ++j) {
                 commandTableArg.addColumn(tableArg[0][j]);
             }
 
-            for (table_index i = 1; i < tableArg.shape()[0]; ++i) {
+            for (table_index i = 1; i < table_index(tableArg.shape()[0]); ++i) {
                 Table::row_type row;
-                for (table_index j = 0; j < tableArg.shape()[1]; ++j) {
+                for (table_index j = 0; j < table_index(tableArg.shape()[1]); ++j) {
                     row.push_back(tableArg[i][j]);
                 }
                 commandTableArg.addRow(row);
