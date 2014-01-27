@@ -1,7 +1,10 @@
 #ifndef CUKE_REGEX_HPP_
 #define CUKE_REGEX_HPP_
 
+#include <string>
 #include <vector>
+
+#define BOOST_REGEX_V4_CHAR_REGEX_TRAITS_HPP
 
 #include <boost/regex.hpp>
 
