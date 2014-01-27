@@ -114,7 +114,7 @@ bool InvokeResult::isPending() const {
     return (type == PENDING);
 }
 
-const InvokeResultType InvokeResult::getType() const {
+InvokeResultType InvokeResult::getType() const {
     return type;
 }
 
