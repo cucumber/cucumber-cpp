@@ -87,11 +87,11 @@ void CukeEngineImpl::invokeStep(const std::string & id, const invoke_args_type &
     }
 }
 
-void CukeEngineImpl::endScenario(const tags_type & tags) {
+void CukeEngineImpl::endScenario(const tags_type & /*tags*/) {
     cukeCommands.endScenario();
 }
 
-std::string CukeEngineImpl::snippetText(const std::string & keyword, const std::string & name, const std::string & multilineArgClass) const {
+std::string CukeEngineImpl::snippetText(const std::string & keyword, const std::string & name, const std::string & /*multilineArgClass*/) const {
     return cukeCommands.snippetText(keyword, name);
 }
 
