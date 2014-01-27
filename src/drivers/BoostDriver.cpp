@@ -15,13 +15,18 @@ namespace internal {
 
 
 namespace {
-
-bool boost_test_init() {
+#ifdef BOOST_TEST_ALTERNATIVE_INIT_API
+  bool boost_init_unit_test() {
     return true;
-}
+  }
+#else
+  ::boost::unit_test::test_suite*
+  boost_init_unit_test_suite(int /*argc*/, char* /*argv*/[]) {
+    return NULL;
+  }
+#endif
 
-static CukeBoostLogInterceptor *logInterceptor = 0;
-
+  static CukeBoostLogInterceptor *logInterceptor = 0;
 }
 
 
@@ -83,7 +88,12 @@ void BoostStep::initBoostTest() {
     if (!framework::is_initialized()) {
         int argc = 2;
         char *argv[] = { (char *) "", (char *) "" };
-        framework::init(&boost_test_init, argc, argv);
+
+#ifdef BOOST_TEST_ALTERNATIVE_INIT_API
+        framework::init(&boost_init_unit_test, argc, argv);
+#else
+        framework::init(&boost_init_unit_test_suite, argc, argv);
+#endif
         logInterceptor = new CukeBoostLogInterceptor;
         ::boost::unit_test::unit_test_log.set_formatter(logInterceptor);
         ::boost::unit_test::unit_test_log.set_threshold_level(log_all_errors);
