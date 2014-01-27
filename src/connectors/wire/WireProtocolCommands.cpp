@@ -71,7 +71,7 @@ WireResponse *SnippetTextCommand::run(CukeEngine *engine) const {
 }
 
 
-WireResponse *FailingCommand::run(CukeEngine *engine) const {
+WireResponse *FailingCommand::run(CukeEngine* /*engine*/) const {
     return new FailureResponse;
 }
 
