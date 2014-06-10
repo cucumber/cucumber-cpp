@@ -40,10 +40,6 @@ int main(int argc, char **argv) {
     }
 
     try {
-        if (argc > 1) {
-            std::string firstArg(argv[1]);
-            port = ::cucumber::internal::fromString<int>(firstArg);
-        }
         acceptWireProtocol(port);
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
