@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
     
     boost::program_options::options_description optionDescription("Allowed options");
     optionDescription.add_options()
-        ("help", "this help message")
+        ("help", "help for cucumber-cpp")
         ("port", value<int>(), "listening port of wireserver")
         ;
     boost::program_options::variables_map optionVariableMap;
