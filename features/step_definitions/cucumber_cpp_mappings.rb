@@ -200,7 +200,7 @@ EOF
       log_file_contents = IO.read(DATA_TABLE_LOG_FILE)
       actual_array      = JSON.parse(log_file_contents)
       expected_array    = JSON.parse(json)
-      actual_array.should == expected_array
+      expect(actual_array).to be == expected_array
     end
   end
 
@@ -302,7 +302,7 @@ EOF
 
   def compile_step_definitions
     compiler_output = %x[ #{COMPILE_STEP_DEFINITIONS_CMD} ]
-    expect($?.success?).to be_true, "Compilation failed!\n#{compiler_output}"
+    expect($?.success?).to be == true, "Compilation failed!\n#{compiler_output}"
   end
 
   def create_wire_file
