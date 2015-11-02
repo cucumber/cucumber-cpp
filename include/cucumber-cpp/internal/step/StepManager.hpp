@@ -43,7 +43,7 @@ public:
     void addMatch(SingleStepMatch match);
 
     operator void *();
-    operator bool();
+    operator bool() const;
 
 private:
     match_results_type resultSet;
