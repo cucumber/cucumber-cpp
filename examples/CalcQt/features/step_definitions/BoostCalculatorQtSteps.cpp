@@ -23,7 +23,7 @@ int millisecondsToWait() {
 }
 
 std::istream& operator>> (std::istream& in, QString& val) { std::string s; in >> s; val = s.c_str(); return in; }
-std::ostream& operator<< (std::ostream& out, const QString& val) { out << val.toAscii().data(); return out; }
+std::ostream& operator<< (std::ostream& out, const QString& val) { out << val.toLatin1().data(); return out; }
 
 GIVEN("^I just turned on the calculator$") {
     cucumber::ScenarioScope<CalculatorWidget> calculator;

@@ -69,7 +69,7 @@ int CalculatorWidget::calculate(const QString& expression) {
         }
         pos += regexp.matchedLength();
         if (pos < expression.length()) {
-            operation = expression.at(pos).toAscii();
+            operation = expression.at(pos).toLatin1();
         }
     }
     return result;
@@ -103,6 +103,7 @@ void CalculatorWidget::keyPressEvent(QKeyEvent *event) {
 }
 
 void CalculatorWidget::keyReleaseEvent(QKeyEvent *event) {
+    Q_UNUSED(event)
     if (0 != keyclickedButton) {
         keyclickedButton->setDown(false);
         keyclickedButton = 0;
