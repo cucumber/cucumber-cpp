@@ -25,18 +25,18 @@ if(QT5_FOUND)
     
     set(CALCQT_HEADERS src/CalculatorWidget.h)
     set(CALCQT_SOURCES src/CalcQt.cpp src/CalculatorWidget.cpp)
-    
+    set(QT_LIBRARIES Qt5::Core Qt5::Widgets Qt5::Test)  
+
     add_library(libcalcqt src/CalculatorWidget.cpp ${CALCQT_HEADERS})
-    target_link_libraries(libcalcqt Qt5::Core Qt5::Widgets)
+    target_link_libraries(libcalcqt ${QT_LIBRARIES})
     
     add_executable(calcqt ${CALCQT_SOURCES} ${CALCQT_HEADERS})
-    target_link_libraries(calcqt Qt5::Core Qt5::Widgets Qt5::Test libcalcqt)    
-
-
+    target_link_libraries(calcqt libcalcqt ${QT_LIBRARIES})
+    
     if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
-        include_directories(${Boost_INCLUDE_DIRS})
-        add_executable(BoostCalculatorQtSteps features/step_definitions/BoostCalculatorQtSteps)
-        target_link_libraries(BoostCalculatorQtSteps CalcQt ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${CUKE_LIBRARIES} ${QT_LIBRARIES})
+        include_directories(${Boost_INCLUDE_DIRS} src/)
+        add_executable(BoostCalculatorQtSteps features/step_definitions/BoostCalculatorQtSteps ${CALCQT_HEADERS})
+        target_link_libraries(BoostCalculatorQtSteps libcalcqt ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${CUKE_LIBRARIES} ${QT_LIBRARIES})
     endif()
 endif()
 

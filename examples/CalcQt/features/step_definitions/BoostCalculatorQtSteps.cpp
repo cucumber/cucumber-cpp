@@ -7,7 +7,7 @@
 #include <QApplication>
 #include <QTest>
 
-#include <CalculatorWidget.h>
+#include "CalculatorWidget.h"
 
 static int argc = 0;
 static QApplication app(argc, 0);
@@ -29,7 +29,7 @@ GIVEN("^I just turned on the calculator$") {
     cucumber::ScenarioScope<CalculatorWidget> calculator;
     calculator->move(0, 0);
     calculator->show();
-    QTest::qWaitForWindowShown(calculator.get());
+    QTest::qWaitForWindowExposed(calculator.get());
     QTest::qWait(millisecondsToWait());
 }
 
