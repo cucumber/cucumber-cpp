@@ -38,5 +38,12 @@ if(QT5_FOUND)
         add_executable(BoostCalculatorQtSteps features/step_definitions/BoostCalculatorQtSteps ${CALCQT_HEADERS})
         target_link_libraries(BoostCalculatorQtSteps libcalcqt ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} ${CUKE_LIBRARIES} ${QT_LIBRARIES})
     endif()
+
+if(GTEST_FOUND)
+    include_directories(${GTEST_INCLUDE_DIRS})
+    add_executable(GTestCalculatorQtSteps features/step_definitions/GTestCalculatorQtSteps)
+    target_link_libraries(GTestCalculatorQtSteps libcalcqt ${QT_LIBRARIES} ${GTEST_LIBRARIES} ${CUKE_LIBRARIES})
+endif()
+
 endif()
 
