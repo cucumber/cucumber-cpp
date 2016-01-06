@@ -1,6 +1,5 @@
 #include "CalculatorWidget.h"
 
-#include <stdio.h>
 #include <QGridLayout>
 #include <QKeyEvent>
 #include <QLabel>
@@ -8,7 +7,7 @@
 #include <QSignalMapper>
 
 CalculatorWidget::CalculatorWidget(QWidget *parent, Qt::WindowFlags flags) : QWidget(parent, flags) {
-    QGridLayout *layout = new QGridLayout;
+    QGridLayout *layout = new QGridLayout(this);
     layout->setSizeConstraint(QLayout::SetFixedSize);
     setLayout(layout);
 
