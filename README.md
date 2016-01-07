@@ -24,7 +24,7 @@ It relies on a few libraries:
   Optional for the CppSpec driver.
 * [GMock](http://code.google.com/p/googlemock/) 1.6 or later.
   Optional for the internal test suite.
-* [Qt 4](http://qt-project.org/). Optional for the CalcQt example.
+* [Qt 5](http://qt-project.org/). Optional for the CalcQt example.
 
 This header-only library is included in the source code:
 
