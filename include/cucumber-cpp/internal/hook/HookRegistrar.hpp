@@ -35,7 +35,7 @@ class BeforeHook : public Hook {
 
 class AroundStepHook : public Hook {
 public:
-    virtual void invokeHook(Scenario *scenario, CallableStep *step);
+    virtual void invokeHookWithStep(Scenario *scenario, CallableStep *step);
     virtual void skipHook();
 protected:
     CallableStep *step;
