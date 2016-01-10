@@ -15,7 +15,6 @@ rvm:
 before_script:
   - "sudo apt-get update -qq"
   - "sudo apt-get install -y libboost-thread-dev libboost-system-dev libboost-regex-dev libboost-date-time-dev libboost-test-dev google-mock"
-  - "cd /usr/src/gtest && sudo cmake . && sudo cmake --build . && sudo mv libg* /usr/local/lib/ ; cd -"
-  - "cd /usr/src/gmock && sudo cmake . && sudo make && sudo mv libg* /usr/lib/ && cd -"
+  - "cd /usr/src/gmock && sudo cmake . && sudo make && sudo mv libg* /usr/lib/ && cd -" 
 
-script: home/travis/cucumber-cpp/travis.sh
+script ./travis.sh
