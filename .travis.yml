@@ -17,4 +17,4 @@ before_script:
   - "sudo apt-get install -y libboost-thread-dev libboost-system-dev libboost-regex-dev libboost-date-time-dev libboost-test-dev google-mock"
   - "cd /usr/src/gmock && sudo cmake . && sudo make && sudo mv libg* /usr/lib/ && cd -" 
 
-script ./travis.sh
+script: ./travis.sh
