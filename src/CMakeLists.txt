@@ -14,7 +14,7 @@ set(CUKE_SOURCES
     connectors/wire/WireProtocolCommands.cpp
 )
 
-if(GTEST_FOUND)
+if(NOT CUKE_DISABLE_GTEST)
     include_directories(${GTEST_INCLUDE_DIRS})
     list(APPEND CUKE_SOURCES drivers/GTestDriver.cpp)
 endif()

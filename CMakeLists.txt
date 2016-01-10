@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.12)
 
 project(Cucumber-Cpp)
 
@@ -86,22 +86,63 @@ endif()
 #
 
 if(NOT CUKE_DISABLE_GTEST)
-    find_package(GTest)
-    find_package(GMock)
-    if(GMOCK_FOUND AND GTEST_FOUND)
-        set(CUKE_TEST_LIBRARIES ${GTEST_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
-        if(UNIX)
-            find_package(Threads) # GTest needs this and it's a static library
-            set(CUKE_TEST_LIBRARIES ${CUKE_TEST_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
-        endif()
+    if(UNIX)
+        find_package(Threads REQUIRED) # GTest needs this and it's a static library
     endif()
+
+    #Gtest as externalproject
+    
+    # Enable ExternalProject CMake module
+    include(ExternalProject)
+    
+    # Download and install GoogleMock
+    ExternalProject_Add(
+        gmock
+        URL https://googlemock.googlecode.com/files/gmock-1.7.0.zip
+        PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gmock
+        # Disable install step
+        INSTALL_COMMAND ""
+        # Wrap download, configure and build steps in a script to log output
+        LOG_DOWNLOAD ON
+        LOG_CONFIGURE ON
+        LOG_BUILD ON
+    )
+    # Create a libgmock target to be used as a dependency by test programs
+    add_library(libgmock IMPORTED STATIC GLOBAL)
+    add_dependencies(libgmock gmock)
+    
+    # Set gmock properties
+    ExternalProject_Get_Property(gmock source_dir binary_dir)
+    set_target_properties(libgmock PROPERTIES
+        "IMPORTED_LOCATION" "${binary_dir}/libgmock.a"
+        "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
+    #    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
+    )
+    set(GMOCK_INCLUDE_DIRS ${source_dir}/include)
+    set(GTEST_INCLUDE_DIRS ${source_dir}/gtest/include) 
+
+    if(MSVC)
+        set(Suffix ".lib")
+    else()
+        set(Suffix ".a")
+    endif()
+    set(CUKE_GTEST_LIBRARIES 
+        "${binary_dir}/gtest/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${Suffix}" 
+        ${CMAKE_THREAD_LIBS_INIT}
+    )
+    set(CUKE_GMOCK_LIBRARIES 
+        "${binary_dir}/gtest/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${Suffix}"
+        "${binary_dir}/libgmock${Suffix}"
+        "${binary_dir}/libgmock_main${Suffix}"
+        ${CMAKE_THREAD_LIBS_INIT}
+    )
 endif()
 
 #
 # Cucumber-Cpp
 #
 
-set(CUKE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(CUKE_INCLUDE_DIR ${CUKE_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 include_directories(${CUKE_INCLUDE_DIR})
 
