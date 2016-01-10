@@ -1,4 +1,4 @@
-rvm install 2.2
+#rvm install 2.2
 ruby -v
 gem install bundler
 rm Gemfile.lock
