@@ -14,7 +14,6 @@ rvm:
 
 before_script:
   - "sudo apt-get update -qq"
-  - "sudo apt-get install -y libboost-thread-dev libboost-system-dev libboost-regex-dev libboost-date-time-dev libboost-test-dev google-mock"
-  - "cd /usr/src/gmock && sudo cmake . && sudo make && ls -l && sudo mv libg* /usr/lib/ && cd -" 
+  - "sudo apt-get install -y libboost-thread-dev libboost-system-dev libboost-regex-dev libboost-date-time-dev libboost-test-dev"
 
 script: ./travis.sh
