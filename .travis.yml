@@ -1,11 +1,27 @@
 language: cpp
-
+sudo: required
+dist: trusty
+os:
+  - linux
+  - osx
 compiler:
   - clang
   - gcc
+rvm:
+  - 1.9.3
+  - 2.0
+  - 2.2
+addons:
+  apt:
+    # List of whitelisted in travis packages for ubuntu-precise can be found here:
+    #   https://github.com/travis-ci/apt-package-whitelist/blob/master/ubuntu-precise
+    # List of whitelisted in travis apt-sources:
+    #   https://github.com/travis-ci/apt-source-whitelist/blob/master/ubuntu.json
+    packages:
+      - libboost-thread-dev 
+      - libboost-system-dev
+      - libboost-regex-dev
+      - libboost-date-time-dev 
+      - libboost-test-dev
 
-before_script:
-  - "sudo apt-get install libboost-thread-dev libboost-system-dev libboost-regex-dev libboost-date-time-dev libboost-test-dev google-mock"
-  - "cd /usr/src/gtest && sudo cmake . && sudo cmake --build . && sudo mv libg* /usr/local/lib/ ; cd -"
-
-script: "cmake -E make_directory build && cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on .. && cmake --build build && cmake --build build --target test && cmake --build build --target features"
+script: ./travis.sh
