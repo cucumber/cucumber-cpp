@@ -40,7 +40,7 @@ if(QT5_FOUND)
     endif()
 
     if(GTEST_FOUND)
-        include_directories(${GTEST_INCLUDE_DIRS})
+        include_directories(${GTEST_INCLUDE_DIRS} src/)
         add_executable(GTestCalculatorQtSteps features/step_definitions/GTestCalculatorQtSteps)
         target_link_libraries(GTestCalculatorQtSteps libcalcqt ${QT_LIBRARIES} ${GTEST_LIBRARIES} ${CUKE_LIBRARIES})
     endif()
