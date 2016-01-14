@@ -1,5 +1,6 @@
 language: cpp
-
+sudo: required
+dist: trusty
 compiler:
   - clang
   - gcc
@@ -15,6 +16,6 @@ addons:
       - google-mock
  
 before_script:
-  - "cd /usr/src/gtest && sudo cmake . && sudo cmake --build . && sudo mv libg* /usr/local/lib/ ; cd -"
+  - "cd /usr/src/gmock && sudo cmake . && sudo cmake --build . && sudo mv libg* /usr/local/lib/ && sudo mv gtest/libg* /usr/local/lib/ ; cd -"
 
-script: /home/travis/cucumber-cpp/travis.sh 
+script: ./travis.sh 
