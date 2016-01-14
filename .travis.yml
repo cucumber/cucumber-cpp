@@ -17,5 +17,6 @@ addons:
  
 before_script:
   - "cd /usr/src/gmock && sudo cmake . && sudo cmake --build . && sudo mv libg* /usr/local/lib/ && sudo mv gtest/libg* /usr/local/lib/ ; cd -"
+  - "export GTEST_INCLUDE_DIR=/usr/src/gmock/gtest/include/gtest/"
 
 script: ./travis.sh 
