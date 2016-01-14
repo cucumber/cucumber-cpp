@@ -86,6 +86,7 @@ endif()
 #
 
 if(NOT CUKE_DISABLE_GTEST)
+    set(GTEST_INCLUDE_DIR /usr/src/gmock/gtest/include/gtest/)
     find_package(GTest)
     find_package(GMock)
     if(GMOCK_FOUND AND GTEST_FOUND)
