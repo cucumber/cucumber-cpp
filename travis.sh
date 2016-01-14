@@ -10,11 +10,11 @@ cmake --build build --target features
 GTEST=build/examples/Calc/GTestCalculatorSteps 
 BOOST=build/examples/Calc/BoostCalculatorSteps
 if [ -f $GTEST ]; then
-    GTEST >/dev/null &
+    $GTEST >/dev/null &
     cucumber examples/Calc
 fi
 if [ -f $BOOST ]; then 
-    BOOST >/dev/null &
+    $BOOST >/dev/null &
     cucumber examples/Calc
 fi
 
