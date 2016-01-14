@@ -196,12 +196,10 @@ EOF
   end
 
   def assert_data_table_equals_json(json)
-    prep_for_fs_check do
-      log_file_contents = IO.read(DATA_TABLE_LOG_FILE)
-      actual_array      = JSON.parse(log_file_contents)
-      expected_array    = JSON.parse(json)
-      expect(actual_array).to be == expected_array
-    end
+    log_file_contents = File.read(DATA_TABLE_LOG_FILE)
+    actual_array      = JSON.parse(log_file_contents)
+    expected_array    = JSON.parse(json)
+    expect(actual_array).to be == expected_array
   end
 
   def run_feature
