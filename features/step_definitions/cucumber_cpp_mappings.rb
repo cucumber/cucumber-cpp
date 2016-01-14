@@ -172,7 +172,7 @@ EOF
   end
 
   def assert_world_variable_held_value_at_time(value, time)
-    check_file_content("#{WORLD_VARIABLE_LOG_FILE}.#{time}", value, true)
+    expect(File.read("#{WORLD_VARIABLE_LOG_FILE}.#{time}")).to match value 
   end
 
   def assert_world_function_called
@@ -181,18 +181,18 @@ EOF
 
   def assert_cycle_sequence *args
     expected_string = args.join CYCLE_SEQUENCE_SEPARATOR
-    expect(File.read(CYCLE_LOG_FILE)). to match expected_string
+    expect(File.read(CYCLE_LOG_FILE)).to match expected_string
   end
 
   def assert_cycle_sequence_excluding *args
     args.each do |unexpected_string|
-      check_file_content(CYCLE_LOG_FILE, unexpected_string, false)
+      expect(File.read(CYCLE_LOG_FILE)).not_to match unexpected_string
     end
   end
 
   def assert_complete_cycle_sequence *args
     expected_string = "#{CYCLE_SEQUENCE_SEPARATOR}#{args.join(CYCLE_SEQUENCE_SEPARATOR)}"
-    check_file_content(CYCLE_LOG_FILE, expected_string, true)
+    expect(File.read(CYCLE_LOG_FILE)).to match expected_string
   end
 
   def assert_data_table_equals_json(json)
