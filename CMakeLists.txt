@@ -108,7 +108,7 @@ include_directories(${CUKE_INCLUDE_DIR})
 set(CUKE_LIBRARIES cucumber-cpp ${CUKE_EXTRA_LIBRARIES})
 
 add_subdirectory(src)
-add_subdirectory(tests)
+#add_subdirectory(tests)
 
 if(CUKE_ENABLE_EXAMPLES)
     add_subdirectory(examples)
