@@ -176,12 +176,12 @@ EOF
   end
 
   def assert_world_function_called
-    expect(WORLD_FUNCTION_LOG_FILE).to be_existing_file
+    expect(File.file?(WORLD_FUNCTION_LOG_FILE)).to be true
   end
 
   def assert_cycle_sequence *args
     expected_string = args.join CYCLE_SEQUENCE_SEPARATOR
-    check_file_content(CYCLE_LOG_FILE, expected_string, true)
+    expect(File.read(CYCLE_LOG_FILE)). to match expected_string
   end
 
   def assert_cycle_sequence_excluding *args
