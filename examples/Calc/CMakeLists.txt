@@ -7,7 +7,7 @@ add_library(Calc src/Calculator)
 if(GTEST_FOUND)
     include_directories(${GTEST_INCLUDE_DIRS})
     add_executable(GTestCalculatorSteps features/step_definitions/GTestCalculatorSteps)
-    target_link_libraries(GTestCalculatorSteps Calc ${GTEST_LIBRARIES} ${CUKE_LIBRARIES})
+    target_link_libraries(GTestCalculatorSteps Calc ${CUKE_LIBRARIES} ${GTEST_LIBRARIES})
 endif()
 
 if(CPPSPEC_FOUND)
