@@ -14,7 +14,7 @@ if(CUKE_TEST_LIBRARIES)
         get_filename_component(TEST_NAME ${TEST_FILE} NAME)
         message(STATUS "Adding " ${TEST_NAME})
         add_executable(${TEST_NAME} ${TEST_FILE}.cpp)
-        target_link_libraries(${TEST_NAME} ${CUKE_TEST_LIBRARIES} cucumber-cpp-nomain ${CUKE_EXTRA_LIBRARIES} ${ARGN})
+        target_link_libraries(${TEST_NAME} cucumber-cpp-nomain ${CUKE_EXTRA_LIBRARIES} ${ARGN} ${CUKE_TEST_LIBRARIES})
         gtest_add_tests(${TEST_NAME} "" ${TEST_FILE}.cpp)
     endfunction()
 
@@ -36,7 +36,7 @@ if(CUKE_TEST_LIBRARIES)
     cuke_add_test(unit/TableTest)
     cuke_add_test(unit/TagTest)
 
-    cuke_add_driver_test(integration/drivers/GTestDriverTest ${GTEST_LIBRARIES})
+    cuke_add_driver_test(integration/drivers/GTestDriverTest ${CUKE_TEST_LIBRARIES})
 endif()
 
 if(CPPSPEC_FOUND)
