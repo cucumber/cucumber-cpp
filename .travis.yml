@@ -19,3 +19,7 @@ before_script:
   - "cd /usr/src/gmock && sudo cmake . && sudo cmake --build . && sudo mv libg* /usr/local/lib/ && sudo mv gtest/libg* /usr/local/lib/ ; cd -"
 
 script: ./travis.sh 
+
+notifications:
+  email:
+    - cukes-devs@googlegroups.com
