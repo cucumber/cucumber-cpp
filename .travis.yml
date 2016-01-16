@@ -20,6 +20,10 @@ before_script:
 
 script: ./travis.sh 
 
+branches:
+  only:
+    - master
+
 notifications:
   email:
     - cukes-devs@googlegroups.com
