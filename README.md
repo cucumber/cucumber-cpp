@@ -1,6 +1,6 @@
 # Cucumber-CPP
 
-[![Build Status](https://travis-ci.org/cucumber/cucumber-cpp.png)](https://travis-ci.org/cucumber/cucumber-cpp)
+[![Build Status](https://travis-ci.org/cucumber/cucumber-cpp.svg)](https://travis-ci.org/cucumber/cucumber-cpp)
 
 Cucumber-Cpp allows Cucumber to support step definitions written in C++.
 
