@@ -4,6 +4,11 @@ dist: trusty
 compiler:
   - clang
   - gcc
+env:
+  matrix:
+    - GMOCK_VER=1.6.0 
+    - GMOCK_VER=1.7.0 
+    - GMOCK_PATH=/usr/src/gmock
 
 addons:
   apt:
@@ -13,7 +18,8 @@ addons:
       - libboost-regex-dev
       - libboost-date-time-dev 
       - libboost-test-dev
- 
+      - google-mock
+
 script: ./travis.sh 
 
 notifications:
