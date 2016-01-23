@@ -135,12 +135,14 @@ if(NOT CUKE_DISABLE_GTEST)
 
     set(CUKE_GTEST_LIBRARIES 
         "${binary_dir}/gtest/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${Suffix}" 
+        "${binary_dir}/gtest/${CMAKE_FIND_LIBRARY_PREFIXES}gtest_main${Suffix}" 
         ${CMAKE_THREAD_LIBS_INIT}
     )
     set(CUKE_GMOCK_LIBRARIES 
         "${binary_dir}/gtest/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${Suffix}"
-        "${binary_dir}/libgmock${Suffix}"
-        "${binary_dir}/libgmock_main${Suffix}"
+        "${binary_dir}/gtest/${CMAKE_FIND_LIBRARY_PREFIXES}gtest_main${Suffix}" 
+        "${binary_dir}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock${Suffix}"
+        "${binary_dir}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock_main${Suffix}"
         ${CMAKE_THREAD_LIBS_INIT}
     )
 endif()
