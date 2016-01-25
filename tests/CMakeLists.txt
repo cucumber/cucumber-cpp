@@ -1,46 +1,4 @@
-# Thanks to Daniel Blezek <blezek@gmail.com> for the GTEST_ADD_TESTS code
-
-function(GTEST_ADD_TESTS executable extra_args)
-    if(NOT ARGN)
-        message(FATAL_ERROR "Missing ARGN: Read the documentation for GTEST_ADD_TESTS")
-    endif()
-    if(ARGN STREQUAL "AUTO")
-        # obtain sources used for building that executable
-        get_property(ARGN TARGET ${executable} PROPERTY SOURCES)
-    endif()
-    set(gtest_case_name_regex ".*\\( *([A-Za-z_0-9]+) *, *([A-Za-z_0-9]+) *\\).*")
-    set(gtest_test_type_regex "(TYPED_TEST|TEST_?[FP]?)")
-    foreach(source ${ARGN})
-        file(READ "${source}" contents)
-        string(REGEX MATCHALL "${gtest_test_type_regex} *\\(([A-Za-z_0-9 ,]+)\\)" found_tests ${contents})
-        foreach(hit ${found_tests})
-          string(REGEX MATCH "${gtest_test_type_regex}" test_type ${hit})
-
-          # Parameterized tests have a different signature for the filter
-          if("x${test_type}" STREQUAL "xTEST_P")
-            string(REGEX REPLACE ${gtest_case_name_regex}  "*/\\1.\\2/*" test_name ${hit})
-          elseif("x${test_type}" STREQUAL "xTEST_F" OR "x${test_type}" STREQUAL "xTEST")
-            string(REGEX REPLACE ${gtest_case_name_regex} "\\1.\\2" test_name ${hit})
-          elseif("x${test_type}" STREQUAL "xTYPED_TEST")
-            string(REGEX REPLACE ${gtest_case_name_regex} "\\1/*.\\2" test_name ${hit})
-          else()
-            message(WARNING "Could not parse GTest ${hit} for adding to CTest.")
-            continue()
-          endif()
-          add_test(NAME ${test_name} COMMAND ${executable} --gtest_filter=${test_name} ${extra_args})
-        endforeach()
-    endforeach()
-endfunction()
-
-function(cuke_add_driver_test TEST_FILE)
-    get_filename_component(TEST_NAME ${TEST_FILE} NAME)
-    message(STATUS "Adding " ${TEST_NAME})
-    add_executable(${TEST_NAME} ${TEST_FILE}.cpp)
-    target_link_libraries(${TEST_NAME} cucumber-cpp-nomain ${CUKE_EXTRA_LIBRARIES} ${ARGN})
-    add_test(${TEST_NAME} ${TEST_NAME})
-endfunction()
-
-if(NOT CUKE_DISABLE_GTEST)
+if(GMOCK_FOUND)
     include_directories(${GTEST_INCLUDE_DIRS})
     include_directories(${GMOCK_INCLUDE_DIRS})
 
