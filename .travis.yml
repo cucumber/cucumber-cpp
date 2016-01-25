@@ -6,9 +6,10 @@ compiler:
   - gcc
 env:
   matrix:
-    - GMOCK_VER=1.6.0 
+    - GMOCK_VER=1.4.0 
+    - GMOCK_VER=1.5.0
     - GMOCK_VER=1.7.0 
-    - GMOCK_PATH=/usr/src/gmock
+    - GMOCK_PATH=/usr/src/gmock #1.6.0 for ubuntu trusty
 
 addons:
   apt:
