@@ -8,9 +8,8 @@ set(CUKE_DISABLE_CPPSPEC OFF CACHE BOOL "Disable CppSpec")
 set(CUKE_DISABLE_GTEST OFF CACHE BOOL "Disable Google Test framework")
 set(CUKE_DISABLE_FUNCTIONAL OFF CACHE BOOL "Disable Functional Tests")
 set(CUKE_ENABLE_EXAMPLES OFF CACHE BOOL "Enable the examples")
-set(CUKE_GMOCK_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
-set(CUKE_GMOCK_VER "1.7.0" CACHE STRING "Google Mock framework version to be used")
-
+set(GMOCK_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
+set(GMOCK_VER "1.7.0" CACHE STRING "Google Mock framework version to be used")
 enable_testing()
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
@@ -88,61 +87,16 @@ endif()
 #
 
 if(NOT CUKE_DISABLE_GTEST)
-
-    if(UNIX)
-        find_package(Threads REQUIRED) # GTest needs this and it's a static library
-        set(Suffix ".a")
-    else()
-        set(Suffix ".lib")
-    endif()
-
-    include(ExternalProject)
-    if("${CUKE_GMOCK_DIR}" STREQUAL "" )
-       message(STATUS "Downloading GMock / GTest version ${CUKE_GMOCK_VER}")
-       ExternalProject_Add(
-           gmock
-           URL "https://googlemock.googlecode.com/files/gmock-${CUKE_GMOCK_VER}.zip"
-           PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gmock
-           INSTALL_COMMAND ""
-           LOG_DOWNLOAD ON
-           LOG_CONFIGURE ON
-           LOG_BUILD ON
-       )
-    else()
-       Message(STATUS "Building Gmock / Gtest from dir ${CUKE_GMOCK_DIR}")
-       ExternalProject_Add(
-            gmock
-            SOURCE_DIR ${CUKE_GMOCK_DIR}
-            PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gmock
-            INSTALL_COMMAND ""
-            LOG_DOWNLOAD OFF
-            LOG_CONFIGURE ON
-            LOG_BUILD ON
-        )
-    endif()
-
-    add_library(libgmock IMPORTED STATIC GLOBAL)
-    add_dependencies(libgmock gmock)
-    
-    ExternalProject_Get_Property(gmock source_dir binary_dir)
-    set_target_properties(libgmock PROPERTIES
-        "IMPORTED_LOCATION" "${binary_dir}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock.${Suffix}"
-        "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
-        "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
-    )
-    set(GMOCK_INCLUDE_DIRS ${source_dir}/include)
-    set(GTEST_INCLUDE_DIRS ${source_dir}/gtest/include) 
+    set(GMOCK_ROOT "${CMAKE_CURRENT_BINARY_DIR}/gmock")
+    find_package(GMock REQUIRED)
 
     set(CUKE_GTEST_LIBRARIES 
-        "${binary_dir}/gtest/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${Suffix}" 
-        "${binary_dir}/gtest/${CMAKE_FIND_LIBRARY_PREFIXES}gtest_main${Suffix}" 
+        ${GTEST_BOTH_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
     )
     set(CUKE_GMOCK_LIBRARIES 
-        "${binary_dir}/gtest/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${Suffix}"
-        "${binary_dir}/gtest/${CMAKE_FIND_LIBRARY_PREFIXES}gtest_main${Suffix}" 
-        "${binary_dir}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock${Suffix}"
-        "${binary_dir}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock_main${Suffix}"
+        ${GTEST_BOTH_LIBRARIES}
+        ${GMOCK_BOTH_LIBRARIES}
         ${CMAKE_THREAD_LIBS_INIT}
     )
 endif()

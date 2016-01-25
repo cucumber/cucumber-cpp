@@ -4,9 +4,9 @@ gem install bundler
 
 cmake -E make_directory build
 if [ -z ${GMOCK_PATH+x} ]; then 
-    cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on -DCUKE_GMOCK_VER=${GMOCK_VER}  .. ;
+    cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on -DGMOCK_VER=${GMOCK_VER} ..
 else
-    cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on -DCUKE_GMOCK_DIR=${GMOCK_PATH} -DGTEST_INCLUDE_DIR=/usr/src/gmock/gtest/include/  .. ;
+    cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on -DGMOCK_SRC_DIR=${GMOCK_PATH} ..
 fi
 cmake --build build
 cmake --build build --target test
