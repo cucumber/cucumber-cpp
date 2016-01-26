@@ -2,7 +2,7 @@ project(FeatureShowcase)
 
 include_directories(${CUKE_INCLUDE_DIRS})
 
-if(NOT CUKE_DISABLE_GTEST)
+if(GMOCK_FOUND)
     include_directories(${GTEST_INCLUDE_DIRS})
 
     function(add_cucumber_executable)

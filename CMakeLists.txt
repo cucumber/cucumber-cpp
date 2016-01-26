@@ -89,16 +89,18 @@ endif()
 if(NOT CUKE_DISABLE_GTEST)
     set(GMOCK_ROOT "${CMAKE_CURRENT_BINARY_DIR}/gmock")
     find_package(GMock REQUIRED)
-
-    set(CUKE_GTEST_LIBRARIES 
-        ${GTEST_BOTH_LIBRARIES}
-        ${CMAKE_THREAD_LIBS_INIT}
-    )
-    set(CUKE_GMOCK_LIBRARIES 
-        ${GTEST_BOTH_LIBRARIES}
-        ${GMOCK_BOTH_LIBRARIES}
-        ${CMAKE_THREAD_LIBS_INIT}
-    )
+    
+    if(GMOCK_FOUND)
+        set(CUKE_GTEST_LIBRARIES 
+            ${GTEST_BOTH_LIBRARIES}
+            ${CMAKE_THREAD_LIBS_INIT}
+        )
+        set(CUKE_GMOCK_LIBRARIES 
+            ${GTEST_BOTH_LIBRARIES}
+            ${GMOCK_BOTH_LIBRARIES}
+            ${CMAKE_THREAD_LIBS_INIT}
+        )
+    endif()
 endif()
 
 #
