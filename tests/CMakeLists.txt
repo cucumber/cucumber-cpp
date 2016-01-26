@@ -1,3 +1,11 @@
+function(cuke_add_driver_test TEST_FILE)
+    get_filename_component(TEST_NAME ${TEST_FILE} NAME)
+    message(STATUS "Adding " ${TEST_NAME})
+    add_executable(${TEST_NAME} ${TEST_FILE}.cpp)
+    target_link_libraries(${TEST_NAME} cucumber-cpp-nomain ${CUKE_EXTRA_LIBRARIES} ${ARGN})
+    add_test(${TEST_NAME} ${TEST_NAME})
+endfunction()
+
 if(GMOCK_FOUND)
     include_directories(${GTEST_INCLUDE_DIRS})
     include_directories(${GMOCK_INCLUDE_DIRS})
