@@ -183,8 +183,10 @@ mark_as_advanced(GMOCK_INCLUDE_DIR)
 set(GTEST_INCLUDE_DIR ${source_dir}/gtest/include)
 mark_as_advanced(GTEST_INCLUDE_DIR)
 
-set(GTEST_LIBRARY "${binary_dir}/gtest/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${Suffix}")
-set(GTEST_MAIN_LIBRARY "${binary_dir}/gtest/${CMAKE_FIND_LIBRARY_PREFIXES}gtest_main${Suffix}")
+set(GTEST_LIB_DIR "${binary_dir}/gtest/")
+if(MSVC) set(GTEST_LIB_DIR "${GTEST_LIB_DIR}/Release") endif()
+set(GTEST_LIBRARY "${GTEST_LIB_DIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${Suffix}")
+set(GTEST_MAIN_LIBRARY "${GTEST_LIB_DIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gtest_main${Suffix}")
 set(GMOCK_LIBRARY "${binary_dir}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock${Suffix}")
 set(GMOCK_MAIN_LIBRARY "${binary_dir}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock_main${Suffix}")
 
