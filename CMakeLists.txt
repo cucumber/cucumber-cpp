@@ -11,10 +11,18 @@ set(CUKE_ENABLE_EXAMPLES OFF CACHE BOOL "Enable the examples")
 set(GMOCK_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
 set(GMOCK_VER "1.7.0" CACHE STRING "Google Mock framework version to be used")
 set(VERBOSE OFF CACHE BOOL "Verbose output")
+set(APPVEYOR OFF CACHE BOOL "Is this appveyor CI build")
 
 enable_testing()
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
+
+function(show variables)
+    foreach(variable ${variables})
+        message(STATUS "  '${variable}': ${${variable}}")
+    endforeach()
+endfunction(show)
+
 
 #
 # Generic Compiler Flags
@@ -25,8 +33,38 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     # TODO: A better fix should handle ld's --as-needed flag 
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Xlinker '--no-as-needed'")
 elseif(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOMINMAX") # exclude M$ min/max macros
     #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /analyze")
+    add_definitions(-DNOMINMAX) # exclude M$ min/max macros
+    add_definitions(-D_SCL_SECURE_NO_WARNINGS) #turn off msvc warning
+    add_definitions(-D_WINSOCK_DEPRECATED_NO_WARNINGS) #likewise
+    if(APPVEYOR)
+        link_directories("C:/Libraries/boost/lib32-msvc-12.0")
+        add_definitions(-D_WIN32_WINNT=0x0600) #windows vista
+        message(STATUS "MSVC -> forcing use of statically-linked runtime.")
+        set(variables
+          CMAKE_C_FLAGS_DEBUG
+          CMAKE_C_FLAGS_MINSIZEREL
+          CMAKE_C_FLAGS_RELEASE
+          CMAKE_C_FLAGS_RELWITHDEBINFO
+          CMAKE_CXX_FLAGS_DEBUG
+          CMAKE_CXX_FLAGS_MINSIZEREL
+          CMAKE_CXX_FLAGS_RELEASE
+          CMAKE_CXX_FLAGS_RELWITHDEBINFO
+        )
+        if(verbose)
+        message(STATUS "Initial build flags:")
+        show(variables)
+        endif()
+        foreach(variable ${variables})
+            if(${variable} MATCHES "/MD")
+                string(REGEX REPLACE "/MD" "/MT" ${variable} "${${variable}}")
+            endif()
+        endforeach()
+        if(verbose)
+            message(STATUS "Build flags after replace:")
+            show(variables)
+        endif()
+    endif()
 endif()
 
 #
@@ -47,26 +85,38 @@ if(NOT CUKE_DISABLE_BOOST_TEST)
 endif()
 
 if(CUKE_USE_STATIC_BOOST)
+    message(STATUS "Using STATIC BOOST")
     set(CUKE_STATIC_BOOST_LIBS ${CUKE_CORE_BOOST_LIBS})
     # "An external test runner utility is required to link with dynamic library" (Boost User's Guide)
-    set(CUKE_DYNAMIC_BOOST_LIBS ${CUKE_TEST_BOOST_LIBS})
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_TEST_DYN_LINK")
+    if(NOT CUKE_DISABLE_BOOST_TEST)
+        set(CUKE_DYNAMIC_BOOST_LIBS ${CUKE_TEST_BOOST_LIBS})
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_TEST_DYN_LINK")
+    endif()
 
     if(NOT MSVC)
         find_package(Threads)
         set(CUKE_EXTRA_LIBRARIES ${CUKE_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
     endif()
 else()
+    message(STATUS "Using DYNAMIC BOOST")
     set(CUKE_DYNAMIC_BOOST_LIBS ${CUKE_CORE_BOOST_LIBS} ${CUKE_TEST_BOOST_LIBS})
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_ALL_DYN_LINK")
 endif()
 
 if(CUKE_STATIC_BOOST_LIBS)
+    if(VERBOSE)
+        message(STATUS "Using STATIC BOOST libs: ${CUKE_STATIC_BOOST_LIBS}")
+    endif()
     set(Boost_USE_STATIC_LIBS ON)
+    set(Boost_USE_STATIC_RUNTIME ON)
+    set (Boost_MULTITHREADED ON) 
     find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS ${CUKE_STATIC_BOOST_LIBS})
 endif()
 
 if(CUKE_DYNAMIC_BOOST_LIBS)
+    if(VERBOSE)
+        message(STATUS "Using DYNAMIC BOOST libs: ${CUKE_DYNAMIC_BOOST_LIBS}")
+    endif()
     set(Boost_USE_STATIC_LIBS OFF)
     find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS ${CUKE_DYNAMIC_BOOST_LIBS})
 endif()
@@ -74,6 +124,12 @@ endif()
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
     set(CUKE_EXTRA_LIBRARIES ${CUKE_EXTRA_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_REGEX_LIBRARY} ${Boost_DATE_TIME_LIBRARY})
+    if(VERBOSE)
+        message(STATUS "Boost include dir: ${Boost_INCLUDE_DIRS}")
+        message(STATUS "Boost libs: ${CUKE_EXTRA_LIBRARIES}")
+    endif()
+else()
+    message(WARNING "Boost NOT found?!")
 endif()
 
 #

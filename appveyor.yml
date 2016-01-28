@@ -1,33 +1,44 @@
 version: "{branch}-ci-{build}"
-os: Visual Studio 2013
+os:
+- Visual Studio 2013
+
+platform:
+- Win32
+
+configuration:
+- Debug 
+- Release
 
 on_finish:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 environment:
-  BOOST_ROOT: C:\Libraries\boost
-  BOOST_INCLUDEDIR: C:\Libraries\boost\boost
-  BOOST_LIBRARYDIR: C:\Libraries\boost\lib32-msvc-12.0
-  QT_ROOT: C:\Qt\5.5\msvc2013
-  GTEST_ROOT: C:\projects\googletest
+  BOOST_ROOT: C:\Libraries\boost_1_58_0
+  BOOST_INCLUDEDIR: C:\Libraries\boost_1_58_0\boost
+  BOOST_LIBRARYDIR: C:\Libraries\boost_1_58_0\lib32-msvc-12.0
 
 install:
-- cd C:\projects
-- ps: Start-FileDownload https://github.com/google/googletest/archive/release-1.7.0.zip -FileName googletest-release-1.7.0.zip
-- 7z x googletest-release-1.7.0.zip
-- rename googletest-release-1.7.0 googletest
-- cmake -E make_directory googletest\build
-- cmake -E chdir googletest\build cmake ..
-- cmake --build googletest\build
-- cd C:\projects\cucumber-cpp
+- git submodule init
+- git submodule update
+#- ruby --version
+- gem update --system --no-ri --no-rdoc -q
+- gem install bundler --no-document
+- bundle install
 
 build_script:
-- cmd: cmake -E make_directory build
-# -DCUKE_ENABLE_EXAMPLES=on after importing Qt 5.5 pull request
-- cmd: cmake -E chdir build cmake -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_INCLUDEDIR="%BOOST_INCLUDEDIR%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" -DCMAKE_PREFIX_PATH="QT_ROOT" -DGTEST_ROOT=%GTEST_ROOT% -DGMOCK_ROOT=%GTEST_ROOT% ..
-- cmd: cmake --build build
+- cmake -E make_directory build
+- cmake -E chdir build cmake -DAPPVEYOR=on -DVERBOSE=on -DCUKE_ENABLE_EXAMPLES=on -DCUKE_DISABLE_BOOST_TEST=on -DCUKE_DISABLE_FUNCTIONAL=on -DCMAKE_BUILD_TYPE=Debug -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_INCLUDEDIR="%BOOST_INCLUDEDIR%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" ..
+- cmake --build build
 
 test_script:
-- cmd: cmake --build build --target test
-- cmd: cmake --build build --target features
+- cmake --build build --target RUN_TESTS
+#- cmake --build build --target features
 
+notifications:
+- provider: Email
+  to:
+    - konserw@gmail.com
+  subject: cucumber_cpp AppVeyor Build
+  on_build_success: false
+  on_build_failure: true
+  on_build_status_changed: true
