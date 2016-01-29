@@ -171,26 +171,29 @@ endif()
 
 add_library(libgmock IMPORTED STATIC GLOBAL)
 add_dependencies(libgmock gmock)
-
 ExternalProject_Get_Property(gmock source_dir binary_dir)
+
+if(MSVC) 
+    set(MS_DIR "/${CMAKE_BUILD_TYPE}") 
+endif()
+set(GTEST_LIB_DIR "${binary_dir}/gtest${MS_DIR}")
+set(GMOCK_LIB_DIR "${binary_dir}${MS_DIR}")
+
 set_target_properties(libgmock PROPERTIES
-    "IMPORTED_LOCATION" "${binary_dir}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock.${Suffix}"
+    "IMPORTED_LOCATION" "${GMOCK_LIB_DIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock.${Suffix}"
     "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
     "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
 )
+
 set(GMOCK_INCLUDE_DIR ${source_dir}/include)
 mark_as_advanced(GMOCK_INCLUDE_DIR)
 set(GTEST_INCLUDE_DIR ${source_dir}/gtest/include)
 mark_as_advanced(GTEST_INCLUDE_DIR)
 
-set(GTEST_LIB_DIR "${binary_dir}/gtest/")
-if(MSVC) 
-    set(GTEST_LIB_DIR "${GTEST_LIB_DIR}/Release") 
- endif()
 set(GTEST_LIBRARY "${GTEST_LIB_DIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${Suffix}")
 set(GTEST_MAIN_LIBRARY "${GTEST_LIB_DIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gtest_main${Suffix}")
-set(GMOCK_LIBRARY "${binary_dir}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock${Suffix}")
-set(GMOCK_MAIN_LIBRARY "${binary_dir}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock_main${Suffix}")
+set(GMOCK_LIBRARY "${GMOCK_LIB_DIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock${Suffix}")
+set(GMOCK_MAIN_LIBRARY "${GMOCK_LIB_DIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock_main${Suffix}")
 
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(GMock DEFAULT_MSG GMOCK_LIBRARY GMOCK_INCLUDE_DIR GMOCK_MAIN_LIBRARY)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(GTest DEFAULT_MSG GTEST_LIBRARY GTEST_INCLUDE_DIR GTEST_MAIN_LIBRARY)
@@ -200,12 +203,14 @@ if(GMOCK_FOUND)
   set(GMOCK_LIBRARIES ${GMOCK_LIBRARY})
   set(GMOCK_MAIN_LIBRARIES ${GMOCK_MAIN_LIBRARY})
   set(GMOCK_BOTH_LIBRARIES ${GMOCK_LIBRARIES} ${GMOCK_MAIN_LIBRARIES})
-#  Message(STATUS "GMock includes: ${GMOCK_INCLUDE_DIRS}")
+  Message(STATUS "GMock includes: ${GMOCK_INCLUDE_DIRS}")
+  Message(STATUS "GMock libs: ${GMOCK_BOTH_LIBRARIESS}")
 endif()
 if(GTEST_FOUND)
   set(GTEST_INCLUDE_DIRS ${GTEST_INCLUDE_DIR})
   set(GTEST_LIBRARIES ${GTEST_LIBRARY})
   set(GTEST_MAIN_LIBRARIES ${GTEST_MAIN_LIBRARY})
   set(GTEST_BOTH_LIBRARIES ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
-#  Message(STATUS "GTest includes: ${GTEST_INCLUDE_DIRS}")
+  Message(STATUS "GTest includes: ${GTEST_INCLUDE_DIRS}")
+  Message(STATUS "GTest libs: ${GTEST_BOT_LIBRARIES}")
 endif()

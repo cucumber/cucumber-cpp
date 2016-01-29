@@ -38,10 +38,9 @@ if(CMAKE_EXTRA_GENERATOR OR MSVC_IDE)
 endif()
 
 add_library(cucumber-cpp-nomain STATIC ${CUKE_SOURCES})
-if(GMOCK_FOUND) 
-    add_dependencies(cucumber-cpp-nomain gmock) 
- endif()
 add_library(cucumber-cpp STATIC ${CUKE_SOURCES} main.cpp)
+
 if(GMOCK_FOUND) 
     add_dependencies(cucumber-cpp gmock) 
- endif()
+    add_dependencies(cucumber-cpp-nomain gmock) 
+endif()
