@@ -1,8 +1,13 @@
 #!/bin/sh
 set -e #break script on non-zero exitcode from any command
 gem install bundler
+
 cmake -E make_directory build
-cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on -DGTEST_INCLUDE_DIR=/usr/src/gmock/gtest/include/  ..
+if [ -z ${GMOCK_PATH+x} ]; then 
+    cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on -DGMOCK_VER=${GMOCK_VER} ..
+else
+    cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on -DGMOCK_SRC_DIR=${GMOCK_PATH} ..
+fi
 cmake --build build
 cmake --build build --target test
 cmake --build build --target features

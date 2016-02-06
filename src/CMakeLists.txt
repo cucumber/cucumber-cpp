@@ -14,7 +14,7 @@ set(CUKE_SOURCES
     connectors/wire/WireProtocolCommands.cpp
 )
 
-if(GTEST_FOUND)
+if(GMOCK_FOUND)
     include_directories(${GTEST_INCLUDE_DIRS})
     list(APPEND CUKE_SOURCES drivers/GTestDriver.cpp)
 endif()
@@ -40,3 +40,7 @@ endif()
 add_library(cucumber-cpp-nomain STATIC ${CUKE_SOURCES})
 add_library(cucumber-cpp STATIC ${CUKE_SOURCES} main.cpp)
 
+if(GMOCK_FOUND) 
+    add_dependencies(cucumber-cpp gmock) 
+    add_dependencies(cucumber-cpp-nomain gmock) 
+endif()

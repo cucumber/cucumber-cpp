@@ -8,6 +8,9 @@ set(CUKE_DISABLE_CPPSPEC OFF CACHE BOOL "Disable CppSpec")
 set(CUKE_DISABLE_GTEST OFF CACHE BOOL "Disable Google Test framework")
 set(CUKE_DISABLE_FUNCTIONAL OFF CACHE BOOL "Disable Functional Tests")
 set(CUKE_ENABLE_EXAMPLES OFF CACHE BOOL "Enable the examples")
+set(GMOCK_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
+set(GMOCK_VER "1.7.0" CACHE STRING "Google Mock framework version to be used")
+set(VERBOSE OFF CACHE BOOL "Verbose output")
 
 enable_testing()
 
@@ -86,14 +89,19 @@ endif()
 #
 
 if(NOT CUKE_DISABLE_GTEST)
-    find_package(GTest)
-    find_package(GMock)
-    if(GMOCK_FOUND AND GTEST_FOUND)
-        set(CUKE_TEST_LIBRARIES ${GTEST_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
-        if(UNIX)
-            find_package(Threads) # GTest needs this and it's a static library
-            set(CUKE_TEST_LIBRARIES ${CUKE_TEST_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
-        endif()
+    set(GMOCK_ROOT "${CMAKE_CURRENT_BINARY_DIR}/gmock")
+    find_package(GMock REQUIRED)
+    
+    if(GMOCK_FOUND)
+        set(CUKE_GTEST_LIBRARIES 
+            ${GTEST_BOTH_LIBRARIES}
+            ${CMAKE_THREAD_LIBS_INIT}
+        )
+        set(CUKE_GMOCK_LIBRARIES 
+            ${GTEST_BOTH_LIBRARIES}
+            ${GMOCK_BOTH_LIBRARIES}
+            ${CMAKE_THREAD_LIBS_INIT}
+        )
     endif()
 endif()
 
