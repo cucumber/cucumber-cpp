@@ -24,3 +24,7 @@ script: ./travis.sh
 notifications:
   email:
     - cukes-devs@googlegroups.com
+
+branches:
+  only:
+    - master
