@@ -16,6 +16,6 @@ if(QT4_FOUND)
     endif()
 
     set(CALCQT_SOURCES src/CalcQt.cpp src/CalculatorWidget.cpp)
-    add_executable(calcqt ${CALCQT_SOURCES} ${CALCQT_HEADERS_MOC})
-    target_link_libraries(calcqt ${QT_LIBRARIES})
+    add_executable(CalcQtApp ${CALCQT_SOURCES} ${CALCQT_HEADERS_MOC})
+    target_link_libraries(CalcQtApp ${QT_LIBRARIES})
 endif()
