@@ -15,13 +15,18 @@ namespace internal {
 
 
 namespace {
-
-bool boost_test_init() {
+#ifdef BOOST_TEST_ALTERNATIVE_INIT_API
+  bool boost_init_unit_test() {
     return true;
-}
+  }
+#else
+  ::boost::unit_test::test_suite*
+  boost_init_unit_test_suite(int /*argc*/, char* /*argv*/[]) {
+    return NULL;
+  }
+#endif
 
-static CukeBoostLogInterceptor *logInterceptor = 0;
-
+  static CukeBoostLogInterceptor *logInterceptor = 0;
 }
 
 
@@ -31,19 +36,19 @@ public:
     void reset();
 
     // Formatter
-    void log_start( std::ostream&, counter_t test_cases_amount) {};
+    void log_start( std::ostream&, counter_t /*test_cases_amount*/) {};
     void log_finish( std::ostream&) {};
     void log_build_info( std::ostream&) {};
 
-    void test_unit_start( std::ostream&, test_unit const& tu) {};
-    void test_unit_finish( std::ostream&, test_unit const& tu, unsigned long elapsed) {};
-    void test_unit_skipped( std::ostream&, test_unit const& tu) {};
+    void test_unit_start( std::ostream&, test_unit const& /*tu*/) {};
+    void test_unit_finish( std::ostream&, test_unit const& /*tu*/, unsigned long /*elapsed*/) {};
+    void test_unit_skipped( std::ostream&, test_unit const& /*tu*/) {};
 
-    void log_exception( std::ostream&, log_checkpoint_data const&, execution_exception const& ex) {};
+    void log_exception( std::ostream&, log_checkpoint_data const&, execution_exception const& /*ex*/) {};
 
-    void log_entry_start( std::ostream&, log_entry_data const&, log_entry_types let) {};
-    void log_entry_value( std::ostream&, const_string value);
-    void log_entry_value( std::ostream&, lazy_ostream const& value) {};
+    void log_entry_start( std::ostream&, log_entry_data const&, log_entry_types /*let*/) {};
+    void log_entry_value( std::ostream&, const_string /*value*/);
+    void log_entry_value( std::ostream&, lazy_ostream const& /*value*/) {};
     void log_entry_finish( std::ostream&) {};
 
     void log_exception(std::ostream&, const boost::unit_test::log_checkpoint_data&, boost::unit_test::const_string) {};
@@ -83,7 +88,12 @@ void BoostStep::initBoostTest() {
     if (!framework::is_initialized()) {
         int argc = 2;
         char *argv[] = { (char *) "", (char *) "" };
-        framework::init(&boost_test_init, argc, argv);
+
+#ifdef BOOST_TEST_ALTERNATIVE_INIT_API
+        framework::init(&boost_init_unit_test, argc, argv);
+#else
+        framework::init(&boost_init_unit_test_suite, argc, argv);
+#endif
         logInterceptor = new CukeBoostLogInterceptor;
         ::boost::unit_test::unit_test_log.set_formatter(logInterceptor);
         ::boost::unit_test::unit_test_log.set_threshold_level(log_all_errors);

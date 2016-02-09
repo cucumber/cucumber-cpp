@@ -54,7 +54,7 @@ public:
         EmptyCallableStep emptyStep;
         aroundhook_list_type &ash = aroundStepHooks();
         for (HookRegistrar::aroundhook_list_type::const_iterator h = ash.begin(); h != ash.end(); ++h) {
-            (*h)->invokeHook(scenario, &emptyStep);
+            (*h)->invokeHookWithStep(scenario, &emptyStep);
         }
     }
 };

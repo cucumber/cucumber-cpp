@@ -24,7 +24,7 @@ bool Hook::tagsMatch(Scenario *scenario) {
     return !scenario || tagExpression->matches(scenario->getTags());
 }
 
-void AroundStepHook::invokeHook(Scenario *scenario, CallableStep *step) {
+void AroundStepHook::invokeHookWithStep(Scenario *scenario, CallableStep *step) {
     this->step = step;
     Hook::invokeHook(scenario);
 }
@@ -155,7 +155,7 @@ void StepCallChain::execNext() {
     } else {
         HookRegistrar::aroundhook_list_type::iterator currentHook = nextHook++;
         CallableStepChain callableStepChain(this);
-        (*currentHook)->invokeHook(scenario, &callableStepChain);
+        (*currentHook)->invokeHookWithStep(scenario, &callableStepChain);
     }
 }
 
