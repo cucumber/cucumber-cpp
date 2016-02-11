@@ -17,7 +17,8 @@ matrix:
       env: GMOCK_VER=1.6.0
     - os: osx
       env: GMOCK_PATH=/usr/src/gmock
-
+    - os: osx
+      compiler: gcc #does anyone on osx use it?
 addons:
   apt:
     packages:
