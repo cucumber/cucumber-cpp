@@ -8,13 +8,13 @@ compiler:
   - clang
   - gcc
 env:
-  - GMOCK_VER=1.6.0 
+#  - GMOCK_VER=1.6.0 
   - GMOCK_VER=1.7.0 
   - GMOCK_PATH=/usr/src/gmock #1.6.0 from ubuntu trusty repo
 matrix:
   exclude:
-    - os: linux
-      env: GMOCK_VER=1.6.0
+#    - os: linux
+#      env: GMOCK_VER=1.6.0
     - os: osx
       env: GMOCK_PATH=/usr/src/gmock
     - os: osx
@@ -31,10 +31,10 @@ addons:
 
 script: ./travis.sh 
 
-#notifications:
-#  email:
-#    - cukes-devs@googlegroups.com
+notifications:
+  email:
+    - cukes-devs@googlegroups.com
 
-#branches:
-#  only:
-#    - master
+branches:
+  only:
+    - master
