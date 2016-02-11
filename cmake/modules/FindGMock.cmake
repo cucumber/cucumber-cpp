@@ -143,7 +143,7 @@ else()
 endif()
 if(APPLE AND "${GMOCK_VER}" STREQUAL "1.6.0")
   #  add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=1 -DGTEST_LANG_CXX11 -D_VARIADIC_MAX=10)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGTEST_USE_OWN_TR1_TUPLE=1 -DGTEST_HAS_TR1_TUPLE=1 -std=c++11 -stdlib=libc++ -Wno-narrowing"
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGTEST_USE_OWN_TR1_TUPLE=1 -DGTEST_HAS_TR1_TUPLE=1 -std=c++11 -stdlib=libc++ -Wno-narrowing")
     set(CMAKE_CXX_LINKER_FLAGS "{CMAKE_CXX_LINKER_FLAGS} -stdlib=libc++") 
 endif()
 
