@@ -141,6 +141,9 @@ if(UNIX)
 else()
     set(Suffix ".lib")
 endif()
+if(APPLE)
+    add_definitions(-DGTEST_USE_OWN_TR1_TUPLE=1 -DGTEST_LANG_CXX11)
+endif
 
 if("${GMOCK_SRC_DIR}" STREQUAL "") 
    if("${GMOCK_VER}" STREQUAL "") 
