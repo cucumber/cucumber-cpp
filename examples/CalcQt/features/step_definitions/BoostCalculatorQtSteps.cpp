@@ -1,13 +1,10 @@
-
 #include <cstdlib>
-
 #include <boost/test/unit_test.hpp>
 #include <cucumber-cpp/defs.hpp>
-
 #include <QApplication>
 #include <QTest>
 
-#include <CalculatorWidget.h>
+#include "CalculatorWidget.h"
 
 static int argc = 0;
 static QApplication app(argc, 0);
@@ -23,13 +20,17 @@ int millisecondsToWait() {
 }
 
 std::istream& operator>> (std::istream& in, QString& val) { std::string s; in >> s; val = s.c_str(); return in; }
-std::ostream& operator<< (std::ostream& out, const QString& val) { out << val.toAscii().data(); return out; }
+std::ostream& operator<< (std::ostream& out, const QString& val) { out << val.toLatin1().data(); return out; }
 
 GIVEN("^I just turned on the calculator$") {
     cucumber::ScenarioScope<CalculatorWidget> calculator;
     calculator->move(0, 0);
     calculator->show();
+#if QT_VERSION >= 0x050000
+    QTest::qWaitForWindowExposed(calculator.get());
+#else
     QTest::qWaitForWindowShown(calculator.get());
+#endif
     QTest::qWait(millisecondsToWait());
 }
 

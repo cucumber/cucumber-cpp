@@ -1,7 +1,8 @@
 class QLabel;
 class QPushButton;
-#include <QString>
 class QSignalMapper;
+
+#include <QString>
 #include <QWidget>
 
 class CalculatorWidget : public QWidget {

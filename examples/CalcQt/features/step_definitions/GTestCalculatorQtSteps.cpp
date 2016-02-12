@@ -1,8 +1,6 @@
 #include <cstdlib>
-
 #include <gtest/gtest.h>
 #include <cucumber-cpp/defs.hpp>
-
 #include <QApplication>
 #include <QTest>
 
@@ -28,7 +26,11 @@ GIVEN("^I just turned on the calculator$") {
     cucumber::ScenarioScope<CalculatorWidget> calculator;
     calculator->move(0, 0);
     calculator->show();
+#if QT_VERSION >= 0x050000
     QTest::qWaitForWindowExposed(calculator.get());
+#else
+    QTest::qWaitForWindowShown(calculator.get());
+#endif
     QTest::qWait(millisecondsToWait());
 }
 
