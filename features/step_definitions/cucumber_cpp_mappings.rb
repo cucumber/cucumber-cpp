@@ -1,5 +1,4 @@
 require 'json'
-require 'timeout'
 
 module CucumberCppMappings
 
@@ -315,7 +314,9 @@ EOF
 
   def run_cucumber_cpp
     @steps_out = IO.popen [STEP_DEFINITIONS_EXE, "-v"]
-    expect(@steps_out.readline).to start_with("Listening")
+    out = @steps_out.readline
+    puts "definition output: #{out}"
+    expect(out).to start_with("Listening")
   end
 
   def run_cucumber_test_feature(params)
