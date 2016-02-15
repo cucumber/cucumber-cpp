@@ -292,7 +292,7 @@ EOF
     create_wire_file
     run_cucumber_cpp
     run_cucumber_test_feature params
-    Process.kill(:SIGTERM, @steps_out.pid) # for when there are no scenarios
+    Process.kill(9, @steps_out.pid) # for when there are no scenarios
     Process.wait @steps_out.pid
   end
 
@@ -315,7 +315,7 @@ EOF
   def run_cucumber_cpp
     @steps_out = IO.popen [STEP_DEFINITIONS_EXE, "-v"]
     out = @steps_out.readline
-    puts "definition output: #{out}"
+#    puts "definition output: #{out}"
     expect(out).to start_with("Listening")
   end
 
