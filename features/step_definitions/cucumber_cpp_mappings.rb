@@ -1,4 +1,5 @@
 require 'json'
+require "io/wait" # it might be already included
 
 module CucumberCppMappings
 
@@ -314,6 +315,8 @@ EOF
 
   def run_cucumber_cpp
     @steps_out = IO.popen STEP_DEFINITIONS_EXE
+    expect(@steps_out.wait(1)).not_to be_nil
+    expect(@steps_out.readline).to start_with("Listening")
   end
 
   def run_cucumber_test_feature(params)

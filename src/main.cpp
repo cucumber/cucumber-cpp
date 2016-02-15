@@ -5,13 +5,15 @@
 
 namespace {
 
-void acceptWireProtocol(int port) {
+void acceptWireProtocol(int port, bool verbose = false) {
     using namespace ::cucumber::internal;
     CukeEngineImpl cukeEngine;
     JsonSpiritWireMessageCodec wireCodec;
     WireProtocolHandler protocolHandler(&wireCodec, &cukeEngine);
     SocketServer server(&protocolHandler);
     server.listen(port);
+    if (verbose)
+        std::cerr << "Listening on port " << port << std::endl;
     server.acceptOnce();
 }
 
@@ -24,7 +26,7 @@ int main(int argc, char **argv) {
             std::string firstArg(argv[1]);
             port = ::cucumber::internal::fromString<int>(firstArg);
         }
-        acceptWireProtocol(port);
+        acceptWireProtocol(port, true);
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         exit(1);
