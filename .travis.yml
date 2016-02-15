@@ -27,14 +27,15 @@ addons:
       - libboost-regex-dev
       - libboost-date-time-dev 
       - libboost-test-dev
+      - libboost-program-options-dev
       - google-mock
 
 script: ./travis.sh 
 
-#notifications:
-#  email:
-#    - cukes-devs@googlegroups.com
-#
-#branches:
-#  only:
-#    - master
+notifications:
+  email:
+    - cukes-devs@googlegroups.com
+
+branches:
+  only:
+    - master
