@@ -10,7 +10,7 @@ else
 fi
 cmake --build build
 cmake --build build --target test
-cmake --build build --target features
+cmake --build build --target features-pretty
 
 GTEST=build/examples/Calc/GTestCalculatorSteps 
 BOOST=build/examples/Calc/BoostCalculatorSteps
