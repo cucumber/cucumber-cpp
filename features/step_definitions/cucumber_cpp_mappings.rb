@@ -291,6 +291,8 @@ EOF
     compile_step_definitions
     create_wire_file
     run_cucumber_cpp
+    puts "wait a second"
+    sleep(1)
     run_cucumber_test_feature params
     Process.kill(9, @steps_out.pid) # for when there are no scenarios
     Process.wait @steps_out.pid
