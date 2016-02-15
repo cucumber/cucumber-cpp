@@ -15,17 +15,19 @@ void acceptWireProtocol(int port, bool verbose = false) {
     SocketServer server(&protocolHandler);
     server.listen(port);
     if (verbose)
-        std::cerr << "Listening on port " << port << std::endl;
+        std::cout << "Listening on port " << port << std::endl;
     server.acceptOnce();
 }
 
 }
 
 int main(int argc, char **argv) {
+    bool verbose = false;
     
     boost::program_options::options_description optionDescription("Allowed options");
     optionDescription.add_options()
-        ("help", "help for cucumber-cpp")
+        ("help,h", "help for cucumber-cpp")
+        ("verbose,v", "verbose output")
         ("port", value<int>(), "listening port of wireserver")
         ;
     boost::program_options::variables_map optionVariableMap;
@@ -36,13 +38,17 @@ int main(int argc, char **argv) {
         std::cout << optionDescription << std::endl;
     }
 
+    if (optionVariableMap.count("verbose")) {
+        verbose = true;
+    }
+
     int port = 3902;
     if (optionVariableMap.count("port")) {
        port = optionVariableMap["port"].as<int>();
     }
 
     try {
-        acceptWireProtocol(port, true);
+        acceptWireProtocol(port, verbose);
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         exit(1);
