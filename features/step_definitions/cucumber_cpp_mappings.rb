@@ -1,5 +1,6 @@
 require 'json'
-require 'os'
+require 'io/wait'
+require 'pty'
 
 module CucumberCppMappings
 
@@ -292,13 +293,12 @@ EOF
     compile_step_definitions
     create_wire_file
     run_cucumber_cpp
-    if OS.mac?
-        puts "wait a second"
-        sleep(1)
-    end
     run_cucumber_test_feature params
-    Process.kill(9, @steps_out.pid) # for when there are no scenarios
-    Process.wait @steps_out.pid
+    begin
+      Process.kill(:SIGTERM, @steps_pid)
+      Process.wait @steps_pid
+    rescue Errno::ESRCH
+    end
   end
 
   def write_main_step_definitions_file
@@ -318,7 +318,12 @@ EOF
   end
 
   def run_cucumber_cpp
-    @steps_out = IO.popen STEP_DEFINITIONS_EXE 
+    PTY.spawn(STEP_DEFINITIONS_EXE, '-v') do
+      |output, input, pid|
+      @steps_pid = pid
+      expect(output.wait(2)).not_to be_nil
+      expect(output.readline).to start_with("Listening")
+    end
   end
 
   def run_cucumber_test_feature(params)
