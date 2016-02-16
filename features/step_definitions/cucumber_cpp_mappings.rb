@@ -321,7 +321,7 @@ EOF
     PTY.spawn(STEP_DEFINITIONS_EXE, '-v') do
       |output, input, pid|
       @steps_pid = pid
-      expect(output.wait(10)).not_to be_nil
+#      expect(output.wait(10)).not_to be_nil
       expect(output.readline).to start_with("Listening")
     end
   end
