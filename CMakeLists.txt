@@ -205,7 +205,8 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
         target_link_libraries(functional-steps ${CUKE_LIBRARIES})
 
         # TODO It does not escape paths
-        set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "\"${CMAKE_COMMAND}\" --build \"${CMAKE_BINARY_DIR}\" --target functional-steps")
+        #set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "\"${CMAKE_COMMAND}\" --build \"${CMAKE_BINARY_DIR}\" --target functional-steps")
+        set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "cmake --build build --target functional-steps")
 message(STATUS, "compile_dnamic: ${CUKE_COMPILE_DYNAMIC_CPP_STEPS}")
         function(add_feature_target TARGET_NAME)
             add_custom_target(${TARGET_NAME}
