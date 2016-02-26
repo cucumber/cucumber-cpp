@@ -250,6 +250,7 @@ EOF
     @support_code += code
   end
 
+  CUCUMBER_EXE                 = ENV["CUKE_EXE"]
   TMP_DIR                      = ENV["TMP_DIR"]
   FEATURES_DIR                 = ENV["TEST_FEATURES_DIR"]
   STEP_DEFINITIONS_SRC         = ENV["DYNAMIC_CPP_STEPS_SRC"]
@@ -294,7 +295,7 @@ EOF
     run_cucumber_cpp
     run_cucumber_test_feature params
     begin
-      Process.kill('INT', @steps_out.pid)
+      Process.kill(9, @steps_out.pid)
       Process.wait @steps_out.pid
     rescue Errno::ESRCH
 #jescze jedno rescue
@@ -327,8 +328,8 @@ EOF
   end
 
   def run_cucumber_test_feature(params)
-    puts "running: cucumber #{params} #{FEATURES_DIR}"
-    run_simple "cucumber #{params} #{FEATURES_DIR}", false
+    puts "running: #{CUCUMBER_EXE} #{params} #{FEATURES_DIR}"
+    run_simple "#{CUCUMBER_EXE} #{params} #{FEATURES_DIR}", false
   end
 end
 

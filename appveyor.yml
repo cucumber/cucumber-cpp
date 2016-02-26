@@ -10,7 +10,7 @@ configuration:
 #- Release
 
 on_finish:
-- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 environment:
   BOOST_ROOT: C:\Libraries\boost_1_58_0
@@ -33,7 +33,7 @@ build_script:
 
 test_script:
 - cmake --build build --target RUN_TESTS
-#- cmake --build build --target features
+- cmake --build build --target features
 
 notifications:
 - provider: Email
