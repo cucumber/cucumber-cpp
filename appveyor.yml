@@ -7,10 +7,10 @@ platform:
 
 configuration:
 - Debug 
-- Release
+#- Release
 
 on_finish:
-#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 environment:
   BOOST_ROOT: C:\Libraries\boost_1_58_0
@@ -27,12 +27,13 @@ install:
 
 build_script:
 - cmake -E make_directory build
-- cmake -E chdir build cmake -DAPPVEYOR=on -DVERBOSE=on -DCUKE_ENABLE_EXAMPLES=on -DCUKE_DISABLE_BOOST_TEST=on -DCUKE_DISABLE_FUNCTIONAL=on -DCMAKE_BUILD_TYPE=Debug -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_INCLUDEDIR="%BOOST_INCLUDEDIR%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" ..
+- cmake -E chdir build cmake -DAPPVEYOR=on -DVERBOSE=on -DCUKE_ENABLE_EXAMPLES=on -DCUKE_DISABLE_BOOST_TEST=on  -DCMAKE_BUILD_TYPE=Debug -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_INCLUDEDIR="%BOOST_INCLUDEDIR%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" ..
+#-DCUKE_DISABLE_FUNCTIONAL=on
 - cmake --build build
 
 test_script:
 - cmake --build build --target RUN_TESTS
-#- cmake --build build --target features
+- cmake --build build --target features
 
 notifications:
 - provider: Email
