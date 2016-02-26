@@ -294,14 +294,15 @@ EOF
     run_cucumber_cpp
     run_cucumber_test_feature params
     begin
-      Process.kill(:SIGTERM, @steps_out.pid)
+      Process.kill('INT', @steps_out.pid)
       Process.wait @steps_out.pid
     rescue Errno::ESRCH
+#jescze jedno rescue
     end
-    if(OS.windows?)
-      run_simple "taskkill /pid #{@steps_out.pid} /f /t"
-      run_simple "del /f #{STEP_DEFINITIONS_EXE}"
-    end
+#    if(OS.windows?)
+#      %x[taskkill /pid #{@steps_out.pid} /f /t]
+#      %x[del /f #{STEP_DEFINITIONS_EXE}]
+#    end
   end
 
   def write_main_step_definitions_file
@@ -321,10 +322,12 @@ EOF
   end
 
   def run_cucumber_cpp
+    puts "running: #{STEP_DEFINITIONS_EXE}"
     @steps_out = IO.popen STEP_DEFINITIONS_EXE
   end
 
   def run_cucumber_test_feature(params)
+    puts "running: cucumber #{params} #{FEATURES_DIR}"
     run_simple "cucumber #{params} #{FEATURES_DIR}", false
   end
 end
