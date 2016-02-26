@@ -33,7 +33,7 @@ build_script:
 
 test_script:
 - cmake --build build --target RUN_TESTS
-- cmake --build build --target features
+#- cmake --build build --target features
 
 notifications:
 - provider: Email
