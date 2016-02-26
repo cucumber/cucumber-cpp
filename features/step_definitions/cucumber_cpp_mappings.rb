@@ -1,4 +1,5 @@
 require 'json'
+require 'os'
 
 module CucumberCppMappings
 
@@ -292,8 +293,15 @@ EOF
     create_wire_file
     run_cucumber_cpp
     run_cucumber_test_feature params
-    Process.kill(:SIGTERM, @steps_out.pid) # for when there are no scenarios
-    Process.wait @steps_out.pid
+    begin
+      Process.kill(:SIGTERM, @steps_out.pid)
+      Process.wait @steps_out.pid
+    rescue Errno::ESRCH
+    end
+    if(OS.windows?)
+      run_simple "taskkill /pid #{@steps_out.pid} /f /t"
+      run_simple "del /f #{STEP_DEFINITIONS_EXE}"
+    end
   end
 
   def write_main_step_definitions_file
