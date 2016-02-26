@@ -206,11 +206,11 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
 
 set(CUKE_STEPS_DIR "${CMAKE_BINARY_DIR}")
 if(MSVC)
-    set(CUKE_STEPS_DIR "${CUKE_STEPS_DIR}/${CMAKE_BUILD_TYPE}")
+    set(CUKE_STEPS_DIR "${CUKE_STEPS_DIR}/${CMAKE_CFG_INTDIR}")
 endif()
 
         # TODO It does not escape paths
-        #set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "\"${CMAKE_COMMAND}\" --build \"${CMAKE_BINARY_DIR}\" --target functional-steps")
+       # set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "\"${CMAKE_COMMAND}\" --build \"${CMAKE_BINARY_DIR}\" --target functional-steps")
         set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "cmake --build ../build --target functional-steps")
 message(STATUS, "compile_dnamic: ${CUKE_COMPILE_DYNAMIC_CPP_STEPS}")
         function(add_feature_target TARGET_NAME)
