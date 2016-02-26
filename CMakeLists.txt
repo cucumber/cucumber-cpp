@@ -204,6 +204,11 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
         add_executable(functional-steps EXCLUDE_FROM_ALL ${CUKE_DYNAMIC_CPP_STEPS})
         target_link_libraries(functional-steps ${CUKE_LIBRARIES})
 
+set(CUKE_STEPS_DIR "${CMAKE_BINARY_DIR}")
+if(MSVC)
+    set(CUKE_STEPS_DIR "${CUKE_STEPS_DIR}/${CMAKE_BUILD_TYPE}")
+endif()
+
         # TODO It does not escape paths
         #set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "\"${CMAKE_COMMAND}\" --build \"${CMAKE_BINARY_DIR}\" --target functional-steps")
         set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "cmake --build ../build --target functional-steps")
@@ -214,7 +219,7 @@ message(STATUS, "compile_dnamic: ${CUKE_COMPILE_DYNAMIC_CPP_STEPS}")
                 TEST_FEATURES_DIR=${CUKE_TEST_FEATURES_DIR}
                 TMP_DIR=${CUKE_FEATURES_TMP}
                 DYNAMIC_CPP_STEPS_SRC=${CUKE_DYNAMIC_CPP_STEPS}
-                DYNAMIC_CPP_STEPS_EXE=${CMAKE_BINARY_DIR}/functional-steps
+                DYNAMIC_CPP_STEPS_EXE="${CUKE_STEPS_DIR}/functional-steps"
                 COMPILE_DYNAMIC_CPP_STEPS=${CUKE_COMPILE_DYNAMIC_CPP_STEPS}
                 ${ARGV1} ${ARGV2} ${ARGV3} ${ARGV4} ${ARGV5} ${ARGV6}
                 ${CUKE_FEATURES_DIR}
