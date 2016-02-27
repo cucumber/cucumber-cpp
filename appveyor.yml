@@ -9,18 +9,19 @@ configuration:
 - Debug 
 #- Release
 
-environment:
-  matrix:
-    - ruby_version: "22"
-    - ruby_version: "193"
-
 on_finish:
 #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 environment:
-  BOOST_ROOT: C:\Libraries\boost_1_58_0
-  BOOST_INCLUDEDIR: C:\Libraries\boost_1_58_0\boost
-  BOOST_LIBRARYDIR: C:\Libraries\boost_1_58_0\lib32-msvc-12.0
+  matrix:
+    - BOOST_ROOT: C:\Libraries\boost_1_58_0
+      BOOST_INCLUDEDIR: C:\Libraries\boost_1_58_0\boost
+      BOOST_LIBRARYDIR: C:\Libraries\boost_1_58_0\lib32-msvc-12.0
+    - BOOST_ROOT: C:\Libraries\boost
+      BOOST_INCLUDEDIR: C:\Libraries\boost\boost
+      BOOST_LIBRARYDIR: C:\Libraries\boost\lib32-msvc-12.0
+    - ruby_version: "22"
+#    - ruby_version: "193"
 
 install:
 - git submodule init
