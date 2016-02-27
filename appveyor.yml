@@ -7,7 +7,7 @@ platform:
 
 configuration:
 - Debug 
-#- Release
+- Release
 
 on_finish:
 #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -17,16 +17,16 @@ environment:
     - BOOST_ROOT: C:\Libraries\boost_1_58_0
       BOOST_INCLUDEDIR: C:\Libraries\boost_1_58_0\boost
       BOOST_LIBRARYDIR: C:\Libraries\boost_1_58_0\lib32-msvc-12.0
-      ruby_version: "2.2"
+      ruby_version: "22"
     - BOOST_ROOT: C:\Libraries\boost
       BOOST_INCLUDEDIR: C:\Libraries\boost\boost
       BOOST_LIBRARYDIR: C:\Libraries\boost\lib32-msvc-12.0
-      ruby_version: "1.9.3"
+      ruby_version: "193"
 
 install:
 - git submodule init
 - git submodule update
-- rvm use %ruby_version
+- SET PATH=C:\Ruby%ruby_version%\bin;%PATH% 
 - ruby --version
 - gem update --system --no-ri --no-rdoc -q
 - gem install bundler --no-document
