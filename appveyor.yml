@@ -17,16 +17,17 @@ environment:
     - BOOST_ROOT: C:\Libraries\boost_1_58_0
       BOOST_INCLUDEDIR: C:\Libraries\boost_1_58_0\boost
       BOOST_LIBRARYDIR: C:\Libraries\boost_1_58_0\lib32-msvc-12.0
+      ruby_version: "2.2"
     - BOOST_ROOT: C:\Libraries\boost
       BOOST_INCLUDEDIR: C:\Libraries\boost\boost
       BOOST_LIBRARYDIR: C:\Libraries\boost\lib32-msvc-12.0
-    - ruby_version: "22"
-#    - ruby_version: "193"
+      ruby_version: "1.9.3"
 
 install:
 - git submodule init
 - git submodule update
-#- ruby --version
+- rvm use %ruby_version
+- ruby --version
 - gem update --system --no-ri --no-rdoc -q
 - gem install bundler --no-document
 - bundle install
