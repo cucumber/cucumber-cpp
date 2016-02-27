@@ -329,7 +329,7 @@ EOF
 
   def run_cucumber_test_feature(params)
     puts "running: #{CUCUMBER_EXE} #{params} #{FEATURES_DIR}"
-    run_simple "#{CUCUMBER_EXE} #{params} #{FEATURES_DIR}", false
+    %x [#{CUCUMBER_EXE} #{params} #{FEATURES_DIR}]
   end
 end
 
