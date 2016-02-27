@@ -133,32 +133,33 @@ EOF
   end
 
   def assert_passing_scenario
-    assert_partial_output("1 scenario (1 passed)", all_output)
-    assert_success true
+    #puts @output
+    assert_partial_output("1 scenario (1 passed)", @output)
+    expect(@return).to be == true
   end
 
   def assert_failing_scenario
-    assert_partial_output("1 scenario (1 failed)", all_output)
-    assert_success false
+    assert_partial_output("1 scenario (1 failed)", @output)
+    expect(@return).to be == false 
   end
 
   def assert_pending_scenario
-    assert_partial_output("1 scenario (1 pending)", all_output)
-    assert_success true
+    assert_partial_output("1 scenario (1 pending)", @output)
+    expect(@return).to be == true
   end
 
   def assert_undefined_scenario
-    assert_partial_output("1 scenario (1 undefined)", all_output)
-    assert_success true
+    assert_partial_output("1 scenario (1 undefined)", @output)
+    expect(@return).to be == true
   end
 
   def assert_scenario_reported_as_failing(scenario_name)
-    assert_partial_output("# Scenario: #{scenario_name}", all_output)
-    assert_success false
+    assert_partial_output("# Scenario: #{scenario_name}", @output)
+    expect(@return).to be == false
   end
 
   def assert_scenario_not_reported_as_failing(scenario_name)
-    assert_no_partial_output("# Scenario: #{scenario_name}", all_output)
+    assert_no_partial_output("# Scenario: #{scenario_name}", @output)
   end
 
   def assert_suggested_step_definition_snippet(stepdef_keyword, stepdef_pattern, parameter_count = 0, doc_string = false, data_table = false)
@@ -323,13 +324,15 @@ EOF
   end
 
   def run_cucumber_cpp
-    puts "running: #{STEP_DEFINITIONS_EXE}"
+   # puts "running: #{STEP_DEFINITIONS_EXE}"
     @steps_out = IO.popen STEP_DEFINITIONS_EXE
   end
 
   def run_cucumber_test_feature(params)
-    puts "running: #{CUCUMBER_EXE} #{params} #{FEATURES_DIR}"
-    %x [#{CUCUMBER_EXE} #{params} #{FEATURES_DIR}]
+    cmd="cucumber #{params} #{FEATURES_DIR}"
+   # puts "running #{cmd}"
+    @output = %x[ #{cmd} ]
+    @return = ($?.success?)
   end
 end
 
