@@ -132,6 +132,20 @@ world->someFunction();
 EOF
   end
 
+  def assert_returned_success
+    expect(@return).to be == true
+  end
+
+  def assert_passing_feature
+    assert_no_partial_output(failed_output, @output)
+    expect(@return).to be == true
+  end
+
+  def assert_failing_feature(message)
+    assert_partial_output(message, @output)
+    expect(@return).to be == false 
+  end
+
   def assert_passing_scenario
     #puts @output
     assert_partial_output("1 scenario (1 passed)", @output)
