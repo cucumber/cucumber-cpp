@@ -139,7 +139,6 @@ EOF
   end
 
   def assert_passing_feature
-    puts @output.encode('UTF-8')
     assert_no_partial_output("failed", @output.encode('UTF-8'))
     expect(@return).to be == true
   end
