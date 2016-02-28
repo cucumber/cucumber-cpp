@@ -13,7 +13,7 @@ protected:
     const InvokeResult invokeStepBody();
 
 private:
-    void initBoostTest();
+    static void initBoostTest();
     void runWithMasterSuite();
 };
 

@@ -3,9 +3,11 @@
 #include <sstream>
 
 #include <boost/bind.hpp>
-
+#include <boost/function.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/unit_test_log_formatter.hpp>
+#include <boost/thread/once.hpp>
+#include <boost/version.hpp>
 
 using namespace ::boost::unit_test;
 using ::boost::execution_exception;
@@ -16,7 +18,20 @@ namespace internal {
 
 namespace {
 
+    test_case* testCase = 0;
+    boost::function<void()> currentTestBody;
+
+    void exec_test_body() {
+        if (currentTestBody) {
+            currentTestBody();
+        }
+    }
+
+
 bool boost_test_init() {
+    testCase = BOOST_TEST_CASE(&exec_test_body);
+    framework::master_test_suite().add(testCase);
+
     return true;
 }
 
@@ -39,14 +54,17 @@ public:
     void test_unit_finish( std::ostream&, test_unit const& tu, unsigned long elapsed) {};
     void test_unit_skipped( std::ostream&, test_unit const& tu) {};
 
-    void log_exception( std::ostream&, log_checkpoint_data const&, execution_exception const& ex) {};
+    void log_exception_start( std::ostream&, log_checkpoint_data const&, execution_exception const&) {};
+    void log_exception_finish( std::ostream& ) {};
 
     void log_entry_start( std::ostream&, log_entry_data const&, log_entry_types let) {};
     void log_entry_value( std::ostream&, const_string value);
     void log_entry_value( std::ostream&, lazy_ostream const& value) {};
     void log_entry_finish( std::ostream&) {};
 
-    void log_exception(std::ostream&, const boost::unit_test::log_checkpoint_data&, boost::unit_test::const_string) {};
+    void entry_context_start( std::ostream&, log_level l ) {}
+    void log_entry_context( std::ostream&, const_string value ) {}
+    void entry_context_finish( std::ostream& ) {}
 
 private:
     std::stringstream description;
@@ -73,29 +91,34 @@ const InvokeResult CukeBoostLogInterceptor::getResult() const {
 }
 
 const InvokeResult BoostStep::invokeStepBody() {
-    initBoostTest();
+    static boost::once_flag initialized;
+    boost::call_once(initialized, BoostStep::initBoostTest);
+
     logInterceptor->reset();
     runWithMasterSuite();
     return logInterceptor->getResult();
 }
 
 void BoostStep::initBoostTest() {
-    if (!framework::is_initialized()) {
-        int argc = 2;
-        char *argv[] = { (char *) "", (char *) "" };
-        framework::init(&boost_test_init, argc, argv);
-        logInterceptor = new CukeBoostLogInterceptor;
-        ::boost::unit_test::unit_test_log.set_formatter(logInterceptor);
-        ::boost::unit_test::unit_test_log.set_threshold_level(log_all_errors);
-    }
+    int argc = 1;
+    char dummyArg[] = "dummy";
+    char *argv[] = { dummyArg };
+    framework::init(&boost_test_init, argc, argv);
+#if BOOST_VERSION >= 105900
+    framework::finalize_setup_phase();
+#endif
+    
+    logInterceptor = new CukeBoostLogInterceptor;
+    ::boost::unit_test::unit_test_log.set_formatter(logInterceptor);
+    ::boost::unit_test::unit_test_log.set_threshold_level(log_all_errors);
 }
 
 void BoostStep::runWithMasterSuite() {
-    using namespace ::boost::unit_test;
-    test_case *tc = BOOST_TEST_CASE(boost::bind(&BoostStep::body, this));
-    framework::master_test_suite().add(tc);
-    framework::run(tc, false);
-    framework::master_test_suite().remove(tc->p_id);
+    currentTestBody = boost::bind(&BoostStep::body, this);
+    
+    ::boost::unit_test::framework::run(testCase, false);
+
+    currentTestBody.clear();
 }
 
 }
