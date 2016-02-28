@@ -137,7 +137,7 @@ EOF
   end
 
   def assert_passing_feature
-    assert_no_partial_output(failed_output, @output)
+    assert_no_partial_output("failed", @output)
     expect(@return).to be == true
   end
 
