@@ -306,7 +306,7 @@ EOF
 
   def compile_step_definitions
     if OS.mac?
-      File.delete(cpp_step.cpp.o)
+      File.delete("./CMakeFiles/functional-steps.dir/tmp/test_features/step_definitions/cpp_steps.cpp.o")
     end
     compiler_output = %x[ #{COMPILE_STEP_DEFINITIONS_CMD} ]
     expect($?.success?).to be_true, "Compilation failed!\n#{compiler_output}"
