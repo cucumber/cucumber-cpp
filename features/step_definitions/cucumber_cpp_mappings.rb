@@ -1,4 +1,5 @@
 require 'json'
+require 'os'
 
 module CucumberCppMappings
 
@@ -292,8 +293,11 @@ EOF
     create_wire_file
     run_cucumber_cpp
     run_cucumber_test_feature params
-    Process.kill(:SIGTERM, @steps_out.pid) # for when there are no scenarios
-    Process.wait @steps_out.pid
+    begin
+      Process.kill(:SIGTERM, @steps_out.pid)
+      Process.wait @steps_out.pid
+    rescue Errno::ESRCH
+    end
   end
 
   def write_main_step_definitions_file
@@ -301,6 +305,9 @@ EOF
   end
 
   def compile_step_definitions
+    if OS.mac?
+      File.delete("./CMakeFiles/functional-steps.dir/tmp/test_features/step_definitions/cpp_steps.cpp.o")
+    end
     compiler_output = %x[ #{COMPILE_STEP_DEFINITIONS_CMD} ]
     expect($?.success?).to be_true, "Compilation failed!\n#{compiler_output}"
   end
@@ -313,7 +320,7 @@ EOF
   end
 
   def run_cucumber_cpp
-    @steps_out = IO.popen STEP_DEFINITIONS_EXE
+    @steps_out = IO.popen STEP_DEFINITIONS_EXE 
   end
 
   def run_cucumber_test_feature(params)
