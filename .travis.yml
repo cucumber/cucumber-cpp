@@ -1,7 +1,7 @@
 language: cpp
 os:
-  - linux
   - osx
+  - linux
 sudo: required
 dist: trusty
 compiler:
