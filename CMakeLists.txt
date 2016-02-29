@@ -22,7 +22,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Weffc++")
-    # TODO: A better fix should handle ld's --as-needed flag 
+    # TODO: A better fix should handle ld's --as-needed flag
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Xlinker '--no-as-needed'")
 elseif(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOMINMAX") # exclude M$ min/max macros
@@ -91,13 +91,13 @@ endif()
 if(NOT CUKE_DISABLE_GTEST)
     set(GMOCK_ROOT "${CMAKE_CURRENT_BINARY_DIR}/gmock")
     find_package(GMock REQUIRED)
-    
+
     if(GMOCK_FOUND)
-        set(CUKE_GTEST_LIBRARIES 
+        set(CUKE_GTEST_LIBRARIES
             ${GTEST_BOTH_LIBRARIES}
             ${CMAKE_THREAD_LIBS_INIT}
         )
-        set(CUKE_GMOCK_LIBRARIES 
+        set(CUKE_GMOCK_LIBRARIES
             ${GTEST_BOTH_LIBRARIES}
             ${GMOCK_BOTH_LIBRARIES}
             ${CMAKE_THREAD_LIBS_INIT}
@@ -143,6 +143,7 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
         set(CUKE_FEATURES_TMP ${CMAKE_BINARY_DIR}/tmp)
         set(CUKE_TEST_FEATURES_DIR ${CUKE_FEATURES_TMP}/test_features)
         set(CUKE_DYNAMIC_CPP_STEPS ${CUKE_TEST_FEATURES_DIR}/step_definitions/cpp_steps.cpp)
+        string(REPLACE "/tmp" "${CMAKE_FILES_DIRECTORY}/functional-steps.dir/tmp" CUKE_DYNAMIC_CPP_STEPS_OBJ "${CUKE_DYNAMIC_CPP_STEPS}${CMAKE_CXX_OUTPUT_EXTENSION}")
 
         file(WRITE ${CUKE_DYNAMIC_CPP_STEPS})
         add_executable(functional-steps EXCLUDE_FROM_ALL ${CUKE_DYNAMIC_CPP_STEPS})
@@ -158,6 +159,7 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
                 TMP_DIR=${CUKE_FEATURES_TMP}
                 DYNAMIC_CPP_STEPS_SRC=${CUKE_DYNAMIC_CPP_STEPS}
                 DYNAMIC_CPP_STEPS_EXE=${CMAKE_BINARY_DIR}/functional-steps
+                DYNAMIC_CPP_STEPS_OBJ=${CUKE_DYNAMIC_CPP_STEPS_OBJ}
                 COMPILE_DYNAMIC_CPP_STEPS=${CUKE_COMPILE_DYNAMIC_CPP_STEPS}
                 ${ARGV1} ${ARGV2} ${ARGV3} ${ARGV4} ${ARGV5} ${ARGV6}
                 ${CUKE_FEATURES_DIR}
@@ -174,4 +176,3 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
     endif()
 
 endif()
-

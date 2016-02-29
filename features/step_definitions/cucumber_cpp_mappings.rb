@@ -252,6 +252,7 @@ EOF
   TMP_DIR                      = ENV["TMP_DIR"]
   FEATURES_DIR                 = ENV["TEST_FEATURES_DIR"]
   STEP_DEFINITIONS_SRC         = ENV["DYNAMIC_CPP_STEPS_SRC"]
+  STEP_DEFINITIONS_OBJ         = ENV["DYNAMIC_CPP_STEPS_OBJ"]
   STEP_DEFINITIONS_EXE         = ENV["DYNAMIC_CPP_STEPS_EXE"]
   COMPILE_STEP_DEFINITIONS_CMD = ENV["COMPILE_DYNAMIC_CPP_STEPS"]
 
@@ -292,17 +293,23 @@ EOF
     create_wire_file
     run_cucumber_cpp
     run_cucumber_test_feature params
-    Process.kill(:SIGTERM, @steps_out.pid) # for when there are no scenarios
+    Process.kill :SIGTERM, @steps_out.pid # for when there are no scenarios
     Process.wait @steps_out.pid
   end
 
   def write_main_step_definitions_file
-    write_file(STEP_DEFINITIONS_SRC, @support_code);
+    write_file STEP_DEFINITIONS_SRC, @support_code
   end
 
   def compile_step_definitions
+    remove_step_definition_obj
     compiler_output = %x[ #{COMPILE_STEP_DEFINITIONS_CMD} ]
     expect($?.success?).to be_true, "Compilation failed!\n#{compiler_output}"
+  end
+
+  def remove_step_definition_obj
+    remove_file STEP_DEFINITIONS_OBJ
+  rescue Errno::ENOENT
   end
 
   def create_wire_file
