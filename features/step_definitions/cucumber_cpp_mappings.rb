@@ -294,8 +294,8 @@ EOF
     run_cucumber_cpp
     run_cucumber_test_feature params
     begin
-      Process.kill(:SIGTERM, @steps_pid)
-      Process.wait @steps_pid
+      Process.kill(:SIGTERM, @steps_out.pid)
+      Process.wait @steps_out.pid
     rescue Errno::ESRCH
     end
   end
@@ -320,8 +320,7 @@ EOF
   end
 
   def run_cucumber_cpp
-    output = IO.popen STEP_DEFINITIONS_EXE 
-    @steps_pid = output.pid
+    @steps_out = IO.popen STEP_DEFINITIONS_EXE 
   end
 
   def run_cucumber_test_feature(params)
