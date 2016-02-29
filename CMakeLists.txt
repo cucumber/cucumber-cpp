@@ -204,16 +204,16 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
         add_executable(functional-steps EXCLUDE_FROM_ALL ${CUKE_DYNAMIC_CPP_STEPS})
         target_link_libraries(functional-steps ${CUKE_LIBRARIES})
 
-set(CUKE_STEPS_DIR "${CMAKE_BINARY_DIR}")
-if(MSVC)
-    set(CUKE_STEPS_DIR "${CUKE_STEPS_DIR}/${CMAKE_CFG_INTDIR}")
-endif()
+        set(CUKE_STEPS_DIR "${CMAKE_BINARY_DIR}")
+        if(MSVC)
+            set(CUKE_STEPS_DIR "${CUKE_STEPS_DIR}/${CMAKE_CFG_INTDIR}")
+        endif()
 
-        # TODO It does not escape paths
-       # set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "\"${CMAKE_COMMAND}\" --build \"${CMAKE_BINARY_DIR}\" --target functional-steps")
         set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "cmake --build ../build --target functional-steps")
-#message(STATUS, "compile_dnamic: ${CUKE_COMPILE_DYNAMIC_CPP_STEPS}")
-#message(STATUS, "cucumber: ${CUCUMBER_RUBY}")
+        if(VERBOSE)
+            message(STATUS, "compile dnamic steps command: ${CUKE_COMPILE_DYNAMIC_CPP_STEPS}")
+            message(STATUS, "cucumber: ${CUCUMBER_RUBY}")
+        endif()
         function(add_feature_target TARGET_NAME)
             add_custom_target(${TARGET_NAME}
                 COMMAND ${CUCUMBER_RUBY}

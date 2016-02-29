@@ -149,7 +149,6 @@ EOF
   end
 
   def assert_passing_scenario
-    #puts @output
     assert_partial_output("1 scenario (1 passed)", @output)
     expect(@return).to be == true
   end
@@ -313,12 +312,7 @@ EOF
       Process.kill(9, @steps_out.pid)
       Process.wait @steps_out.pid
     rescue Errno::ESRCH
-#jescze jedno rescue
     end
-#    if(OS.windows?)
-#      %x[taskkill /pid #{@steps_out.pid} /f /t]
-#      %x[del /f #{STEP_DEFINITIONS_EXE}]
-#    end
   end
 
   def write_main_step_definitions_file
@@ -338,13 +332,11 @@ EOF
   end
 
   def run_cucumber_cpp
-   # puts "running: #{STEP_DEFINITIONS_EXE}"
     @steps_out = IO.popen STEP_DEFINITIONS_EXE
   end
 
   def run_cucumber_test_feature(params)
     cmd="cucumber #{params} #{FEATURES_DIR}"
-   # puts "running #{cmd}"
     @output = %x[ #{cmd} ]
     @return = ($?.success?)
   end
