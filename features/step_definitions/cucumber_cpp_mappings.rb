@@ -1,6 +1,5 @@
 require 'json'
-require 'io/wait'
-require 'pty'
+require 'os'
 
 module CucumberCppMappings
 
@@ -306,6 +305,9 @@ EOF
   end
 
   def compile_step_definitions
+    if OS.mac?
+      File.delete(cpp_step.cpp.o)
+    end
     compiler_output = %x[ #{COMPILE_STEP_DEFINITIONS_CMD} ]
     expect($?.success?).to be_true, "Compilation failed!\n#{compiler_output}"
   end
@@ -318,12 +320,8 @@ EOF
   end
 
   def run_cucumber_cpp
-    PTY.spawn(STEP_DEFINITIONS_EXE, '-v') do
-      |output, input, pid|
-      @steps_pid = pid
-#      expect(output.wait(10)).not_to be_nil
-      expect(output.readline).to start_with("Listening")
-    end
+    output = IO.popen STEP_DEFINITIONS_EXE 
+    @steps_pid = output.pid
   end
 
   def run_cucumber_test_feature(params)
