@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 require 'json'
-require 'os'
 
 module CucumberCppMappings
 
@@ -264,7 +263,6 @@ EOF
     @support_code += code
   end
 
-  CUCUMBER_EXE                 = ENV["CUKE_EXE"]
   TMP_DIR                      = ENV["TMP_DIR"]
   FEATURES_DIR                 = ENV["TEST_FEATURES_DIR"]
   STEP_DEFINITIONS_SRC         = ENV["DYNAMIC_CPP_STEPS_SRC"]

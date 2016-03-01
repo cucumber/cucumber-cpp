@@ -214,7 +214,6 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
         function(add_feature_target TARGET_NAME)
             add_custom_target(${TARGET_NAME}
                 COMMAND ${CUCUMBER_RUBY}
-                CUKE_EXE=${CUCUMBER_RUBY} 
                 TEST_FEATURES_DIR=${CUKE_TEST_FEATURES_DIR}
                 TMP_DIR=${CUKE_FEATURES_TMP}
                 DYNAMIC_CPP_STEPS_SRC=${CUKE_DYNAMIC_CPP_STEPS}
