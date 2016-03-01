@@ -11,7 +11,6 @@ set(CUKE_ENABLE_EXAMPLES OFF CACHE BOOL "Enable the examples")
 set(GMOCK_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
 set(GMOCK_VER "1.7.0" CACHE STRING "Google Mock framework version to be used")
 set(VERBOSE OFF CACHE BOOL "Verbose output")
-set(APPVEYOR OFF CACHE BOOL "Is this appveyor CI build")
 
 enable_testing()
 
@@ -30,33 +29,23 @@ elseif(MSVC)
     add_definitions(-DNOMINMAX) # exclude M$ min/max macros
     add_definitions(-D_SCL_SECURE_NO_WARNINGS) #turn off msvc warning
     add_definitions(-D_WINSOCK_DEPRECATED_NO_WARNINGS) #likewise
-    if(APPVEYOR)
-        link_directories("C:/Libraries/boost/lib32-msvc-12.0")
-        add_definitions(-D_WIN32_WINNT=0x0600) #windows vista
-        set(variables
-          CMAKE_C_FLAGS_DEBUG
-          CMAKE_C_FLAGS_MINSIZEREL
-          CMAKE_C_FLAGS_RELEASE
-          CMAKE_C_FLAGS_RELWITHDEBINFO
-          CMAKE_CXX_FLAGS_DEBUG
-          CMAKE_CXX_FLAGS_MINSIZEREL
-          CMAKE_CXX_FLAGS_RELEASE
-          CMAKE_CXX_FLAGS_RELWITHDEBINFO
-        )
-        message(STATUS "Initial build flags:")
+   #     link_directories("C:/Libraries/boost/lib32-msvc-12.0")
+   #     add_definitions(-D_WIN32_WINNT=0x0600) #windows vista
+    set(variables
+      CMAKE_C_FLAGS_DEBUG
+      CMAKE_C_FLAGS_MINSIZEREL
+      CMAKE_C_FLAGS_RELEASE
+      CMAKE_C_FLAGS_RELWITHDEBINFO
+      CMAKE_CXX_FLAGS_DEBUG
+      CMAKE_CXX_FLAGS_MINSIZEREL
+      CMAKE_CXX_FLAGS_RELEASE
+      CMAKE_CXX_FLAGS_RELWITHDEBINFO
+    )
     foreach(variable ${variables})
-        message(STATUS "  '${variable}': ${${variable}}")
+        if(${variable} MATCHES "/MD")
+            string(REGEX REPLACE "/MD" "/MT" ${variable} "${${variable}}")
+        endif()
     endforeach()
-#        foreach(variable ${variables})
-#            if(${variable} MATCHES "/MD")
-#                string(REGEX REPLACE "/MD" "/MT" ${variable} "${${variable}}")
-#            endif()
-#        endforeach()
-#        if(verbose)
-#            message(STATUS "Build flags after replace:")
-#            show(variables)
-#        endif()
-    endif()
 endif()
 
 #
@@ -96,9 +85,6 @@ else()
 endif()
 
 if(CUKE_STATIC_BOOST_LIBS)
-    if(VERBOSE)
-        message(STATUS "Using STATIC BOOST libs: ${CUKE_STATIC_BOOST_LIBS}")
-    endif()
     set(Boost_USE_STATIC_LIBS ON)
     set(Boost_USE_STATIC_RUNTIME ON)
     set (Boost_MULTITHREADED ON) 
@@ -106,9 +92,6 @@ if(CUKE_STATIC_BOOST_LIBS)
 endif()
 
 if(CUKE_DYNAMIC_BOOST_LIBS)
-    if(VERBOSE)
-        message(STATUS "Using DYNAMIC BOOST libs: ${CUKE_DYNAMIC_BOOST_LIBS}")
-    endif()
     set(Boost_USE_STATIC_LIBS OFF)
     find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS ${CUKE_DYNAMIC_BOOST_LIBS})
 endif()
@@ -116,12 +99,6 @@ endif()
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
     set(CUKE_EXTRA_LIBRARIES ${CUKE_EXTRA_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_REGEX_LIBRARY} ${Boost_DATE_TIME_LIBRARY})
-    if(VERBOSE)
-        message(STATUS "Boost include dir: ${Boost_INCLUDE_DIRS}")
-        message(STATUS "Boost libs: ${CUKE_EXTRA_LIBRARIES}")
-    endif()
-else()
-    message(WARNING "Boost NOT found?!")
 endif()
 
 #
@@ -196,12 +173,7 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
         add_executable(functional-steps EXCLUDE_FROM_ALL ${CUKE_DYNAMIC_CPP_STEPS})
         target_link_libraries(functional-steps ${CUKE_LIBRARIES})
 
-        set(CUKE_STEPS_DIR "${CMAKE_BINARY_DIR}")
-        if(MSVC)
-            set(CUKE_STEPS_DIR "${CUKE_STEPS_DIR}/${CMAKE_CFG_INTDIR}")
-        endif()
-
-        set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "cmake --build ../build --target functional-steps")
+        set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "cmake --build ${CMAKE_BINARY_DIR} --target functional-steps")
         if(VERBOSE)
             message(STATUS, "compile dnamic steps command: ${CUKE_COMPILE_DYNAMIC_CPP_STEPS}")
             message(STATUS, "cucumber: ${CUCUMBER_RUBY}")
@@ -212,7 +184,7 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
                 TEST_FEATURES_DIR=${CUKE_TEST_FEATURES_DIR}
                 TMP_DIR=${CUKE_FEATURES_TMP}
                 DYNAMIC_CPP_STEPS_SRC=${CUKE_DYNAMIC_CPP_STEPS}
-                DYNAMIC_CPP_STEPS_EXE="${CUKE_STEPS_DIR}/functional-steps"
+                DYNAMIC_CPP_STEPS_EXE="${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/functional-steps"
                 COMPILE_DYNAMIC_CPP_STEPS=${CUKE_COMPILE_DYNAMIC_CPP_STEPS}
                 ${ARGV1} ${ARGV2} ${ARGV3} ${ARGV4} ${ARGV5} ${ARGV6}
                 ${CUKE_FEATURES_DIR}
