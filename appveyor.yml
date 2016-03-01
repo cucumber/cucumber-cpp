@@ -29,6 +29,7 @@ install:
 - SET PATH=C:\Ruby%ruby_version%\bin;%PATH% 
 - ruby --version
 - gem update --system --no-ri --no-rdoc -q > gem.log
+- gem install gem-shut-the-fuck-up
 - gem install bundler --no-document
 - bundle install
 - ps: .\fixCucumber.ps1
