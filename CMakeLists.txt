@@ -17,13 +17,6 @@ enable_testing()
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
-function(show variables)
-    foreach(variable ${variables})
-        message(STATUS "  '${variable}': ${${variable}}")
-    endforeach()
-endfunction(show)
-
-
 #
 # Generic Compiler Flags
 #
@@ -51,7 +44,9 @@ elseif(MSVC)
           CMAKE_CXX_FLAGS_RELWITHDEBINFO
         )
         message(STATUS "Initial build flags:")
-        show(variables)
+    foreach(variable ${variables})
+        message(STATUS "  '${variable}': ${${variable}}")
+    endforeach()
 #        foreach(variable ${variables})
 #            if(${variable} MATCHES "/MD")
 #                string(REGEX REPLACE "/MD" "/MT" ${variable} "${${variable}}")
