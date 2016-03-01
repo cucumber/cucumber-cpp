@@ -293,8 +293,6 @@ EOF
     create_wire_file
     run_cucumber_cpp
     run_cucumber_test_feature params
-    Process.kill :SIGTERM, @steps_out.pid # for when there are no scenarios
-    Process.wait @steps_out.pid
   end
 
   def write_main_step_definitions_file
