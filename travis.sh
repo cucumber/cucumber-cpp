@@ -1,5 +1,6 @@
 #!/bin/sh
 set -e #break script on non-zero exitcode from any command
+gem install gem-shut-the-fuck-up
 gem install bundler
 cmake -E make_directory build
 cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on -DGTEST_INCLUDE_DIR=/usr/src/gmock/gtest/include/  ..
