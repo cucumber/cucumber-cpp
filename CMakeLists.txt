@@ -40,7 +40,6 @@ elseif(MSVC)
     if(APPVEYOR)
         link_directories("C:/Libraries/boost/lib32-msvc-12.0")
         add_definitions(-D_WIN32_WINNT=0x0600) #windows vista
-        message(STATUS "MSVC -> forcing use of statically-linked runtime.")
         set(variables
           CMAKE_C_FLAGS_DEBUG
           CMAKE_C_FLAGS_MINSIZEREL
@@ -51,19 +50,17 @@ elseif(MSVC)
           CMAKE_CXX_FLAGS_RELEASE
           CMAKE_CXX_FLAGS_RELWITHDEBINFO
         )
-        if(verbose)
         message(STATUS "Initial build flags:")
         show(variables)
-        endif()
-        foreach(variable ${variables})
-            if(${variable} MATCHES "/MD")
-                string(REGEX REPLACE "/MD" "/MT" ${variable} "${${variable}}")
-            endif()
-        endforeach()
-        if(verbose)
-            message(STATUS "Build flags after replace:")
-            show(variables)
-        endif()
+#        foreach(variable ${variables})
+#            if(${variable} MATCHES "/MD")
+#                string(REGEX REPLACE "/MD" "/MT" ${variable} "${${variable}}")
+#            endif()
+#        endforeach()
+#        if(verbose)
+#            message(STATUS "Build flags after replace:")
+#            show(variables)
+#        endif()
     endif()
 endif()
 
