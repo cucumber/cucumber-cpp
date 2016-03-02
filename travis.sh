@@ -1,5 +1,6 @@
 #!/bin/sh
 set -e #break script on non-zero exitcode from any command
+gem install gem-shut-the-fuck-up
 gem install bundler
 
 cmake -E make_directory build

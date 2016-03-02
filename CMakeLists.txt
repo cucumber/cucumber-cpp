@@ -25,8 +25,27 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     # TODO: A better fix should handle ld's --as-needed flag 
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Xlinker '--no-as-needed'")
 elseif(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOMINMAX") # exclude M$ min/max macros
     #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /analyze")
+    add_definitions(-DNOMINMAX) # exclude M$ min/max macros
+    add_definitions(-D_SCL_SECURE_NO_WARNINGS) #turn off msvc warning
+    add_definitions(-D_WINSOCK_DEPRECATED_NO_WARNINGS) #likewise
+   #     link_directories("C:/Libraries/boost/lib32-msvc-12.0")
+   #     add_definitions(-D_WIN32_WINNT=0x0600) #windows vista
+    set(variables
+      CMAKE_C_FLAGS_DEBUG
+      CMAKE_C_FLAGS_MINSIZEREL
+      CMAKE_C_FLAGS_RELEASE
+      CMAKE_C_FLAGS_RELWITHDEBINFO
+      CMAKE_CXX_FLAGS_DEBUG
+      CMAKE_CXX_FLAGS_MINSIZEREL
+      CMAKE_CXX_FLAGS_RELEASE
+      CMAKE_CXX_FLAGS_RELWITHDEBINFO
+    )
+    foreach(variable ${variables})
+        if(${variable} MATCHES "/MD")
+            string(REGEX REPLACE "/MD" "/MT" ${variable} "${${variable}}")
+        endif()
+    endforeach()
 endif()
 
 #
@@ -47,22 +66,28 @@ if(NOT CUKE_DISABLE_BOOST_TEST)
 endif()
 
 if(CUKE_USE_STATIC_BOOST)
+    message(STATUS "Using STATIC BOOST")
     set(CUKE_STATIC_BOOST_LIBS ${CUKE_CORE_BOOST_LIBS})
     # "An external test runner utility is required to link with dynamic library" (Boost User's Guide)
-    set(CUKE_DYNAMIC_BOOST_LIBS ${CUKE_TEST_BOOST_LIBS})
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_TEST_DYN_LINK")
+    if(NOT CUKE_DISABLE_BOOST_TEST)
+        set(CUKE_DYNAMIC_BOOST_LIBS ${CUKE_TEST_BOOST_LIBS})
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_TEST_DYN_LINK")
+    endif()
 
     if(NOT MSVC)
         find_package(Threads)
         set(CUKE_EXTRA_LIBRARIES ${CUKE_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
     endif()
 else()
+    message(STATUS "Using DYNAMIC BOOST")
     set(CUKE_DYNAMIC_BOOST_LIBS ${CUKE_CORE_BOOST_LIBS} ${CUKE_TEST_BOOST_LIBS})
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_ALL_DYN_LINK")
 endif()
 
 if(CUKE_STATIC_BOOST_LIBS)
     set(Boost_USE_STATIC_LIBS ON)
+    set(Boost_USE_STATIC_RUNTIME ON)
+    set (Boost_MULTITHREADED ON) 
     find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS ${CUKE_STATIC_BOOST_LIBS})
 endif()
 
@@ -148,16 +173,18 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
         add_executable(functional-steps EXCLUDE_FROM_ALL ${CUKE_DYNAMIC_CPP_STEPS})
         target_link_libraries(functional-steps ${CUKE_LIBRARIES})
 
-        # TODO It does not escape paths
-        set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target functional-steps")
-
+        set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "cmake --build ${CMAKE_BINARY_DIR} --target functional-steps")
+        if(VERBOSE)
+            message(STATUS, "compile dnamic steps command: ${CUKE_COMPILE_DYNAMIC_CPP_STEPS}")
+            message(STATUS, "cucumber: ${CUCUMBER_RUBY}")
+        endif()
         function(add_feature_target TARGET_NAME)
             add_custom_target(${TARGET_NAME}
                 COMMAND ${CUCUMBER_RUBY}
                 TEST_FEATURES_DIR=${CUKE_TEST_FEATURES_DIR}
                 TMP_DIR=${CUKE_FEATURES_TMP}
                 DYNAMIC_CPP_STEPS_SRC=${CUKE_DYNAMIC_CPP_STEPS}
-                DYNAMIC_CPP_STEPS_EXE=${CMAKE_BINARY_DIR}/functional-steps
+                DYNAMIC_CPP_STEPS_EXE="${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/functional-steps"
                 COMPILE_DYNAMIC_CPP_STEPS=${CUKE_COMPILE_DYNAMIC_CPP_STEPS}
                 ${ARGV1} ${ARGV2} ${ARGV3} ${ARGV4} ${ARGV5} ${ARGV6}
                 ${CUKE_FEATURES_DIR}

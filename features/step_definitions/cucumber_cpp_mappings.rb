@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'json'
 
 module CucumberCppMappings
@@ -131,33 +133,47 @@ world->someFunction();
 EOF
   end
 
+  def assert_returned_success
+    expect(@return).to be == true
+  end
+
+  def assert_passing_feature
+    assert_no_partial_output("failed", @output.encode('UTF-8'))
+    expect(@return).to be == true
+  end
+
+  def assert_failing_feature(message)
+    assert_partial_output(message, @output)
+    expect(@return).to be == false 
+  end
+
   def assert_passing_scenario
-    assert_partial_output("1 scenario (1 passed)", all_output)
-    assert_success true
+    assert_partial_output("1 scenario (1 passed)", @output)
+    expect(@return).to be == true
   end
 
   def assert_failing_scenario
-    assert_partial_output("1 scenario (1 failed)", all_output)
-    assert_success false
+    assert_partial_output("1 scenario (1 failed)", @output)
+    expect(@return).to be == false 
   end
 
   def assert_pending_scenario
-    assert_partial_output("1 scenario (1 pending)", all_output)
-    assert_success true
+    assert_partial_output("1 scenario (1 pending)", @output)
+    expect(@return).to be == true
   end
 
   def assert_undefined_scenario
-    assert_partial_output("1 scenario (1 undefined)", all_output)
-    assert_success true
+    assert_partial_output("1 scenario (1 undefined)", @output)
+    expect(@return).to be == true
   end
 
   def assert_scenario_reported_as_failing(scenario_name)
-    assert_partial_output("# Scenario: #{scenario_name}", all_output)
-    assert_success false
+    assert_partial_output("# Scenario: #{scenario_name}", @output)
+    expect(@return).to be == false
   end
 
   def assert_scenario_not_reported_as_failing(scenario_name)
-    assert_no_partial_output("# Scenario: #{scenario_name}", all_output)
+    assert_no_partial_output("# Scenario: #{scenario_name}", @output)
   end
 
   def assert_suggested_step_definition_snippet(stepdef_keyword, stepdef_pattern, parameter_count = 0, doc_string = false, data_table = false)
@@ -172,36 +188,34 @@ EOF
   end
 
   def assert_world_variable_held_value_at_time(value, time)
-    check_exact_file_content "#{WORLD_VARIABLE_LOG_FILE}.#{time}", value
+    expect(File.read("#{WORLD_VARIABLE_LOG_FILE}.#{time}")).to match value 
   end
 
   def assert_world_function_called
-    check_file_presence [WORLD_FUNCTION_LOG_FILE], true
+    expect(File.file?(WORLD_FUNCTION_LOG_FILE)).to be true
   end
 
   def assert_cycle_sequence *args
     expected_string = args.join CYCLE_SEQUENCE_SEPARATOR
-    check_file_content(CYCLE_LOG_FILE, expected_string, true)
+    expect(File.read(CYCLE_LOG_FILE)).to match expected_string
   end
 
   def assert_cycle_sequence_excluding *args
     args.each do |unexpected_string|
-      check_file_content(CYCLE_LOG_FILE, unexpected_string, false)
+      expect(File.read(CYCLE_LOG_FILE)).not_to match unexpected_string
     end
   end
 
   def assert_complete_cycle_sequence *args
     expected_string = "#{CYCLE_SEQUENCE_SEPARATOR}#{args.join(CYCLE_SEQUENCE_SEPARATOR)}"
-    check_exact_file_content(CYCLE_LOG_FILE, expected_string)
+    expect(File.read(CYCLE_LOG_FILE)).to match expected_string
   end
 
   def assert_data_table_equals_json(json)
-    prep_for_fs_check do
-      log_file_contents = IO.read(DATA_TABLE_LOG_FILE)
-      actual_array      = JSON.parse(log_file_contents)
-      expected_array    = JSON.parse(json)
-      actual_array.should == expected_array
-    end
+    log_file_contents = File.read(DATA_TABLE_LOG_FILE)
+    actual_array      = JSON.parse(log_file_contents)
+    expected_array    = JSON.parse(json)
+    expect(actual_array).to be == expected_array
   end
 
   def run_feature
@@ -292,8 +306,11 @@ EOF
     create_wire_file
     run_cucumber_cpp
     run_cucumber_test_feature params
-    Process.kill(:SIGTERM, @steps_out.pid) # for when there are no scenarios
-    Process.wait @steps_out.pid
+    begin
+      Process.kill(9, @steps_out.pid)
+      Process.wait @steps_out.pid
+    rescue Errno::ESRCH
+    end
   end
 
   def write_main_step_definitions_file
@@ -302,7 +319,7 @@ EOF
 
   def compile_step_definitions
     compiler_output = %x[ #{COMPILE_STEP_DEFINITIONS_CMD} ]
-    expect($?.success?).to be_true, "Compilation failed!\n#{compiler_output}"
+    expect($?.success?).to be == true, "Compilation failed!\n#{compiler_output}"
   end
 
   def create_wire_file
@@ -317,7 +334,9 @@ EOF
   end
 
   def run_cucumber_test_feature(params)
-    run_simple "cucumber #{params} #{FEATURES_DIR}", false
+    cmd="cucumber #{params} #{FEATURES_DIR}"
+    @output = %x[ #{cmd} ]
+    @return = ($?.success?)
   end
 end
 

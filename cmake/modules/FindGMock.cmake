@@ -174,9 +174,8 @@ add_dependencies(libgmock gmock)
 ExternalProject_Get_Property(gmock source_dir binary_dir)
 
 if(MSVC) 
-    set(MS_DIR "/${CMAKE_BUILD_TYPE}") 
+    set(MS_DIR "/${CMAKE_CFG_INTDIR}") 
 endif()
-
 set(GTEST_LIB_DIR "${binary_dir}/gtest${MS_DIR}")
 set(GMOCK_LIB_DIR "${binary_dir}${MS_DIR}")
 
@@ -219,4 +218,3 @@ if(GTEST_FOUND)
         Message(STATUS "GTest libs: ${GTEST_BOTH_LIBRARIES}")
     endif()
 endif()
-

@@ -1,6 +1,6 @@
 #include <cucumber-cpp/internal/drivers/GTestDriver.hpp>
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
 
 namespace cucumber {
 namespace internal {

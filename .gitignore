@@ -1,3 +1,5 @@
+# vim swap files
+*.swp
 # Qt Creator
 CMakeLists.txt.user
 

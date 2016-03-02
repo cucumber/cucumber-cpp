@@ -1,0 +1,53 @@
+version: "{branch}-ci-{build}"
+os:
+- Visual Studio 2013
+
+platform:
+- Win32
+
+configuration:
+- Debug 
+- Release
+
+on_finish:
+#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+environment:
+  matrix:
+    - BOOST_ROOT: C:\Libraries\boost
+      BOOST_INCLUDEDIR: C:\Libraries\boost\boost
+      BOOST_LIBRARYDIR: C:\Libraries\boost\lib32-msvc-12.0
+      ruby_version: "193"
+    - BOOST_ROOT: C:\Libraries\boost_1_58_0
+      BOOST_INCLUDEDIR: C:\Libraries\boost_1_58_0\boost
+      BOOST_LIBRARYDIR: C:\Libraries\boost_1_58_0\lib32-msvc-12.0
+      ruby_version: "200"
+
+install:
+- git submodule init
+- git submodule update
+- SET PATH=C:\Ruby%ruby_version%\bin;%PATH% 
+- ruby --version
+- gem update --system --no-ri --no-rdoc -q > gem.log
+- gem install gem-shut-the-fuck-up
+- gem install bundler --no-document
+- bundle install
+- ps: .\fixCucumber.ps1
+
+build_script:
+- cmake -E make_directory build
+- cmake -E chdir build cmake -DAPPVEYOR=on -DVERBOSE=on -DCUKE_ENABLE_EXAMPLES=on -DCUKE_DISABLE_BOOST_TEST=on  -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_INCLUDEDIR="%BOOST_INCLUDEDIR%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" ..
+- cmake --build build
+
+test_script:
+- cmake --build build --target RUN_TESTS
+- cmake --build build --target features
+
+notifications:
+- provider: Email
+  to:
+    - cukes-devs@googlegroups.com
+  subject: "[cucumber-cpp] AppVeyor Build {version}"
+  on_build_success: false
+  on_build_failure: true
+  on_build_status_changed: true
