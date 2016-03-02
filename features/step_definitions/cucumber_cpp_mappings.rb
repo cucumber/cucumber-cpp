@@ -306,6 +306,11 @@ EOF
     create_wire_file
     run_cucumber_cpp
     run_cucumber_test_feature params
+    begin
+      Process.kill(9, @steps_out.pid)
+      Process.wait @steps_out.pid
+    rescue Errno::ESRCH
+    end
   end
 
   def write_main_step_definitions_file
