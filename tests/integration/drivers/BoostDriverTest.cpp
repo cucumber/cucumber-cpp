@@ -1,4 +1,7 @@
+#include <boost/version.hpp>
+
 #include <boost/test/unit_test.hpp>
+
 #include <cucumber-cpp/defs.hpp>
 
 #include "../../utils/DriverTestRunner.hpp"
@@ -25,6 +28,18 @@ THEN(PENDING_MATCHER_2) {
 
 using namespace cucumber::internal;
 
+#if BOOST_VERSION >= 105900
+namespace boost {
+    namespace unit_test {
+        namespace framework {
+            bool is_initialized() {
+                return boost::unit_test::framework::master_test_suite().argc > 0; 
+            }
+        }
+    }
+}
+#endif
+
 class BoostStepDouble : public BoostStep {
 public:
     const InvokeResult invokeStepBody() {
@@ -47,7 +62,7 @@ private:
         using namespace boost::unit_test;
         BoostStepDouble step;
         expectFalse("Framework is not initialized before the first test", framework::is_initialized());
-	step.invokeStepBody();
+        step.invokeStepBody();
         expectTrue("Framework is initialized after the first test", framework::is_initialized());
     }
 };

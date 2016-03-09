@@ -2,7 +2,7 @@
 
 ### New Features
 
-None yet
+* Support for Boost 1.60 ([#101](https://github.com/cucumber/cucumber-cpp/pull/101) Kai Unger)
 
 ### Bugfixes
 
