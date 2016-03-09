@@ -63,3 +63,23 @@ start build\examples\Calc\BoostCalculatorSteps.exe
 cucumber examples\Calc
 ```
 
+## Getting started
+
+Here is a basic example on how to get started with *cucumber-cpp*. First you need to create the basic feature structure:
+
+```
+cucumber --init
+```
+
+Then create a *cucumber.wire* file in the *features/step_definitions* folder with the following content:
+
+```
+host: localhost
+port: 3902
+```
+
+Create your first feature (an example is available [here](examples/Calc/features/addition.feature)).
+
+Then create your step definition runner (an example is available [here](examples/Calc/features/step_definitions/BoostCalculatorSteps.cpp)). In order to compile the step definition runner, make sure to add [cucumber include directory](includes) to the include path and link with *libcucumber-cpp.a* and additional testing libraries (boost unit test).
+
+Run the step definition runner in the background and then cucumber, like in the Calc example in the previous section. The step definition runner should exit after the feature is run and cucumber exits.
