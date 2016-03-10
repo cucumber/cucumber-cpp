@@ -17,7 +17,7 @@ with [CPP].
 It relies on a few libraries:
 
 * [Boost](http://www.boost.org/) 1.40 or later.
-  Required libraries: *thread*, *system*, *regex*, and *date_time*.
+  Required libraries: *thread*, *system*, *regex*, *date_time* and *program_options*.
   Optional library for Boost Test driver: *test*.
 * [GTest](http://code.google.com/p/googletest/) 1.6 or later.
   Optional for the GTest driver. By default downloaded and built by CMake.
