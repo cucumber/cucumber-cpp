@@ -3,7 +3,6 @@
 #include <cucumber-cpp/internal/connectors/wire/WireProtocol.hpp>
 #include <iostream>
 #include <boost/program_options.hpp>
-using boost::program_options::value;
 
 namespace {
 
@@ -20,18 +19,18 @@ void acceptWireProtocol(int port) {
 }
 
 int main(int argc, char **argv) {
-    
+    using boost::program_options::value;
     boost::program_options::options_description optionDescription("Allowed options");
     optionDescription.add_options()
         ("help", "help for cucumber-cpp")
         ("port", value<int>(), "listening port of wireserver")
         ;
     boost::program_options::variables_map optionVariableMap;
-    boost::program_options::store( boost::program_options::parse_command_line(argc, argv, optionDescription), optionVariableMap);
-    boost::program_options::notify(optionVariableMap); 
+    boost::program_options::store(boost::program_options::parse_command_line(argc, argv, optionDescription), optionVariableMap);
+    boost::program_options::notify(optionVariableMap);
 
     if (optionVariableMap.count("help")) {
-        std::cout << optionDescription << std::endl;
+        std::cerr << optionDescription << std::endl;
     }
 
     int port = 3902;
