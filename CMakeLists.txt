@@ -14,7 +14,7 @@ set(VERBOSE OFF CACHE BOOL "Verbose output")
 
 enable_testing()
 
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 #
 # Generic Compiler Flags
@@ -116,7 +116,10 @@ include_directories(${CUKE_INCLUDE_DIR})
 set(CUKE_LIBRARIES cucumber-cpp ${CUKE_EXTRA_LIBRARIES})
 
 add_subdirectory(src)
-add_subdirectory(tests)
+
+if(NOT CUKE_DISABLE_UNIT_TESTS)
+    add_subdirectory(tests)
+endif()
 
 if(CUKE_ENABLE_EXAMPLES)
     add_subdirectory(examples)
