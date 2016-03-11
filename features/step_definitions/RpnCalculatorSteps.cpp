@@ -1,3 +1,4 @@
+#define CUKE_ENABLE_GENERICDRIVER
 #include <cucumber-cpp/defs.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/math/constants/constants.hpp>

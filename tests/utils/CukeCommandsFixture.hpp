@@ -2,7 +2,7 @@
 #define CUKE_CUKECOMMANDSFIXTURE_HPP_
 
 #include <cucumber-cpp/internal/CukeCommands.hpp>
-#include <cucumber-cpp/internal/drivers/FakeDriver.hpp>
+#include <cucumber-cpp/internal/drivers/GenericDriver.hpp>
 #include "StepManagerTestDouble.hpp"
 
 #include <boost/shared_ptr.hpp>

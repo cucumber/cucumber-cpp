@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <cucumber-cpp/internal/drivers/FakeDriver.hpp>
+#include <cucumber-cpp/internal/drivers/GenericDriver.hpp>
 
 using namespace cucumber::internal;
 

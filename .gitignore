@@ -11,5 +11,5 @@ Gemfile.lock
 # Build artifacts
 build/
 
-#vim swap files
+# vim swap files
 *.swp

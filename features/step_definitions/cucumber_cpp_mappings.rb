@@ -231,6 +231,7 @@ EOF
   def append_support_code(code)
     helper_functions = get_absolute_path('../support/HelperFunctions.hpp');
     @support_code ||= <<-EOF
+#define CUKE_ENABLE_GENERICDRIVER
 #include <cucumber-cpp/defs.hpp>
 #include "#{helper_functions}"
 
