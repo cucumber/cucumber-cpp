@@ -6,13 +6,12 @@ set(CUKE_USE_STATIC_BOOST ${MSVC} CACHE BOOL "Statically link Boost (except boos
 set(CUKE_DISABLE_BOOST_TEST OFF CACHE BOOL "Disable boost:test")
 set(CUKE_DISABLE_CPPSPEC OFF CACHE BOOL "Disable CppSpec")
 set(CUKE_DISABLE_GTEST OFF CACHE BOOL "Disable Google Test framework")
-set(CUKE_DISABLE_FUNCTIONAL OFF CACHE BOOL "Disable Functional Tests")
+set(CUKE_DISABLE_UNIT_TESTS OFF CACHE BOOL "Disable unit tests")
+set(CUKE_DISABLE_E2E_TESTS OFF CACHE BOOL "Disable end-to-end tests")
 set(CUKE_ENABLE_EXAMPLES OFF CACHE BOOL "Enable the examples")
 set(GMOCK_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
 set(GMOCK_VER "1.7.0" CACHE STRING "Google Mock framework version to be used")
 set(VERBOSE OFF CACHE BOOL "Verbose output")
-
-enable_testing()
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
@@ -117,20 +116,20 @@ set(CUKE_LIBRARIES cucumber-cpp ${CUKE_EXTRA_LIBRARIES})
 
 add_subdirectory(src)
 
-if(NOT CUKE_DISABLE_UNIT_TESTS)
+#
+# Tests
+#
+
+if(CUKE_DISABLE_UNIT_TESTS)
+    message(STATUS "Skipping unit tests")
+else()
+    enable_testing()
     add_subdirectory(tests)
 endif()
 
-if(CUKE_ENABLE_EXAMPLES)
-    add_subdirectory(examples)
-endif()
-
-#
-# Functional Tests
-#
-
-if(NOT CUKE_DISABLE_FUNCTIONAL)
-
+if(CUKE_DISABLE_E2E_TESTS)
+    message(STATUS "Skipping end-to-end tests")
+else()
     find_program(BUNDLE bundle)
     if(BUNDLE)
         message(STATUS "Installing gem dependencies")
@@ -146,14 +145,14 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
         set(CUKE_FEATURES_TMP ${CMAKE_BINARY_DIR}/tmp)
         set(CUKE_TEST_FEATURES_DIR ${CUKE_FEATURES_TMP}/test_features)
         set(CUKE_DYNAMIC_CPP_STEPS ${CUKE_TEST_FEATURES_DIR}/step_definitions/cpp_steps.cpp)
-        string(REPLACE "/tmp" "${CMAKE_FILES_DIRECTORY}/functional-steps.dir/tmp" CUKE_DYNAMIC_CPP_STEPS_OBJ "${CUKE_DYNAMIC_CPP_STEPS}${CMAKE_CXX_OUTPUT_EXTENSION}")
+        string(REPLACE "/tmp" "${CMAKE_FILES_DIRECTORY}/e2e-steps.dir/tmp" CUKE_DYNAMIC_CPP_STEPS_OBJ "${CUKE_DYNAMIC_CPP_STEPS}${CMAKE_CXX_OUTPUT_EXTENSION}")
 
         file(WRITE ${CUKE_DYNAMIC_CPP_STEPS})
-        add_executable(functional-steps EXCLUDE_FROM_ALL ${CUKE_DYNAMIC_CPP_STEPS})
-        target_link_libraries(functional-steps ${CUKE_LIBRARIES})
+        add_executable(e2e-steps EXCLUDE_FROM_ALL ${CUKE_DYNAMIC_CPP_STEPS})
+        target_link_libraries(e2e-steps ${CUKE_LIBRARIES})
 
         # TODO It does not escape paths
-        set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target functional-steps")
+        set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target e2e-steps")
 
         function(add_feature_target TARGET_NAME)
             add_custom_target(${TARGET_NAME}
@@ -161,7 +160,7 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
                 TEST_FEATURES_DIR=${CUKE_TEST_FEATURES_DIR}
                 TMP_DIR=${CUKE_FEATURES_TMP}
                 DYNAMIC_CPP_STEPS_SRC=${CUKE_DYNAMIC_CPP_STEPS}
-                DYNAMIC_CPP_STEPS_EXE=${CMAKE_BINARY_DIR}/functional-steps
+                DYNAMIC_CPP_STEPS_EXE=${CMAKE_BINARY_DIR}/e2e-steps
                 DYNAMIC_CPP_STEPS_OBJ=${CUKE_DYNAMIC_CPP_STEPS_OBJ}
                 COMPILE_DYNAMIC_CPP_STEPS=${CUKE_COMPILE_DYNAMIC_CPP_STEPS}
                 ${ARGV1} ${ARGV2} ${ARGV3} ${ARGV4} ${ARGV5} ${ARGV6}
@@ -175,7 +174,15 @@ if(NOT CUKE_DISABLE_FUNCTIONAL)
         add_feature_target(features-wip --format pretty --tags @wip)
 
     else()
-        message(WARNING "Could not find Cucumber: skipping functional tests")
+        message(WARNING "Could not find Cucumber: skipping end-to-end tests")
     endif()
 
+endif()
+
+#
+# Examples
+#
+
+if(CUKE_ENABLE_EXAMPLES)
+    add_subdirectory(examples)
 endif()
