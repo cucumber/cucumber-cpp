@@ -2,7 +2,6 @@ project(CalcQt)
 
 set(CALCQT_HEADERS src/CalculatorWidget.h)
 set(CALCQT_SOURCES src/CalcQt.cpp src/CalculatorWidget.cpp)
-set(LIBCALCQT_BUILD OFF)
 include_directories(${CUKE_INCLUDE_DIRS} src)
 
 find_package(Qt5Core QUIET)
@@ -19,8 +18,6 @@ if(${Qt5Core_FOUND} AND ${Qt5Widgets_FOUND} AND ${Qt5Test_FOUND})
     
     add_executable(calcqt ${CALCQT_SOURCES})
     target_link_libraries(calcqt libcalcqt ${QT_LIBRARIES})
-
-    set(LIBCALCQT_BUILD ON)
 else()
     find_package(Qt4 COMPONENTS QtCore QtGui QtTest)
     if(QT4_FOUND)
@@ -30,12 +27,10 @@ else()
     
         add_executable(calcqt ${CALCQT_SOURCES} ${CALCQT_HEADERS_MOC})
         target_link_libraries(calcqt ${QT_LIBRARIES})
-        
-        set(LIBCALCQT_BUILD ON)
     endif()
 endif()
 
-if(LIBCALCQT_BUILD)
+if(QT_LIBRARIES)
     if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
         include_directories(${Boost_INCLUDE_DIRS})
         add_executable(BoostCalculatorQtSteps features/step_definitions/BoostCalculatorQtSteps)
