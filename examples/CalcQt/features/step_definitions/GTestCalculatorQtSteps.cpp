@@ -1,5 +1,5 @@
 #include <cstdlib>
-#include <boost/test/unit_test.hpp>
+#include <gtest/gtest.h>
 #include <cucumber-cpp/defs.hpp>
 #include <QApplication>
 #include <QTest>
@@ -62,13 +62,13 @@ WHEN("^I press subtract") {
 
 THEN("^the display should be empty$") {
     cucumber::ScenarioScope<CalculatorWidget> calculator;
-    BOOST_CHECK_EQUAL(calculator->display().size(), 0);
+    EXPECT_EQ(calculator->display().size(), 0);
     QTest::qWait(millisecondsToWait());
 }
 
 THEN("^the display should show (.*)$") {
     REGEX_PARAM(QString, expected);
     cucumber::ScenarioScope<CalculatorWidget> calculator;
-    BOOST_CHECK_EQUAL(expected, calculator->display());
+    EXPECT_EQ(expected, calculator->display());
     QTest::qWait(millisecondsToWait());
 }
