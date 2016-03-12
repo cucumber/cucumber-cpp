@@ -30,10 +30,10 @@ addons:
 
 script: ./travis.sh 
 
-#notifications:
-#  email:
-#    - cukes-devs@googlegroups.com
+notifications:
+  email:
+    - cukes-devs@googlegroups.com
 
-#branches:
-#  only:
-#    - master
+branches:
+  only:
+    - master
