@@ -3,6 +3,7 @@
 ### New Features
 
 * Support for Boost 1.60 ([#101](https://github.com/cucumber/cucumber-cpp/pull/101) Kai Unger)
+* Support for CMake inclusion in other projects ([#76](https://github.com/cucumber/cucumber-cpp/pull/76) Eric Brayet)
 
 ### Bugfixes
 
