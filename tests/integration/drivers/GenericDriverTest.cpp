@@ -1,4 +1,4 @@
-#include <cucumber-cpp/defs.hpp>
+#include <cucumber-cpp/generic.hpp>
 
 #include "../../utils/DriverTestRunner.hpp"
 
