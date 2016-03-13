@@ -4,7 +4,8 @@
 
 * Support for Boost 1.60 ([#101](https://github.com/cucumber/cucumber-cpp/pull/101) Kai Unger)
 * Support for CMake inclusion in other projects ([#76](https://github.com/cucumber/cucumber-cpp/pull/76) Eric Brayet)
-* Added Qt5 suppor in CalcQt example ([#98](https://github.com/cucumber/cucumber-cpp/pull/98) Kamil Strzempowicz)
+* Added Qt5 support in CalcQt example ([#98](https://github.com/cucumber/cucumber-cpp/pull/98) Kamil Strzempowicz)
+* Improved Generic Driver to write steps without testing framework ([#99](https://github.com/cucumber/cucumber-cpp/pull/99) Kamil Strzempowicz)
 
 ### Bugfixes
 

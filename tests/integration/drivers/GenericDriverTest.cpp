@@ -1,5 +1,4 @@
-#include <CppSpec/CppSpec.h>
-#include <cucumber-cpp/autodetect.hpp>
+#include <cucumber-cpp/generic.hpp>
 
 #include "../../utils/DriverTestRunner.hpp"
 
@@ -7,12 +6,12 @@ using namespace cucumber;
 
 THEN(SUCCEED_MATCHER) {
     ScenarioScope<SomeContext> ctx;
-    specify(true, should.equal(true));
+    // Do not throw for successes
 }
 
 THEN(FAIL_MATCHER) {
     ScenarioScope<SomeContext> ctx;
-    specify(true, should.equal(false));
+    throw std::runtime_error("Failure description");
 }
 
 THEN(PENDING_MATCHER_1) {

@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include <gtest/gtest.h>
-#include <cucumber-cpp/defs.hpp>
+#include <cucumber-cpp/autodetect.hpp>
 #include <QApplication>
 #include <QTest>
 

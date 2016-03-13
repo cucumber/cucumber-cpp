@@ -2,13 +2,13 @@
 
 #include <cucumber-cpp/internal/step/StepManager.hpp>
 #include <cucumber-cpp/internal/step/StepMacros.hpp>
-#include <cucumber-cpp/internal/drivers/FakeDriver.hpp>
+#include <cucumber-cpp/internal/drivers/GenericDriver.hpp>
 
 using namespace cucumber::internal;
 
 #define MANUAL_STEP_MATCHER "manual step"
 
-class ManualStep : public FakeStep {
+class ManualStep : public GenericStep {
 public:
     void body() {};
 //private:

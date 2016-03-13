@@ -1,4 +1,4 @@
-#include <cucumber-cpp/defs.hpp>
+#include <cucumber-cpp/autodetect.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/math/constants/constants.hpp>
 #include <boost/format.hpp>

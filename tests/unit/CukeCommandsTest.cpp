@@ -15,7 +15,7 @@ protected:
     }
 };
 
-class CheckAllParameters : public FakeStep {
+class CheckAllParameters : public GenericStep {
 protected:
     static const int arg_0_int;
     static const double arg_1_double;

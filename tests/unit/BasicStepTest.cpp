@@ -1,18 +1,18 @@
 #include <gtest/gtest.h>
 
-#include <cucumber-cpp/internal/drivers/FakeDriver.hpp>
+#include <cucumber-cpp/internal/drivers/GenericDriver.hpp>
 
 using namespace cucumber::internal;
 
 #define PENDING_STEP_DESCRIPTION "A description"
 
-class PendingStep : public FakeStep {
+class PendingStep : public GenericStep {
     void body() {
         pending();
     }
 };
 
-class PendingStepWithDescription : public FakeStep {
+class PendingStepWithDescription : public GenericStep {
     void body() {
         pending(PENDING_STEP_DESCRIPTION);
     }
