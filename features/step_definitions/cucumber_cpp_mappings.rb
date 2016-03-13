@@ -231,7 +231,7 @@ EOF
   def append_support_code(code)
     helper_functions = get_absolute_path('../support/HelperFunctions.hpp');
     @support_code ||= <<-EOF
-#include <cucumber-cpp/defs.hpp>
+#include <cucumber-cpp/generic.hpp>
 #include "#{helper_functions}"
 
 using cucumber::ScenarioScope;
