@@ -5,9 +5,5 @@
 #elif defined(CPPSPEC_H_)
     #include "CppSpecDriver.hpp"
 #else // No test framework
-    #ifdef CUKE_ENABLE_GENERICDRIVER
-        #include "GenericDriver.hpp"
-    #else
-        #error Please #inlude testing framework before cucumber-cpp or #define CUKE_ENABLE_GENERICDRIVER explicitly 
-    #endif
+    #include "GenericDriver.hpp"
 #endif

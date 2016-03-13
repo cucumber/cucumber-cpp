@@ -1,5 +1,5 @@
 #include <CppSpec/CppSpec.h>
-#include <cucumber-cpp/defs.hpp>
+#include <cucumber-cpp/autodetect.hpp>
 
 #include <Calculator.h>
 

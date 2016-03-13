@@ -6,12 +6,12 @@
 namespace cucumber {
 namespace internal {
 
-class FakeStep : public BasicStep {
+class GenericStep : public BasicStep {
 protected:
     virtual const InvokeResult invokeStepBody();
 };
 
-#define STEP_INHERITANCE(step_name) virtual ::cucumber::internal::FakeStep
+#define STEP_INHERITANCE(step_name) virtual ::cucumber::internal::GenericStep
 
 }
 }

@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include <boost/test/unit_test.hpp>
-#include <cucumber-cpp/defs.hpp>
+#include <cucumber-cpp/autodetect.hpp>
 #include <QApplication>
 #include <QTest>
 

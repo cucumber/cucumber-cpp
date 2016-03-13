@@ -10,7 +10,7 @@
 using namespace cucumber::internal;
 using boost::shared_ptr;
 
-class EmptyStep : public FakeStep {
+class EmptyStep : public GenericStep {
     void body() {}
 };
 
