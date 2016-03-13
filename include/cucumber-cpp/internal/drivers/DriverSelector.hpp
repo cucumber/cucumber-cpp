@@ -4,6 +4,4 @@
     #include "BoostDriver.hpp"
 #elif defined(CPPSPEC_H_)
     #include "CppSpecDriver.hpp"
-#else // No test framework
-    #include "GenericDriver.hpp"
 #endif
