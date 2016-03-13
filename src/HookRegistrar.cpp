@@ -1,11 +1,10 @@
 #include <cucumber-cpp/internal/hook/HookRegistrar.hpp>
-
 #include <cucumber-cpp/internal/CukeCommands.hpp>
 
 namespace cucumber {
 namespace internal {
 
-void Hook::invokeHook(Scenario *scenario) {
+void Hook::invokeHook(Scenario *scenario, CallableStep *) {
     if (tagsMatch(scenario)) {
         body();
     } else {
@@ -26,14 +25,14 @@ bool Hook::tagsMatch(Scenario *scenario) {
 
 void AroundStepHook::invokeHook(Scenario *scenario, CallableStep *step) {
     this->step = step;
-    Hook::invokeHook(scenario);
+    Hook::invokeHook(scenario, NULL);
 }
 
 void AroundStepHook::skipHook() {
     step->call();
 }
 
-void UnconditionalHook::invokeHook(Scenario*) {
+void UnconditionalHook::invokeHook(Scenario*, CallableStep *) {
     body();
 }
 
@@ -68,7 +67,6 @@ InvokeResult HookRegistrar::execStepChain(Scenario *scenario, StepInfo *stepInfo
     return scc.exec();
 }
 
-
 void HookRegistrar::addAfterStepHook(AfterStepHook *afterStepHook) {
     afterStepHooks().push_front(afterStepHook);
 }
@@ -99,7 +97,7 @@ void HookRegistrar::execAfterHooks(Scenario *scenario) {
 
 void HookRegistrar::execHooks(HookRegistrar::hook_list_type &hookList, Scenario *scenario) {
     for (HookRegistrar::hook_list_type::iterator hook = hookList.begin(); hook != hookList.end(); ++hook) {
-        (*hook)->invokeHook(scenario);
+        (*hook)->invokeHook(scenario, NULL);
     }
 }
 

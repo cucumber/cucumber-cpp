@@ -21,7 +21,7 @@ public:
 class Hook {
 public:
     void setTags(const std::string &csvTagNotation);
-    virtual void invokeHook(Scenario *scenario);
+    virtual void invokeHook(Scenario *scenario, CallableStep *step);
     virtual void skipHook();
     virtual void body() = 0;
 protected:
@@ -49,7 +49,7 @@ class AfterHook : public Hook {
 
 class UnconditionalHook : public Hook {
 public:
-  virtual void invokeHook(Scenario *);
+    virtual void invokeHook(Scenario *scenario, CallableStep *step);
 };
 
 class BeforeAllHook : public UnconditionalHook {
