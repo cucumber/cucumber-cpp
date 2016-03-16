@@ -173,12 +173,8 @@ add_library(libgmock IMPORTED STATIC GLOBAL)
 add_dependencies(libgmock gmock)
 ExternalProject_Get_Property(gmock source_dir binary_dir)
 
-if(MSVC) 
-    set(MS_DIR "/${CMAKE_BUILD_TYPE}") 
-endif()
-
-set(GTEST_LIB_DIR "${binary_dir}/gtest${MS_DIR}")
-set(GMOCK_LIB_DIR "${binary_dir}${MS_DIR}")
+set(GTEST_LIB_DIR "${binary_dir}/gtest/${CMAKE_CFG_INTDIR}")
+set(GMOCK_LIB_DIR "${binary_dir}/${CMAKE_CFG_INTDIR}")
 
 set_target_properties(libgmock PROPERTIES
     "IMPORTED_LOCATION" "${GMOCK_LIB_DIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock.${Suffix}"

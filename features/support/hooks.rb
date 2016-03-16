@@ -10,7 +10,7 @@ After do
   # for when there are no scenarios
   if @steps_out
     begin
-      Process.kill :SIGTERM, @steps_out.pid
+      Process.kill "KILL", @steps_out.pid #windows accepts only KILL signal - do not change please
       Process.wait @steps_out.pid
     rescue Errno::ESRCH  # exited already
     rescue Errno::ECHILD # killed before wait call

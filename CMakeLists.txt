@@ -11,7 +11,6 @@ set(CUKE_DISABLE_E2E_TESTS OFF CACHE BOOL "Disable end-to-end tests")
 set(CUKE_ENABLE_EXAMPLES OFF CACHE BOOL "Enable the examples")
 set(GMOCK_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
 set(GMOCK_VER "1.7.0" CACHE STRING "Google Mock framework version to be used")
-set(VERBOSE OFF CACHE BOOL "Verbose output")
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
@@ -26,6 +25,24 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 elseif(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOMINMAX") # exclude M$ min/max macros
     #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /analyze")
+    add_definitions(-DNOMINMAX) # exclude M$ min/max macros
+    add_definitions(-D_SCL_SECURE_NO_WARNINGS) #turn off msvc warning
+    add_definitions(-D_WINSOCK_DEPRECATED_NO_WARNINGS) #likewise
+    set(variables
+      CMAKE_C_FLAGS_DEBUG
+      CMAKE_C_FLAGS_MINSIZEREL
+      CMAKE_C_FLAGS_RELEASE
+      CMAKE_C_FLAGS_RELWITHDEBINFO
+      CMAKE_CXX_FLAGS_DEBUG
+      CMAKE_CXX_FLAGS_MINSIZEREL
+      CMAKE_CXX_FLAGS_RELEASE
+      CMAKE_CXX_FLAGS_RELWITHDEBINFO
+    )
+    foreach(variable ${variables})
+        if(${variable} MATCHES "/MD")
+            string(REGEX REPLACE "/MD" "/MT" ${variable} "${${variable}}")
+        endif()
+    endforeach()
 endif()
 
 #
@@ -48,8 +65,10 @@ endif()
 if(CUKE_USE_STATIC_BOOST)
     set(CUKE_STATIC_BOOST_LIBS ${CUKE_CORE_BOOST_LIBS})
     # "An external test runner utility is required to link with dynamic library" (Boost User's Guide)
-    set(CUKE_DYNAMIC_BOOST_LIBS ${CUKE_TEST_BOOST_LIBS})
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_TEST_DYN_LINK")
+    if(NOT CUKE_DISABLE_BOOST_TEST)
+        set(CUKE_DYNAMIC_BOOST_LIBS ${CUKE_TEST_BOOST_LIBS})
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_TEST_DYN_LINK")
+    endif()
 
     if(NOT MSVC)
         find_package(Threads)
@@ -62,6 +81,8 @@ endif()
 
 if(CUKE_STATIC_BOOST_LIBS)
     set(Boost_USE_STATIC_LIBS ON)
+    set(Boost_USE_STATIC_RUNTIME ON)
+    set(Boost_MULTITHREADED ON) 
     find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS ${CUKE_STATIC_BOOST_LIBS})
 endif()
 
@@ -151,8 +172,7 @@ else()
         add_executable(e2e-steps EXCLUDE_FROM_ALL ${CUKE_DYNAMIC_CPP_STEPS})
         target_link_libraries(e2e-steps ${CUKE_LIBRARIES})
 
-        # TODO It does not escape paths
-        set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target e2e-steps")
+        set(CUKE_COMPILE_DYNAMIC_CPP_STEPS "cmake --build ${CMAKE_BINARY_DIR} --target e2e-steps")
 
         function(add_feature_target TARGET_NAME)
             add_custom_target(${TARGET_NAME}
@@ -160,7 +180,7 @@ else()
                 TEST_FEATURES_DIR=${CUKE_TEST_FEATURES_DIR}
                 TMP_DIR=${CUKE_FEATURES_TMP}
                 DYNAMIC_CPP_STEPS_SRC=${CUKE_DYNAMIC_CPP_STEPS}
-                DYNAMIC_CPP_STEPS_EXE=${CMAKE_BINARY_DIR}/e2e-steps
+                DYNAMIC_CPP_STEPS_EXE=${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/e2e-steps
                 DYNAMIC_CPP_STEPS_OBJ=${CUKE_DYNAMIC_CPP_STEPS_OBJ}
                 COMPILE_DYNAMIC_CPP_STEPS=${CUKE_COMPILE_DYNAMIC_CPP_STEPS}
                 ${ARGV1} ${ARGV2} ${ARGV3} ${ARGV4} ${ARGV5} ${ARGV6}
