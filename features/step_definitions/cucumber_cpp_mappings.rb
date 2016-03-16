@@ -303,6 +303,7 @@ EOF
 
   def run_feature_with_params(params)
     write_main_step_definitions_file
+    remove_step_definition_obj
     compile_step_definitions
     create_wire_file
     run_cucumber_cpp
@@ -314,13 +315,13 @@ EOF
   end
 
   def compile_step_definitions
-    remove_step_definition_obj
     compiler_output = %x[ #{COMPILE_STEP_DEFINITIONS_CMD} ]
     expect($?.success?).to be == true, "Compilation failed!\n#{compiler_output}"
   end
 
   def remove_step_definition_obj
     remove STEP_DEFINITIONS_OBJ
+    remove STEP_DEFINITIONS_EXE
   rescue Errno::ENOENT
   end
 
