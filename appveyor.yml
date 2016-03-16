@@ -1,10 +1,9 @@
 version: "{branch}-ci-{build}"
 image: Visual Studio 2015
-os:
-- Visual Studio 2013
 
 platform:
-- Win32
+- x86
+- x64
 
 configuration:
 - Debug 
@@ -16,12 +15,18 @@ on_finish:
 environment:
   ruby_version: "200"
   matrix:
-    - BOOST_ROOT: 'C:\Libraries\boost'
+    - GENERATOR: '"Visual Studio 12 2013"'
+      BOOST_ROOT: 'C:\Libraries\boost'
       BOOST_INCLUDEDIR: 'C:\Libraries\boost\boost'
       BOOST_LIBRARYDIR: 'C:\Libraries\boost\lib32-msvc-12.0'
-    - BOOST_ROOT: 'C:\Libraries\boost_1_58_0'
+    - GENERATOR: '"Visual Studio 12 2013"'
+      BOOST_ROOT: 'C:\Libraries\boost_1_58_0'
       BOOST_INCLUDEDIR: 'C:\Libraries\boost_1_58_0\boost'
       BOOST_LIBRARYDIR: 'C:\Libraries\boost_1_58_0\lib32-msvc-12.0'
+    - GENERATOR: '"Visual Studio 14 2015"'
+      BOOST_ROOT: 'C:\Libraries\boost_1_59_0'
+      BOOST_INCLUDEDIR: 'C:\Libraries\boost_1_59_0\boost'
+      BOOST_LIBRARYDIR: 'C:\Libraries\boost_1_59_0\lib32-msvc-14.0'
       
 
 install:
@@ -36,7 +41,7 @@ install:
 
 build_script:
 - cmake -E make_directory build
-- cmake -E chdir build cmake -DCUKE_DISABLE_BOOST_TEST=on -DCUKE_ENABLE_EXAMPLES=on -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_INCLUDEDIR="%BOOST_INCLUDEDIR%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" ..
+- cmake -E chdir build cmake -G%GENERATOR% -DCUKE_DISABLE_BOOST_TEST=on -DCUKE_ENABLE_EXAMPLES=on -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_INCLUDEDIR="%BOOST_INCLUDEDIR%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" ..
 - cmake --build build
 
 test_script:
