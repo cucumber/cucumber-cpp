@@ -253,6 +253,7 @@ EOF
   STEP_DEFINITIONS_OBJ         = ENV["DYNAMIC_CPP_STEPS_OBJ"]
   STEP_DEFINITIONS_EXE         = ENV["DYNAMIC_CPP_STEPS_EXE"]
   COMPILE_STEP_DEFINITIONS_CMD = ENV["COMPILE_DYNAMIC_CPP_STEPS"]
+  CUCUMBER_RUBY                = ENV["CUCUMBER_RUBY"]
 
   WORLD_VARIABLE_LOG_FILE      = "#{TMP_DIR}/world_variable.log"
   WORLD_FUNCTION_LOG_FILE      = "#{TMP_DIR}/world_function.log"
@@ -320,7 +321,7 @@ EOF
   end
 
   def run_cucumber_test_feature(params)
-    run_simple "cucumber #{params} #{FEATURES_DIR}", false
+    run_simple "#{CUCUMBER_RUBY} #{params} #{FEATURES_DIR}", false
   end
 end
 
