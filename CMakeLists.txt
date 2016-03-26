@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 2.8.12)
 project(Cucumber-Cpp)
 
 set(CUKE_USE_STATIC_BOOST ${MSVC} CACHE BOOL "Statically link Boost (except boost::test)")
+set(CUKE_USE_STATIC_GTEST ON CACHE BOOL "Statically link Google Test")
+
 set(CUKE_DISABLE_BOOST_TEST OFF CACHE BOOL "Disable boost:test")
 set(CUKE_DISABLE_CPPSPEC OFF CACHE BOOL "Disable CppSpec")
 set(CUKE_DISABLE_GTEST OFF CACHE BOOL "Disable Google Test framework")
@@ -11,7 +13,6 @@ set(CUKE_DISABLE_E2E_TESTS OFF CACHE BOOL "Disable end-to-end tests")
 set(CUKE_ENABLE_EXAMPLES OFF CACHE BOOL "Enable the examples")
 set(GMOCK_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
 set(GMOCK_VER "1.7.0" CACHE STRING "Google Mock framework version to be used")
-set(VERBOSE OFF CACHE BOOL "Verbose output")
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
@@ -60,11 +61,11 @@ else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_ALL_DYN_LINK")
 endif()
 
+set(Boost_USE_STATIC_RUNTIME OFF)
 if(CUKE_STATIC_BOOST_LIBS)
     set(Boost_USE_STATIC_LIBS ON)
     find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS ${CUKE_STATIC_BOOST_LIBS})
 endif()
-
 if(CUKE_DYNAMIC_BOOST_LIBS)
     set(Boost_USE_STATIC_LIBS OFF)
     find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS ${CUKE_DYNAMIC_BOOST_LIBS})
@@ -88,6 +89,7 @@ endif()
 #
 
 if(NOT CUKE_DISABLE_GTEST)
+    set(GTEST_USE_STATIC_LIBS ${CUKE_USE_STATIC_GTEST})
     set(GMOCK_ROOT "${CMAKE_CURRENT_BINARY_DIR}/gmock")
     find_package(GMock REQUIRED)
 

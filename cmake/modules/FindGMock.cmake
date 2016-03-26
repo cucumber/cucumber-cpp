@@ -7,7 +7,7 @@
 #
 #   GMOCK_FOUND - Got the Google Mocking framework
 #   GMOCK_INCLUDE_DIRS - GMock include directory
-#   GTEST_INCLUDE_DIRS - GTest include direcotry 
+#   GTEST_INCLUDE_DIRS - GTest include direcotry
 #
 # Also defines the library variables below as normal variables
 #
@@ -45,23 +45,23 @@
 # Copyright 2000-2016 Kitware, Inc.
 # Copyright 2000-2011 Insight Software Consortium
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
 # are met:
-# 
+#
 # * Redistributions of source code must retain the above copyright
 #   notice, this list of conditions and the following disclaimer.
-# 
+#
 # * Redistributions in binary form must reproduce the above copyright
 #   notice, this list of conditions and the following disclaimer in the
 #   documentation and/or other materials provided with the distribution.
-# 
+#
 # * Neither the names of Kitware, Inc., the Insight Software Consortium,
 #   nor the names of their contributors may be used to endorse or promote
 #   products derived from this software without specific prior written
 #   permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 # LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -73,30 +73,30 @@
 # THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-# 
+#
 # ------------------------------------------------------------------------------
-# 
+#
 # The above copyright and license notice applies to distributions of
 # CMake in source and binary form.  Some source files contain additional
 # notices of original copyright by their contributors; see each source
 # for details.  Third-party software packages supplied with CMake under
 # compatible licenses provide their own copyright notices documented in
 # corresponding subdirectories.
-# 
+#
 # ------------------------------------------------------------------------------
-# 
+#
 # CMake was initially developed by Kitware with the following sponsorship:
-# 
+#
 #  * National Library of Medicine at the National Institutes of Health
 #    as part of the Insight Segmentation and Registration Toolkit (ITK).
-# 
+#
 #  * US National Labs (Los Alamos, Livermore, Sandia) ASC Parallel
 #    Visualization Initiative.
-# 
+#
 #  * National Alliance for Medical Image Computing (NAMIC) is funded by the
 #    National Institutes of Health through the NIH Roadmap for Medical Research,
 #    Grant U54 EB005149.
-# 
+#
 #  * Kitware, Inc.
 #=============================================================================
 # Thanks to Daniel Blezek <blezek@gmail.com> for the GTEST_ADD_TESTS code
@@ -142,10 +142,16 @@ else()
     set(Suffix ".lib")
 endif()
 
-if("${GMOCK_SRC_DIR}" STREQUAL "") 
-   if("${GMOCK_VER}" STREQUAL "") 
+if(GTEST_USE_STATIC_LIBS)
+  set(GTEST_CMAKE_ARGS -Dgtest_force_shared_crt:BOOL=ON -DBUILD_SHARED_LIBS=OFF)
+else()
+  set(GTEST_CMAKE_ARGS -DBUILD_SHARED_LIBS=ON)
+endif()
+
+if("${GMOCK_SRC_DIR}" STREQUAL "")
+   if("${GMOCK_VER}" STREQUAL "")
        set(GMOCK_VER "1.7.0")
-   endif() 
+   endif()
    message(STATUS "Downloading GMock / GTest version ${GMOCK_VER}")
    ExternalProject_Add(
        gmock
@@ -155,6 +161,7 @@ if("${GMOCK_SRC_DIR}" STREQUAL "")
        LOG_DOWNLOAD ON
        LOG_CONFIGURE ON
        LOG_BUILD ON
+       CMAKE_ARGS ${GTEST_CMAKE_ARGS}
    )
 else()
    Message(STATUS "Building Gmock / Gtest from dir ${GMOCK_SRC_DIR}")
@@ -166,6 +173,7 @@ else()
         LOG_DOWNLOAD OFF
         LOG_CONFIGURE ON
         LOG_BUILD ON
+        CMAKE_ARGS ${GTEST_CMAKE_ARGS}
     )
 endif()
 
@@ -173,12 +181,8 @@ add_library(libgmock IMPORTED STATIC GLOBAL)
 add_dependencies(libgmock gmock)
 ExternalProject_Get_Property(gmock source_dir binary_dir)
 
-if(MSVC) 
-    set(MS_DIR "/${CMAKE_BUILD_TYPE}") 
-endif()
-
-set(GTEST_LIB_DIR "${binary_dir}/gtest${MS_DIR}")
-set(GMOCK_LIB_DIR "${binary_dir}${MS_DIR}")
+set(GTEST_LIB_DIR "${binary_dir}/gtest/${CMAKE_CFG_INTDIR}")
+set(GMOCK_LIB_DIR "${binary_dir}/${CMAKE_CFG_INTDIR}")
 
 set_target_properties(libgmock PROPERTIES
     "IMPORTED_LOCATION" "${GMOCK_LIB_DIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock.${Suffix}"
@@ -219,4 +223,3 @@ if(GTEST_FOUND)
         Message(STATUS "GTest libs: ${GTEST_BOTH_LIBRARIES}")
     endif()
 endif()
-
