@@ -15,6 +15,11 @@ If you need to ask a question, don't open a ticket on GitHub! Please post
 your question on the Cucumber discussion group instead, prefixing the title
 with [CPP].
 
+It relies on a few executables:
+
+* [cmake](https://cmake.org/download/) 2.8.12 or later.
+  Required to setup environment and build software
+
 It relies on a few libraries:
 
 * [Boost](http://www.boost.org/) 1.40 or later.
@@ -49,10 +54,23 @@ bundle install
 Building Cucumber-Cpp with tests and samples:
 
 ```
+# Download test suite
+git submodule init
+git submodule update
+
+# Create build directory
 cmake -E make_directory build
+
+# Generate Makefiles
 cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on ..
+
+# Build cucumber-cpp and tests
 cmake --build build
+
+# Run unit tests
 cmake --build build --target test
+
+# Check implementation against common cucumber test suite
 cmake --build build --target features
 ```
 
