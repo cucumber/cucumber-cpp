@@ -21,7 +21,7 @@ It relies on a few libraries:
   Optional library for Boost Test driver: *test*.
 * [GTest](http://code.google.com/p/googletest/) 1.6 or later.
   Optional for the GTest driver. By default downloaded and built by CMake.
-* [CppSpec](https://github.com/tpuronen/cppspec) development branch. 
+* [CppSpec](https://github.com/tpuronen/cppspec) development branch.
   Optional for the CppSpec driver.
 * [GMock](http://code.google.com/p/googlemock/) 1.6 or later.
   Optional for the internal test suite. By default downloaded and built by CMake.
@@ -37,6 +37,13 @@ tested with them.
 Cucumber-Cpp uses the wire protocol at the moment, so you will need
 Cucumber-Ruby installed and available on the path. It is also needed
 to run the functional test suite.
+
+To install the Ruby prerequisites:
+
+```
+gem install bundler
+bundle install
+```
 
 Building Cucumber-Cpp with tests and samples:
 
