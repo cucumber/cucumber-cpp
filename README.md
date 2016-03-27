@@ -1,7 +1,8 @@
 # Cucumber-CPP
 
 [![Join the chat at https://gitter.im/cucumber/cucumber-cpp](https://badges.gitter.im/cucumber/cucumber-cpp.svg)](https://gitter.im/cucumber/cucumber-cpp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/cucumber/cucumber-cpp.svg)](https://travis-ci.org/cucumber/cucumber-cpp)
+[![Linux and OSX build status](https://travis-ci.org/cucumber/cucumber-cpp.svg)](https://travis-ci.org/cucumber/cucumber-cpp)
+[![Windows build status](https://ci.appveyor.com/api/projects/status/5jeap3a4si9w8kka?svg=true)](https://ci.appveyor.com/project/paoloambrosio/cucumber-cpp-qqrt7)
 
 Cucumber-Cpp allows Cucumber to support step definitions written in C++.
 
