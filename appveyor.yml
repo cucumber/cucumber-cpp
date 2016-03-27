@@ -1,0 +1,42 @@
+version: "{branch}-ci-{build}"
+os: Visual Studio 2015
+
+environment:
+  RUBY_VERSION: 200
+  BOOST_ROOT: C:\Libraries\boost_1_59_0
+  BOOST_INCLUDEDIR: C:\Libraries\boost_1_59_0\boost
+  matrix:
+  - platform: x86
+    BOOST_LIBRARYDIR: C:\Libraries\boost_1_59_0\lib32-msvc-14.0
+  - platform: x64
+    BOOST_LIBRARYDIR: C:\Libraries\boost_1_59_0\lib64-msvc-14.0
+
+install:
+- git submodule init
+- git submodule update
+- set PATH=C:\Ruby%RUBY_VERSION%\bin;%BOOST_LIBRARYDIR%;%PATH%
+- gem install bundle
+- bundle install
+- bundle env
+
+build_script:
+- cmd: call "%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" %PLATFORM%
+- cmd: cmake -E make_directory build
+- cmd: cmake -E chdir build cmake -G "NMake Makefiles" -DCUKE_ENABLE_EXAMPLES=on -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_INCLUDEDIR="%BOOST_INCLUDEDIR%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" ..
+- cmd: cmake --build build
+
+test_script:
+- cmd: cmake --build build --target test
+- cmd: cmake --build build --target features
+
+branches:
+  only:
+  - master
+
+notifications:
+- provider: Email
+  to:
+  - cukes-devs@googlegroups.com
+  on_build_success: false
+  on_build_failure: true
+  on_build_status_changed: true
