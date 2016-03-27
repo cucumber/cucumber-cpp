@@ -91,7 +91,7 @@ public:
 
     bool isSuccess() const;
     bool isPending() const;
-    const InvokeResultType getType() const;
+    InvokeResultType getType() const;
     const std::string &getDescription() const;
 };
 
@@ -157,7 +157,7 @@ protected:
 };
 
 
-static std::string toSourceString(const char *filePath, const int line) {
+static inline std::string toSourceString(const char *filePath, const int line) {
     using namespace std;
     stringstream s;
     string file(filePath);

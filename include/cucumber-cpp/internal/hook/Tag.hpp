@@ -16,6 +16,7 @@ class TagExpression {
 public:
     typedef std::vector<std::string> tag_list;
 
+    virtual ~TagExpression() { }
     virtual bool matches(const tag_list &tags) = 0;
 };
 
