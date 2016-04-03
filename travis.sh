@@ -3,7 +3,12 @@ set -e #break script on non-zero exitcode from any command
 gem install bundler
 bundle install
 
-case $OSTYPE in darwin*) brew install ninja ;; esac
+case $OSTYPE in darwin*)
+    brew update > /dev/null
+    brew upgrade cmake
+    brew install ninja
+    ;;
+esac
 
 cmake -E make_directory build
 if [ -z ${GMOCK_PATH+x} ]; then 
