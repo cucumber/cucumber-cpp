@@ -6,7 +6,7 @@
 
 ### Bugfixes
 
-None yet
+*Fixed suggested step definition when step sentence contains double quote ([#79](https://github.com/cucumber/cucumber-cpp/issues/79))
 
 ## [0.3.1](https://github.com/cucumber/cucumber-cpp/compare/v0.3...v0.3.1) (11 April 2016)
 
