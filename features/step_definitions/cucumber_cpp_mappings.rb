@@ -151,26 +151,6 @@ EOF
     assert_success true
   end
 
-  def unescape(string)
-    string.gsub('\n', "\n").gsub('\e', "\e")
-  end
-
-  def assert_include(expected, actual)
-    expect(unescape(actual)).to include(unescape(expected))
-  end
-
-  def assert_scenario_output(scenario_output)
-    assert_include("#{scenario_output}", all_output)
-  end
-
-  def assert_not_include(unexpected, actual)
-    expect(unescape(actual)).not_to include(unescape(unexpected))
-  end
-
-  def assert_scenario_output_not_include(scenario_output)
-    assert_not_include("#{scenario_output}", all_output)
-  end
-
   def assert_scenario_reported_as_failing(scenario_name)
     assert_partial_output("# Scenario: #{scenario_name}", all_output)
     assert_success false

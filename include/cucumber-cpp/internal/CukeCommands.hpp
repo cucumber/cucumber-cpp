@@ -25,12 +25,16 @@ class CukeCommands {
 public:
 	CukeCommands();
 	virtual ~CukeCommands();
-		
+
     void beginScenario(const TagExpression::tag_list *tags);
     void endScenario();
     const std::string snippetText(const std::string stepKeyword, const std::string stepName) const;
     MatchResult stepMatches(const std::string description) const;
     InvokeResult invoke(step_id_type id, const InvokeArgs * pArgs);
+
+protected:
+	const std::string escapeRegex(const std::string regex) const;
+	const std::string escapeCString(const std::string str) const;
 
 private:
     StepManager stepManager;

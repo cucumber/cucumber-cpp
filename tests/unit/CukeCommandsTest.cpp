@@ -83,7 +83,7 @@ public:
 
 TEST_F(CukeCommandsTest, matchesCorrectly) {
     addStepWithMatcher(STATIC_MATCHER);
-    MatchResult result = cukeCommands.stepMatches(STATIC_MATCHER);
+    MatchResult result = stepMatches(STATIC_MATCHER);
     EXPECT_EQ(stepInfoPtr->id, result.getResultSet().at(0).stepInfo->id);
 }
 
@@ -95,4 +95,21 @@ TEST_F(CukeCommandsTest, invokeHandlesParametersWithoutMacro) {
 TEST_F(CukeCommandsTest, invokeHandlesParametersWithMacro) {
     // The real test is in CheckAllParameters::body()
     runStepBodyTest<CheckAllParametersWithMacro>();
+}
+
+TEST_F(CukeCommandsTest, producesSnippetsEscapingTitle) {
+    EXPECT_EQ("THEN(\"^x\\\\|y\\\"z$\") {\n"
+              "    pending();\n"
+              "}\n",
+              snippetText("then","x|y\"z"));
+}
+
+TEST_F(CukeCommandsTest, escapesCaractersInRegexes) {
+    //  abc|()[]{}^$*+?.\def  <=  abc\|\(\)\[\]\{\}\^\$\*\+\?\.\\def
+    EXPECT_EQ("abc\\|\\(\\)\\[\\]\\{\\}\\^\\$\\*\\+\\?\\.\\\\def", escapeRegex("abc|()[]{}^$*+?.\\def"));
+}
+
+TEST_F(CukeCommandsTest, escapesCharactersInCStrings) {
+    //  abc\"def\\ghi  <=  abc"def\ghi
+    EXPECT_EQ("abc\\\"def\\\\ghi", escapeCString("abc\"def\\ghi"));
 }
