@@ -6,7 +6,6 @@ set(CUKE_USE_STATIC_BOOST ${MSVC} CACHE BOOL "Statically link Boost (except boos
 set(CUKE_USE_STATIC_GTEST ON CACHE BOOL "Statically link Google Test")
 
 set(CUKE_DISABLE_BOOST_TEST OFF CACHE BOOL "Disable boost:test")
-set(CUKE_DISABLE_CPPSPEC OFF CACHE BOOL "Disable CppSpec")
 set(CUKE_DISABLE_GTEST OFF CACHE BOOL "Disable Google Test framework")
 set(CUKE_DISABLE_UNIT_TESTS OFF CACHE BOOL "Disable unit tests")
 set(CUKE_DISABLE_E2E_TESTS OFF CACHE BOOL "Disable end-to-end tests")
@@ -74,14 +73,6 @@ endif()
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
     set(CUKE_EXTRA_LIBRARIES ${CUKE_EXTRA_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_REGEX_LIBRARY} ${Boost_DATE_TIME_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY})
-endif()
-
-#
-# CppSpec
-#
-
-if(NOT CUKE_DISABLE_CPPSPEC)
-    find_package(CppSpec)
 endif()
 
 #

@@ -2,7 +2,7 @@
 
 ### New Features
 
-None yet
+* Removed CppSpec support ([#118](https://github.com/cucumber/cucumber-cpp/pull/118) Paolo Ambrosio)
 
 ### Bugfixes
 

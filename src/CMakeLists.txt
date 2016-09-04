@@ -20,11 +20,6 @@ if(GMOCK_FOUND)
     list(APPEND CUKE_SOURCES drivers/GTestDriver.cpp)
 endif()
 
-if(CPPSPEC_FOUND)
-    include_directories(${CPPSPEC_INCLUDE_DIRS})
-    list(APPEND CUKE_SOURCES drivers/CppSpecDriver.cpp)
-endif()
-
 if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
     list(APPEND CUKE_SOURCES drivers/BoostDriver.cpp)
 endif()
