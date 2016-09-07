@@ -27,6 +27,7 @@ addons:
       - libboost-program-options-dev
       - libboost-test-dev
       - google-mock
+      - ninja-build
 
 script: ./travis.sh 
 
