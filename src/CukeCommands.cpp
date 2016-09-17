@@ -34,11 +34,22 @@ void CukeCommands::endScenario() {
 }
 
 const std::string CukeCommands::snippetText(const std::string stepKeyword, const std::string stepName) const {
-    std::stringstream snippetText; // TODO Escape stepName
-    snippetText << boost::to_upper_copy(stepKeyword) << "(\"^" << stepName << "$\") {" << std::endl;
-    snippetText << "    pending();" << std::endl;
-    snippetText << "}" << std::endl;
-    return snippetText.str();
+    std::stringstream text;
+    text << boost::to_upper_copy(stepKeyword)
+        << "(\""
+        << escapeCString("^" + escapeRegex(stepName) + "$")
+        << "\") {\n"
+        << "    pending();\n"
+        << "}\n";
+    return text.str();
+}
+
+const std::string CukeCommands::escapeRegex(const std::string reg) const {
+    return regex_replace(reg, boost::regex("[\\|\\(\\)\\[\\]\\{\\}\\^\\$\\*\\+\\?\\.\\\\]"), "\\\\&", boost::match_default | boost::format_sed);
+}
+
+const std::string CukeCommands::escapeCString(const std::string str) const {
+    return regex_replace(str, boost::regex("[\"\\\\]"), "\\\\&", boost::match_default | boost::format_sed);
 }
 
 MatchResult CukeCommands::stepMatches(const std::string description) const {

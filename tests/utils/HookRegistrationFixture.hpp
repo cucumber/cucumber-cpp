@@ -99,20 +99,20 @@ protected:
     }
 
     void beginScenario(const TagExpression::tag_list *tags) {
-        cukeCommands.beginScenario(tags);
+        CukeCommandsFixture::beginScenario(tags);
     }
 
     void beginScenario(const TagExpression::tag_list & tags) {
         TagExpression::tag_list *pTags = new TagExpression::tag_list(tags.begin(), tags.end());
-        beginScenario(pTags);
+        CukeCommandsFixture::beginScenario(pTags);
     }
 
     void invokeStep() {
-        cukeCommands.invoke(stepInfoPtr->id, &NO_INVOKE_ARGS);
+        invoke(stepInfoPtr->id, &NO_INVOKE_ARGS);
     }
 
     void endScenario() {
-        cukeCommands.endScenario();
+        CukeCommandsFixture::endScenario();
     }
 
     std::string sort(std::string str) {

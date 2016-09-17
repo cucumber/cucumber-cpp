@@ -14,13 +14,12 @@ class EmptyStep : public GenericStep {
     void body() {}
 };
 
-class CukeCommandsFixture : public ::testing::Test {
+class CukeCommandsFixture : public ::testing::Test, public CukeCommands {
     StepManagerTestDouble stepManager;
 public:
     const static std::string STATIC_MATCHER;
 
 protected:
-    CukeCommands cukeCommands;
     shared_ptr<StepInfo> stepInfoPtr;
 
     template<class T>
@@ -28,7 +27,7 @@ protected:
         addStepToManager<T>(STATIC_MATCHER);
         const InvokeArgs *pArgs = T::buildInvokeArgs();
         shared_ptr<const InvokeArgs> spArgs(pArgs);
-        cukeCommands.invoke(stepInfoPtr->id, pArgs);
+        invoke(stepInfoPtr->id, pArgs);
     }
 
     template<class T>
