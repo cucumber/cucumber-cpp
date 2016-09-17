@@ -22,9 +22,7 @@
 # Accepts the following variables as input:
 #
 #   GMOCK_ROOT - The root directory of the gmock install prefix
-#
 #   GMOCK_SRC_DIR -The directory of the gmock sources
-#
 #   GMOCK_VER - The version of the gmock sources to be downloaded
 #
 #-----------------------
@@ -148,21 +146,84 @@ else()
   set(GTEST_CMAKE_ARGS -DBUILD_SHARED_LIBS=ON)
 endif()
 
-if("${GMOCK_SRC_DIR}" STREQUAL "")
-   if("${GMOCK_VER}" STREQUAL "")
-       set(GMOCK_VER "1.7.0")
-   endif()
-   message(STATUS "Downloading GMock / GTest version ${GMOCK_VER}")
-   ExternalProject_Add(
-       gmock
-       URL "https://googlemock.googlecode.com/files/gmock-${GMOCK_VER}.zip"
-       PREFIX ${GMOCK_ROOT}
-       INSTALL_COMMAND ""
-       LOG_DOWNLOAD ON
-       LOG_CONFIGURE ON
-       LOG_BUILD ON
-       CMAKE_ARGS ${GTEST_CMAKE_ARGS}
-   )
+if("${GMOCK_SRC_DIR}" STREQUAL "") 
+    message(STATUS "Downloading GMock / GTest version ${GMOCK_VER} from git")
+    if("${GMOCK_VER}" STREQUAL "1.6.0" OR "${GMOCK_VER}" STREQUAL "1.7.0") 
+        ExternalProject_Add(
+            gtest
+            GIT_REPOSITORY "https://github.com/google/googletest.git"
+            GIT_TAG "release-${GMOCK_VER}"
+            PREFIX ${GMOCK_ROOT}
+            INSTALL_COMMAND ""
+            LOG_DOWNLOAD ON
+            LOG_CONFIGURE ON
+            LOG_BUILD ON
+            CMAKE_ARGS ${GTEST_CMAKE_ARGS}
+        )
+        ExternalProject_Add(
+            gmock
+            GIT_REPOSITORY "https://github.com/google/googlemock.git"
+            GIT_TAG "release-${GMOCK_VER}"
+            PREFIX ${GMOCK_ROOT}
+            INSTALL_COMMAND ""
+            LOG_DOWNLOAD ON
+            LOG_CONFIGURE ON
+            LOG_BUILD ON
+            CMAKE_ARGS ${GTEST_CMAKE_ARGS}
+            DEPENDS gtest
+        )
+
+        add_library(libgtest IMPORTED STATIC GLOBAL)
+        add_dependencies(libgtest gtest)
+        add_library(libgmock IMPORTED STATIC GLOBAL)
+        add_dependencies(libgmock gmock)
+        
+        ExternalProject_Get_Property(gtest source_dir binary_dir)
+        set(GTEST_INCLUDE_DIR  "${source_dir}/include")
+        mark_as_advanced(GTEST_INCLUDE_DIR)
+        set(GTEST_LIBRARY      "${binary_dir}/${CMAKE_CFG_INTDIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${Suffix}")
+        mark_as_advanced(GTEST_LIBRARY)
+        set(GTEST_MAIN_LIBRARY "${binary_dir}/${CMAKE_CFG_INTDIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gtest_main${Suffix}")
+        mark_as_advanced(GTEST_MAIN_LIBRARY)
+        ExternalProject_Get_Property(gmock source_dir binary_dir)
+        set(GMOCK_INCLUDE_DIR  "${source_dir}/include")
+        mark_as_advanced(GMOCK_INCLUDE_DIR)
+        set(GMOCK_LIBRARY      "${binary_dir}/${CMAKE_CFG_INTDIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock${Suffix}")
+        mark_as_advanced(GMOCK_LIBRARY)
+        set(GMOCK_MAIN_LIBRARY "${binary_dir}/${CMAKE_CFG_INTDIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock_main${Suffix}")
+        mark_as_advanced(GMOCK_MAIN_LIBRARY)
+    else() #1.8.0
+        ExternalProject_Add(
+            gmock
+            GIT_REPOSITORY "https://github.com/google/googletest.git"
+            GIT_TAG "release-${GMOCK_VER}"
+            PREFIX ${GMOCK_ROOT}
+            INSTALL_COMMAND ""
+            LOG_DOWNLOAD ON
+            LOG_CONFIGURE ON
+            LOG_BUILD ON
+            CMAKE_ARGS ${GTEST_CMAKE_ARGS}
+        )
+
+        add_library(libgtest IMPORTED STATIC GLOBAL)
+        add_dependencies(libgtest gmock)
+        add_library(libgmock IMPORTED STATIC GLOBAL)
+        add_dependencies(libgmock gmock)
+        
+        ExternalProject_Get_Property(gmock source_dir binary_dir)
+        set(GTEST_INCLUDE_DIR  "${source_dir}/googletest/include")
+        set(GTEST_LIBRARY      "${binary_dir}/googlemock/gtest/${CMAKE_CFG_INTDIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${Suffix}")
+        set(GTEST_MAIN_LIBRARY "${binary_dir}/googlemock/gtest/${CMAKE_CFG_INTDIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gtest_main${Suffix}")
+        set(GMOCK_INCLUDE_DIR  "${source_dir}/googlemock/include")
+        set(GMOCK_LIBRARY      "${binary_dir}/googlemock/${CMAKE_CFG_INTDIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock${Suffix}")
+        set(GMOCK_MAIN_LIBRARY "${binary_dir}/googlemock/${CMAKE_CFG_INTDIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock_main${Suffix}")
+        mark_as_advanced(GMOCK_LIBRARY)
+        mark_as_advanced(GMOCK_INCLUDE_DIR)
+        mark_as_advanced(GTEST_MAIN_LIBRARY)
+        mark_as_advanced(GTEST_LIBRARY)
+        mark_as_advanced(GTEST_INCLUDE_DIR)
+        mark_as_advanced(GMOCK_MAIN_LIBRARY)
+    endif() 
 else()
    Message(STATUS "Building Gmock / Gtest from dir ${GMOCK_SRC_DIR}")
    ExternalProject_Add(
@@ -175,33 +236,51 @@ else()
         LOG_BUILD ON
         CMAKE_ARGS ${GTEST_CMAKE_ARGS}
     )
+
+    add_library(libgtest IMPORTED STATIC GLOBAL)
+    add_dependencies(libgtest gmock)
+    add_library(libgmock IMPORTED STATIC GLOBAL)
+    add_dependencies(libgmock gmock)
+    
+    ExternalProject_Get_Property(gmock source_dir binary_dir)
+    set(GTEST_INCLUDE_DIR  "${source_dir}/gtest/include")
+    mark_as_advanced(GTEST_INCLUDE_DIR)
+    set(GTEST_LIBRARY      "${binary_dir}/gtest/${CMAKE_CFG_INTDIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${Suffix}")
+    mark_as_advanced(GTEST_LIBRARY)
+    set(GTEST_MAIN_LIBRARY "${binary_dir}/gtest/${CMAKE_CFG_INTDIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gtest_main${Suffix}")
+    mark_as_advanced(GTEST_MAIN_LIBRARY)
+    set(GMOCK_INCLUDE_DIR  "${source_dir}/include")
+    mark_as_advanced(GMOCK_INCLUDE_DIR)
+    set(GMOCK_LIBRARY      "${binary_dir}/${CMAKE_CFG_INTDIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock${Suffix}")
+    mark_as_advanced(GMOCK_LIBRARY)
+    set(GMOCK_MAIN_LIBRARY "${binary_dir}/${CMAKE_CFG_INTDIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock_main${Suffix}")
+    mark_as_advanced(GMOCK_MAIN_LIBRARY)
 endif()
 
-add_library(libgmock IMPORTED STATIC GLOBAL)
-add_dependencies(libgmock gmock)
-ExternalProject_Get_Property(gmock source_dir binary_dir)
-
-set(GTEST_LIB_DIR "${binary_dir}/gtest/${CMAKE_CFG_INTDIR}")
-set(GMOCK_LIB_DIR "${binary_dir}/${CMAKE_CFG_INTDIR}")
-
-set_target_properties(libgmock PROPERTIES
-    "IMPORTED_LOCATION" "${GMOCK_LIB_DIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock.${Suffix}"
+set_target_properties(libgtest PROPERTIES
+    "IMPORTED_LOCATION" "${GTEST_LIBRARY}"
     "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
-    "INTERFACE_INCLUDE_DIRECTORIES" "${source_dir}/include"
+    "INTERFACE_INCLUDE_DIRECTORIES" "${GTEST_INCLUDE_DIR}"
+)
+set_target_properties(libgmock PROPERTIES
+    "IMPORTED_LOCATION" "${GMOCK_LIBARY}"
+    "IMPORTED_LINK_INTERFACE_LIBRARIES" "${CMAKE_THREAD_LIBS_INIT}"
+    "INTERFACE_INCLUDE_DIRECTORIES" "${GMOCK_INCLUDE_DIR}"
 )
 
-set(GMOCK_INCLUDE_DIR ${source_dir}/include)
-mark_as_advanced(GMOCK_INCLUDE_DIR)
-set(GTEST_INCLUDE_DIR ${source_dir}/gtest/include)
-mark_as_advanced(GTEST_INCLUDE_DIR)
-
-set(GTEST_LIBRARY "${GTEST_LIB_DIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gtest${Suffix}")
-set(GTEST_MAIN_LIBRARY "${GTEST_LIB_DIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gtest_main${Suffix}")
-set(GMOCK_LIBRARY "${GMOCK_LIB_DIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock${Suffix}")
-set(GMOCK_MAIN_LIBRARY "${GMOCK_LIB_DIR}/${CMAKE_FIND_LIBRARY_PREFIXES}gmock_main${Suffix}")
-
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(GMock DEFAULT_MSG GMOCK_LIBRARY GMOCK_INCLUDE_DIR GMOCK_MAIN_LIBRARY)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(GTest DEFAULT_MSG GTEST_LIBRARY GTEST_INCLUDE_DIR GTEST_MAIN_LIBRARY)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(GMock DEFAULT_MSG GMOCK_LIBRARY GMOCK_INCLUDE_DIR GMOCK_MAIN_LIBRARY)
+
+if(GTEST_FOUND)
+    set(GTEST_INCLUDE_DIRS ${GTEST_INCLUDE_DIR})
+    set(GTEST_LIBRARIES ${GTEST_LIBRARY})
+    set(GTEST_MAIN_LIBRARIES ${GTEST_MAIN_LIBRARY})
+    set(GTEST_BOTH_LIBRARIES ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+    if(VERBOSE)
+        Message(STATUS "GTest includes: ${GTEST_INCLUDE_DIRS}")
+        Message(STATUS "GTest libs: ${GTEST_BOTH_LIBRARIES}")
+    endif()
+endif()
 
 if(GMOCK_FOUND)
     set(GMOCK_INCLUDE_DIRS ${GMOCK_INCLUDE_DIR})
@@ -211,15 +290,5 @@ if(GMOCK_FOUND)
     if(VERBOSE)
       Message(STATUS "GMock includes: ${GMOCK_INCLUDE_DIRS}")
       Message(STATUS "GMock libs: ${GMOCK_BOTH_LIBRARIES}")
-    endif()
-endif()
-if(GTEST_FOUND)
-    set(GTEST_INCLUDE_DIRS ${GTEST_INCLUDE_DIR})
-    set(GTEST_LIBRARIES ${GTEST_LIBRARY})
-    set(GTEST_MAIN_LIBRARIES ${GTEST_MAIN_LIBRARY})
-    set(GTEST_BOTH_LIBRARIES ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
-    if(VERBOSE)
-        Message(STATUS "GTest includes: ${GTEST_INCLUDE_DIRS}")
-        Message(STATUS "GTest libs: ${GTEST_BOTH_LIBRARIES}")
     endif()
 endif()

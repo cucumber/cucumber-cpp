@@ -44,7 +44,7 @@ MatchResult::operator void *() {
     return (void *) resultSet.size();
 }
 
-MatchResult::operator bool() {
+MatchResult::operator bool() const {
     return !resultSet.empty();
 }
 

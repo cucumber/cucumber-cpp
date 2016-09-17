@@ -3,6 +3,7 @@
 ### New Features
 
 * Removed CppSpec support ([#118](https://github.com/cucumber/cucumber-cpp/pull/118) Paolo Ambrosio)
+* Support for GoogleTest 1.8 ([#120](https://github.com/cucumber/cucumber-cpp/pull/120) Kamil Strzempowicz)
 
 ### Bugfixes
 
