@@ -2,14 +2,17 @@
 
 #include <gmock/gmock.h>
 
+#include <boost/filesystem/operations.hpp>
 #include <boost/thread.hpp>
 #include <boost/timer.hpp>
 
+#include <stdlib.h>
 #include <sstream>
 
 using namespace cucumber::internal;
 using namespace boost::posix_time;
 using namespace boost::asio::ip;
+using namespace boost::asio::local;
 using namespace std;
 using namespace testing;
 using boost::bind;
@@ -75,6 +78,32 @@ protected:
     }
 };
 
+#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
+class UnixSocketServerTest : public SocketServerTest {
+protected:
+    std::string SOCKET;
+
+    virtual void SetUp() {
+        // Get a free filename for the Unix socket
+        char socketAddr[] = "cucumber.wire.sock.XXXXXX";
+        const int fd = mkstemp(socketAddr);
+        ASSERT_NE(-1, fd);
+        SOCKET = socketAddr;
+        boost::filesystem::remove(SOCKET);
+        close(fd);
+
+        server = new SocketServer(&protocolHandler);
+        server->listen(SOCKET);
+        serverThread = new thread(bind(&SocketServer::acceptOnce, server));
+    }
+
+    virtual void TearDown() {
+        boost::filesystem::remove(SOCKET);
+        SocketServerTest::TearDown();
+    }
+};
+#endif
+
 
 TEST_F(SocketServerTest, exitsOnFirstConnectionClosed) {
     // given
@@ -121,3 +150,16 @@ TEST_F(SocketServerTest, receiveAndSendsSingleLineMassages) {
     EXPECT_THAT(client, EventuallyReceives("B"));
     EXPECT_THAT(client, EventuallyReceives("C"));
 }
+
+#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
+TEST_F(UnixSocketServerTest, clientCanConnect) {
+    // given
+    stream_protocol::iostream client;
+
+    // when
+    client.connect(stream_protocol::endpoint(SOCKET));
+
+    // then
+    EXPECT_THAT(client, IsConnected());
+}
+#endif

@@ -6,12 +6,17 @@
 #include <string>
 
 #include <boost/asio.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/variant.hpp>
 
 namespace cucumber {
 namespace internal {
 
 using namespace boost::asio;
 using namespace boost::asio::ip;
+#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
+using namespace boost::asio::local;
+#endif
 
 /**
  * Socket server that calls a protocol handler line by line
@@ -33,6 +38,13 @@ public:
      */
     void listen(const port_type port);
 
+#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
+    /**
+     * Bind and listen on a local strea
+     */
+    void listen(const std::string& unixPath);
+#endif
+
     /**
      * Port number that this server is currently listening on.
      *
@@ -46,14 +58,22 @@ public:
      */
     void acceptOnce();
 
-    ~SocketServer() {}; // Forbid inheritance
+    ~SocketServer(); // Forbid inheritance
+
+private:
+    void removeUnixSocket();
 
 private:
     const ProtocolHandler *protocolHandler;
     io_service ios;
-    tcp::acceptor acceptor;
-
-    void processStream(tcp::iostream &stream);
+    boost::variant<
+        boost::blank
+      , boost::shared_ptr<tcp::acceptor>
+#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
+      , boost::shared_ptr<stream_protocol::acceptor>
+#endif
+      >  acceptor;
+    std::string socketToRemove;
 };
 
 }
