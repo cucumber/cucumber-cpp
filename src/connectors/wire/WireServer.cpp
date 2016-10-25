@@ -13,6 +13,7 @@ void SocketServer::listen(const port_type port) {
     tcp::endpoint endpoint(tcp::v4(), port);
     acceptor.open(endpoint.protocol());
     acceptor.set_option(tcp::acceptor::reuse_address(true));
+    acceptor.set_option(tcp::no_delay(true));
     acceptor.bind(endpoint);
     acceptor.listen(1);
 }
