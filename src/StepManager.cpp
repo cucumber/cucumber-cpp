@@ -36,8 +36,8 @@ SingleStepMatch & SingleStepMatch::operator =(const SingleStepMatch &match) {
     return *this;
 }
 
-SingleStepMatch::operator void *() {
-    return (void *) stepInfo;
+SingleStepMatch::operator const void *() const {
+    return stepInfo;
 }
 
 MatchResult::operator void *() {

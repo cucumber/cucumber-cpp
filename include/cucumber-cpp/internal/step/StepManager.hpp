@@ -29,7 +29,7 @@ public:
     SingleStepMatch(const SingleStepMatch &match);
 
     SingleStepMatch & operator =(const SingleStepMatch &match);
-    operator void *();
+    operator const void *() const;
 
     const StepInfo *stepInfo;
     submatches_type submatches;
