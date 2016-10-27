@@ -4,15 +4,12 @@
 namespace cucumber {
 namespace internal {
 
-Scenario::Scenario(const TagExpression::tag_list *pTags) :
-    pTags(pTags) {
-    if (!pTags) {
-        this->pTags = boost::make_shared<const TagExpression::tag_list>();
-    }
+Scenario::Scenario(const TagExpression::tag_list& tags) :
+    tags(tags) {
 };
 
 const TagExpression::tag_list & Scenario::getTags() {
-    return *(pTags.get());
+    return tags;
 }
 
 }

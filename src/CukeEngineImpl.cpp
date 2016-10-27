@@ -41,7 +41,7 @@ std::vector<StepMatch> CukeEngineImpl::stepMatches(const std::string & name) con
 }
 
 void CukeEngineImpl::beginScenario(const tags_type & tags) {
-    cukeCommands.beginScenario(&tags);
+    cukeCommands.beginScenario(tags);
 }
 
 void CukeEngineImpl::invokeStep(const std::string & id, const invoke_args_type & args, const invoke_table_type & tableArg) {

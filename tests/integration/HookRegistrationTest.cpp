@@ -98,7 +98,7 @@ const std::string correctAfterAllOrder(AFTER_ALL_MARKER_1 AFTER_ALL_MARKER_2 AFT
 
 
 TEST_F(HookRegistrationTest, hooksAreRegisteredByTheMacros) {
-    beginScenario(0);
+    beginScenario();
     EXPECT_EQ(correctBeforeOrder, sort(beforeHookOrder()));
     EXPECT_EQ(correctBeforeAroundStepOrder, sort(aroundStepHookOrder()));
     EXPECT_EQ(correctAfterStepOrder, sort(afterStepHookOrder()));
@@ -108,7 +108,7 @@ TEST_F(HookRegistrationTest, hooksAreRegisteredByTheMacros) {
 
 TEST_F(HookRegistrationTest, beforeHooksAreInvokedInAnyOrder) {
     EXPECT_EQ("", beforeHookCallMarker.str());
-    beginScenario(0);
+    beginScenario();
     EXPECT_EQ(correctBeforeOrder, sort(beforeHookCallMarker.str()));
     invokeStep();
     endScenario();
@@ -116,7 +116,7 @@ TEST_F(HookRegistrationTest, beforeHooksAreInvokedInAnyOrder) {
 }
 
 TEST_F(HookRegistrationTest, aroundStepHooksAreInvokedInAnyOrderButNested) {
-    beginScenario(0);
+    beginScenario();
     EXPECT_EQ("", beforeAroundStepHookCallMarker.str());
     invokeStep();
     EXPECT_EQ(correctBeforeAroundStepOrder, sort(beforeAroundStepHookCallMarker.str()));
@@ -127,7 +127,7 @@ TEST_F(HookRegistrationTest, aroundStepHooksAreInvokedInAnyOrderButNested) {
 }
 
 TEST_F(HookRegistrationTest, afterStepHooksAreInvokedInAnyOrder) {
-    beginScenario(0);
+    beginScenario();
     EXPECT_EQ("", afterStepHookCallMarker.str());
     invokeStep();
     EXPECT_EQ(correctAfterStepOrder, sort(afterStepHookCallMarker.str()));
@@ -136,7 +136,7 @@ TEST_F(HookRegistrationTest, afterStepHooksAreInvokedInAnyOrder) {
 }
 
 TEST_F(HookRegistrationTest, afterHooksAreInvokedInAnyOrder) {
-    beginScenario(0);
+    beginScenario();
     invokeStep();
     invokeStep();
     EXPECT_EQ("", sort(afterHookCallMarker.str()));
@@ -145,13 +145,13 @@ TEST_F(HookRegistrationTest, afterHooksAreInvokedInAnyOrder) {
 }
 
 TEST_F(HookRegistrationTest, contextIsAccessibleInAfterHooks) {
-    beginScenario(0);
+    beginScenario();
     endScenario();
     EXPECT_EQ(CONTEXT_MARKER, contextContents);
 }
 
 TEST_F(HookRegistrationTest, afterStepHooksAreInvokedAfterAroundStepHooks) {
-    beginScenario(0);
+    beginScenario();
     EXPECT_EQ("", globalStepHookCallMarker.str());
     invokeStep();
     EXPECT_EQ(beforeAroundStepHookCallMarker.str() +
@@ -163,14 +163,14 @@ TEST_F(HookRegistrationTest, afterStepHooksAreInvokedAfterAroundStepHooks) {
 
 TEST_F(HookRegistrationTest, beforeAllHooksAreInvokedInAnyOrderDuringFirstScenarioOnly) {
     EXPECT_EQ("", afterAllHookCallMarker.str());
-    beginScenario(0);
+    beginScenario();
     EXPECT_EQ(correctBeforeAllOrder, sort(beforeAllHookCallMarker.str()));
     
     clearHookCallMarkers();
     invokeStep();
     endScenario();
     EXPECT_EQ("", sort(beforeAllHookCallMarker.str()));
-    beginScenario(0);
+    beginScenario();
     invokeStep();
     endScenario();
     EXPECT_EQ("", sort(beforeAllHookCallMarker.str()));
@@ -203,10 +203,10 @@ TEST_F(HookRegistrationTest, afterAllHooksAreInvokedOnceDuringDestructionOnly) {
     CukeCommands* cukeCommands = new CukeCommands();
 
     EXPECT_EQ("", afterAllHookCallMarker.str());
-    cukeCommands->beginScenario(0);
+    cukeCommands->beginScenario();
     cukeCommands->endScenario();
     EXPECT_EQ("", afterAllHookCallMarker.str());
-    cukeCommands->beginScenario(0);
+    cukeCommands->beginScenario();
     cukeCommands->endScenario();
     EXPECT_EQ("", afterAllHookCallMarker.str());
 

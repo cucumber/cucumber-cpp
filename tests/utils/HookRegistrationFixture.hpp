@@ -68,7 +68,7 @@ protected:
     shared_ptr<Scenario> emptyScenario;
 
     HookRegistrationTest() {
-        emptyScenario = boost::make_shared<Scenario>(new TagExpression::tag_list);
+        emptyScenario = boost::make_shared<Scenario>();
     }
 
     Scenario *getEmptyScenario() {
@@ -99,13 +99,8 @@ protected:
         return getHookCallMarkers();
     }
 
-    void beginScenario(const TagExpression::tag_list *tags) {
+    void beginScenario(const TagExpression::tag_list & tags = TagExpression::tag_list()) {
         CukeCommandsFixture::beginScenario(tags);
-    }
-
-    void beginScenario(const TagExpression::tag_list & tags) {
-        TagExpression::tag_list *pTags = new TagExpression::tag_list(tags.begin(), tags.end());
-        CukeCommandsFixture::beginScenario(pTags);
     }
 
     void invokeStep() {

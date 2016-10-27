@@ -18,7 +18,7 @@ CukeCommands::~CukeCommands() {
     }
 }
 
-void CukeCommands::beginScenario(const TagExpression::tag_list *tags) {
+void CukeCommands::beginScenario(const TagExpression::tag_list& tags) {
     if (!hasStarted) {
         hasStarted = true;
         hookRegistrar.execBeforeAllHooks();
@@ -58,7 +58,7 @@ MatchResult CukeCommands::stepMatches(const std::string description) const {
 }
 
 InvokeResult CukeCommands::invoke(step_id_type id, const InvokeArgs *pArgs) {
-    StepInfo *stepInfo = stepManager.getStep(id);
+    boost::shared_ptr<StepInfo> stepInfo = stepManager.getStep(id);
     InvokeResult result = hookRegistrar.execStepChain(currentScenario.get(), stepInfo, pArgs);
     hookRegistrar.execAfterStepHooks(currentScenario.get());
     return result;

@@ -3,6 +3,7 @@
 #include <gmock/gmock.h>
 
 #include <boost/filesystem/operations.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <boost/thread.hpp>
 #include <boost/timer.hpp>
 
@@ -31,8 +32,7 @@ MATCHER(HasTerminated, "") {
 }
 
 MATCHER(EventuallyTerminates, "") {
-    thread *t = const_cast<thread *>(arg);
-    return t->timed_join(THREAD_TEST_TIMEOUT);
+    return arg->timed_join(THREAD_TEST_TIMEOUT);
 }
 
 MATCHER_P(EventuallyReceives, value, "") {
@@ -62,18 +62,17 @@ class SocketServerTest : public Test {
 
 protected:
     StrictMock<MockProtocolHandler> protocolHandler;
-    thread *serverThread;
+    boost::scoped_ptr<thread> serverThread;
 
     virtual void SetUp() {
         SocketServer* server = createListeningServer();
-        serverThread = new thread(&SocketServer::acceptOnce, server);
+        serverThread.reset(new thread(&SocketServer::acceptOnce, server));
     }
 
     virtual void TearDown() {
         if (serverThread) {
             serverThread->timed_join(THREAD_TEST_TIMEOUT);
-            delete serverThread;
-            serverThread = NULL;
+            serverThread.reset();
         }
         destroyListeningServer();
     }
@@ -84,20 +83,16 @@ protected:
 
 class TCPSocketServerTest : public SocketServerTest {
 protected:
-    TCPSocketServer *server;
-    TCPSocketServerTest() :
-        server(NULL) {
-    }
+    boost::scoped_ptr<TCPSocketServer> server;
 
-    virtual TCPSocketServer* createListeningServer() {
-        server = new TCPSocketServer(&protocolHandler);
+    virtual SocketServer* createListeningServer() {
+        server.reset(new TCPSocketServer(&protocolHandler));
         server->listen(0);
-        return server;
+        return server.get();
     }
 
     virtual void destroyListeningServer() {
-        delete server;
-        server = NULL;
+        server.reset();
     }
 };
 
@@ -150,21 +145,17 @@ TEST_F(TCPSocketServerTest, receiveAndSendsSingleLineMassages) {
 #if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
 class UnixSocketServerTest : public SocketServerTest {
 protected:
-    UnixSocketServer *server;
-    UnixSocketServerTest() :
-        server(NULL) {
-    }
+    boost::scoped_ptr<UnixSocketServer> server;
 
-    virtual UnixSocketServer* createListeningServer() {
+    virtual SocketServer* createListeningServer() {
         fs::path socket = fs::temp_directory_path() / fs::unique_path();
-        server = new UnixSocketServer(&protocolHandler);
+        server.reset(new UnixSocketServer(&protocolHandler));
         server->listen(socket.string());
-        return server;
+        return server.get();
     }
 
     virtual void destroyListeningServer() {
-        delete server;
-        server = NULL;
+        server.reset();
     }
 };
 

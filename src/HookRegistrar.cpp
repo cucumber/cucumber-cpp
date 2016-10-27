@@ -40,7 +40,7 @@ void UnconditionalHook::invokeHook(Scenario*, CallableStep *) {
 HookRegistrar::~HookRegistrar() {
 }
 
-void HookRegistrar::addBeforeHook(BeforeHook *beforeHook) {
+void HookRegistrar::addBeforeHook(const boost::shared_ptr<BeforeHook>& beforeHook) {
     beforeHooks().push_back(beforeHook);
 }
 
@@ -54,7 +54,7 @@ void HookRegistrar::execBeforeHooks(Scenario *scenario) {
 }
 
 
-void HookRegistrar::addAroundStepHook(AroundStepHook *aroundStepHook) {
+void HookRegistrar::addAroundStepHook(const boost::shared_ptr<AroundStepHook>& aroundStepHook) {
     aroundStepHooks().push_front(aroundStepHook);
 }
 
@@ -63,12 +63,12 @@ HookRegistrar::aroundhook_list_type& HookRegistrar::aroundStepHooks() {
     return aroundStepHooks;
 }
 
-InvokeResult HookRegistrar::execStepChain(Scenario *scenario, StepInfo *stepInfo, const InvokeArgs *pArgs) {
+InvokeResult HookRegistrar::execStepChain(Scenario *scenario, const boost::shared_ptr<StepInfo>& stepInfo, const InvokeArgs *pArgs) {
     StepCallChain scc(scenario, stepInfo, pArgs, aroundStepHooks());
     return scc.exec();
 }
 
-void HookRegistrar::addAfterStepHook(AfterStepHook *afterStepHook) {
+void HookRegistrar::addAfterStepHook(const boost::shared_ptr<AfterStepHook>& afterStepHook) {
     afterStepHooks().push_front(afterStepHook);
 }
 
@@ -82,7 +82,7 @@ void HookRegistrar::execAfterStepHooks(Scenario *scenario) {
 }
 
 
-void HookRegistrar::addAfterHook(AfterHook *afterHook) {
+void HookRegistrar::addAfterHook(const boost::shared_ptr<AfterHook>& afterHook) {
     afterHooks().push_front(afterHook);
 }
 
@@ -107,7 +107,7 @@ HookRegistrar::hook_list_type& HookRegistrar::beforeAllHooks() {
     return beforeAllHooks;
 }
 
-void HookRegistrar::addBeforeAllHook(BeforeAllHook *beforeAllHook) {
+void HookRegistrar::addBeforeAllHook(const boost::shared_ptr<BeforeAllHook>& beforeAllHook) {
     beforeAllHooks().push_back(beforeAllHook);
 }
 
@@ -120,7 +120,7 @@ HookRegistrar::hook_list_type& HookRegistrar::afterAllHooks() {
     return afterAllHooks;
 }
 
-void HookRegistrar::addAfterAllHook(AfterAllHook *afterAllHook) {
+void HookRegistrar::addAfterAllHook(const boost::shared_ptr<AfterAllHook>& afterAllHook) {
     afterAllHooks().push_back(afterAllHook);
 }
 
@@ -131,7 +131,7 @@ void HookRegistrar::execAfterAllHooks() {
 
 StepCallChain::StepCallChain(
     Scenario *scenario,
-    StepInfo *stepInfo,
+    const boost::shared_ptr<StepInfo>& stepInfo,
     const InvokeArgs *pStepArgs,
     HookRegistrar::aroundhook_list_type &aroundHooks
 ) :

@@ -3,6 +3,7 @@
 
 #include "ProtocolHandler.hpp"
 #include "../../CukeEngine.hpp"
+#include <boost/shared_ptr.hpp>
 
 namespace cucumber {
 namespace internal {
@@ -17,14 +18,14 @@ class WireResponse {
 public:
     WireResponse() {};
 
-    virtual void accept(WireResponseVisitor *visitor) const = 0;
+    virtual void accept(WireResponseVisitor& visitor) const = 0;
 
     virtual ~WireResponse() {};
 };
 
 class SuccessResponse : public WireResponse {
 public:
-    void accept(WireResponseVisitor *visitor) const;
+    void accept(WireResponseVisitor& visitor) const;
 };
 
 class FailureResponse : public WireResponse {
@@ -37,7 +38,7 @@ public:
     const std::string getMessage() const;
     const std::string getExceptionType() const;
 
-    void accept(WireResponseVisitor *visitor) const;
+    void accept(WireResponseVisitor& visitor) const;
 };
 
 class PendingResponse : public WireResponse {
@@ -49,7 +50,7 @@ public:
 
     const std::string getMessage() const;
 
-    void accept(WireResponseVisitor *visitor) const;
+    void accept(WireResponseVisitor& visitor) const;
 };
 
 class StepMatchesResponse : public WireResponse {
@@ -60,7 +61,7 @@ public:
     StepMatchesResponse(const std::vector<StepMatch> & matchingSteps);
     const std::vector<StepMatch>& getMatchingSteps() const;
 
-    void accept(WireResponseVisitor *visitor) const;
+    void accept(WireResponseVisitor& visitor) const;
 };
 
 class SnippetTextResponse : public WireResponse {
@@ -72,16 +73,16 @@ public:
 
     const std::string getStepSnippet() const;
 
-    void accept(WireResponseVisitor *visitor) const;
+    void accept(WireResponseVisitor& visitor) const;
 };
 
 class WireResponseVisitor {
 public:
-    virtual void visit(const SuccessResponse *response) = 0;
-    virtual void visit(const FailureResponse *response) = 0;
-    virtual void visit(const PendingResponse *response) = 0;
-    virtual void visit(const StepMatchesResponse *response) = 0;
-    virtual void visit(const SnippetTextResponse *response) = 0;
+    virtual void visit(const SuccessResponse& response) = 0;
+    virtual void visit(const FailureResponse& response) = 0;
+    virtual void visit(const PendingResponse& response) = 0;
+    virtual void visit(const StepMatchesResponse& response) = 0;
+    virtual void visit(const SnippetTextResponse& response) = 0;
 
     virtual ~WireResponseVisitor() {};
 };
@@ -99,7 +100,7 @@ public:
      *
      * @return The command response (ownership passed to the caller)
      */
-    virtual WireResponse *run(CukeEngine *engine) const = 0;
+    virtual boost::shared_ptr<WireResponse> run(CukeEngine& engine) const = 0;
 
     virtual ~WireCommand() {};
 };
@@ -133,7 +134,7 @@ public:
      *
      * @throws WireMessageCodecException
      */
-    virtual WireCommand *decode(const std::string &request) const = 0;
+    virtual boost::shared_ptr<WireCommand> decode(const std::string &request) const = 0;
 
     /**
      * Encodes a response to wire format.
@@ -142,7 +143,7 @@ public:
      *
      * @return The encoded string
      */
-    virtual const std::string encode(const WireResponse *response) const = 0;
+    virtual const std::string encode(const WireResponse& response) const = 0;
 
     virtual ~WireMessageCodec() {};
 };
@@ -153,8 +154,8 @@ public:
 class JsonSpiritWireMessageCodec : public WireMessageCodec {
 public:
     JsonSpiritWireMessageCodec();
-    WireCommand *decode(const std::string &request) const;
-    const std::string encode(const WireResponse *response) const;
+    boost::shared_ptr<WireCommand> decode(const std::string &request) const;
+    const std::string encode(const WireResponse& response) const;
 };
 
 /**
@@ -163,11 +164,11 @@ public:
  */
 class WireProtocolHandler : public ProtocolHandler {
 private:
-    const WireMessageCodec *codec;
-    CukeEngine *engine;
+    const WireMessageCodec& codec;
+    CukeEngine& engine;
 
 public:
-    WireProtocolHandler(const WireMessageCodec *codec, CukeEngine *engine);
+    WireProtocolHandler(const WireMessageCodec& codec, CukeEngine& engine);
 
     std::string handle(const std::string &request) const;
 };

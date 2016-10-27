@@ -3,6 +3,9 @@
 #include <cucumber-cpp/internal/step/StepMacros.hpp>
 #include "../utils/CukeCommandsFixture.hpp"
 
+#include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
+
 using namespace cucumber::internal;
 
 using std::string;
@@ -23,8 +26,8 @@ protected:
     static const string arg_3_string_with_spaces;
 
 public:
-    static InvokeArgs *buildInvokeArgs() {
-        InvokeArgs *mixedArgs = new InvokeArgs;
+    static boost::shared_ptr<InvokeArgs> buildInvokeArgs() {
+        boost::shared_ptr<InvokeArgs> mixedArgs(boost::make_shared<InvokeArgs>());
         mixedArgs->addArg(toString(arg_0_int));
         mixedArgs->addArg(toString(arg_1_double));
         mixedArgs->addArg(toString(arg_2_string));

@@ -4,6 +4,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/unit_test_log_formatter.hpp>
 #include <boost/thread/once.hpp>
@@ -35,6 +36,7 @@ bool boost_test_init() {
     return true;
 }
 
+// Freed by Boost's unit test framework on exit
 static CukeBoostLogInterceptor *logInterceptor = 0;
 
 }

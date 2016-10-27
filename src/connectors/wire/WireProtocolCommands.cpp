@@ -1,30 +1,31 @@
 #include <cucumber-cpp/internal/connectors/wire/WireProtocolCommands.hpp>
+#include <boost/make_shared.hpp>
 
 namespace cucumber {
 namespace internal {
 
-ScenarioCommand::ScenarioCommand(const CukeEngine::tags_type *tags) :
+ScenarioCommand::ScenarioCommand(const CukeEngine::tags_type& tags) :
     tags(tags) {
 }
 
 
-BeginScenarioCommand::BeginScenarioCommand(const CukeEngine::tags_type *tags) :
+BeginScenarioCommand::BeginScenarioCommand(const CukeEngine::tags_type& tags) :
     ScenarioCommand(tags) {
 }
 
-WireResponse *BeginScenarioCommand::run(CukeEngine *engine) const {
-    engine->beginScenario(*tags);
-    return new SuccessResponse;
+boost::shared_ptr<WireResponse> BeginScenarioCommand::run(CukeEngine& engine) const {
+    engine.beginScenario(tags);
+    return boost::make_shared<SuccessResponse>();
 }
 
 
-EndScenarioCommand::EndScenarioCommand(const CukeEngine::tags_type *tags) :
+EndScenarioCommand::EndScenarioCommand(const CukeEngine::tags_type& tags) :
     ScenarioCommand(tags) {
 }
 
-WireResponse *EndScenarioCommand::run(CukeEngine *engine) const {
-    engine->endScenario(*tags);
-    return new SuccessResponse;
+boost::shared_ptr<WireResponse> EndScenarioCommand::run(CukeEngine& engine) const {
+    engine.endScenario(tags);
+    return boost::make_shared<SuccessResponse>();
 }
 
 
@@ -32,30 +33,30 @@ StepMatchesCommand::StepMatchesCommand(const std::string & stepName) :
     stepName(stepName) {
 }
 
-WireResponse *StepMatchesCommand::run(CukeEngine *engine) const {
-    std::vector<StepMatch> matchingSteps = engine->stepMatches(stepName);
-    return new StepMatchesResponse(matchingSteps);
+boost::shared_ptr<WireResponse> StepMatchesCommand::run(CukeEngine& engine) const {
+    std::vector<StepMatch> matchingSteps = engine.stepMatches(stepName);
+    return boost::make_shared<StepMatchesResponse>(matchingSteps);
 }
 
 
 InvokeCommand::InvokeCommand(const std::string & stepId,
-                             const CukeEngine::invoke_args_type *args,
-                             const CukeEngine::invoke_table_type * tableArg) :
+                             const CukeEngine::invoke_args_type& args,
+                             const CukeEngine::invoke_table_type& tableArg) :
     stepId(stepId),
     args(args),
     tableArg(tableArg) {
 }
 
-WireResponse *InvokeCommand::run(CukeEngine *engine) const {
+boost::shared_ptr<WireResponse> InvokeCommand::run(CukeEngine& engine) const {
     try {
-        engine->invokeStep(stepId, *args, *tableArg);
-        return new SuccessResponse;
+        engine.invokeStep(stepId, args, tableArg);
+        return boost::make_shared<SuccessResponse>();
     } catch (const InvokeFailureException& e) {
-        return new FailureResponse(e.getMessage(), e.getExceptionType());
+        return boost::make_shared<FailureResponse>(e.getMessage(), e.getExceptionType());
     } catch (const PendingStepException& e) {
-        return new PendingResponse(e.getMessage());
+        return boost::make_shared<PendingResponse>(e.getMessage());
     } catch (...) {
-        return new FailureResponse;
+        return boost::make_shared<FailureResponse>();
     }
 }
 
@@ -66,13 +67,13 @@ SnippetTextCommand::SnippetTextCommand(const std::string & keyword, const std::s
     multilineArgClass(multilineArgClass) {
 }
 
-WireResponse *SnippetTextCommand::run(CukeEngine *engine) const {
-    return new SnippetTextResponse(engine->snippetText(keyword, name, multilineArgClass));
+boost::shared_ptr<WireResponse> SnippetTextCommand::run(CukeEngine& engine) const {
+    return boost::make_shared<SnippetTextResponse>(engine.snippetText(keyword, name, multilineArgClass));
 }
 
 
-WireResponse *FailingCommand::run(CukeEngine* /*engine*/) const {
-    return new FailureResponse;
+boost::shared_ptr<WireResponse> FailingCommand::run(CukeEngine& /*engine*/) const {
+    return boost::make_shared<FailureResponse>();
 }
 
 }
