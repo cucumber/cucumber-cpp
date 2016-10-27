@@ -70,7 +70,7 @@ public:
     void execBeforeHooks(Scenario *scenario);
 
     void addAroundStepHook(const boost::shared_ptr<AroundStepHook>& aroundStepHook);
-    InvokeResult execStepChain(Scenario *scenario, const boost::shared_ptr<StepInfo>& stepInfo, const InvokeArgs *pArgs);
+    InvokeResult execStepChain(Scenario *scenario, const boost::shared_ptr<const StepInfo>& stepInfo, const InvokeArgs *pArgs);
 
     void addAfterStepHook(const boost::shared_ptr<AfterStepHook>& afterStepHook);
     void execAfterStepHooks(Scenario *scenario);
@@ -99,14 +99,14 @@ protected:
 
 class StepCallChain {
 public:
-    StepCallChain(Scenario *scenario, const boost::shared_ptr<StepInfo>& stepInfo, const InvokeArgs *pStepArgs, HookRegistrar::aroundhook_list_type &aroundHooks);
+    StepCallChain(Scenario *scenario, const boost::shared_ptr<const StepInfo>& stepInfo, const InvokeArgs *pStepArgs, HookRegistrar::aroundhook_list_type &aroundHooks);
     InvokeResult exec();
     void execNext();
 private:
     void execStep();
 
     Scenario *scenario;
-    boost::shared_ptr<StepInfo> stepInfo;
+    boost::shared_ptr<const StepInfo> stepInfo;
     const InvokeArgs *pStepArgs;
 
     HookRegistrar::aroundhook_list_type::iterator nextHook;

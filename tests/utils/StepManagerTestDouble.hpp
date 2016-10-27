@@ -10,7 +10,7 @@ namespace internal {
 class StepInfoNoOp : public StepInfo {
 public:
     StepInfoNoOp(const std::string &stepMatcher, const std::string source) : StepInfo(stepMatcher, source) {}
-    InvokeResult invokeStep(const InvokeArgs *pArgs) {
+    InvokeResult invokeStep(const InvokeArgs *pArgs) const {
         return InvokeResult::success();
     }
 };
@@ -24,7 +24,7 @@ public:
         description(description) {
     }
 
-    InvokeResult invokeStep(const InvokeArgs *pArgs) {
+    InvokeResult invokeStep(const InvokeArgs *pArgs) const {
         return InvokeResult::pending(description);
     }
 };
@@ -40,7 +40,7 @@ public:
         expectedSize(expectedSize) {
     }
 
-    InvokeResult invokeStep(const InvokeArgs *pArgs) {
+    InvokeResult invokeStep(const InvokeArgs *pArgs) const {
         if (pArgs->getTableArg().hashes().size() == expectedSize) {
             return InvokeResult::success();
         } else {
@@ -97,7 +97,7 @@ public:
     const step_id_type getStepId(const std::string &stepMatcher) {
         step_id_type id = 0;
         for (steps_type::const_iterator i = steps().begin(); i != steps().end(); ++i) {
-            const boost::shared_ptr<StepInfo>& stepInfo = i->second;
+            const boost::shared_ptr<const StepInfo>& stepInfo = i->second;
             if (stepInfo->regex.str() == stepMatcher) {
                 id = stepInfo->id;
                 break;

@@ -11,7 +11,7 @@ StepInfo::StepInfo(const std::string &stepMatcher, const std::string source) :
     id = ++currentId;
 }
 
-SingleStepMatch StepInfo::matches(const std::string &stepDescription) {
+SingleStepMatch StepInfo::matches(const std::string &stepDescription) const {
     SingleStepMatch stepMatch;
     shared_ptr<RegexMatch> regexMatch(regex.find(stepDescription));
     if (regexMatch->matches()) {
@@ -133,7 +133,7 @@ void StepManager::addStep(const boost::shared_ptr<StepInfo>& stepInfo) {
 MatchResult StepManager::stepMatches(const std::string &stepDescription) const {
     MatchResult matchResult;
     for (steps_type::iterator iter = steps().begin(); iter != steps().end(); ++iter) {
-        const boost::shared_ptr<StepInfo>& stepInfo = iter->second;
+        const boost::shared_ptr<const StepInfo>& stepInfo = iter->second;
         SingleStepMatch currentMatch = stepInfo->matches(stepDescription);
         if (currentMatch) {
             matchResult.addMatch(currentMatch);
@@ -142,7 +142,7 @@ MatchResult StepManager::stepMatches(const std::string &stepDescription) const {
     return matchResult;
 }
 
-const boost::shared_ptr<StepInfo>& StepManager::getStep(step_id_type id) {
+const boost::shared_ptr<const StepInfo>& StepManager::getStep(step_id_type id) {
     return steps()[id];
 }
 

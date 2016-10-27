@@ -13,7 +13,7 @@ public:
         result(result) {
     }
 
-    InvokeResult invokeStep(const InvokeArgs *pArgs) {
+    InvokeResult invokeStep(const InvokeArgs *pArgs) const {
         latestArgsPtr = pArgs;
         (*markersPtr) << "S";
         return result;
@@ -24,7 +24,7 @@ public:
     }
 
 private:
-    const InvokeArgs *latestArgsPtr;
+    mutable const InvokeArgs *latestArgsPtr;
     std::stringstream *markersPtr;
     const InvokeResult result;
 };

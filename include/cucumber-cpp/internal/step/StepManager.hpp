@@ -100,8 +100,8 @@ public:
 class StepInfo {
 public:
     StepInfo(const std::string &stepMatcher, const std::string source);
-    SingleStepMatch matches(const std::string &stepDescription);
-    virtual InvokeResult invokeStep(const InvokeArgs * pArgs) = 0;
+    SingleStepMatch matches(const std::string &stepDescription) const;
+    virtual InvokeResult invokeStep(const InvokeArgs * pArgs) const = 0;
 
     step_id_type id;
     Regex regex;
@@ -142,20 +142,20 @@ class StepInvoker : public StepInfo {
 public:
     StepInvoker(const std::string &stepMatcher, const std::string source);
 
-    InvokeResult invokeStep(const InvokeArgs *args);
+    InvokeResult invokeStep(const InvokeArgs *args) const;
 };
 
 
 class StepManager {
 protected:
-    typedef std::map<step_id_type, boost::shared_ptr<StepInfo> > steps_type;
+    typedef std::map<step_id_type, boost::shared_ptr<const StepInfo> > steps_type;
 
 public:
     virtual ~StepManager();
 
     void addStep(const boost::shared_ptr<StepInfo>& stepInfo);
     MatchResult stepMatches(const std::string &stepDescription) const;
-    const boost::shared_ptr<StepInfo>& getStep(step_id_type id);
+    const boost::shared_ptr<const StepInfo>& getStep(step_id_type id);
 protected:
     steps_type& steps() const;
 };
@@ -228,7 +228,7 @@ StepInvoker<T>::StepInvoker(const std::string &stepMatcher, const std::string so
 }
 
 template<class T>
-InvokeResult StepInvoker<T>::invokeStep(const InvokeArgs *pArgs) {
+InvokeResult StepInvoker<T>::invokeStep(const InvokeArgs *pArgs) const {
     T t;
     return t.invoke(pArgs);
 }
