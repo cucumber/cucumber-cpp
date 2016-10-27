@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 
@@ -26,7 +27,7 @@ protected:
 
 template<class T>
 weak_ptr<T> ContextManager::addContext() {
-    shared_ptr<T> shared(new T);
+    shared_ptr<T> shared(boost::make_shared<T>());
     contexts.push_back(shared);
     return weak_ptr<T> (shared);
 }

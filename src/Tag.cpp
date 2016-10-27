@@ -1,4 +1,5 @@
 #include <cucumber-cpp/internal/hook/Tag.hpp>
+#include <boost/make_shared.hpp>
 
 namespace cucumber {
 namespace internal {
@@ -13,8 +14,7 @@ AndTagExpression::AndTagExpression(const std::string &csvTagNotation) {
     const RegexMatch::submatches_type submatches = match->getSubmatches();
     for (RegexMatch::submatches_type::const_iterator i = submatches.begin(); i != submatches.end(); ++i) {
         const std::string orCsvTagNotation = i->value;
-        shared_ptr<OrTagExpression> orExpression(new OrTagExpression(orCsvTagNotation));
-        orExpressions.push_back(orExpression);
+        orExpressions.push_back(boost::make_shared<OrTagExpression>(orCsvTagNotation));
     }
 }
 

@@ -5,6 +5,7 @@
 
 #include "CukeCommandsFixture.hpp"
 
+#include <boost/make_shared.hpp>
 #include <sstream>
 
 using namespace cucumber::internal;
@@ -67,7 +68,7 @@ protected:
     shared_ptr<Scenario> emptyScenario;
 
     HookRegistrationTest() {
-        emptyScenario = shared_ptr<Scenario>(new Scenario(new TagExpression::tag_list));
+        emptyScenario = boost::make_shared<Scenario>(new TagExpression::tag_list);
     }
 
     Scenario *getEmptyScenario() {

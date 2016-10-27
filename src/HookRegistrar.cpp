@@ -1,5 +1,6 @@
 #include <cucumber-cpp/internal/hook/HookRegistrar.hpp>
 #include <cucumber-cpp/internal/CukeCommands.hpp>
+#include <boost/make_shared.hpp>
 
 namespace cucumber {
 namespace internal {
@@ -16,7 +17,7 @@ void Hook::skipHook() {
 }
 
 void Hook::setTags(const std::string &csvTagNotation) {
-    tagExpression = shared_ptr<TagExpression>(new AndTagExpression(csvTagNotation));
+    tagExpression = boost::make_shared<AndTagExpression>(csvTagNotation);
 }
 
 bool Hook::tagsMatch(Scenario *scenario) {

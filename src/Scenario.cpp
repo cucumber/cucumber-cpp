@@ -1,4 +1,5 @@
 #include <cucumber-cpp/internal/Scenario.hpp>
+#include <boost/make_shared.hpp>
 
 namespace cucumber {
 namespace internal {
@@ -6,7 +7,7 @@ namespace internal {
 Scenario::Scenario(const TagExpression::tag_list *pTags) :
     pTags(pTags) {
     if (!pTags) {
-        this->pTags = shared_ptr<const TagExpression::tag_list>(new TagExpression::tag_list);
+        this->pTags = boost::make_shared<const TagExpression::tag_list>();
     }
 };
 

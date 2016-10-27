@@ -4,6 +4,7 @@
 #include <json_spirit/json_spirit_reader_template.h>
 #include <json_spirit/json_spirit_writer_template.h>
 
+#include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/assign/list_of.hpp>
 #include <boost/foreach.hpp>
@@ -195,12 +196,13 @@ public:
     }
 };
 
-static std::map<std::string, boost::shared_ptr<CommandDecoder> > commandDecodersMap = boost::assign::map_list_of
-    ("begin_scenario", boost::shared_ptr<CommandDecoder> (new BeginScenarioDecoder))
-    ("end_scenario", boost::shared_ptr<CommandDecoder> (new EndScenarioDecoder))
-    ("step_matches", boost::shared_ptr<CommandDecoder> (new StepMatchesDecoder))
-    ("invoke", boost::shared_ptr<CommandDecoder> (new InvokeDecoder))
-    ("snippet_text", boost::shared_ptr<CommandDecoder> (new SnippetTextDecoder));
+static std::map<std::string, boost::shared_ptr<CommandDecoder> > commandDecodersMap =
+  boost::assign::map_list_of<std::string, boost::shared_ptr<CommandDecoder> >
+    ("begin_scenario", boost::make_shared< BeginScenarioDecoder >())
+    ("end_scenario"  , boost::make_shared< EndScenarioDecoder   >())
+    ("step_matches"  , boost::make_shared< StepMatchesDecoder   >())
+    ("invoke"        , boost::make_shared< InvokeDecoder        >())
+    ("snippet_text"  , boost::make_shared< SnippetTextDecoder   >());
 
 
 JsonSpiritWireMessageCodec::JsonSpiritWireMessageCodec() {};

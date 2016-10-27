@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <boost/algorithm/string.hpp>
+#include <boost/make_shared.hpp>
 
 namespace cucumber {
 namespace internal {
@@ -23,7 +24,7 @@ void CukeCommands::beginScenario(const TagExpression::tag_list *tags) {
         hookRegistrar.execBeforeAllHooks();
     }
 
-    currentScenario = shared_ptr<Scenario>(new Scenario(tags));
+    currentScenario = boost::make_shared<Scenario>(tags);
     hookRegistrar.execBeforeHooks(currentScenario.get());
 }
 
