@@ -44,8 +44,8 @@ void HookRegistrar::addBeforeHook(BeforeHook *beforeHook) {
 }
 
 HookRegistrar::hook_list_type& HookRegistrar::beforeHooks() {
-    static hook_list_type *beforeHooks = new hook_list_type();
-    return *beforeHooks;
+    static hook_list_type beforeHooks;
+    return beforeHooks;
 }
 
 void HookRegistrar::execBeforeHooks(Scenario *scenario) {
@@ -58,8 +58,8 @@ void HookRegistrar::addAroundStepHook(AroundStepHook *aroundStepHook) {
 }
 
 HookRegistrar::aroundhook_list_type& HookRegistrar::aroundStepHooks() {
-    static aroundhook_list_type *aroundStepHooks = new aroundhook_list_type();
-    return *aroundStepHooks;
+    static aroundhook_list_type aroundStepHooks;
+    return aroundStepHooks;
 }
 
 InvokeResult HookRegistrar::execStepChain(Scenario *scenario, StepInfo *stepInfo, const InvokeArgs *pArgs) {
@@ -72,8 +72,8 @@ void HookRegistrar::addAfterStepHook(AfterStepHook *afterStepHook) {
 }
 
 HookRegistrar::hook_list_type& HookRegistrar::afterStepHooks() {
-    static hook_list_type *afterStepHooks = new hook_list_type();
-    return *afterStepHooks;
+    static hook_list_type afterStepHooks;
+    return afterStepHooks;
 }
 
 void HookRegistrar::execAfterStepHooks(Scenario *scenario) {
@@ -86,8 +86,8 @@ void HookRegistrar::addAfterHook(AfterHook *afterHook) {
 }
 
 HookRegistrar::hook_list_type& HookRegistrar::afterHooks() {
-    static hook_list_type *afterHooks = new hook_list_type();
-    return *afterHooks;
+    static hook_list_type afterHooks;
+    return afterHooks;
 }
 
 void HookRegistrar::execAfterHooks(Scenario *scenario) {
@@ -102,8 +102,8 @@ void HookRegistrar::execHooks(HookRegistrar::hook_list_type &hookList, Scenario 
 }
 
 HookRegistrar::hook_list_type& HookRegistrar::beforeAllHooks() {
-    static hook_list_type *beforeAllHooks = new hook_list_type();
-    return *beforeAllHooks;
+    static hook_list_type beforeAllHooks;
+    return beforeAllHooks;
 }
 
 void HookRegistrar::addBeforeAllHook(BeforeAllHook *beforeAllHook) {
@@ -115,8 +115,8 @@ void HookRegistrar::execBeforeAllHooks() {
 }
 
 HookRegistrar::hook_list_type& HookRegistrar::afterAllHooks() {
-    static hook_list_type *afterAllHooks = new hook_list_type();
-    return *afterAllHooks;
+    static hook_list_type afterAllHooks;
+    return afterAllHooks;
 }
 
 void HookRegistrar::addAfterAllHook(AfterAllHook *afterAllHook) {

@@ -151,8 +151,8 @@ StepInfo *StepManager::getStep(step_id_type id) {
  * http://www.parashift.com/c++-faq-lite/ctors.html#faq-10.12
  */
 StepManager::steps_type& StepManager::steps() const {
-    static steps_type *steps = new steps_type();
-    return *steps;
+    static steps_type steps;
+    return steps;
 }
 
 
