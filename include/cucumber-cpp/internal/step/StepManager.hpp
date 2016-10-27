@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include <boost/enable_shared_from_this.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 using boost::shared_ptr;
@@ -25,13 +26,9 @@ class SingleStepMatch {
 public:
     typedef RegexMatch::submatches_type submatches_type;
 
-    SingleStepMatch();
-    SingleStepMatch(const SingleStepMatch &match);
-
-    SingleStepMatch & operator =(const SingleStepMatch &match);
     operator const void *() const;
 
-    const StepInfo *stepInfo;
+    boost::shared_ptr<const StepInfo> stepInfo;
     submatches_type submatches;
 };
 
@@ -97,7 +94,7 @@ public:
 };
 
 
-class StepInfo {
+class StepInfo : public boost::enable_shared_from_this<StepInfo> {
 public:
     StepInfo(const std::string &stepMatcher, const std::string source);
     SingleStepMatch matches(const std::string &stepDescription) const;

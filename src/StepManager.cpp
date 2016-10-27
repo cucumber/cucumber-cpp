@@ -15,29 +15,14 @@ SingleStepMatch StepInfo::matches(const std::string &stepDescription) const {
     SingleStepMatch stepMatch;
     shared_ptr<RegexMatch> regexMatch(regex.find(stepDescription));
     if (regexMatch->matches()) {
-        stepMatch.stepInfo = this;
+        stepMatch.stepInfo = shared_from_this();
         stepMatch.submatches = regexMatch->getSubmatches();
     }
     return stepMatch;
 }
 
-SingleStepMatch::SingleStepMatch() :
-    stepInfo(0) {
-}
-
-SingleStepMatch::SingleStepMatch(const SingleStepMatch &match) :
-    stepInfo(match.stepInfo),
-    submatches(match.submatches) {
-}
-
-SingleStepMatch & SingleStepMatch::operator =(const SingleStepMatch &match) {
-    stepInfo = match.stepInfo;
-    submatches = match.submatches;
-    return *this;
-}
-
 SingleStepMatch::operator const void *() const {
-    return stepInfo;
+    return stepInfo.get();
 }
 
 MatchResult::operator void *() {
