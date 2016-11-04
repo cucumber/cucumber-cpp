@@ -105,6 +105,9 @@ public:
     step_id_type id;
     Regex regex;
     const std::string source;
+private:
+    StepInfo& operator=(const StepInfo& other);
+    
 };
 
 
