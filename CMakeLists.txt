@@ -182,6 +182,13 @@ if(VALGRIND_TESTS)
 endif()
 
 #
+# cgreen
+#
+if(NOT CUKE_DISABLE_CGREEN)
+    find_package(cgreen)
+endif()
+
+#
 # Cucumber-Cpp
 #
 

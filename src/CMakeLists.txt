@@ -26,6 +26,11 @@ if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
     list(APPEND CUKE_SOURCES drivers/BoostDriver.cpp)
 endif()
 
+if(cgreen_FOUND)
+    include_directories(${CGREEN_INCLUDE_DIRS})
+    list(APPEND CUKE_SOURCES drivers/CgreenDriver.cpp)
+endif()
+
 if(CMAKE_EXTRA_GENERATOR OR MSVC_IDE)
     message(STATUS "Adding header files to project")
     file(GLOB_RECURSE CUKE_HEADERS "${CUKE_INCLUDE_DIR}/cucumber-cpp/*.hpp")

@@ -31,6 +31,8 @@ It relies on a few libraries:
   Optional library for Boost Test driver: *test*.
 * [GTest](http://code.google.com/p/googletest/) 1.6 or later.
   Optional for the GTest driver. By default downloaded and built by CMake.
+* [Cgreen](https://github.com/cgreen-devs/cgreen) 1.1.0 or later.
+  Optional for the Cgreen driver.
 * [GMock](http://code.google.com/p/googlemock/) 1.6 or later.
   Optional for the internal test suite. By default downloaded and built by CMake.
 * [Qt 4 or 5](http://qt-project.org/). Optional for the CalcQt example.

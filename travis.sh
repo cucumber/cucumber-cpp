@@ -18,7 +18,7 @@ startXvfb () {
     else
         sudo Xvfb $DISPLAY -screen 0 640x480x8 -nolisten tcp > /dev/null 2>&1 &
         XVFBPID=$!
-        sleep 5 
+        sleep 5
     fi
 }
 
@@ -92,4 +92,13 @@ if [ -f "${TEST}" ]; then
     wait %
 fi
 
-killXvfb
+if [ -n "${XVFBPID:-}" ]; then
+    kill $XVFBPID
+    wait
+fi
+
+CGREEN=build/examples/FizzBuzz/FizzBuzzSteps
+if [ -f $CGREEN ]; then
+    $CGREEN >/dev/null &
+    cucumber examples/FizzBuzz
+fi

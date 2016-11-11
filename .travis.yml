@@ -11,8 +11,8 @@ env:
   global:
     - DISPLAY=:99
   matrix:
-    - GMOCK_VER=1.8.0 
-    - GMOCK_VER=1.7.0 
+    - GMOCK_VER=1.8.0
+    - GMOCK_VER=1.7.0
     - GMOCK_PATH=/usr/src/gmock #1.6.0 from ubuntu trusty repo
 matrix:
   include:
@@ -29,13 +29,18 @@ matrix:
       compiler: clang
       env: GMOCK_VER=1.7.0
 
+before_script:
+  - git clone https://github.com/cgreen-devs/cgreen.git
+  - mkdir cgreen/build && pushd cgreen/build && cmake .. && make && sudo make install && popd
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo ldconfig; fi
+
 addons:
   apt:
     packages:
-      - libboost-thread-dev 
+      - libboost-thread-dev
       - libboost-system-dev
       - libboost-regex-dev
-      - libboost-date-time-dev 
+      - libboost-date-time-dev
       - libboost-filesystem-dev
       - libboost-program-options-dev
       - libboost-test-dev
