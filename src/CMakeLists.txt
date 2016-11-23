@@ -13,7 +13,7 @@ set(CUKE_SOURCES
     connectors/wire/WireServer.cpp
     connectors/wire/WireProtocol.cpp
     connectors/wire/WireProtocolCommands.cpp
-)
+    )
 
 if(GTEST_FOUND)
     include_directories(${GTEST_INCLUDE_DIRS})
@@ -35,3 +35,12 @@ endif()
 
 add_library(cucumber-cpp-nomain STATIC ${CUKE_SOURCES})
 add_library(cucumber-cpp STATIC ${CUKE_SOURCES} main.cpp)
+
+if(MINGW)
+    target_link_libraries(cucumber-cpp-nomain
+        ws2_32
+        )
+    target_link_libraries(cucumber-cpp
+        ws2_32
+        )
+endif(MINGW)
