@@ -18,6 +18,11 @@ void SocketServer::listen(const port_type port) {
     acceptor.listen(1);
 }
 
+SocketServer::port_type SocketServer::listenPort() const {
+  const tcp::endpoint ep(acceptor.local_endpoint());
+  return ep.port();
+}
+
 void SocketServer::acceptOnce() {
     tcp::iostream stream;
     acceptor.accept(*stream.rdbuf());

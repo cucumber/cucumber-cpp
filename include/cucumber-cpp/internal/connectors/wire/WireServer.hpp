@@ -34,6 +34,14 @@ public:
     void listen(const port_type port);
 
     /**
+     * Port number that this server is currently listening on.
+     *
+     * @throw boost::system::system_error when not listening on any TCP port or
+     *        the port cannot be determined.
+     */
+    port_type listenPort() const;
+
+    /**
      * Accept one connection
      */
     void acceptOnce();
