@@ -54,14 +54,13 @@ public:
 class SocketServerTest : public Test {
 
 protected:
-    static const unsigned short PORT = 54321;
     StrictMock<MockProtocolHandler> protocolHandler;
     SocketServer *server;
     thread *serverThread;
 
     virtual void SetUp() {
         server = new SocketServer(&protocolHandler);
-        server->listen(PORT);
+        server->listen(0);
         serverThread = new thread(bind(&SocketServer::acceptOnce, server));
     }
 
@@ -79,7 +78,7 @@ protected:
 
 TEST_F(SocketServerTest, exitsOnFirstConnectionClosed) {
     // given
-    tcp::iostream client(tcp::endpoint(tcp::v4(), PORT));
+    tcp::iostream client(tcp::endpoint(tcp::v4(), server->listenPort()));
     ASSERT_THAT(client, IsConnected());
 
     // when
@@ -91,11 +90,11 @@ TEST_F(SocketServerTest, exitsOnFirstConnectionClosed) {
 
 TEST_F(SocketServerTest, moreThanOneClientCanConnect) {
     // given
-    tcp::iostream client1(tcp::endpoint(tcp::v4(), PORT));
+    tcp::iostream client1(tcp::endpoint(tcp::v4(), server->listenPort()));
     ASSERT_THAT(client1, IsConnected());
 
     // when
-    tcp::iostream client2(tcp::endpoint(tcp::v4(), PORT));
+    tcp::iostream client2(tcp::endpoint(tcp::v4(), server->listenPort()));
 
     //then
     ASSERT_THAT(client2, IsConnected());
@@ -110,7 +109,7 @@ TEST_F(SocketServerTest, receiveAndSendsSingleLineMassages) {
     }
 
     // given
-    tcp::iostream client(tcp::endpoint(tcp::v4(), PORT));
+    tcp::iostream client(tcp::endpoint(tcp::v4(), server->listenPort()));
     ASSERT_THAT(client, IsConnected());
 
     // when

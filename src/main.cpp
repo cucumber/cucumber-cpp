@@ -14,7 +14,7 @@ void acceptWireProtocol(int port, bool verbose) {
     SocketServer server(&protocolHandler);
     server.listen(port);
     if (verbose)
-        std::clog << "Listening on port " << port << std::endl;
+        std::clog << "Listening on port " << server.listenPort() << std::endl;
     server.acceptOnce();
 }
 
@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
     optionDescription.add_options()
         ("help,h", "help for cucumber-cpp")
         ("verbose,v", "verbose output")
-        ("port,p", value<int>(), "listening port of wireserver")
+        ("port,p", value<int>(), "listening port of wireserver, use '0' (zero) to select an ephemeral port")
         ;
     boost::program_options::variables_map optionVariableMap;
     boost::program_options::store(boost::program_options::parse_command_line(argc, argv, optionDescription), optionVariableMap);

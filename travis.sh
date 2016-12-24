@@ -18,8 +18,10 @@ BOOST=build/examples/Calc/BoostCalculatorSteps
 if [ -f $GTEST ]; then
     $GTEST >/dev/null &
     cucumber examples/Calc
+    wait
 fi
 if [ -f $BOOST ]; then
     $BOOST >/dev/null &
     cucumber examples/Calc
+    wait
 fi
