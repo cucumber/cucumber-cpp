@@ -50,9 +50,9 @@ WireResponse *InvokeCommand::run(CukeEngine *engine) const {
     try {
         engine->invokeStep(stepId, *args, *tableArg);
         return new SuccessResponse;
-    } catch (InvokeFailureException e) {
+    } catch (const InvokeFailureException& e) {
         return new FailureResponse(e.getMessage(), e.getExceptionType());
-    } catch (PendingStepException e) {
+    } catch (const PendingStepException& e) {
         return new PendingResponse(e.getMessage());
     } catch (...) {
         return new FailureResponse;
