@@ -3,6 +3,7 @@
 #include <cucumber-cpp/internal/connectors/wire/WireProtocol.hpp>
 #include <iostream>
 #include <boost/program_options.hpp>
+#include <boost/scoped_ptr.hpp>
 
 namespace {
 
@@ -11,22 +12,26 @@ void acceptWireProtocol(int port, const std::string& unixPath, bool verbose) {
     CukeEngineImpl cukeEngine;
     JsonSpiritWireMessageCodec wireCodec;
     WireProtocolHandler protocolHandler(&wireCodec, &cukeEngine);
-    SocketServer server(&protocolHandler);
+    boost::scoped_ptr<SocketServer> server;
 #if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
     if (!unixPath.empty())
     {
-        server.listen(unixPath);
+        UnixSocketServer* const unixServer = new UnixSocketServer(&protocolHandler);
+        server.reset(unixServer);
+        unixServer->listen(unixPath);
         if (verbose)
-            std::clog << "Listening on socket " << unixPath << std::endl;
+            std::clog << "Listening on socket " << unixServer->listenEndpoint() << std::endl;
     }
     else
 #endif
     {
-        server.listen(port);
+        TCPSocketServer* const tcpServer = new TCPSocketServer(&protocolHandler);
+        server.reset(tcpServer);
+        tcpServer->listen(port);
         if (verbose)
-            std::clog << "Listening on port " << server.listenPort() << std::endl;
+            std::clog << "Listening on port " << tcpServer->listenEndpoint() << std::endl;
     }
-    server.acceptOnce();
+    server->acceptOnce();
 }
 
 }

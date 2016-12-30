@@ -6,8 +6,6 @@
 #include <string>
 
 #include <boost/asio.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/variant.hpp>
 
 namespace cucumber {
 namespace internal {
@@ -24,6 +22,33 @@ using namespace boost::asio::local;
 class SocketServer {
 public:
     /**
+      * Constructor for DI
+      */
+    SocketServer(const ProtocolHandler *protocolHandler);
+
+    /**
+     * Accept one connection
+     */
+    virtual void acceptOnce() = 0;
+
+protected:
+    const ProtocolHandler *protocolHandler;
+    io_service ios;
+
+    template <typename Protocol, typename Service>
+    void doListen(basic_socket_acceptor<Protocol, Service>& acceptor,
+            const typename Protocol::endpoint& endpoint);
+    template <typename Protocol, typename Service>
+    void doAcceptOnce(basic_socket_acceptor<Protocol, Service>& acceptor);
+    void processStream(std::iostream &stream);
+};
+
+/**
+ * Socket server that calls a protocol handler line by line
+ */
+class TCPSocketServer : public SocketServer {
+public:
+    /**
      * Type definition for TCP port
      */
     typedef unsigned short port_type;
@@ -31,50 +56,60 @@ public:
     /**
       * Constructor for DI
       */
-    SocketServer(const ProtocolHandler *protocolHandler);
+    TCPSocketServer(const ProtocolHandler *protocolHandler);
 
     /**
      * Bind and listen to a TCP port
      */
     void listen(const port_type port);
 
-#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
     /**
-     * Bind and listen on a local strea
+     * Endpoint (IP address and port number) that this server is currently
+     * listening on.
+     *
+     * @throw boost::system::system_error when not listening on any socket or
+     *        the endpoint cannot be determined.
+     */
+    tcp::endpoint listenEndpoint() const;
+
+    virtual void acceptOnce();
+
+private:
+    tcp::acceptor acceptor;
+};
+
+#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
+/**
+ * Socket server that calls a protocol handler line by line
+ */
+class UnixSocketServer : public SocketServer {
+public:
+    /**
+      * Constructor for DI
+      */
+    UnixSocketServer(const ProtocolHandler *protocolHandler);
+
+    /**
+     * Bind and listen on a local stream socket
      */
     void listen(const std::string& unixPath);
-#endif
 
     /**
      * Port number that this server is currently listening on.
      *
-     * @throw boost::system::system_error when not listening on any TCP port or
-     *        the port cannot be determined.
+     * @throw boost::system::system_error when not listening on any socket or
+     *        the endpoint cannot be determined.
      */
-    port_type listenPort() const;
+    stream_protocol::endpoint listenEndpoint() const;
 
-    /**
-     * Accept one connection
-     */
-    void acceptOnce();
+    virtual void acceptOnce();
 
-    ~SocketServer(); // Forbid inheritance
+    ~UnixSocketServer();
 
 private:
-    void removeUnixSocket();
-
-private:
-    const ProtocolHandler *protocolHandler;
-    io_service ios;
-    boost::variant<
-        boost::blank
-      , boost::shared_ptr<tcp::acceptor>
-#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
-      , boost::shared_ptr<stream_protocol::acceptor>
-#endif
-      >  acceptor;
-    std::string socketToRemove;
+    stream_protocol::acceptor acceptor;
 };
+#endif
 
 }
 }

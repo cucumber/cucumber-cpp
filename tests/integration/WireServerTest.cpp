@@ -12,11 +12,14 @@
 using namespace cucumber::internal;
 using namespace boost::posix_time;
 using namespace boost::asio::ip;
+#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
 using namespace boost::asio::local;
+#endif
 using namespace std;
 using namespace testing;
 using boost::bind;
 using boost::thread;
+namespace fs = boost::filesystem;
 
 static const time_duration THREAD_TEST_TIMEOUT = milliseconds(4000);
 
@@ -58,56 +61,49 @@ class SocketServerTest : public Test {
 
 protected:
     StrictMock<MockProtocolHandler> protocolHandler;
-    SocketServer *server;
     thread *serverThread;
 
     virtual void SetUp() {
-        server = new SocketServer(&protocolHandler);
-        server->listen(0);
-        serverThread = new thread(bind(&SocketServer::acceptOnce, server));
+        SocketServer* server = createListeningServer();
+        ASSERT_TRUE(server);
+        serverThread = new thread(&SocketServer::acceptOnce, server);
     }
 
     virtual void TearDown() {
         if (serverThread) {
             serverThread->timed_join(THREAD_TEST_TIMEOUT);
             delete serverThread;
+            serverThread = NULL;
         }
-        if (server) {
-            delete server;
-        }
+        destroyListeningServer();
     }
+
+    virtual SocketServer* createListeningServer() = 0;
+    virtual void destroyListeningServer() = 0;
 };
 
-#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
-class UnixSocketServerTest : public SocketServerTest {
+class TCPSocketServerTest : public SocketServerTest {
 protected:
-    std::string SOCKET;
-
-    virtual void SetUp() {
-        // Get a free filename for the Unix socket
-        char socketAddr[] = "cucumber.wire.sock.XXXXXX";
-        const int fd = mkstemp(socketAddr);
-        ASSERT_NE(-1, fd);
-        SOCKET = socketAddr;
-        boost::filesystem::remove(SOCKET);
-        close(fd);
-
-        server = new SocketServer(&protocolHandler);
-        server->listen(SOCKET);
-        serverThread = new thread(bind(&SocketServer::acceptOnce, server));
+    TCPSocketServer *server;
+    TCPSocketServerTest() :
+        server(NULL) {
     }
 
-    virtual void TearDown() {
-        boost::filesystem::remove(SOCKET);
-        SocketServerTest::TearDown();
+    virtual TCPSocketServer* createListeningServer() {
+        server = new TCPSocketServer(&protocolHandler);
+        server->listen(0);
+        return server;
+    }
+
+    virtual void destroyListeningServer() {
+        delete server;
+        server = NULL;
     }
 };
-#endif
 
-
-TEST_F(SocketServerTest, exitsOnFirstConnectionClosed) {
+TEST_F(TCPSocketServerTest, exitsOnFirstConnectionClosed) {
     // given
-    tcp::iostream client(tcp::endpoint(tcp::v4(), server->listenPort()));
+    tcp::iostream client(server->listenEndpoint());
     ASSERT_THAT(client, IsConnected());
 
     // when
@@ -117,19 +113,19 @@ TEST_F(SocketServerTest, exitsOnFirstConnectionClosed) {
     EXPECT_THAT(serverThread, EventuallyTerminates());
 }
 
-TEST_F(SocketServerTest, moreThanOneClientCanConnect) {
+TEST_F(TCPSocketServerTest, moreThanOneClientCanConnect) {
     // given
-    tcp::iostream client1(tcp::endpoint(tcp::v4(), server->listenPort()));
+    tcp::iostream client1(server->listenEndpoint());
     ASSERT_THAT(client1, IsConnected());
 
     // when
-    tcp::iostream client2(tcp::endpoint(tcp::v4(), server->listenPort()));
+    tcp::iostream client2(server->listenEndpoint());
 
     //then
     ASSERT_THAT(client2, IsConnected());
 }
 
-TEST_F(SocketServerTest, receiveAndSendsSingleLineMassages) {
+TEST_F(TCPSocketServerTest, receiveAndSendsSingleLineMassages) {
     {
         InSequence s;
         EXPECT_CALL(protocolHandler, handle("12")).WillRepeatedly(Return("A"));
@@ -138,7 +134,7 @@ TEST_F(SocketServerTest, receiveAndSendsSingleLineMassages) {
     }
 
     // given
-    tcp::iostream client(tcp::endpoint(tcp::v4(), server->listenPort()));
+    tcp::iostream client(server->listenEndpoint());
     ASSERT_THAT(client, IsConnected());
 
     // when
@@ -152,12 +148,32 @@ TEST_F(SocketServerTest, receiveAndSendsSingleLineMassages) {
 }
 
 #if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
+class UnixSocketServerTest : public SocketServerTest {
+protected:
+    UnixSocketServer *server;
+    UnixSocketServerTest() :
+        server(NULL) {
+    }
+
+    virtual UnixSocketServer* createListeningServer() {
+        fs::path socket = fs::temp_directory_path() / fs::unique_path();
+        server = new UnixSocketServer(&protocolHandler);
+        server->listen(socket.string());
+        return server;
+    }
+
+    virtual void destroyListeningServer() {
+        delete server;
+        server = NULL;
+    }
+};
+
 TEST_F(UnixSocketServerTest, clientCanConnect) {
     // given
     stream_protocol::iostream client;
 
     // when
-    client.connect(stream_protocol::endpoint(SOCKET));
+    client.connect(server->listenEndpoint());
 
     // then
     EXPECT_THAT(client, IsConnected());

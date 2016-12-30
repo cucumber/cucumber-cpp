@@ -1,9 +1,5 @@
 #include <cucumber-cpp/internal/connectors/wire/WireServer.hpp>
 #include <boost/filesystem/operations.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/ref.hpp>
-#include <boost/variant/apply_visitor.hpp>
-#include <boost/variant/get.hpp>
 
 namespace cucumber {
 namespace internal {
@@ -18,90 +14,78 @@ SocketServer::SocketServer(const ProtocolHandler *protocolHandler) :
     ios() {
 }
 
-SocketServer::~SocketServer()
-{
-    removeUnixSocket();
+template <typename Protocol, typename Service>
+void SocketServer::doListen(basic_socket_acceptor<Protocol, Service>& acceptor,
+        const typename Protocol::endpoint& endpoint) {
+    if (acceptor.is_open())
+        throw boost::system::system_error(boost::asio::error::already_open);
+    acceptor.open(endpoint.protocol());
+    acceptor.set_option(typename Protocol::acceptor::reuse_address(true));
+    acceptor.bind(endpoint);
+    acceptor.listen(1);
 }
 
-void SocketServer::listen(const port_type port) {
-    removeUnixSocket();
-
-    boost::shared_ptr<tcp::acceptor> acceptor(
-            boost::make_shared<tcp::acceptor>(boost::ref(ios), tcp::endpoint(tcp::v4(), port)));
-    acceptor->set_option(tcp::no_delay(true));
-    acceptor->listen(1);
-    this->acceptor = acceptor;
+template <typename Protocol, typename Service>
+void SocketServer::doAcceptOnce(basic_socket_acceptor<Protocol, Service>& acceptor) {
+    typename Protocol::iostream stream;
+    acceptor.accept(*stream.rdbuf());
+    processStream(stream);
 }
 
-SocketServer::port_type SocketServer::listenPort() const {
-    const boost::shared_ptr<tcp::acceptor>* const acceptorPtr
-        = boost::get< const boost::shared_ptr<tcp::acceptor> >(&this->acceptor);
-    if (!acceptorPtr || !*acceptorPtr)
-    {
-        // Force an exception to get thrown if we're not listening on a TCP port.
-        // Will be something like "bad file descriptor" on *nix
-        io_service local_ios;
-        return tcp::acceptor(local_ios).local_endpoint().port();
+void SocketServer::processStream(std::iostream& stream) {
+    std::string request;
+    while (getline(stream, request)) {
+        stream << protocolHandler->handle(request) << std::endl << std::flush;
     }
+}
 
-    return (*acceptorPtr)->local_endpoint().port();
+TCPSocketServer::TCPSocketServer(const ProtocolHandler *protocolHandler) :
+    SocketServer(protocolHandler),
+    acceptor(ios) {
+}
+
+void TCPSocketServer::listen(const port_type port) {
+    doListen(acceptor, tcp::endpoint(tcp::v4(), port));
+    acceptor.set_option(tcp::no_delay(true));
+}
+
+tcp::endpoint TCPSocketServer::listenEndpoint() const {
+    return acceptor.local_endpoint();
+}
+
+void TCPSocketServer::acceptOnce() {
+    doAcceptOnce(acceptor);
 }
 
 #if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
-void SocketServer::listen(const std::string& unixPath) {
-    removeUnixSocket();
+UnixSocketServer::UnixSocketServer(const ProtocolHandler *protocolHandler) :
+    SocketServer(protocolHandler),
+    acceptor(ios) {
+}
 
+void UnixSocketServer::listen(const std::string& unixPath) {
     if (boost::filesystem::status(unixPath).type() == boost::filesystem::socket_file)
         boost::filesystem::remove(unixPath);
 
-    boost::shared_ptr<stream_protocol::acceptor> acceptor(
-            boost::make_shared<stream_protocol::acceptor>(boost::ref(ios), stream_protocol::endpoint(unixPath)));
-    socketToRemove = unixPath;
-    acceptor->listen(1);
-    this->acceptor = acceptor;
+    doListen(acceptor, stream_protocol::endpoint(unixPath));
+}
+
+stream_protocol::endpoint UnixSocketServer::listenEndpoint() const {
+    return acceptor.local_endpoint();
+}
+
+void UnixSocketServer::acceptOnce() {
+    doAcceptOnce(acceptor);
+}
+
+UnixSocketServer::~UnixSocketServer() {
+    if (!acceptor.is_open())
+        return;
+    std::string path = acceptor.local_endpoint().path();
+    // NOTE: this will fail if this path got deleted manually or represents an abstract-namespace socket
+    boost::filesystem::remove(path);
 }
 #endif
-
-void SocketServer::removeUnixSocket() {
-    if (!socketToRemove.empty())
-        boost::filesystem::remove(socketToRemove);
-    socketToRemove.clear();
-}
-
-namespace {
-    void processStream(std::iostream &stream, const ProtocolHandler *protocolHandler) {
-        std::string request;
-        while (getline(stream, request)) {
-            stream << protocolHandler->handle(request) << std::endl << std::flush;
-        }
-    }
-
-    class AcceptOnce
-    {
-    public:
-        typedef void result_type;
-
-        AcceptOnce(const ProtocolHandler *protocolHandler) :
-            protocolHandler(protocolHandler) {
-        }
-
-        void operator()(const boost::blank&) const {}
-
-        template <typename Protocol, typename Service>
-        void operator()(const boost::shared_ptr<basic_socket_acceptor<Protocol, Service> >& acceptor) const {
-            typename Protocol::iostream stream;
-            acceptor->accept(*stream.rdbuf());
-            processStream(stream, protocolHandler);
-        }
-
-    private:
-        const ProtocolHandler *protocolHandler;
-    };
-}
-
-void SocketServer::acceptOnce() {
-    boost::apply_visitor(AcceptOnce(protocolHandler), acceptor);
-}
 
 }
 }
