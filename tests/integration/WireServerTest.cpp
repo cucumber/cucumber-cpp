@@ -178,4 +178,18 @@ TEST_F(UnixSocketServerTest, clientCanConnect) {
     // then
     EXPECT_THAT(client, IsConnected());
 }
+
+TEST_F(UnixSocketServerTest, socketIsRemovedByDestructor) {
+    // given
+    stream_protocol::endpoint socketName = server->listenEndpoint();
+    ASSERT_TRUE(fs::exists(socketName.path()));
+
+    // when
+    stream_protocol::iostream client(server->listenEndpoint());
+    client.close();
+    TearDown();
+
+    // then
+    EXPECT_FALSE(fs::exists(socketName.path()));
+}
 #endif
