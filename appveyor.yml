@@ -26,6 +26,7 @@ build_script:
 - cmd: cmake --build build
 
 test_script:
+- cmd: set CTEST_OUTPUT_ON_FAILURE=ON
 - cmd: cmake --build build --target test
 - cmd: cmake --build build --target features
 
