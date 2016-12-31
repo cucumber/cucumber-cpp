@@ -2,6 +2,7 @@
 
 ### New Features
 
+* Add support for Unix sockets ([#126](https://github.com/cucumber/cucumber-cpp/pull/126) Giel van Schijndel)
 * Add support for using ephemeral ports ([#131](https://github.com/cucumber/cucumber-cpp/pull/131) Giel van Schijndel)
 * Removed CppSpec support ([#118](https://github.com/cucumber/cucumber-cpp/pull/118) Paolo Ambrosio)
 * Support for GoogleTest 1.8 ([#120](https://github.com/cucumber/cucumber-cpp/pull/120) Kamil Strzempowicz)

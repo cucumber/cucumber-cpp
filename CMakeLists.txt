@@ -40,7 +40,7 @@ else()
     set(BOOST_MIN_VERSION "1.40")
 endif()
 
-set(CUKE_CORE_BOOST_LIBS thread system regex date_time program_options)
+set(CUKE_CORE_BOOST_LIBS thread system regex date_time program_options filesystem)
 if(NOT CUKE_DISABLE_BOOST_TEST)
     set(CUKE_TEST_BOOST_LIBS unit_test_framework)
 endif()
@@ -72,7 +72,7 @@ endif()
 
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})
-    set(CUKE_EXTRA_LIBRARIES ${CUKE_EXTRA_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_REGEX_LIBRARY} ${Boost_DATE_TIME_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY})
+    set(CUKE_EXTRA_LIBRARIES ${CUKE_EXTRA_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_REGEX_LIBRARY} ${Boost_DATE_TIME_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost_FILESYSTEM_LIBRARY})
 endif()
 
 #
