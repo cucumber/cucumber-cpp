@@ -36,7 +36,8 @@ MATCHER(EventuallyTerminates, "") {
 }
 
 MATCHER_P(EventuallyReceives, value, "") {
-    tcp::iostream *stream = const_cast<tcp::iostream *>(&arg);
+    std::basic_iostream<char> *stream = const_cast<std::basic_iostream<char> *>(
+            static_cast<const std::basic_iostream<char> *>(&arg));
     std::string output;
 // FIXME It should not block
     (*stream) >> output;
@@ -65,7 +66,6 @@ protected:
 
     virtual void SetUp() {
         SocketServer* server = createListeningServer();
-        ASSERT_TRUE(server);
         serverThread = new thread(&SocketServer::acceptOnce, server);
     }
 
@@ -168,28 +168,31 @@ protected:
     }
 };
 
-TEST_F(UnixSocketServerTest, clientCanConnect) {
-    // given
-    stream_protocol::iostream client;
-
-    // when
-    client.connect(server->listenEndpoint());
-
-    // then
-    EXPECT_THAT(client, IsConnected());
-}
-
-TEST_F(UnixSocketServerTest, socketIsRemovedByDestructor) {
-    // given
+/*
+ * Tests are flickering on OSX when testing without traffic flowing.
+ *
+ * This full lifecycle test is not optimal but it should be enough
+ * given that the main difference between Unix and TCP is the socket
+ * created at startup and removed on shutdown.
+ */
+TEST_F(UnixSocketServerTest, fullLifecycle) {
     stream_protocol::endpoint socketName = server->listenEndpoint();
+    EXPECT_CALL(protocolHandler, handle("X")).WillRepeatedly(Return("Y"));
+
+    // socket created at startup
     ASSERT_TRUE(fs::exists(socketName.path()));
 
-    // when
-    stream_protocol::iostream client(server->listenEndpoint());
-    client.close();
-    TearDown();
+    // traffic flows
+    stream_protocol::iostream client(socketName);
+    client << "X" << endl << flush;
+    EXPECT_THAT(client, EventuallyReceives("Y"));
 
-    // then
+    // client disconnection terminates server
+    client.close();
+    EXPECT_THAT(serverThread, EventuallyTerminates());
+
+    // socket removed by destructor
+    TearDown();
     EXPECT_FALSE(fs::exists(socketName.path()));
 }
 #endif
