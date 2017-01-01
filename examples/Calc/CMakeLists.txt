@@ -5,7 +5,6 @@ include_directories(${CUKE_INCLUDE_DIRS} src)
 add_library(Calc src/Calculator)
 
 if(GMOCK_FOUND)
-    include_directories(${GTEST_INCLUDE_DIRS})
     add_executable(GTestCalculatorSteps features/step_definitions/GTestCalculatorSteps)
     target_link_libraries(GTestCalculatorSteps Calc ${CUKE_LIBRARIES} ${CUKE_GTEST_LIBRARIES})
 endif()

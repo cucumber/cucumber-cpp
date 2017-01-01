@@ -372,6 +372,9 @@ if(NOT (${GMOCK_LIBRARY_EXISTS} AND ${GTEST_LIBRARY_EXISTS}))
             mark_as_advanced(GMOCK_INCLUDE_DIR)
             mark_as_advanced(GTEST_INCLUDE_DIR)
         endif()
+
+        # Prevent CMake from complaining about these directories missing when the libgtest/libgmock targets get used as dependencies
+        file(MAKE_DIRECTORY ${GTEST_INCLUDE_DIR} ${GMOCK_INCLUDE_DIR})
     else()
         message(STATUS "Building Gmock / Gtest from dir ${GMOCK_SRC_DIR}")
 
@@ -466,8 +469,8 @@ set_target_properties(GMock::Main PROPERTIES
 
 if(GTEST_FOUND)
     set(GTEST_INCLUDE_DIRS ${GTEST_INCLUDE_DIR})
-    set(GTEST_LIBRARIES ${GTEST_LIBRARY})
-    set(GTEST_MAIN_LIBRARIES ${GTEST_MAIN_LIBRARY})
+    set(GTEST_LIBRARIES GTest::GTest)
+    set(GTEST_MAIN_LIBRARIES GTest::Main)
     set(GTEST_BOTH_LIBRARIES ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
     if(VERBOSE)
         message(STATUS "GTest includes: ${GTEST_INCLUDE_DIRS}")
@@ -477,8 +480,8 @@ endif()
 
 if(GMOCK_FOUND)
     set(GMOCK_INCLUDE_DIRS ${GMOCK_INCLUDE_DIR})
-    set(GMOCK_LIBRARIES ${GMOCK_LIBRARY})
-    set(GMOCK_MAIN_LIBRARIES ${GMOCK_MAIN_LIBRARY})
+    set(GMOCK_LIBRARIES GMock::GMock)
+    set(GMOCK_MAIN_LIBRARIES GMock::Main)
     set(GMOCK_BOTH_LIBRARIES ${GMOCK_LIBRARIES} ${GMOCK_MAIN_LIBRARIES})
     if(VERBOSE)
         message(STATUS "GMock includes: ${GMOCK_INCLUDE_DIRS}")

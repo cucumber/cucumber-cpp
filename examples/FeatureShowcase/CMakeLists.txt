@@ -3,8 +3,6 @@ project(FeatureShowcase)
 include_directories(${CUKE_INCLUDE_DIRS})
 
 if(GMOCK_FOUND)
-    include_directories(${GTEST_INCLUDE_DIRS})
-
     function(add_cucumber_executable)
         add_executable(FeatureShowcaseSteps ${ARGV})
         target_link_libraries(FeatureShowcaseSteps ${CUKE_LIBRARIES} ${CUKE_GTEST_LIBRARIES})
