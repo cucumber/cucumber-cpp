@@ -29,6 +29,10 @@ addons:
       - libboost-program-options-dev
       - libboost-test-dev
       - google-mock
+      - ninja-build
+
+before_install:
+  - if [[ "${TRAVIS_OS_NAME}" = "osx" ]]; then brew update && brew install ninja; fi
 
 script: ./travis.sh 
 
