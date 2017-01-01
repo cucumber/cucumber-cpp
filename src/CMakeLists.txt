@@ -15,22 +15,21 @@ set(CUKE_SOURCES
     connectors/wire/WireProtocolCommands.cpp
     )
 
-set(CUKE_DEP_LIBRARIES json_spirit.header)
-
 if(TARGET GTest::GTest)
-    list(APPEND CUKE_DEP_LIBRARIES GTest::GTest)
+    list(APPEND CUKE_EXTRA_PRIVATE_LIBRARIES GTest::GTest)
     list(APPEND CUKE_SOURCES drivers/GTestDriver.cpp)
 endif()
 
-if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
+if(TARGET Boost::unit_test_framework)
+    list(APPEND CUKE_EXTRA_PRIVATE_LIBRARIES Boost::unit_test_framework)
     list(APPEND CUKE_SOURCES drivers/BoostDriver.cpp)
 endif()
 
-if(Qt5TEST_FOUND)
+if(TARGET Qt::Test)
     qt5_wrap_cpp(MOC_FILE ../include/cucumber-cpp/internal/drivers/QtTestDriver.hpp)
     list(APPEND CUKE_SOURCES ${MOC_FILE})
     list(APPEND CUKE_SOURCES drivers/QtTestDriver.cpp)
-    list(APPEND CUKE_DEP_LIBRARIES Qt5::Test)
+    list(APPEND CUKE_EXTRA_PRIVATE_LIBRARIES Qt::Test)
 endif()
 
 if(CMAKE_EXTRA_GENERATOR OR MSVC_IDE)
@@ -45,9 +44,31 @@ endif()
 add_library(cucumber-cpp-nomain STATIC ${CUKE_SOURCES})
 add_library(cucumber-cpp STATIC ${CUKE_SOURCES} main.cpp)
 
-if(MINGW)
-    list(APPEND CUKE_DEP_LIBRARIES ws2_32)
-endif(MINGW)
+foreach(TARGET
+        cucumber-cpp-nomain
+        cucumber-cpp
+)
+    target_include_directories(${TARGET} PUBLIC ${CMAKE_SOURCE_DIR}/include)
+    target_link_libraries(${TARGET}
+        PUBLIC
+            Boost::boost
+            Boost::regex
+        PRIVATE
+            Boost::date_time
+            Boost::filesystem
+            Boost::thread
+            json_spirit.header
+            ${CUKE_EXTRA_PRIVATE_LIBRARIES}
+    )
+    if(MINGW)
+        target_link_libraries(${TARGET}
+            PRIVATE
+                ws2_32
+        )
+    endif(MINGW)
+endforeach()
 
-target_link_libraries(cucumber-cpp-nomain PRIVATE ${CUKE_DEP_LIBRARIES})
-target_link_libraries(cucumber-cpp PRIVATE ${CUKE_DEP_LIBRARIES})
+target_link_libraries(cucumber-cpp
+    PRIVATE
+        Boost::program_options
+)

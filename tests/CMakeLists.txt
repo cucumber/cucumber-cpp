@@ -2,7 +2,7 @@ function(cuke_add_driver_test TEST_FILE)
     get_filename_component(TEST_NAME ${TEST_FILE} NAME)
     message(STATUS "Adding " ${TEST_NAME})
     add_executable(${TEST_NAME} ${TEST_FILE}.cpp)
-    target_link_libraries(${TEST_NAME} cucumber-cpp-nomain ${CUKE_EXTRA_LIBRARIES} ${ARGN})
+    target_link_libraries(${TEST_NAME} PRIVATE cucumber-cpp-nomain ${ARGN})
     add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
 endfunction()
 
@@ -11,7 +11,7 @@ if(TARGET GMock::Main)
         get_filename_component(TEST_NAME ${TEST_FILE} NAME)
         message(STATUS "Adding " ${TEST_NAME})
         add_executable(${TEST_NAME} ${TEST_FILE}.cpp)
-        target_link_libraries(${TEST_NAME} cucumber-cpp-nomain ${CUKE_EXTRA_LIBRARIES} ${ARGN} GMock::Main)
+        target_link_libraries(${TEST_NAME} PRIVATE cucumber-cpp-nomain ${ARGN} GMock::Main)
         gtest_add_tests(${TEST_NAME} "" ${TEST_FILE}.cpp)
         # Run all tests in executable at once too. This ensures that the used fixtures get tested
         # properly too. Additionally gather the output in jUnit compatible output for CI.
@@ -46,12 +46,15 @@ if(TARGET GTest::Main)
     endif()
 endif()
 
-if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
-    cuke_add_driver_test(integration/drivers/BoostDriverTest ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+if(TARGET Boost::unit_test_framework)
+    cuke_add_driver_test(integration/drivers/BoostDriverTest Boost::unit_test_framework)
 endif()
 
-if(Qt5TEST_FOUND)
-    cuke_add_driver_test(integration/drivers/QtTestDriverTest ${QT_LIBRARIES})
+if((TARGET Qt::Test)
+    # FIXME: not including this in the test suite due to memory leak #190
+    AND (NOT VALGRIND_TESTS)
+    )
+    cuke_add_driver_test(integration/drivers/QtTestDriverTest Qt::Test)
 endif()
 
 cuke_add_driver_test(integration/drivers/GenericDriverTest)

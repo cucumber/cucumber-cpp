@@ -74,19 +74,74 @@ endif()
 if(CUKE_USE_STATIC_BOOST)
     set(Boost_USE_STATIC_LIBS ON)
     find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS ${CUKE_CORE_BOOST_LIBS} REQUIRED)
-
-    if(NOT MSVC)
-        find_package(Threads)
-        set(CUKE_EXTRA_LIBRARIES ${CUKE_EXTRA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
-    endif()
 else()
     set(CMAKE_CXX_FLAGS "-DBOOST_ALL_DYN_LINK ${CMAKE_CXX_FLAGS}")
     set(Boost_USE_STATIC_LIBS OFF)
     find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS ${CUKE_CORE_BOOST_LIBS} REQUIRED)
 endif()
 
-include_directories(${Boost_INCLUDE_DIRS})
-set(CUKE_EXTRA_LIBRARIES ${CUKE_EXTRA_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_REGEX_LIBRARY} ${Boost_DATE_TIME_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost_FILESYSTEM_LIBRARY})
+# Create import targets for CMake versions older than 3.5 (actually older FindBoost.cmake)
+if(Boost_USE_STATIC_LIBS)
+    set(LIBRARY_TYPE STATIC)
+else()
+    # Just because we don't ask for static doesn't mean we're not getting static
+    set(LIBRARY_TYPE UNKNOWN)
+endif()
+if(Boost_INCLUDE_DIRS AND NOT TARGET Boost::boost)
+    add_library(Boost::boost INTERFACE IMPORTED)
+    set_target_properties(Boost::boost PROPERTIES
+        "INTERFACE_INCLUDE_DIRECTORIES" "${Boost_INCLUDE_DIRS}")
+endif()
+if(Boost_THREAD_LIBRARY AND NOT TARGET Boost::thread)
+    find_package(Threads REQUIRED)
+    add_library(Boost::thread ${LIBRARY_TYPE} IMPORTED)
+    set_target_properties(Boost::thread PROPERTIES
+        "IMPORTED_LOCATION" "${Boost_THREAD_LIBRARY}"
+        "INTERFACE_LINK_LIBRARIES" "Threads::Threads;Boost::boost"
+    )
+endif()
+if(Boost_SYSTEM_LIBRARY AND NOT TARGET Boost::system)
+    add_library(Boost::system ${LIBRARY_TYPE} IMPORTED)
+    set_target_properties(Boost::system PROPERTIES
+        "IMPORTED_LOCATION" "${Boost_SYSTEM_LIBRARY}"
+        "INTERFACE_LINK_LIBRARIES" "Boost::boost"
+    )
+endif()
+if(Boost_FILESYSTEM_LIBRARY AND NOT TARGET Boost::filesystem)
+    add_library(Boost::filesystem ${LIBRARY_TYPE} IMPORTED)
+    set_target_properties(Boost::filesystem PROPERTIES
+        "IMPORTED_LOCATION" "${Boost_FILESYSTEM_LIBRARY}"
+        "INTERFACE_LINK_LIBRARIES" "Boost::system;Boost::boost"
+    )
+endif()
+if(Boost_REGEX_LIBRARY AND NOT TARGET Boost::regex)
+    add_library(Boost::regex ${LIBRARY_TYPE} IMPORTED)
+    set_target_properties(Boost::regex PROPERTIES
+        "IMPORTED_LOCATION" "${Boost_REGEX_LIBRARY}"
+        "INTERFACE_LINK_LIBRARIES" "Boost::boost"
+    )
+endif()
+if(Boost_DATE_TIME_LIBRARY AND NOT TARGET Boost::date_time)
+    add_library(Boost::date_time ${LIBRARY_TYPE} IMPORTED)
+    set_target_properties(Boost::date_time PROPERTIES
+        "IMPORTED_LOCATION" "${Boost_DATE_TIME_LIBRARY}"
+        "INTERFACE_LINK_LIBRARIES" "Boost::boost"
+    )
+endif()
+if(Boost_PROGRAM_OPTIONS_LIBRARY AND NOT TARGET Boost::program_options)
+    add_library(Boost::program_options ${LIBRARY_TYPE} IMPORTED)
+    set_target_properties(Boost::program_options PROPERTIES
+        "IMPORTED_LOCATION" "${Boost_PROGRAM_OPTIONS_LIBRARY}"
+        "INTERFACE_LINK_LIBRARIES" "Boost::boost"
+    )
+endif()
+if(Boost_UNIT_TEST_FRAMEWORK_LIBRARY AND NOT TARGET Boost::unit_test_framework)
+    add_library(Boost::unit_test_framework ${LIBRARY_TYPE} IMPORTED)
+    set_target_properties(Boost::unit_test_framework PROPERTIES
+        "IMPORTED_LOCATION" "${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}"
+        "INTERFACE_LINK_LIBRARIES" "Boost::boost"
+    )
+endif()
 
 #
 # GTest
@@ -106,20 +161,35 @@ endif()
 
 if(NOT CUKE_DISABLE_QT)
     find_package(Qt5Core)
+    find_package(Qt5Gui)
     find_package(Qt5Widgets)
     find_package(Qt5Test)
 
-    if(${Qt5Core_FOUND} AND ${Qt5Widgets_FOUND} AND ${Qt5Test_FOUND})
+    if(Qt5Core_FOUND AND Qt5Gui_FOUND AND Qt5Widgets_FOUND AND Qt5Test_FOUND)
         message(STATUS "Found Qt version: ${Qt5Core_VERSION_STRING}")
-        set(QT_LIBRARIES Qt5::Core Qt5::Widgets Qt5::Test)
-	if(NOT Qt5Core_VERSION_STRING VERSION_LESS 5.7 AND (NOT DEFINED CMAKE_CXX_STANDARD OR NOT CMAKE_CXX_STANDARD STREQUAL 98))
+        if(NOT Qt5Core_VERSION_STRING VERSION_LESS 5.7 AND (NOT DEFINED CMAKE_CXX_STANDARD OR NOT CMAKE_CXX_STANDARD STREQUAL 98))
             message(STATUS "C++11 is needed from Qt version 5.7.0, building with c++11 enabled")
             set(CMAKE_CXX_STANDARD 11)
         endif()
+        add_library(Qt::Core    INTERFACE IMPORTED)
+        add_library(Qt::Gui     INTERFACE IMPORTED)
+        add_library(Qt::Widgets INTERFACE IMPORTED)
+        add_library(Qt::Test    INTERFACE IMPORTED)
+        set_target_properties(Qt::Core    PROPERTIES INTERFACE_LINK_LIBRARIES Qt5::Core   )
+        set_target_properties(Qt::Gui     PROPERTIES INTERFACE_LINK_LIBRARIES Qt5::Gui    )
+        set_target_properties(Qt::Widgets PROPERTIES INTERFACE_LINK_LIBRARIES Qt5::Widgets)
+        set_target_properties(Qt::Test    PROPERTIES INTERFACE_LINK_LIBRARIES Qt5::Test   )
     else()
         find_package(Qt4 COMPONENTS QtCore QtGui QtTest)
         if(QT4_FOUND)
-            set(QT_LIBRARIES Qt4::QtCore Qt4::QtGui Qt4::QtTest)
+            add_library(Qt::Core    INTERFACE IMPORTED)
+            add_library(Qt::Gui     INTERFACE IMPORTED)
+            add_library(Qt::Widgets INTERFACE IMPORTED)
+            add_library(Qt::Test    INTERFACE IMPORTED)
+            set_target_properties(Qt::Core    PROPERTIES INTERFACE_LINK_LIBRARIES Qt4::QtCore)
+            set_target_properties(Qt::Gui     PROPERTIES INTERFACE_LINK_LIBRARIES Qt4::QtGui )
+            set_target_properties(Qt::Widgets PROPERTIES INTERFACE_LINK_LIBRARIES Qt4::QtGui )
+            set_target_properties(Qt::Test    PROPERTIES INTERFACE_LINK_LIBRARIES Qt4::QtTest)
             include(${QT_USE_FILE})
         endif()
     endif()
@@ -177,8 +247,6 @@ endif()
 #
 
 set(CUKE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${CUKE_INCLUDE_DIR})
-set(CUKE_LIBRARIES cucumber-cpp ${CUKE_EXTRA_LIBRARIES})
 add_subdirectory(3rdparty/json_spirit)
 add_subdirectory(src)
 
@@ -208,10 +276,10 @@ else()
         add_executable(e2e-steps EXCLUDE_FROM_ALL ${CUKE_DYNAMIC_CPP_STEPS})
         # Mark this file as generated so it isn't required at CMake generation time (it is necessary when the target gets built though)
         set_source_files_properties(${CUKE_DYNAMIC_CPP_STEPS} PROPERTIES GENERATED TRUE)
-        target_link_libraries(e2e-steps PRIVATE ${CUKE_LIBRARIES})
+        target_link_libraries(e2e-steps PRIVATE cucumber-cpp)
         #Boost test lib required for boost specific scenario "Predicate Message"
-        if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
-            target_link_libraries(e2e-steps PRIVATE ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+        if(TARGET Boost::unit_test_framework)
+            target_link_libraries(e2e-steps PRIVATE Boost::unit_test_framework)
         else()
             set(CUKE_E2E_TAGS "--tags ~@boost")
         endif()
@@ -242,7 +310,6 @@ else()
                 ${CUKE_E2E_TAGS}
                 ${ARGN}
                 ${CUKE_FEATURES_DIR}
-                DEPENDS cucumber-cpp
                 ${USES_TERMINAL}
                 )
         endfunction(add_feature_target)
