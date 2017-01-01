@@ -460,6 +460,17 @@ set_target_properties(GMock::GMock PROPERTIES
 if(GMOCK_INCLUDE_DIR)
     set_target_properties(GMock::GMock PROPERTIES
         INTERFACE_INCLUDE_DIRECTORIES "${GMOCK_INCLUDE_DIR}")
+    if(GMOCK_VER VERSION_LESS "1.7")
+        # GMock 1.6 still has GTest as an external link-time dependency,
+        # so just specify it on the link interface.
+        set_property(TARGET GMock::GMock APPEND PROPERTY
+            INTERFACE_LINK_LIBRARIES GTest::GTest)
+    elseif(GTEST_INCLUDE_DIR)
+        # GMock 1.7 and beyond doesn't have it as a link-time dependency anymore,
+        # so merge it's compile-time interface (include dirs) with ours.
+        set_property(TARGET GMock::GMock APPEND PROPERTY
+            INTERFACE_INCLUDE_DIRECTORIES "${GTEST_INCLUDE_DIR}")
+    endif()
 endif()
 
 set_target_properties(GMock::Main PROPERTIES
