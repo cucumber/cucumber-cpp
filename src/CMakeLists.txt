@@ -17,7 +17,7 @@ set(CUKE_SOURCES
 
 set(CUKE_DEP_LIBRARIES json_spirit.header)
 
-if(GTEST_FOUND)
+if(TARGET GTest::GTest)
     list(APPEND CUKE_DEP_LIBRARIES GTest::GTest)
     list(APPEND CUKE_SOURCES drivers/GTestDriver.cpp)
 endif()

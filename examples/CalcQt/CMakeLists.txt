@@ -19,9 +19,9 @@ if(QT_LIBRARIES)
         target_link_libraries(BoostCalculatorQtSteps libcalcqt ${CUKE_LIBRARIES} ${QT_LIBRARIES} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
     endif()
 
-    if(GTEST_FOUND)
+    if(TARGET GTest::GTest)
         add_executable(GTestCalculatorQtSteps features/step_definitions/GTestCalculatorQtSteps)
-        target_link_libraries(GTestCalculatorQtSteps libcalcqt ${CUKE_LIBRARIES} ${CUKE_GTEST_LIBRARIES} ${QT_LIBRARIES})
+        target_link_libraries(GTestCalculatorQtSteps libcalcqt ${CUKE_LIBRARIES} GTest::GTest ${QT_LIBRARIES})
     endif()
 
 endif()

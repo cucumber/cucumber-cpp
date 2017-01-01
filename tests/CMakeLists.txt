@@ -6,12 +6,12 @@ function(cuke_add_driver_test TEST_FILE)
     add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
 endfunction()
 
-if(GMOCK_FOUND)
+if(TARGET GMock::Main)
     function(cuke_add_test TEST_FILE)
         get_filename_component(TEST_NAME ${TEST_FILE} NAME)
         message(STATUS "Adding " ${TEST_NAME})
         add_executable(${TEST_NAME} ${TEST_FILE}.cpp)
-        target_link_libraries(${TEST_NAME} cucumber-cpp-nomain ${CUKE_EXTRA_LIBRARIES} ${ARGN} ${CUKE_GMOCK_LIBRARIES})
+        target_link_libraries(${TEST_NAME} cucumber-cpp-nomain ${CUKE_EXTRA_LIBRARIES} ${ARGN} GMock::Main)
         gtest_add_tests(${TEST_NAME} "" ${TEST_FILE}.cpp)
         # Run all tests in executable at once too. This ensures that the used fixtures get tested
         # properly too. Additionally gather the output in jUnit compatible output for CI.
@@ -35,8 +35,10 @@ if(GMOCK_FOUND)
     cuke_add_test(unit/StepManagerTest)
     cuke_add_test(unit/TableTest)
     cuke_add_test(unit/TagTest)
+endif()
 
-    cuke_add_driver_test(integration/drivers/GTestDriverTest ${CUKE_GTEST_LIBRARIES})
+if(TARGET GTest::Main)
+    cuke_add_driver_test(integration/drivers/GTestDriverTest GTest::Main)
 
     list(FIND CMAKE_CXX_COMPILE_FEATURES cxx_variadic_templates HAS_VARIADIC_TEMPLATES)
     if(HAS_VARIADIC_TEMPLATES GREATER -1)

@@ -1,9 +1,9 @@
 project(FeatureShowcase)
 
-if(GMOCK_FOUND)
+if(TARGET GTest::GTest)
     function(add_cucumber_executable)
         add_executable(FeatureShowcaseSteps ${ARGV})
-        target_link_libraries(FeatureShowcaseSteps ${CUKE_LIBRARIES} ${CUKE_GTEST_LIBRARIES})
+        target_link_libraries(FeatureShowcaseSteps ${CUKE_LIBRARIES} GTest::GTest)
         foreach(_arg ${ARGN})
             get_filename_component(OBJECT_PREFIX ${_arg} NAME_WE)
             set_source_files_properties(${_arg} PROPERTIES COMPILE_FLAGS "-DCUKE_OBJECT_PREFIX=${OBJECT_PREFIX}")
