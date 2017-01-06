@@ -12,6 +12,7 @@ set(CUKE_DISABLE_E2E_TESTS OFF CACHE BOOL "Disable end-to-end tests")
 set(CUKE_ENABLE_EXAMPLES OFF CACHE BOOL "Enable the examples")
 set(GMOCK_SRC_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
 set(GMOCK_VER "1.7.0" CACHE STRING "Google Mock framework version to be used")
+option(VALGRIND_TESTS "Run tests within Valgrind" OFF)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
@@ -100,6 +101,52 @@ if(NOT CUKE_DISABLE_GTEST)
             GMock::Main
             )
     endif()
+endif()
+
+#
+# Valgrind
+#
+
+if(VALGRIND_TESTS)
+    find_program(VALGRIND_CMD valgrind)
+    if(NOT VALGRIND_CMD)
+        message(SEND_ERROR "Failed to find 'valgrind', cannot run tests with it as requested")
+    endif()
+    set(VALGRIND_ARGS --error-exitcode=2 --leak-check=full --show-leak-kinds=all --undef-value-errors=no)
+    function(add_test name)
+        if(NOT name STREQUAL "NAME")
+            _add_test(${VALGRIND_CMD} ${VALGRIND_ARGS} ${ARGV})
+            return()
+        endif()
+
+        set(TEST_ARGS ${ARGV})
+        list(FIND TEST_ARGS COMMAND COMMAND_IDX)
+        if(COMMAND_IDX EQUAL -1)
+            message(AUTHOR_WARNING "Weird command-line given to add_test(), not injecting valgrind")
+            _add_test(${ARGV})
+            return()
+        endif()
+
+        # We want to operate on the COMMAND, not the 'COMMAND' keyword preceding it
+        math(EXPR COMMAND_IDX "${COMMAND_IDX} + 1")
+
+        # Keep add_test() behaviour of replacing COMMANDs, when executable targets, with their output files
+        list(GET TEST_ARGS ${COMMAND_IDX} COMMAND)
+        if(TARGET ${COMMAND})
+            get_target_property(COMMAND_TYPE ${COMMAND} TYPE)
+            if(COMMAND_TYPE STREQUAL "EXECUTABLE")
+                # Inserting first, removing the original only after that, because inserting to the end of the list doesn't work
+                math(EXPR ORIG_COMMAND_IDX "${COMMAND_IDX} + 1")
+                list(INSERT TEST_ARGS ${COMMAND_IDX} "$<TARGET_FILE:${COMMAND}>")
+                list(REMOVE_AT TEST_ARGS ${ORIG_COMMAND_IDX})
+            endif()
+        endif()
+
+        # Insert the valgrind command line, before the command to execute
+        list(INSERT TEST_ARGS ${COMMAND_IDX} ${VALGRIND_CMD} ${VALGRIND_ARGS})
+
+        _add_test(${TEST_ARGS})
+    endfunction()
 endif()
 
 #
