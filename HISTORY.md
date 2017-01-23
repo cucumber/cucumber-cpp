@@ -2,6 +2,7 @@
 
 ### New Features
 
+* Support for MinGW build ([#130](https://github.com/cucumber/cucumber-cpp/pull/130) Michel Estermann)
 * Add support for Unix sockets ([#126](https://github.com/cucumber/cucumber-cpp/pull/126) Giel van Schijndel)
 * Add support for using ephemeral ports ([#131](https://github.com/cucumber/cucumber-cpp/pull/131) Giel van Schijndel)
 * Removed CppSpec support ([#118](https://github.com/cucumber/cucumber-cpp/pull/118) Paolo Ambrosio)

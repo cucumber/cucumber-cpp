@@ -3,13 +3,37 @@ os: Visual Studio 2015
 
 environment:
   RUBY_VERSION: 200
-  BOOST_ROOT: C:\Libraries\boost_1_59_0
-  BOOST_INCLUDEDIR: C:\Libraries\boost_1_59_0\boost
   matrix:
-  - platform: x86
+  - build: mingw
+    platform: x86
+    MINGW_ARCH: i686
+    MSYSTEM: MINGW32
+    MINGW_ROOT: C:\msys64\mingw32
+    BOOST_ROOT: C:\msys64\mingw32
+    BOOST_LIBRARYDIR: C:\msys64\mingw32\lib
+    BOOST_INCLUDEDIR: C:\msys64\mingw32\include\boost
+    CMAKE_GENERATOR: 'MSYS Makefiles'
+  - build: mingw
+    platform: x64
+    MINGW_ARCH: x86_64
+    MSYSTEM: MINGW64
+    MINGW_ROOT: C:\msys64\mingw64
+    BOOST_ROOT: C:\msys64\mingw64
+    BOOST_LIBRARYDIR: C:\msys64\mingw64\lib
+    BOOST_INCLUDEDIR: C:\msys64\mingw64\include\boost
+    CMAKE_GENERATOR: 'MSYS Makefiles'
+  - build: msvc
+    platform: x86
+    BOOST_ROOT: C:\Libraries\boost_1_59_0
     BOOST_LIBRARYDIR: C:\Libraries\boost_1_59_0\lib32-msvc-14.0
-  - platform: x64
+    BOOST_INCLUDEDIR: C:\Libraries\boost_1_59_0\boost
+    CMAKE_GENERATOR: 'NMake Makefiles'
+  - build: msvc
+    platform: x64
+    BOOST_ROOT: C:\Libraries\boost_1_59_0
+    BOOST_INCLUDEDIR: C:\Libraries\boost_1_59_0\boost
     BOOST_LIBRARYDIR: C:\Libraries\boost_1_59_0\lib64-msvc-14.0
+    CMAKE_GENERATOR: 'NMake Makefiles'
 
 install:
 - git submodule init
@@ -18,11 +42,13 @@ install:
 - gem install bundle
 - bundle install
 - bundle env
+- if "%build%"=="mingw" set PATH=%MINGW_ROOT%\bin;C:\msys64\usr\bin\;%PATH%
+- if "%build%"=="mingw" bash -lc "pacman --needed --noconfirm -S mingw-w64-%MINGW_ARCH%-boost
 
 build_script:
-- cmd: call "%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" %PLATFORM%
+- cmd: if "%build%"=="msvc" call "%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" %PLATFORM%
 - cmd: cmake -E make_directory build
-- cmd: cmake -E chdir build cmake -G "NMake Makefiles" -DCUKE_ENABLE_EXAMPLES=on -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_INCLUDEDIR="%BOOST_INCLUDEDIR%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" ..
+- cmd: cmake -E chdir build cmake -G "%CMAKE_GENERATOR%" -DCUKE_ENABLE_EXAMPLES=ON -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_INCLUDEDIR="%BOOST_INCLUDEDIR%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" ..
 - cmd: cmake --build build
 
 test_script:
