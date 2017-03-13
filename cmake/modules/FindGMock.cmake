@@ -317,6 +317,8 @@ if(NOT (${GMOCK_LIBRARY_EXISTS} AND ${GTEST_LIBRARY_EXISTS}))
                     "${GMOCK_MAIN_LIBRARY}"
             )
 
+            add_dependencies(gmock gtest)
+
             add_dependencies(GTest::GTest gtest)
             add_dependencies(GTest::Main gtest)
             add_dependencies(GMock::GMock gmock)
