@@ -31,6 +31,25 @@ elseif(MSVC)
 endif()
 
 #
+# Qt
+#
+
+find_package(Qt5Core QUIET)
+find_package(Qt5Widgets QUIET)
+find_package(Qt5Test QUIET)
+find_package(Qt5Concurrent QUIET)
+
+if(${Qt5Core_FOUND} AND ${Qt5Test_FOUND})
+    message(STATUS "Using Qt version: ${Qt5Core_VERSION_STRING}")
+    set(CMAKE_INCLUDE_CURRENT_DIR ON)
+    set(CMAKE_AUTOMOC ON)
+    if (Qt5_POSITION_INDEPENDENT_CODE)
+        SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
+    endif()
+    set(QT_LIBRARIES Qt5::Core Qt5::Widgets Qt5::Test)
+endif()
+
+#
 # Boost
 #
 
@@ -107,11 +126,8 @@ endif()
 #
 
 set(CUKE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
 include_directories(${CUKE_INCLUDE_DIR})
-
 set(CUKE_LIBRARIES cucumber-cpp ${CUKE_EXTRA_LIBRARIES})
-
 add_subdirectory(src)
 
 #
@@ -176,3 +192,23 @@ endif()
 if(CUKE_ENABLE_EXAMPLES)
     add_subdirectory(examples)
 endif()
+
+#check if c++11 is nedded
+if(${Qt5Core_FOUND} AND ${Qt5Test_FOUND})
+    find_program(QMAKE_EXECUTABLE NAMES qmake HINTS ${QTDIR} ENV QTDIR PATH_SUFFIXES bin)
+    execute_process(COMMAND ${QMAKE_EXECUTABLE} -query QT_VERSION OUTPUT_VARIABLE QT_VERSION)
+    if(QT_VERSION GREATER 5.6.99)
+        message(STATUS "C++11 is needed from Qt version 5.7.0, building with c++11 enabled")
+        set_property(TARGET cucumber-cpp PROPERTY CXX_STANDARD 11)
+        set_property(TARGET cucumber-cpp-nomain PROPERTY CXX_STANDARD 11)
+        if(NOT CUKE_DISABLE_UNIT_TESTS)
+            set_property(TARGET QtTestDriverTest PROPERTY CXX_STANDARD 11)
+        endif()
+        if(CUKE_ENABLE_EXAMPLES)
+            set_property(TARGET libcalcqt PROPERTY CXX_STANDARD 11)
+            set_property(TARGET calcqt PROPERTY CXX_STANDARD 11)
+            set_property(TARGET QtTestCalculatorQtSteps PROPERTY CXX_STANDARD 11)
+        endif()
+    endif()
+endif()
+

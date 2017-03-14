@@ -18,6 +18,9 @@ if(${Qt5Core_FOUND} AND ${Qt5Widgets_FOUND} AND ${Qt5Test_FOUND})
     
     add_executable(calcqt ${CALCQT_SOURCES})
     target_link_libraries(calcqt libcalcqt ${QT_LIBRARIES})
+
+    add_executable(QtTestCalculatorQtSteps features/step_definitions/QtTestCalculatorQtSteps)
+    target_link_libraries(QtTestCalculatorQtSteps libcalcqt ${QT_LIBRARIES} ${CUKE_LIBRARIES})
 else()
     find_package(Qt4 COMPONENTS QtCore QtGui QtTest)
     if(QT4_FOUND)
