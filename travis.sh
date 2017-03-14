@@ -4,11 +4,12 @@ gem install bundler
 bundle install
 
 cmake -E make_directory build
-if [ -z ${GMOCK_PATH+x} ]; then
-    cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on -DGMOCK_VER=${GMOCK_VER} ..
-else
-    cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on -DGMOCK_SRC_DIR=${GMOCK_PATH} ..
-fi
+cmake -E chdir build cmake \
+    -G Ninja \
+    -DCUKE_ENABLE_EXAMPLES=on \
+    ${GMOCK_PATH:-"-DGMOCK_VER=${GMOCK_VER}"} \
+    ${GMOCK_PATH:+"-DGMOCK_SRC_DIR=${GMOCK_PATH}"} \
+    ..
 cmake --build build
 cmake --build build --target test
 cmake --build build --target features

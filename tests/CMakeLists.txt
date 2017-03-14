@@ -7,9 +7,6 @@ function(cuke_add_driver_test TEST_FILE)
 endfunction()
 
 if(GMOCK_FOUND)
-    include_directories(${GTEST_INCLUDE_DIRS})
-    include_directories(${GMOCK_INCLUDE_DIRS})
-
     function(cuke_add_test TEST_FILE)
         get_filename_component(TEST_NAME ${TEST_FILE} NAME)
         message(STATUS "Adding " ${TEST_NAME})
