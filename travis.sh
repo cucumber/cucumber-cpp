@@ -3,6 +3,9 @@ set -e #break script on non-zero exitcode from any command
 gem install bundler
 bundle install
 
+CTEST_OUTPUT_ON_FAILURE=ON
+export CTEST_OUTPUT_ON_FAILURE
+
 cmake -E make_directory build
 cmake -E chdir build cmake \
     -G Ninja \
