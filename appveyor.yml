@@ -56,10 +56,6 @@ test_script:
 - cmd: cmake --build build --target test
 - cmd: cmake --build build --target features
 
-branches:
-  only:
-  - master
-
 notifications:
 - provider: Email
   to:
