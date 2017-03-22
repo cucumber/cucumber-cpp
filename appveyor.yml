@@ -62,7 +62,7 @@ branches:
 notifications:
 - provider: Email
   to:
-  - cukes-devs@googlegroups.com
+  - '{{commitAuthorEmail}}'
   on_build_success: false
   on_build_failure: true
   on_build_status_changed: true

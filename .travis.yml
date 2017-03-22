@@ -36,10 +36,8 @@ before_install:
 
 script: ./travis.sh 
 
-notifications:
-  email:
-    - cukes-devs@googlegroups.com
-
 branches:
   only:
     - master
+
+# default notifications: https://docs.travis-ci.com/user/notifications#Notifications
