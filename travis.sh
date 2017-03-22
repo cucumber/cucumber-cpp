@@ -1,5 +1,9 @@
 #!/bin/sh
 set -e #break script on non-zero exitcode from any command
+
+echo OS name: ${TRAVIS_OS_NAME}
+if [ "${TRAVIS_OS_NAME}" = "osx" ]; then source osx-install-qt.sh; fi
+
 gem install bundler
 bundle install
 
