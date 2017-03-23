@@ -25,9 +25,7 @@ public:
     EXPECT_THAT(typeid(classname).name(), StrEq(typeid(expression).name()))
 
 #define EXPECT_PTRTYPE(classname, expression) \
-    EXPECT_TYPE(classname, *expression)
-
-
+    EXPECT_NE(dynamic_cast<const classname*>(expression), (void*)NULL)
 
 class WireMessageCodecTest : public Test {
 public:
