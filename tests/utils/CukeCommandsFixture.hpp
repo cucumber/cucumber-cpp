@@ -5,6 +5,7 @@
 #include <cucumber-cpp/internal/drivers/GenericDriver.hpp>
 #include "StepManagerTestDouble.hpp"
 
+#include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 
 using namespace cucumber::internal;
@@ -25,15 +26,14 @@ protected:
     template<class T>
     void runStepBodyTest() {
         addStepToManager<T>(STATIC_MATCHER);
-        const InvokeArgs *pArgs = T::buildInvokeArgs();
-        shared_ptr<const InvokeArgs> spArgs(pArgs);
-        invoke(stepInfoPtr->id, pArgs);
+        shared_ptr<const InvokeArgs> spArgs(T::buildInvokeArgs());
+        invoke(stepInfoPtr->id, spArgs.get());
     }
 
     template<class T>
     void addStepToManager(const std::string &matcher) {
-        stepInfoPtr = shared_ptr<StepInfo>(new StepInvoker<T>(matcher, ""));
-        stepManager.addStep(stepInfoPtr.get());
+        stepInfoPtr = boost::make_shared< StepInvoker<T> >(matcher, "");
+        stepManager.addStep(stepInfoPtr);
     }
 
     virtual void TearDown() {

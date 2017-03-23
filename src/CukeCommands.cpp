@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <boost/algorithm/string.hpp>
+#include <boost/make_shared.hpp>
 
 namespace cucumber {
 namespace internal {
@@ -17,13 +18,13 @@ CukeCommands::~CukeCommands() {
     }
 }
 
-void CukeCommands::beginScenario(const TagExpression::tag_list *tags) {
+void CukeCommands::beginScenario(const TagExpression::tag_list& tags) {
     if (!hasStarted) {
         hasStarted = true;
         hookRegistrar.execBeforeAllHooks();
     }
 
-    currentScenario = shared_ptr<Scenario>(new Scenario(tags));
+    currentScenario = boost::make_shared<Scenario>(tags);
     hookRegistrar.execBeforeHooks(currentScenario.get());
 }
 
@@ -57,7 +58,7 @@ MatchResult CukeCommands::stepMatches(const std::string description) const {
 }
 
 InvokeResult CukeCommands::invoke(step_id_type id, const InvokeArgs *pArgs) {
-    StepInfo *stepInfo = stepManager.getStep(id);
+    boost::shared_ptr<const StepInfo> stepInfo = stepManager.getStep(id);
     InvokeResult result = hookRegistrar.execStepChain(currentScenario.get(), stepInfo, pArgs);
     hookRegistrar.execAfterStepHooks(currentScenario.get());
     return result;

@@ -11,7 +11,7 @@ void acceptWireProtocol(int port, const std::string& unixPath, bool verbose) {
     using namespace ::cucumber::internal;
     CukeEngineImpl cukeEngine;
     JsonSpiritWireMessageCodec wireCodec;
-    WireProtocolHandler protocolHandler(&wireCodec, &cukeEngine);
+    WireProtocolHandler protocolHandler(wireCodec, cukeEngine);
     boost::scoped_ptr<SocketServer> server;
 #if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
     if (!unixPath.empty())

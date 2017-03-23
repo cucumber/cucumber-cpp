@@ -26,7 +26,7 @@ public:
 	CukeCommands();
 	virtual ~CukeCommands();
 
-    void beginScenario(const TagExpression::tag_list *tags);
+    void beginScenario(const TagExpression::tag_list& tags = TagExpression::tag_list());
     void endScenario();
     const std::string snippetText(const std::string stepKeyword, const std::string stepName) const;
     MatchResult stepMatches(const std::string description) const;

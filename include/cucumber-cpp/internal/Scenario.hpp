@@ -8,11 +8,11 @@ namespace internal {
 
 class Scenario {
 public:
-    Scenario(const TagExpression::tag_list *pTags);
+    Scenario(const TagExpression::tag_list& tags = TagExpression::tag_list());
 
     const TagExpression::tag_list & getTags();
 private:
-    shared_ptr<const TagExpression::tag_list> pTags;
+    const TagExpression::tag_list tags;
 };
 
 }

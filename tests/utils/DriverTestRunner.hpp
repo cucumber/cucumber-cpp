@@ -113,7 +113,7 @@ private:
 
         InvokeResult result;
 
-        cukeCommands.beginScenario(0);
+        cukeCommands.beginScenario();
 
         result = cukeCommands.invoke(getStepIdFromMatcher(SUCCEED_MATCHER), &NO_INVOKE_ARGS);
         expectTrue("Succeeding step", result.isSuccess());
@@ -145,7 +145,7 @@ private:
     void contextConstructorAndDesctructorGetCalledOn(const std::string stepMatcher) {
         std::cout << "== " << stepMatcher << " ==" << std::endl;
         listener.reset();
-        cukeCommands.beginScenario(0);
+        cukeCommands.beginScenario();
         cukeCommands.invoke(getStepIdFromMatcher(stepMatcher), &NO_INVOKE_ARGS);
         expectEqual("Contexts created after invoke", 1, listener.getCreatedContexts());
         expectEqual("Contexts destroyed after invoke", 0, listener.getDestroyedContexts());
@@ -157,7 +157,7 @@ private:
     void failureDescriptionIsResetOnEachRun() {
         std::cout << "= Step failure description is reset =" << std::endl;
         InvokeResult result;
-        cukeCommands.beginScenario(0);
+        cukeCommands.beginScenario();
 
         result = cukeCommands.invoke(getStepIdFromMatcher(FAIL_MATCHER), &NO_INVOKE_ARGS);
         std::string failureMessage = result.getDescription();

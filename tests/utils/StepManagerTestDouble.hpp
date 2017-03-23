@@ -10,7 +10,7 @@ namespace internal {
 class StepInfoNoOp : public StepInfo {
 public:
     StepInfoNoOp(const std::string &stepMatcher, const std::string source) : StepInfo(stepMatcher, source) {}
-    InvokeResult invokeStep(const InvokeArgs *pArgs) {
+    InvokeResult invokeStep(const InvokeArgs *pArgs) const {
         return InvokeResult::success();
     }
 };
@@ -24,7 +24,7 @@ public:
         description(description) {
     }
 
-    InvokeResult invokeStep(const InvokeArgs *pArgs) {
+    InvokeResult invokeStep(const InvokeArgs *pArgs) const {
         return InvokeResult::pending(description);
     }
 };
@@ -40,7 +40,7 @@ public:
         expectedSize(expectedSize) {
     }
 
-    InvokeResult invokeStep(const InvokeArgs *pArgs) {
+    InvokeResult invokeStep(const InvokeArgs *pArgs) const {
         if (pArgs->getTableArg().hashes().size() == expectedSize) {
             return InvokeResult::success();
         } else {
@@ -61,7 +61,7 @@ public:
     }
 
     step_id_type addStepDefinition(const std::string &stepMatcher) {
-        StepInfo *stepInfo = new StepInfoNoOp(stepMatcher, "");
+        boost::shared_ptr<StepInfo> stepInfo(boost::make_shared<StepInfoNoOp>(stepMatcher, ""));
         addStep(stepInfo);
         return stepInfo->id;
     }
@@ -72,7 +72,7 @@ public:
 
     void addStepDefinitionWithId(step_id_type desiredId, const std::string &stepMatcher,
             const std::string source) {
-        StepInfo *stepInfo = new StepInfoNoOp(stepMatcher, source);
+        boost::shared_ptr<StepInfo> stepInfo(boost::make_shared<StepInfoNoOp>(stepMatcher, source));
         stepInfo->id = desiredId;
         addStep(stepInfo);
     }
@@ -83,13 +83,13 @@ public:
 
     void addPendingStepDefinitionWithId(step_id_type desiredId,
             const std::string &stepMatcher, const char *description) {
-        StepInfo *stepInfo = new StepInfoPending(stepMatcher, description);
+        boost::shared_ptr<StepInfo> stepInfo(boost::make_shared<StepInfoPending>(stepMatcher, description));
         stepInfo->id = desiredId;
         addStep(stepInfo);
     }
 
     void addTableStepDefinitionWithId(step_id_type desiredId, const std::string &stepMatcher, const unsigned short expectedSize) {
-        StepInfo *stepInfo = new StepInfoWithTableArg(stepMatcher, expectedSize);
+        boost::shared_ptr<StepInfo> stepInfo(boost::make_shared<StepInfoWithTableArg>(stepMatcher, expectedSize));
         stepInfo->id = desiredId;
         addStep(stepInfo);
     }
@@ -97,7 +97,7 @@ public:
     const step_id_type getStepId(const std::string &stepMatcher) {
         step_id_type id = 0;
         for (steps_type::const_iterator i = steps().begin(); i != steps().end(); ++i) {
-            StepInfo *stepInfo = i->second;
+            const boost::shared_ptr<const StepInfo>& stepInfo = i->second;
             if (stepInfo->regex.str() == stepMatcher) {
                 id = stepInfo->id;
                 break;

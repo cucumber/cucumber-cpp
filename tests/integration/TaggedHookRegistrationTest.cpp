@@ -24,7 +24,7 @@ AFTER("@a,@b") { afterHookCallMarker << "L"; }
 
 
 TEST_F(HookRegistrationTest, noTaggedHooksAreInvokedIfNoScenarioTag) {
-    beginScenario(0);
+    beginScenario();
     invokeStep();
     endScenario();
     EXPECT_EQ("", sort(beforeHookCallMarker.str()));

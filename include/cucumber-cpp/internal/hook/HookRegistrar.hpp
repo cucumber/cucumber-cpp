@@ -5,6 +5,7 @@
 #include "../Scenario.hpp"
 #include "../step/StepManager.hpp"
 
+#include <boost/make_shared.hpp>
 #include <boost/smart_ptr.hpp>
 using boost::shared_ptr;
 
@@ -60,27 +61,27 @@ class AfterAllHook : public UnconditionalHook {
 
 class HookRegistrar {
 public:
-    typedef std::list<Hook *> hook_list_type;
-    typedef std::list<AroundStepHook *> aroundhook_list_type;
+    typedef std::list< boost::shared_ptr<Hook> > hook_list_type;
+    typedef std::list< boost::shared_ptr<AroundStepHook> > aroundhook_list_type;
 
     virtual ~HookRegistrar();
 
-    void addBeforeHook(BeforeHook *afterHook);
+    void addBeforeHook(const boost::shared_ptr<BeforeHook>& afterHook);
     void execBeforeHooks(Scenario *scenario);
 
-    void addAroundStepHook(AroundStepHook *aroundStepHook);
-    InvokeResult execStepChain(Scenario *scenario, StepInfo *stepInfo, const InvokeArgs *pArgs);
+    void addAroundStepHook(const boost::shared_ptr<AroundStepHook>& aroundStepHook);
+    InvokeResult execStepChain(Scenario *scenario, const boost::shared_ptr<const StepInfo>& stepInfo, const InvokeArgs *pArgs);
 
-    void addAfterStepHook(AfterStepHook *afterStepHook);
+    void addAfterStepHook(const boost::shared_ptr<AfterStepHook>& afterStepHook);
     void execAfterStepHooks(Scenario *scenario);
 
-    void addAfterHook(AfterHook *afterHook);
+    void addAfterHook(const boost::shared_ptr<AfterHook>& afterHook);
     void execAfterHooks(Scenario *scenario);
 
-    void addBeforeAllHook(BeforeAllHook *beforeAllHook);
+    void addBeforeAllHook(const boost::shared_ptr<BeforeAllHook>& beforeAllHook);
     void execBeforeAllHooks();
 
-    void addAfterAllHook(AfterAllHook *afterAllHook);
+    void addAfterAllHook(const boost::shared_ptr<AfterAllHook>& afterAllHook);
     void execAfterAllHooks();
 
 private:
@@ -98,14 +99,14 @@ protected:
 
 class StepCallChain {
 public:
-    StepCallChain(Scenario *scenario, StepInfo *stepInfo, const InvokeArgs *pStepArgs, HookRegistrar::aroundhook_list_type &aroundHooks);
+    StepCallChain(Scenario *scenario, const boost::shared_ptr<const StepInfo>& stepInfo, const InvokeArgs *pStepArgs, HookRegistrar::aroundhook_list_type &aroundHooks);
     InvokeResult exec();
     void execNext();
 private:
     void execStep();
 
     Scenario *scenario;
-    StepInfo *stepInfo;
+    boost::shared_ptr<const StepInfo> stepInfo;
     const InvokeArgs *pStepArgs;
 
     HookRegistrar::aroundhook_list_type::iterator nextHook;
@@ -125,7 +126,7 @@ private:
 template<class T>
 static int registerBeforeHook(const std::string &csvTagNotation) {
    HookRegistrar reg;
-   T *hook = new T;
+   boost::shared_ptr<T> hook(boost::make_shared<T>());
    hook->setTags(csvTagNotation);
    reg.addBeforeHook(hook);
    return 0; // We are not interested in the ID at this time
@@ -134,7 +135,7 @@ static int registerBeforeHook(const std::string &csvTagNotation) {
 template<class T>
 static int registerAroundStepHook(const std::string &csvTagNotation) {
    HookRegistrar reg;
-   T *hook = new T;
+   boost::shared_ptr<T> hook(boost::make_shared<T>());
    hook->setTags(csvTagNotation);
    reg.addAroundStepHook(hook);
    return 0;
@@ -143,7 +144,7 @@ static int registerAroundStepHook(const std::string &csvTagNotation) {
 template<class T>
 static int registerAfterStepHook(const std::string &csvTagNotation) {
    HookRegistrar reg;
-   T *hook = new T;
+   boost::shared_ptr<T> hook(boost::make_shared<T>());
    hook->setTags(csvTagNotation);
    reg.addAfterStepHook(hook);
    return 0;
@@ -152,7 +153,7 @@ static int registerAfterStepHook(const std::string &csvTagNotation) {
 template<class T>
 static int registerAfterHook(const std::string &csvTagNotation) {
    HookRegistrar reg;
-   T *hook = new T;
+   boost::shared_ptr<T> hook(boost::make_shared<T>());
    hook->setTags(csvTagNotation);
    reg.addAfterHook(hook);
    return 0;
@@ -161,7 +162,7 @@ static int registerAfterHook(const std::string &csvTagNotation) {
 template<class T>
 static int registerBeforeAllHook() {
    HookRegistrar reg;
-   T *hook = new T;
+   boost::shared_ptr<T> hook(boost::make_shared<T>());
    reg.addBeforeAllHook(hook);
    return 0;
 }
@@ -169,7 +170,7 @@ static int registerBeforeAllHook() {
 template<class T>
 static int registerAfterAllHook() {
    HookRegistrar reg;
-   T *hook = new T;
+   boost::shared_ptr<T> hook(boost::make_shared<T>());
    reg.addAfterAllHook(hook);
    return 0;
 }

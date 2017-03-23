@@ -13,7 +13,7 @@ public:
         result(result) {
     }
 
-    InvokeResult invokeStep(const InvokeArgs *pArgs) {
+    InvokeResult invokeStep(const InvokeArgs *pArgs) const {
         latestArgsPtr = pArgs;
         (*markersPtr) << "S";
         return result;
@@ -24,7 +24,7 @@ public:
     }
 
 private:
-    const InvokeArgs *latestArgsPtr;
+    mutable const InvokeArgs *latestArgsPtr;
     std::stringstream *markersPtr;
     const InvokeResult result;
 };
@@ -73,8 +73,8 @@ protected:
     std::stringstream markers;
 
     InvokeResult execStep(const InvokeResult &result) {
-        FakeStepInfo step(&markers, result);
-        StepCallChain scc(0, &step, &NO_INVOKE_ARGS, aroundHooks);
+        boost::shared_ptr<FakeStepInfo> step(boost::make_shared<FakeStepInfo>(&markers, result));
+        StepCallChain scc(0, step, &NO_INVOKE_ARGS, aroundHooks);
         return scc.exec();
     }
 
@@ -88,34 +88,36 @@ protected:
 };
 
 TEST_F(StepCallChainTest, failsIfNoStep) {
-    StepCallChain scc(0, 0, &NO_INVOKE_ARGS, aroundHooks);
+    StepCallChain scc(0, boost::shared_ptr<StepInfo>(), &NO_INVOKE_ARGS, aroundHooks);
     EXPECT_FALSE(scc.exec().isSuccess());
     EXPECT_EQ("", markers.str());
 }
 
 TEST_F(StepCallChainTest, stepExecutionReturnsTheExpectedResult) {
-    MarkingAroundStepHook hook;
+    boost::shared_ptr<MarkingAroundStepHook> hook(boost::make_shared<MarkingAroundStepHook>());
 
     execStepAndCheckSuccess();
 
-    aroundHooks.push_back(&hook);
+    aroundHooks.push_back(hook);
 
     execStepAndCheckSuccess();
 
-    aroundHooks.push_back(&hook);
-    aroundHooks.push_back(&hook);
+    aroundHooks.push_back(hook);
+    aroundHooks.push_back(hook);
 
     execStepAndCheckSuccess();
 }
 
 TEST_F(StepCallChainTest, aroundHooksAreInvokedInTheCorrectOrder) {
-    MarkingAroundStepHook hook1("1", &markers);
-    MarkingAroundStepHook hook2("2", &markers);
-    MarkingAroundStepHook hook3("3", &markers);
+    boost::shared_ptr<MarkingAroundStepHook>
+        hook1(boost::make_shared<MarkingAroundStepHook>("1", &markers))
+      , hook2(boost::make_shared<MarkingAroundStepHook>("2", &markers))
+      , hook3(boost::make_shared<MarkingAroundStepHook>("3", &markers))
+      ;
 
-    aroundHooks.push_back(&hook1);
-    aroundHooks.push_back(&hook2);
-    aroundHooks.push_back(&hook3);
+    aroundHooks.push_back(hook1);
+    aroundHooks.push_back(hook2);
+    aroundHooks.push_back(hook3);
 
     execStep(InvokeResult::success());
 
@@ -123,22 +125,24 @@ TEST_F(StepCallChainTest, aroundHooksAreInvokedInTheCorrectOrder) {
 }
 
 TEST_F(StepCallChainTest, argsArePassedToTheStep) {
-    FakeStepInfo step(&markers, InvokeResult::success());
-    StepCallChain scc(0, &step, &NO_INVOKE_ARGS, aroundHooks);
+    boost::shared_ptr<FakeStepInfo> step(boost::make_shared<FakeStepInfo>(&markers, InvokeResult::success()));
+    StepCallChain scc(0, step, &NO_INVOKE_ARGS, aroundHooks);
 
-    EXPECT_NE(&NO_INVOKE_ARGS, step.getLatestArgsPassed());
+    EXPECT_NE(&NO_INVOKE_ARGS, step->getLatestArgsPassed());
     scc.exec();
-    EXPECT_EQ(&NO_INVOKE_ARGS, step.getLatestArgsPassed());
+    EXPECT_EQ(&NO_INVOKE_ARGS, step->getLatestArgsPassed());
 }
 
 TEST_F(StepCallChainTest, aroundHooksCanStopTheCallChain) {
-    MarkingAroundStepHook hook1("1", &markers);
-    BlockingAroundStepHook hook2("2", &markers);
-    MarkingAroundStepHook hook3("3", &markers);
+    boost::shared_ptr<MarkingAroundStepHook>
+        hook1(boost::make_shared<MarkingAroundStepHook >("1", &markers))
+      , hook2(boost::make_shared<BlockingAroundStepHook>("2", &markers))
+      , hook3(boost::make_shared<MarkingAroundStepHook >("3", &markers))
+      ;
 
-    aroundHooks.push_back(&hook1);
-    aroundHooks.push_back(&hook2);
-    aroundHooks.push_back(&hook3);
+    aroundHooks.push_back(hook1);
+    aroundHooks.push_back(hook2);
+    aroundHooks.push_back(hook3);
 
     execStep(InvokeResult::success());
 

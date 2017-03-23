@@ -11,33 +11,18 @@ StepInfo::StepInfo(const std::string &stepMatcher, const std::string source) :
     id = ++currentId;
 }
 
-SingleStepMatch StepInfo::matches(const std::string &stepDescription) {
+SingleStepMatch StepInfo::matches(const std::string &stepDescription) const {
     SingleStepMatch stepMatch;
     shared_ptr<RegexMatch> regexMatch(regex.find(stepDescription));
     if (regexMatch->matches()) {
-        stepMatch.stepInfo = this;
+        stepMatch.stepInfo = shared_from_this();
         stepMatch.submatches = regexMatch->getSubmatches();
     }
     return stepMatch;
 }
 
-SingleStepMatch::SingleStepMatch() :
-    stepInfo(0) {
-}
-
-SingleStepMatch::SingleStepMatch(const SingleStepMatch &match) :
-    stepInfo(match.stepInfo),
-    submatches(match.submatches) {
-}
-
-SingleStepMatch & SingleStepMatch::operator =(const SingleStepMatch &match) {
-    stepInfo = match.stepInfo;
-    submatches = match.submatches;
-    return *this;
-}
-
-SingleStepMatch::operator void *() {
-    return (void *) stepInfo;
+SingleStepMatch::operator const void *() const {
+    return stepInfo.get();
 }
 
 MatchResult::operator void *() {
@@ -126,14 +111,14 @@ const std::string &InvokeResult::getDescription() const {
 StepManager::~StepManager() {
 }
 
-void StepManager::addStep(StepInfo *stepInfo) {
+void StepManager::addStep(const boost::shared_ptr<StepInfo>& stepInfo) {
     steps().insert(std::make_pair(stepInfo->id, stepInfo));
 }
 
 MatchResult StepManager::stepMatches(const std::string &stepDescription) const {
     MatchResult matchResult;
     for (steps_type::iterator iter = steps().begin(); iter != steps().end(); ++iter) {
-        StepInfo *stepInfo = iter->second;
+        const boost::shared_ptr<const StepInfo>& stepInfo = iter->second;
         SingleStepMatch currentMatch = stepInfo->matches(stepDescription);
         if (currentMatch) {
             matchResult.addMatch(currentMatch);
@@ -142,7 +127,7 @@ MatchResult StepManager::stepMatches(const std::string &stepDescription) const {
     return matchResult;
 }
 
-StepInfo *StepManager::getStep(step_id_type id) {
+const boost::shared_ptr<const StepInfo>& StepManager::getStep(step_id_type id) {
     return steps()[id];
 }
 
@@ -151,8 +136,8 @@ StepInfo *StepManager::getStep(step_id_type id) {
  * http://www.parashift.com/c++-faq-lite/ctors.html#faq-10.12
  */
 StepManager::steps_type& StepManager::steps() const {
-    static steps_type *steps = new steps_type();
-    return *steps;
+    static steps_type steps;
+    return steps;
 }
 
 

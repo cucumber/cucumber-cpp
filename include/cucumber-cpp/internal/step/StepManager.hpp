@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+#include <boost/enable_shared_from_this.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 using boost::shared_ptr;
 
@@ -24,13 +26,9 @@ class SingleStepMatch {
 public:
     typedef RegexMatch::submatches_type submatches_type;
 
-    SingleStepMatch();
-    SingleStepMatch(const SingleStepMatch &match);
+    operator const void *() const;
 
-    SingleStepMatch & operator =(const SingleStepMatch &match);
-    operator void *();
-
-    const StepInfo *stepInfo;
+    boost::shared_ptr<const StepInfo> stepInfo;
     submatches_type submatches;
 };
 
@@ -96,11 +94,11 @@ public:
 };
 
 
-class StepInfo {
+class StepInfo : public boost::enable_shared_from_this<StepInfo> {
 public:
     StepInfo(const std::string &stepMatcher, const std::string source);
-    SingleStepMatch matches(const std::string &stepDescription);
-    virtual InvokeResult invokeStep(const InvokeArgs * pArgs) = 0;
+    SingleStepMatch matches(const std::string &stepDescription) const;
+    virtual InvokeResult invokeStep(const InvokeArgs * pArgs) const = 0;
 
     step_id_type id;
     Regex regex;
@@ -141,20 +139,20 @@ class StepInvoker : public StepInfo {
 public:
     StepInvoker(const std::string &stepMatcher, const std::string source);
 
-    InvokeResult invokeStep(const InvokeArgs *args);
+    InvokeResult invokeStep(const InvokeArgs *args) const;
 };
 
 
 class StepManager {
 protected:
-    typedef std::map<step_id_type, StepInfo *> steps_type;
+    typedef std::map<step_id_type, boost::shared_ptr<const StepInfo> > steps_type;
 
 public:
     virtual ~StepManager();
 
-    void addStep(StepInfo *stepInfo);
+    void addStep(const boost::shared_ptr<StepInfo>& stepInfo);
     MatchResult stepMatches(const std::string &stepDescription) const;
-    StepInfo *getStep(step_id_type id);
+    const boost::shared_ptr<const StepInfo>& getStep(step_id_type id);
 protected:
     steps_type& steps() const;
 };
@@ -177,7 +175,7 @@ static inline std::string toSourceString(const char *filePath, const int line) {
 template<class T>
 static int registerStep(const std::string &stepMatcher, const char *file, const int line) {
    StepManager s;
-   StepInfo *stepInfo = new StepInvoker<T>(stepMatcher, toSourceString(file, line));
+   boost::shared_ptr<StepInfo> stepInfo(boost::make_shared< StepInvoker<T> >(stepMatcher, toSourceString(file, line)));
    s.addStep(stepInfo);
    return stepInfo->id;
 }
@@ -227,7 +225,7 @@ StepInvoker<T>::StepInvoker(const std::string &stepMatcher, const std::string so
 }
 
 template<class T>
-InvokeResult StepInvoker<T>::invokeStep(const InvokeArgs *pArgs) {
+InvokeResult StepInvoker<T>::invokeStep(const InvokeArgs *pArgs) const {
     T t;
     return t.invoke(pArgs);
 }
