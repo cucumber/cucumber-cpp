@@ -16,7 +16,7 @@ matrix:
     - os: osx
       env: GMOCK_PATH=/usr/src/gmock
     - os: osx
-      compiler: gcc #does anyone on osx use it?
+      compiler: gcc
 
 addons:
   apt:
@@ -30,6 +30,7 @@ addons:
       - libboost-test-dev
       - google-mock
       - ninja-build
+      - qtbase5-dev
 
 before_install:
   - if [[ "${TRAVIS_OS_NAME}" = "osx" ]]; then brew update && brew install ninja; fi

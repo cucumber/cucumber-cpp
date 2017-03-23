@@ -28,28 +28,22 @@ environment:
     BOOST_LIBRARYDIR: C:\Libraries\boost_1_59_0\lib32-msvc-14.0
     BOOST_INCLUDEDIR: C:\Libraries\boost_1_59_0\boost
     CMAKE_GENERATOR: 'NMake Makefiles'
+    QT_DIR: C:\Qt\5.7\msvc2015
   - build: msvc
     platform: x64
     BOOST_ROOT: C:\Libraries\boost_1_59_0
     BOOST_INCLUDEDIR: C:\Libraries\boost_1_59_0\boost
     BOOST_LIBRARYDIR: C:\Libraries\boost_1_59_0\lib64-msvc-14.0
     CMAKE_GENERATOR: 'NMake Makefiles'
+    QT_DIR: C:\Qt\5.7\msvc2015_64
 
 install:
-- git submodule init
-- git submodule update
 - set PATH=C:\Ruby%RUBY_VERSION%\bin;%BOOST_LIBRARYDIR%;%PATH%
-- gem install bundle
-- bundle install
-- bundle env
 - if "%build%"=="mingw" set PATH=%MINGW_ROOT%\bin;C:\msys64\usr\bin\;%PATH%
-- if "%build%"=="mingw" bash -lc "pacman --needed --noconfirm -S mingw-w64-%MINGW_ARCH%-boost
+- if "%build%"=="msvc" set PATH=%QT_DIR%\bin;%PATH%
 
 build_script:
-- cmd: if "%build%"=="msvc" call "%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" %PLATFORM%
-- cmd: cmake -E make_directory build
-- cmd: cmake -E chdir build cmake -G "%CMAKE_GENERATOR%" -DCUKE_ENABLE_EXAMPLES=ON -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_INCLUDEDIR="%BOOST_INCLUDEDIR%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" ..
-- cmd: cmake --build build
+- cmd: call appveyor.bat
 
 test_script:
 - cmd: set CTEST_OUTPUT_ON_FAILURE=ON
