@@ -11,7 +11,6 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
-using boost::shared_ptr;
 
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
     #include <type_traits>
@@ -179,13 +178,11 @@ protected:
     typedef std::map<step_id_type, boost::shared_ptr<const StepInfo> > steps_type;
 
 public:
-    virtual ~StepManager();
-
-    void addStep(const boost::shared_ptr<StepInfo>& stepInfo);
-    MatchResult stepMatches(const std::string &stepDescription) const;
-    const boost::shared_ptr<const StepInfo>& getStep(step_id_type id);
+    static step_id_type addStep(boost::shared_ptr<StepInfo> stepInfo);
+    static MatchResult stepMatches(const std::string &stepDescription);
+    static const boost::shared_ptr<const StepInfo>& getStep(step_id_type id);
 protected:
-    steps_type& steps() const;
+    static steps_type& steps();
 };
 
 
@@ -205,10 +202,7 @@ static inline std::string toSourceString(const char *filePath, const int line) {
 
 template<class T>
 static int registerStep(const std::string &stepMatcher, const char *file, const int line) {
-   StepManager s;
-   boost::shared_ptr<StepInfo> stepInfo(boost::make_shared< StepInvoker<T> >(stepMatcher, toSourceString(file, line)));
-   s.addStep(stepInfo);
-   return stepInfo->id;
+   return StepManager::addStep(boost::make_shared< StepInvoker<T> >(stepMatcher, toSourceString(file, line)));
 }
 
 template<typename T>

@@ -13,7 +13,7 @@ StepInfo::StepInfo(const std::string &stepMatcher, const std::string source) :
 
 SingleStepMatch StepInfo::matches(const std::string &stepDescription) const {
     SingleStepMatch stepMatch;
-    shared_ptr<RegexMatch> regexMatch(regex.find(stepDescription));
+    boost::shared_ptr<RegexMatch> regexMatch(regex.find(stepDescription));
     if (regexMatch->matches()) {
         stepMatch.stepInfo = shared_from_this();
         stepMatch.submatches = regexMatch->getSubmatches();
@@ -108,14 +108,11 @@ const std::string &InvokeResult::getDescription() const {
 }
 
 
-StepManager::~StepManager() {
+step_id_type StepManager::addStep(boost::shared_ptr<StepInfo> stepInfo) {
+    return steps().insert(std::make_pair(stepInfo->id, stepInfo)).first->first;
 }
 
-void StepManager::addStep(const boost::shared_ptr<StepInfo>& stepInfo) {
-    steps().insert(std::make_pair(stepInfo->id, stepInfo));
-}
-
-MatchResult StepManager::stepMatches(const std::string &stepDescription) const {
+MatchResult StepManager::stepMatches(const std::string &stepDescription) {
     MatchResult matchResult;
     for (steps_type::iterator iter = steps().begin(); iter != steps().end(); ++iter) {
         const boost::shared_ptr<const StepInfo>& stepInfo = iter->second;
@@ -135,7 +132,7 @@ const boost::shared_ptr<const StepInfo>& StepManager::getStep(step_id_type id) {
  * Needed to fix the "static initialization order fiasco"
  * http://www.parashift.com/c++-faq-lite/ctors.html#faq-10.12
  */
-StepManager::steps_type& StepManager::steps() const {
+StepManager::steps_type& StepManager::steps() {
     static steps_type steps;
     return steps;
 }

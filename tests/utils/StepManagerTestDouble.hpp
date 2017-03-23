@@ -52,54 +52,52 @@ public:
 
 class StepManagerTestDouble : public StepManager {
 public:
-    void clearSteps() {
+    static void clearSteps() {
         steps().clear();
     }
 
-    steps_type::size_type count() {
+    static steps_type::size_type count() {
         return steps().size();
     }
 
-    step_id_type addStepDefinition(const std::string &stepMatcher) {
-        boost::shared_ptr<StepInfo> stepInfo(boost::make_shared<StepInfoNoOp>(stepMatcher, ""));
-        addStep(stepInfo);
-        return stepInfo->id;
+    static step_id_type addStepDefinition(const std::string &stepMatcher) {
+        return addStep(boost::make_shared<StepInfoNoOp>(stepMatcher, ""));
     }
 
-    void addStepDefinitionWithId(step_id_type desiredId, const std::string &stepMatcher) {
-        addStepDefinitionWithId(desiredId, stepMatcher, "");
+    static step_id_type addStepDefinitionWithId(step_id_type desiredId, const std::string &stepMatcher) {
+        return addStepDefinitionWithId(desiredId, stepMatcher, "");
     }
 
-    void addStepDefinitionWithId(step_id_type desiredId, const std::string &stepMatcher,
+    static step_id_type addStepDefinitionWithId(step_id_type desiredId, const std::string &stepMatcher,
             const std::string source) {
         boost::shared_ptr<StepInfo> stepInfo(boost::make_shared<StepInfoNoOp>(stepMatcher, source));
         stepInfo->id = desiredId;
-        addStep(stepInfo);
+        return addStep(stepInfo);
     }
 
-    void addPendingStepDefinitionWithId(step_id_type desiredId, const std::string &stepMatcher) {
-        addPendingStepDefinitionWithId(desiredId, stepMatcher, 0);
+    static step_id_type addPendingStepDefinitionWithId(step_id_type desiredId, const std::string &stepMatcher) {
+        return addPendingStepDefinitionWithId(desiredId, stepMatcher, 0);
     }
 
-    void addPendingStepDefinitionWithId(step_id_type desiredId,
+    static step_id_type addPendingStepDefinitionWithId(step_id_type desiredId,
             const std::string &stepMatcher, const char *description) {
         boost::shared_ptr<StepInfo> stepInfo(boost::make_shared<StepInfoPending>(stepMatcher, description));
         stepInfo->id = desiredId;
-        addStep(stepInfo);
+        return addStep(stepInfo);
     }
 
-    void addTableStepDefinitionWithId(step_id_type desiredId, const std::string &stepMatcher, const unsigned short expectedSize) {
+    static step_id_type addTableStepDefinitionWithId(step_id_type desiredId, const std::string &stepMatcher, const unsigned short expectedSize) {
         boost::shared_ptr<StepInfo> stepInfo(boost::make_shared<StepInfoWithTableArg>(stepMatcher, expectedSize));
         stepInfo->id = desiredId;
-        addStep(stepInfo);
+        return addStep(stepInfo);
     }
 
-    const step_id_type getStepId(const std::string &stepMatcher) {
+    static step_id_type getStepId(const std::string &stepMatcher) {
         step_id_type id = 0;
         for (steps_type::const_iterator i = steps().begin(); i != steps().end(); ++i) {
-            const boost::shared_ptr<const StepInfo>& stepInfo = i->second;
-            if (stepInfo->regex.str() == stepMatcher) {
-                id = stepInfo->id;
+            const StepInfo& stepInfo = *i->second;
+            if (stepInfo.regex.str() == stepMatcher) {
+                id = stepInfo.id;
                 break;
             }
         }

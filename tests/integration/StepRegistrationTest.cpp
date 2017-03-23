@@ -17,9 +17,8 @@ public:
 const int ManualStep::cukeRegId = ::cucumber::internal::registerStep<ManualStep>(MANUAL_STEP_MATCHER, "C:\\Path\\With/Barward/And\\Forward/Slashes.cpp", 42);
 
 TEST(StepRegistrationTest, manualRegistration) {
-    StepManager stepManager;
-    EXPECT_TRUE(stepManager.stepMatches(MANUAL_STEP_MATCHER));
-    EXPECT_EQ("Slashes.cpp:42", stepManager.getStep(ManualStep::cukeRegId)->source);
+    EXPECT_TRUE(StepManager::stepMatches(MANUAL_STEP_MATCHER));
+    EXPECT_EQ("Slashes.cpp:42", StepManager::getStep(ManualStep::cukeRegId)->source);
 }
 
 #define GIVEN_MATCHER "given matcher"
@@ -31,8 +30,7 @@ WHEN(WHEN_MATCHER) {}
 THEN(THEN_MATCHER) {}
 
 TEST(StepRegistrationTest, macroRegistration) {
-    StepManager stepManager;
-    EXPECT_TRUE(stepManager.stepMatches(GIVEN_MATCHER));
-    EXPECT_TRUE(stepManager.stepMatches(WHEN_MATCHER));
-    EXPECT_TRUE(stepManager.stepMatches(THEN_MATCHER));
+    EXPECT_TRUE(StepManager::stepMatches(GIVEN_MATCHER));
+    EXPECT_TRUE(StepManager::stepMatches(WHEN_MATCHER));
+    EXPECT_TRUE(StepManager::stepMatches(THEN_MATCHER));
 }
