@@ -26,8 +26,8 @@ protected:
     template<class T>
     void runStepBodyTest() {
         addStepToManager<T>(STATIC_MATCHER);
-        shared_ptr<const InvokeArgs> spArgs(T::buildInvokeArgs());
-        invoke(stepInfoPtr->id, spArgs.get());
+        const InvokeArgs spArgs(T::buildInvokeArgs());
+        invoke(stepInfoPtr->id, &spArgs);
     }
 
     template<class T>

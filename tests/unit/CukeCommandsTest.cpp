@@ -4,13 +4,10 @@
 #include "../utils/CukeCommandsFixture.hpp"
 
 #include <boost/config.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/shared_ptr.hpp>
 
 using namespace cucumber::internal;
 
 using std::string;
-using boost::shared_ptr;
 
 class CukeCommandsTest : public CukeCommandsFixture {
 protected:
@@ -27,12 +24,12 @@ protected:
     static const string arg_3_string_with_spaces;
 
 public:
-    static boost::shared_ptr<InvokeArgs> buildInvokeArgs() {
-        boost::shared_ptr<InvokeArgs> mixedArgs(boost::make_shared<InvokeArgs>());
-        mixedArgs->addArg(toString(arg_0_int));
-        mixedArgs->addArg(toString(arg_1_double));
-        mixedArgs->addArg(toString(arg_2_string));
-        mixedArgs->addArg(toString(arg_3_string_with_spaces));
+    static InvokeArgs buildInvokeArgs() {
+        InvokeArgs mixedArgs;
+        mixedArgs.addArg(toString(arg_0_int));
+        mixedArgs.addArg(toString(arg_1_double));
+        mixedArgs.addArg(toString(arg_2_string));
+        mixedArgs.addArg(toString(arg_3_string_with_spaces));
         return mixedArgs;
     }
 };
