@@ -22,13 +22,8 @@ public:
     MOCK_CONST_METHOD3(snippetText, std::string(const std::string & keyword, const std::string & name, const std::string & multilineArgClass));
 };
 
-#define EXPECT_TYPE(classname, expression) \
-    EXPECT_THAT(typeid(classname).name(), StrEq(typeid(expression).name()))
-
 #define EXPECT_PTRTYPE(classname, expression) \
-    EXPECT_TYPE(classname, *expression)
-
-
+    EXPECT_NE(dynamic_cast<const classname*>(expression), (void*)NULL)
 
 class WireMessageCodecTest : public Test {
 public:
