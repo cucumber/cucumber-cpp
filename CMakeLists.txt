@@ -40,7 +40,7 @@ if(MSVC11)
     message(STATUS "Forcing Boost 1.51+ on MSVC11")
     set(BOOST_MIN_VERSION "1.51")
 else()
-    set(BOOST_MIN_VERSION "1.40")
+    set(BOOST_MIN_VERSION "1.46")
 endif()
 
 set(CUKE_CORE_BOOST_LIBS thread system regex date_time program_options filesystem)
