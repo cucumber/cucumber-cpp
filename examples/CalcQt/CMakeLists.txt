@@ -1,36 +1,15 @@
 project(CalcQt)
 
 set(CALCQT_HEADERS src/CalculatorWidget.h)
-set(CALCQT_SOURCES src/CalcQt.cpp src/CalculatorWidget.cpp)
-include_directories(${CUKE_INCLUDE_DIRS} src)
-
-find_package(Qt5Core QUIET)
-find_package(Qt5Widgets QUIET)
-find_package(Qt5Test QUIET)
-
-if(${Qt5Core_FOUND} AND ${Qt5Widgets_FOUND} AND ${Qt5Test_FOUND})
-    set(CMAKE_INCLUDE_CURRENT_DIR ON)
-    set(CMAKE_AUTOMOC ON)
-    set(QT_LIBRARIES Qt5::Core Qt5::Widgets Qt5::Test)
-
-    add_library(libcalcqt src/CalculatorWidget.cpp ${CALCQT_HEADERS})
-    target_link_libraries(libcalcqt ${QT_LIBRARIES})
-    
-    add_executable(calcqt ${CALCQT_SOURCES})
-    target_link_libraries(calcqt libcalcqt ${QT_LIBRARIES})
-else()
-    find_package(Qt4 COMPONENTS QtCore QtGui QtTest)
-    if(QT4_FOUND)
-        include(${QT_USE_FILE})
-        qt4_wrap_cpp(CALCQT_HEADERS_MOC ${CALCQT_HEADERS})
-        add_library(libcalcqt src/CalculatorWidget ${CALCQT_HEADERS_MOC})
-    
-        add_executable(calcqt ${CALCQT_SOURCES} ${CALCQT_HEADERS_MOC})
-        target_link_libraries(calcqt ${QT_LIBRARIES})
-    endif()
-endif()
+include_directories(src)
 
 if(QT_LIBRARIES)
+    add_library(libcalcqt src/CalculatorWidget.cpp)
+    target_link_libraries(libcalcqt ${QT_LIBRARIES})
+    
+    add_executable(calcqt src/CalcQt.cpp)
+    target_link_libraries(calcqt libcalcqt ${QT_LIBRARIES})
+
     if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
         include_directories(${Boost_INCLUDE_DIRS})
         add_executable(BoostCalculatorQtSteps features/step_definitions/BoostCalculatorQtSteps)

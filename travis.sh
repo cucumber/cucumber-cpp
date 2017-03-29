@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e #break script on non-zero exitcode from any command
 set -x #display command being executed
+
 gem install bundler
 bundle install
 
@@ -11,6 +12,7 @@ cmake -E make_directory build
 cmake -E chdir build cmake \
     -G Ninja \
     -DCUKE_ENABLE_EXAMPLES=on \
+    ${QTDIR:+"-DCMAKE_PREFIX_PATH=${QTDIR}"} \
     ${VALGRIND_TESTS:+"-DVALGRIND_TESTS=${VALGRIND_TESTS}"} \
     ${GMOCK_PATH:-"-DGMOCK_VER=${GMOCK_VER}"} \
     ${GMOCK_PATH:+"-DGMOCK_SRC_DIR=${GMOCK_PATH}"} \
