@@ -13,7 +13,9 @@ set(CUKE_ENABLE_EXAMPLES OFF CACHE BOOL "Enable the examples")
 set(GMOCK_SRC_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
 set(GMOCK_VER "1.7.0" CACHE STRING "Google Mock framework version to be used")
 option(VALGRIND_TESTS "Run tests within Valgrind" OFF)
+set(CUKE_DISABLE_QT OFF CACHE BOOL "Disable using Qt framework")
 
+set(ignoreMe "${QT_QMAKE_EXECUTABLE}") #supress warning
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 #
@@ -104,6 +106,34 @@ if(NOT CUKE_DISABLE_GTEST)
 endif()
 
 #
+# Qt
+#
+
+if(NOT CUKE_DISABLE_QT)
+    set(CMAKE_PREFIX_PATH $ENV{QTDIR})
+    find_package(Qt5Core  QUIET)
+    find_package(Qt5Widgets  QUIET)
+    find_package(Qt5Test  QUIET)
+
+    if(${Qt5Core_FOUND} AND ${Qt5Widgets_FOUND} AND ${Qt5Test_FOUND})
+        message(STATUS "Found Qt version: ${Qt5Core_VERSION_STRING}")
+        include_directories(${Qt5Core_INCLUDE_DIRS} ${Qt5Widgets_INCLUDE_DIRS} ${Qt5Test_INCLUDE_DIRS})
+#        set(CMAKE_INCLUDE_CURRENT_DIR ON)
+#        set(CMAKE_AUTOMOC ON)
+        if (Qt5_POSITION_INDEPENDENT_CODE)
+            SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
+        endif()
+        set(QT_LIBRARIES Qt5::Core Qt5::Widgets Qt5::Test)
+    else()
+        find_package(Qt4 COMPONENTS QtCore QtGui QtTest)
+        if(QT4_FOUND)
+            set(QT_LIBRARIES Qt4::QtCore Qt4::QtGui Qt4::QtTest)
+            include(${QT_USE_FILE})
+        endif()
+    endif()
+endif()
+
+#
 # Valgrind
 #
 
@@ -154,11 +184,8 @@ endif()
 #
 
 set(CUKE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
 include_directories(${CUKE_INCLUDE_DIR})
-
 set(CUKE_LIBRARIES cucumber-cpp ${CUKE_EXTRA_LIBRARIES})
-
 add_subdirectory(src)
 
 #
@@ -222,4 +249,16 @@ endif()
 
 if(CUKE_ENABLE_EXAMPLES)
     add_subdirectory(examples)
+
+    #check if c++11 is nedded
+    if(${Qt5Core_FOUND})
+        find_program(QMAKE_EXECUTABLE NAMES qmake HINTS ${QTDIR} ENV QTDIR PATH_SUFFIXES bin)
+        execute_process(COMMAND ${QMAKE_EXECUTABLE} -query QT_VERSION OUTPUT_VARIABLE QT_VERSION)
+        if(QT_VERSION GREATER 5.6.99)
+            message(STATUS "C++11 is needed from Qt version 5.7.0, building with c++11 enabled")
+            set_property(TARGET libcalcqt PROPERTY CXX_STANDARD 11)
+            set_property(TARGET calcqt PROPERTY CXX_STANDARD 11)
+        endif()
+    endif()
 endif()
+

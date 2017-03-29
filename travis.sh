@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e #break script on non-zero exitcode from any command
 set -x #display command being executed
+
 gem install bundler
 bundle install
 
