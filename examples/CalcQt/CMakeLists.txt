@@ -8,6 +8,9 @@ if(QT_LIBRARIES)
         qt4_wrap_cpp(CALCQT_MOC ${CALCQT_HEADERS})
     else()
         qt5_wrap_cpp(CALCQT_MOC ${CALCQT_HEADERS})
+
+        add_executable(QtTestCalculatorQtSteps features/step_definitions/QtTestCalculatorQtSteps)
+        target_link_libraries(QtTestCalculatorQtSteps libcalcqt ${QT_LIBRARIES} ${CUKE_LIBRARIES})
     endif()
     add_library(libcalcqt src/CalculatorWidget.cpp ${CALCQT_MOC})
     
