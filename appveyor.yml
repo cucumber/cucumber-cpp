@@ -9,6 +9,7 @@ environment:
     BOOST_LIBRARYDIR: C:\msys64\mingw32\lib
     BOOST_INCLUDEDIR: C:\msys64\mingw32\include\boost
     CMAKE_GENERATOR: 'MSYS Makefiles'
+    QT_DIR: C:\Qt\5.8\mingw53_32
   - MINGW_ARCH: x86_64
     MINGW_ROOT: C:\msys64\mingw64
     BOOST_ROOT: C:\msys64\mingw64
@@ -20,11 +21,13 @@ environment:
     BOOST_LIBRARYDIR: C:\Libraries\boost_1_59_0\lib32-msvc-14.0
     BOOST_INCLUDEDIR: C:\Libraries\boost_1_59_0\boost
     CMAKE_GENERATOR: 'NMake Makefiles'
+    QT_DIR: C:\Qt\5.8\msvc2015
   - MSVC_ARCH: x64
     BOOST_ROOT: C:\Libraries\boost_1_59_0
     BOOST_INCLUDEDIR: C:\Libraries\boost_1_59_0\boost
     BOOST_LIBRARYDIR: C:\Libraries\boost_1_59_0\lib64-msvc-14.0
     CMAKE_GENERATOR: 'NMake Makefiles'
+    QT_DIR: C:\Qt\5.8\msvc2015_64
 
 install:
 - git submodule init
@@ -38,7 +41,7 @@ install:
 
 build_script:
 - cmake -E make_directory build
-- cmake -E chdir build cmake -G "%CMAKE_GENERATOR%" -DCUKE_ENABLE_EXAMPLES=ON -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_INCLUDEDIR="%BOOST_INCLUDEDIR%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" ..
+- cmake -E chdir build cmake -G "%CMAKE_GENERATOR%" -DCUKE_ENABLE_EXAMPLES=ON -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_INCLUDEDIR="%BOOST_INCLUDEDIR%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" -DCMAKE_PREFIX_PATH="%QT_DIR%" ..
 - cmake --build build
 
 test_script:
