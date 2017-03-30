@@ -3,7 +3,8 @@
  * who granted his work on BSD license
  * adjusted for Qt by konserw
  */
-#ifdef _MSC_VER
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+#define WINDOWS
 #include <io.h>
 #include <fcntl.h>
 #define popen _popen 
@@ -53,7 +54,7 @@ public:
         secure_dup2(m_pipe[WRITE], STD_OUT_FD);
         secure_dup2(m_pipe[WRITE], STD_ERR_FD);
         m_capturing = true;
-#ifndef _MSC_VER
+#ifndef WINDOWS
         secure_close(m_pipe[WRITE]);
 #endif
     }
@@ -79,7 +80,7 @@ public:
         do {
             bytesRead = 0;
             fd_blocked = false;
-#ifdef _MSC_VER
+#ifdef WINDOWS
             if (!eof(m_pipe[READ]))
                 bytesRead = read(m_pipe[READ], buf, bufSize-1);
 #else
@@ -99,7 +100,7 @@ public:
         secure_close(m_oldStdOut);
         secure_close(m_oldStdErr);
         secure_close(m_pipe[READ]);
-#ifdef _MSC_VER
+#ifdef WINDOWS
         secure_close(m_pipe[WRITE]);
 #endif
         m_capturing = false;
@@ -129,7 +130,7 @@ private:
         int ret = -1;
         bool fd_blocked = false;
         do {
-#ifdef _MSC_VER
+#ifdef WINDOWS
             ret = pipe(pipes, 65536, O_BINARY);
 #else
             ret = pipe(pipes) == -1;
