@@ -1,4 +1,4 @@
-## In Git
+## [0.4](https://github.com/cucumber/cucumber-cpp/compare/v0.3.1...v0.4) (31 March 2017)
 
 ### New Features
 
