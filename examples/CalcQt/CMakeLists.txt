@@ -10,6 +10,7 @@ if(QT_LIBRARIES)
         qt5_wrap_cpp(CALCQT_MOC ${CALCQT_HEADERS})
     endif()
     add_library(libcalcqt src/CalculatorWidget.cpp ${CALCQT_MOC})
+    target_link_libraries(libcalcqt ${QT_LIBRARIES})
     
     add_executable(calcqt src/CalcQt.cpp)
     target_link_libraries(calcqt libcalcqt ${QT_LIBRARIES})
