@@ -138,14 +138,15 @@ endif()
 #
 
 if(VALGRIND_TESTS)
-    find_program(VALGRIND_CMD valgrind)
-    if(NOT VALGRIND_CMD)
-        message(SEND_ERROR "Failed to find 'valgrind', cannot run tests with it as requested")
+    find_package(Valgrind REQUIRED)
+    set(VALGRIND_ARGS --error-exitcode=2 --leak-check=full --undef-value-errors=no)
+    if(NOT VALGRIND_VERSION_STRING VERSION_LESS 3.9)
+        # Valgrind 3.9 no longer shows all leaks unless asked to
+        list(APPEND VALGRIND_ARGS --show-leak-kinds=all)
     endif()
-    set(VALGRIND_ARGS --error-exitcode=2 --leak-check=full --show-leak-kinds=all --undef-value-errors=no)
     function(add_test name)
         if(NOT name STREQUAL "NAME")
-            _add_test(${VALGRIND_CMD} ${VALGRIND_ARGS} ${ARGV})
+            _add_test(${VALGRIND_EXECUTABLE} ${VALGRIND_ARGS} ${ARGV})
             return()
         endif()
 
@@ -173,7 +174,7 @@ if(VALGRIND_TESTS)
         endif()
 
         # Insert the valgrind command line, before the command to execute
-        list(INSERT TEST_ARGS ${COMMAND_IDX} ${VALGRIND_CMD} ${VALGRIND_ARGS})
+        list(INSERT TEST_ARGS ${COMMAND_IDX} ${VALGRIND_EXECUTABLE} ${VALGRIND_ARGS})
 
         _add_test(${TEST_ARGS})
     endfunction()
