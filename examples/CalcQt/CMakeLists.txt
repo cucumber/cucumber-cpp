@@ -13,6 +13,7 @@ if(QT_LIBRARIES)
         target_link_libraries(QtTestCalculatorQtSteps libcalcqt ${QT_LIBRARIES} ${CUKE_LIBRARIES})
     endif()
     add_library(libcalcqt src/CalculatorWidget.cpp ${CALCQT_MOC})
+    target_link_libraries(libcalcqt ${QT_LIBRARIES})
     
     add_executable(calcqt src/CalcQt.cpp)
     target_link_libraries(calcqt libcalcqt ${QT_LIBRARIES})
