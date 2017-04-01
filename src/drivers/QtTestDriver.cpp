@@ -1,5 +1,4 @@
 #include "cucumber-cpp/internal/drivers/QtTestDriver.hpp"
-#include "cucumber-cpp/internal/utils/qtCapture.hpp"
 
 #include <QtTest/QtTest>
 
@@ -38,7 +37,7 @@
 
 class qtCapture {
 public:
-    static void Init() {
+    qtCapture(): m_capturing(false) {
         // make stdout & stderr streams unbuffered
         // so that we don't need to flush the streams
         // before capture and after capture 
@@ -47,8 +46,12 @@ public:
         setvbuf(stdout, NULL, _IONBF, 0);
         setvbuf(stderr, NULL, _IONBF, 0);
     }
+    ~qtCapture() {
+        if(m_capturing)
+            EndCapture();
+    }
 
-    static void BeginCapture() {
+    void BeginCapture() {
         QMutexLocker locker(&m_mutex);
         if (m_capturing)
             return;
@@ -64,12 +67,12 @@ public:
 #endif
     }
 
-    static bool IsCapturing() {
+    bool IsCapturing() {
         QMutexLocker locker(&m_mutex);
         return m_capturing;
     }
 
-    static void EndCapture() {
+    void EndCapture() {
         QMutexLocker locker(&m_mutex);
         if (!m_capturing)
             return;
@@ -111,7 +114,7 @@ public:
         m_capturing = false;
     }
 
-    static std::string GetCapture() {
+    std::string GetCapture() {
         QMutexLocker locker(&m_mutex);
         return m_captured;
     }
@@ -119,7 +122,7 @@ public:
 private:
     enum PIPES { READ, WRITE };
 
-    static int secure_dup(int src) {
+    int secure_dup(int src) {
         int ret = -1;
         bool fd_blocked = false;
         do {
@@ -131,7 +134,7 @@ private:
         return ret;
     }
 
-    static void secure_pipe(int * pipes) {
+    void secure_pipe(int * pipes) {
         int ret = -1;
         bool fd_blocked = false;
         do {
@@ -146,7 +149,7 @@ private:
         } while (ret < 0);
     }
 
-    static void secure_dup2(int src, int dest) {
+    void secure_dup2(int src, int dest) {
         int ret = -1;
         bool fd_blocked = false;
         do {
@@ -157,7 +160,7 @@ private:
         } while (ret < 0);
     }
 
-    static void secure_close(int & fd) {
+    void secure_close(int & fd) {
         int ret = -1;
         bool fd_blocked = false;
         do {
@@ -170,21 +173,13 @@ private:
         fd = -1;
     }
 
-    static int m_pipe[2];
-    static int m_oldStdOut;
-    static int m_oldStdErr;
-    static bool m_capturing;
-    static QMutex m_mutex;
-    static std::string m_captured;
+    int m_pipe[2];
+    int m_oldStdOut;
+    int m_oldStdErr;
+    bool m_capturing;
+    QMutex m_mutex;
+    std::string m_captured;
 };
-
-// actually define vars.
-int qtCapture::m_pipe[2];
-int qtCapture::m_oldStdOut;
-int qtCapture::m_oldStdErr;
-bool qtCapture::m_capturing;
-QMutex qtCapture::m_mutex;
-std::string qtCapture::m_captured;
 
 namespace cucumber {
 namespace internal {
@@ -192,15 +187,15 @@ namespace internal {
 const InvokeResult QtTestStep::invokeStepBody() {
     QtTestObject testObject(this);
 
-    qtCapture::Init();
-    qtCapture::BeginCapture();
+    qtCapture capture;
+    capture.BeginCapture();
     int returnValue = QTest::qExec(&testObject, 0, NULL);
-    qtCapture::EndCapture();
+    capture.EndCapture();
 
     if(returnValue == 0)
         return InvokeResult::success();
     else
-        return InvokeResult::failure(qtCapture::GetCapture());
+        return InvokeResult::failure(capture.GetCapture());
 }
 
 }
