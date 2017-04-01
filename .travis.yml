@@ -24,7 +24,7 @@ matrix:
       env: GMOCK_VER=1.8.0 QTDIR=/usr/local/Cellar/qt5/5.8.0_1
     - os: osx
       compiler: clang
-      env: GMOCK_VER=1.7.0 QTDIR=/usr/local/Cellar/qt5/5.8.0_1
+      env: GMOCK_VER=1.7.0
 
 addons:
   apt:

@@ -21,7 +21,7 @@ environment:
     BOOST_ROOT: C:\Libraries\boost_1_59_0
     BOOST_LIBRARYDIR: C:\Libraries\boost_1_59_0\lib32-msvc-14.0
     BOOST_INCLUDEDIR: C:\Libraries\boost_1_59_0\boost
-    QT_DIR: C:\Qt\5.8\msvc2015
+    QT_DIR: C:\Qt\5.6\msvc2015
   - CMAKE_GENERATOR: 'NMake Makefiles'
     platform: x64
     BOOST_ROOT: C:\Libraries\boost_1_59_0
