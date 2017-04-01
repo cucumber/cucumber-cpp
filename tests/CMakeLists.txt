@@ -3,7 +3,7 @@ function(cuke_add_driver_test TEST_FILE)
     message(STATUS "Adding " ${TEST_NAME})
     add_executable(${TEST_NAME} ${TEST_FILE}.cpp)
     target_link_libraries(${TEST_NAME} cucumber-cpp-nomain ${CUKE_EXTRA_LIBRARIES} ${ARGN})
-    add_test(${TEST_NAME} ${TEST_NAME})
+    add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
 endfunction()
 
 if(GMOCK_FOUND)
