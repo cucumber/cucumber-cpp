@@ -118,12 +118,8 @@ protected:
 
     void SetUp() {
         CukeCommandsFixture::SetUp();
-        addStepToManager<EmptyStep>(STATIC_MATCHER);
-    }
-
-    void TearDown() {
         clearHookCallMarkers();
-        CukeCommandsFixture::TearDown();
+        addStepToManager<EmptyStep>(STATIC_MATCHER);
     }
 };
 
