@@ -2,7 +2,7 @@
 
 We appreciate that. But before you do, please learn our basic rules:
 
-* This is not a support or discussion forum. If you have a question, please ask it on [The Cukes Google Group](http://groups.google.com/group/cukes).
+* This is not a support or discussion forum. If you have a question, please ask it on [The Cukes Google Group](http://groups.google.com/group/cukes) or on [Gitter](https://gitter.im/cucumber/).
 * Do you have a feature request? Then don't expect it to be implemented unless you or someone else sends a [pull request](https://help.github.com/articles/using-pull-requests).
 * Reporting a bug? We need to know what compiler, operating system and architecture (32 or 64 bit) you are using, including versions of all libraries. Bugs with [pull requests](https://help.github.com/articles/using-pull-requests) get fixed quicker. Some bugs may never be fixed.
 * You have to tell us how to reproduce a bug. Bonus point for a [pull request](https://help.github.com/articles/using-pull-requests) with a failing test that reproduces the bug.
@@ -37,14 +37,38 @@ Here is an [Example](https://github.com/cucumber/bool/pull/12) of this process i
 2. Close tickets with commits if you can
     + Add "Closes #5, #9" somewhere in the commit message to both link and close. See [Issues 2.0 the Next Generation](https://github.com/blog/831-issues-2-0-the-next-generation) for details.
     + Use [this script](https://gist.github.com/aslakhellesoy/4754009) to compile and view GFM locally
-3. Tag issues so we can do better triage and assignment.
-    + People tend to gravitate towards areas of expertise and tags makes it easier to give a ticket to the right person.
-4. Update HISTORY.md
-    + When you fix a bug or add a feature
-    + Add release dates
-5. Subscribe to ticket feeds so you stay in the loop and get a chance to provide feedback on tickets
-6. The code standard is the existing code
+3. Update `HISTORY.md` when you fix a bug or add a feature
+4. Subscribe to ticket feeds so you stay in the loop and get a chance to provide feedback on tickets
+5. The code standard is the existing code
     + Use the same indentation, spacing, line ending, ASCII for source code, UTF-8 everywhere else
-7. Use git diff (or git diff --cached if you have staged) before every commit
+6. Use git diff (or git diff --cached if you have staged) before every commit
     + This helps you avoid committing changes you didn't mean to
 
+## Maintainers' guide
+
+### Merge a PR
+
+- Verify that:
+  - All checks have passed
+  - At least one maintainer has approved any non-trivial change, and a
+    discussion has occurred for any breaking change
+  - The branch does not need rebasing or squashing of commits
+- To merge:
+  - Follow the command line instructions on GitHub
+  - If the `HISTORY.md` hasn't been updated and it is either a new feature or
+    a bugfix, specify the `--no-commit` flag when merging and add the relative
+    line following the current convention.
+  - Commit message should follow the current convention:
+    `Merge #42 'Description of the change usually from the PR description'`
+
+### Do a release
+
+- Release commit (e.g. [fdf8a5c](https://github.com/cucumber/cucumber-cpp/commit/fdf8a5c4ef4c51dfa7ea82077f706414a4c6322d)):
+  - Change `HISTORY.md` renaming the "In Git" section with the
+    release number and date
+  - Commit with message `Updated history file for the X.Y release`
+  - Tag this commit with `vX.Y`
+- New development branch commit (e.g. [da60995](https://github.com/cucumber/cucumber-cpp/commit/da609956fcd42046e5182c6226acd7e53dd7754e)):
+  - Add new "In Git" section to `HISTORY.md`
+  - Commit with message `Preparing history file for next development release`
+- Push commits and tags to master
