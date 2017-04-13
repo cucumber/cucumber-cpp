@@ -63,7 +63,7 @@ WHEN("^I press subtract") {
 
 THEN("^the display should be empty$") {
     cucumber::ScenarioScope<CalculatorWidget> calculator;
-    QCOMPARE(0, calculator->display().size());
+    QCOMPARE(calculator->display().size(), 0);
 }
 
 THEN("^the display should show (.*)$") {

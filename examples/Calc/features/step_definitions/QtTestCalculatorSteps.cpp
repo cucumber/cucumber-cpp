@@ -33,6 +33,6 @@ THEN("^the result should be (.*) on the screen$") {
     REGEX_PARAM(double, expected);
     ScenarioScope<CalcCtx> context;
 
-    QCOMPARE(expected, context->result);
+    QCOMPARE(context->result, expected);
 }
 
