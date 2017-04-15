@@ -26,7 +26,7 @@ if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
     list(APPEND CUKE_SOURCES drivers/BoostDriver.cpp)
 endif()
 
-if(cgreen_FOUND)
+if(CGREEN_FOUND)
     include_directories(${CGREEN_INCLUDE_DIRS})
     list(APPEND CUKE_SOURCES drivers/CgreenDriver.cpp)
 endif()

@@ -21,7 +21,7 @@ if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
     target_link_libraries(BoostCalculatorSteps Calc ${CUKE_LIBRARIES} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 endif()
 
-if(cgreen_FOUND)
+if(CGREEN_FOUND)
     include_directories(${CGREEN_INCLUDE_DIRS})
     add_executable(CgreenCalculatorSteps features/step_definitions/CgreenCalculatorSteps)
     target_link_libraries(CgreenCalculatorSteps Calc ${CUKE_LIBRARIES} ${CGREEN_LIBRARIES})

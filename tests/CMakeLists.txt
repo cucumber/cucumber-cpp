@@ -48,7 +48,7 @@ if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
     cuke_add_driver_test(integration/drivers/BoostDriverTest ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 endif()
 
-if(cgreen_FOUND)
+if(CGREEN_FOUND)
     include_directories(${CGREEN_INCLUDE_DIRS})
     cuke_add_driver_test(integration/drivers/CgreenDriverTest ${CGREEN_LIBRARIES})
 endif()
