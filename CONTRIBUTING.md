@@ -37,11 +37,10 @@ Here is an [Example](https://github.com/cucumber/bool/pull/12) of this process i
 2. Close tickets with commits if you can
     + Add "Closes #5, #9" somewhere in the commit message to both link and close. See [Issues 2.0 the Next Generation](https://github.com/blog/831-issues-2-0-the-next-generation) for details.
     + Use [this script](https://gist.github.com/aslakhellesoy/4754009) to compile and view GFM locally
-3. Update `HISTORY.md` when you fix a bug or add a feature
-4. Subscribe to ticket feeds so you stay in the loop and get a chance to provide feedback on tickets
-5. The code standard is the existing code
+3. Subscribe to ticket feeds so you stay in the loop and get a chance to provide feedback on tickets
+4. The code standard is the existing code
     + Use the same indentation, spacing, line ending, ASCII for source code, UTF-8 everywhere else
-6. Use git diff (or git diff --cached if you have staged) before every commit
+5. Use git diff (or git diff --cached if you have staged) before every commit
     + This helps you avoid committing changes you didn't mean to
 
 ## Maintainers' guide
@@ -55,9 +54,10 @@ Here is an [Example](https://github.com/cucumber/bool/pull/12) of this process i
   - The branch does not need rebasing or squashing of commits
 - To merge:
   - Follow the command line instructions on GitHub
-  - If the `HISTORY.md` hasn't been updated and it is either a new feature or
-    a bugfix, specify the `--no-commit` flag when merging and add the relative
-    line following the current convention.
+  - If it is either a new feature or a bugfix, specify the `--no-commit`
+    flag when merging and add a line to `HISTORY.md` following the
+    current convention. Add this file to the changes to be committed and
+    commit the merge.
   - Commit message should follow the current convention:
     `Merge #42 'Description of the change usually from the PR description'`
 
