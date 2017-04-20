@@ -42,7 +42,7 @@ public:
 };
 
 
-class InvokeCommand : public WireCommand {
+class CUCUMBER_CPP_EXPORT InvokeCommand : public WireCommand {
 private:
     const std::string stepId;
     const CukeEngine::invoke_args_type args;

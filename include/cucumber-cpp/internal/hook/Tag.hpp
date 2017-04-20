@@ -7,12 +7,13 @@
 #include <boost/shared_ptr.hpp>
 using boost::shared_ptr;
 
+#include "CukeExport.hpp"
 #include "../utils/Regex.hpp"
 
 namespace cucumber {
 namespace internal {
 
-class TagExpression {
+class CUCUMBER_CPP_EXPORT TagExpression {
 public:
     typedef std::vector<std::string> tag_list;
 
@@ -20,7 +21,7 @@ public:
     virtual bool matches(const tag_list &tags) = 0;
 };
 
-class OrTagExpression : public TagExpression {
+class CUCUMBER_CPP_EXPORT OrTagExpression : public TagExpression {
 public:
     OrTagExpression(const std::string &csvTagNotation);
     bool matches(const tag_list &tags);
@@ -33,7 +34,7 @@ private:
     static Regex & csvTagNotationRegex();
 };
 
-class AndTagExpression : public TagExpression {
+class CUCUMBER_CPP_EXPORT AndTagExpression : public TagExpression {
 public:
     AndTagExpression(const std::string &csvTagNotation);
     bool matches(const tag_list &tags);

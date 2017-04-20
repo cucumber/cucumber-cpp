@@ -8,7 +8,7 @@ namespace internal {
 
 class CukeBoostLogInterceptor;
 
-class BoostStep : public BasicStep {
+class CUCUMBER_CPP_EXPORT BoostStep : public BasicStep {
 protected:
     const InvokeResult invokeStepBody();
 

@@ -6,6 +6,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/regex.hpp>
 
+#include "CukeExport.hpp"
+
 namespace cucumber {
 namespace internal {
 
@@ -15,7 +17,7 @@ struct RegexSubmatch {
 };
 
 
-class RegexMatch {
+class CUCUMBER_CPP_EXPORT RegexMatch {
 public:
     typedef std::vector<RegexSubmatch> submatches_type;
 
@@ -40,7 +42,7 @@ public:
 };
 
 
-class Regex {
+class CUCUMBER_CPP_EXPORT Regex {
 private:
     boost::regex regexImpl;
 

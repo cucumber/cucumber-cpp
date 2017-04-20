@@ -36,7 +36,7 @@ void acceptWireProtocol(int port, const std::string& unixPath, bool verbose) {
 
 }
 
-int main(int argc, char **argv) {
+CUCUMBER_CPP_EXPORT int main(int argc, char **argv) {
     using boost::program_options::value;
     boost::program_options::options_description optionDescription("Allowed options");
     optionDescription.add_options()

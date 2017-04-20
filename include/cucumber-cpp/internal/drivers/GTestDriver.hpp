@@ -1,6 +1,7 @@
 #ifndef CUKE_GTESTDRIVER_HPP_
 #define CUKE_GTESTDRIVER_HPP_
 
+#include "CukeExport.hpp"
 #include "../step/StepManager.hpp"
 
 #include <iostream>
@@ -8,7 +9,7 @@
 namespace cucumber {
 namespace internal {
 
-class GTestStep : public BasicStep {
+class CUCUMBER_CPP_EXPORT GTestStep : public BasicStep {
 protected:
     const InvokeResult invokeStepBody();
 

@@ -1,6 +1,8 @@
 #ifndef CUKE_CUKEENGINE_HPP_
 #define CUKE_CUKEENGINE_HPP_
 
+#include "CukeExport.hpp"
+
 #include <string>
 #include <vector>
 
@@ -9,13 +11,13 @@
 namespace cucumber {
 namespace internal {
 
-class StepMatchArg {
+class CUCUMBER_CPP_EXPORT StepMatchArg {
 public:
     std::string value;
     int position;
 };
 
-class StepMatch {
+class CUCUMBER_CPP_EXPORT StepMatch {
 public:
     std::string id;
     std::vector<StepMatchArg> args;
@@ -23,7 +25,7 @@ public:
     std::string regexp;
 };
 
-class InvokeException {
+class CUCUMBER_CPP_EXPORT InvokeException {
 private:
     const std::string message;
 
@@ -36,7 +38,7 @@ public:
     virtual ~InvokeException() {}
 };
 
-class InvokeFailureException : public InvokeException {
+class CUCUMBER_CPP_EXPORT InvokeFailureException : public InvokeException {
 private:
     const std::string exceptionType;
 
@@ -47,7 +49,7 @@ public:
     const std::string getExceptionType() const;
 };
 
-class PendingStepException : public InvokeException {
+class CUCUMBER_CPP_EXPORT PendingStepException : public InvokeException {
 public:
     PendingStepException(const std::string & message);
     PendingStepException(const PendingStepException &rhs);
@@ -95,7 +97,8 @@ public:
      */
     virtual std::string snippetText(const std::string & keyword, const std::string & name, const std::string & multilineArgClass) const = 0;
 
-    virtual ~CukeEngine() {}
+    CUCUMBER_CPP_EXPORT CukeEngine();
+    CUCUMBER_CPP_EXPORT virtual ~CukeEngine();
 };
 
 }

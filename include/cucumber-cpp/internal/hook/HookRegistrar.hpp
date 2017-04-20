@@ -1,6 +1,7 @@
 #ifndef CUKE_HOOKREGISTRAR_HPP_
 #define CUKE_HOOKREGISTRAR_HPP_
 
+#include "CukeExport.hpp"
 #include "Tag.hpp"
 #include "../Scenario.hpp"
 #include "../step/StepManager.hpp"
@@ -14,12 +15,12 @@ using boost::shared_ptr;
 namespace cucumber {
 namespace internal {
 
-class CallableStep {
+class CUCUMBER_CPP_EXPORT CallableStep {
 public:
     virtual void call() = 0;
 };
 
-class Hook {
+class CUCUMBER_CPP_EXPORT Hook {
 public:
     void setTags(const std::string &csvTagNotation);
     virtual void invokeHook(Scenario *scenario, CallableStep *step);
@@ -31,10 +32,10 @@ private:
     shared_ptr<TagExpression> tagExpression;
 };
 
-class BeforeHook : public Hook {
+class CUCUMBER_CPP_EXPORT BeforeHook : public Hook {
 };
 
-class AroundStepHook : public Hook {
+class CUCUMBER_CPP_EXPORT AroundStepHook : public Hook {
 public:
     virtual void invokeHook(Scenario *scenario, CallableStep *step);
     virtual void skipHook();
@@ -42,24 +43,24 @@ protected:
     CallableStep *step;
 };
 
-class AfterStepHook : public Hook {
+class CUCUMBER_CPP_EXPORT AfterStepHook : public Hook {
 };
 
-class AfterHook : public Hook {
+class CUCUMBER_CPP_EXPORT AfterHook : public Hook {
 };
 
-class UnconditionalHook : public Hook {
+class CUCUMBER_CPP_EXPORT UnconditionalHook : public Hook {
 public:
     virtual void invokeHook(Scenario *scenario, CallableStep *step);
 };
 
-class BeforeAllHook : public UnconditionalHook {
+class CUCUMBER_CPP_EXPORT BeforeAllHook : public UnconditionalHook {
 };
 
-class AfterAllHook : public UnconditionalHook {
+class CUCUMBER_CPP_EXPORT AfterAllHook : public UnconditionalHook {
 };
 
-class HookRegistrar {
+class CUCUMBER_CPP_EXPORT HookRegistrar {
 public:
     typedef std::list< boost::shared_ptr<Hook> > hook_list_type;
     typedef std::list< boost::shared_ptr<AroundStepHook> > aroundhook_list_type;
@@ -97,7 +98,7 @@ protected:
 };
 
 
-class StepCallChain {
+class CUCUMBER_CPP_EXPORT StepCallChain {
 public:
     StepCallChain(Scenario *scenario, const boost::shared_ptr<const StepInfo>& stepInfo, const InvokeArgs *pStepArgs, HookRegistrar::aroundhook_list_type &aroundHooks);
     InvokeResult exec();
@@ -114,7 +115,7 @@ private:
     InvokeResult result;
 };
 
-class CallableStepChain : public CallableStep {
+class CUCUMBER_CPP_EXPORT CallableStepChain : public CallableStep {
 public:
     CallableStepChain(StepCallChain *scc);
     void call();
