@@ -2,6 +2,7 @@
 #define CUKE_CUKEENGINE_IMPL_HPP_
 
 #include "CukeEngine.hpp"
+#include "CukeExport.hpp"
 #include "CukeCommands.hpp"
 
 namespace cucumber {
@@ -13,7 +14,7 @@ namespace internal {
  * Currently it is a wrapper around CukeCommands. It will have its own
  * implementation when feature #31 is complete.
  */
-class CukeEngineImpl : public CukeEngine {
+class CUCUMBER_CPP_EXPORT CukeEngineImpl : public CukeEngine {
 private:
     CukeCommands cukeCommands;
 

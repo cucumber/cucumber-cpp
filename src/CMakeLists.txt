@@ -1,3 +1,5 @@
+include(GenerateExportHeader)
+
 set(CUKE_SOURCES
     drivers/GenericDriver.cpp
     ContextManager.cpp
@@ -41,14 +43,32 @@ if(CMAKE_EXTRA_GENERATOR OR MSVC_IDE)
     list(APPEND CUKE_SOURCES ${CUKE_HEADERS})
 endif()
 
-add_library(cucumber-cpp-nomain STATIC ${CUKE_SOURCES})
-add_library(cucumber-cpp STATIC ${CUKE_SOURCES} main.cpp)
+if(CUKE_ENABLE_SHARED_LIB)
+    set(CUKE_LINKAGE SHARED)
+else()
+    set(CUKE_LINKAGE STATIC)
+endif()
+
+add_library(cucumber-cpp-nomain ${CUKE_LINKAGE} ${CUKE_SOURCES})
+add_library(cucumber-cpp ${CUKE_LINKAGE} ${CUKE_SOURCES} main.cpp)
+
+set_target_properties(cucumber-cpp cucumber-cpp-nomain PROPERTIES
+    DEFINE_SYMBOL cucumber_cpp_EXPORTS
+)
+
+generate_export_header(cucumber-cpp
+    EXPORT_FILE_NAME "CukeExport.hpp"
+)
 
 foreach(TARGET
         cucumber-cpp-nomain
         cucumber-cpp
 )
-    target_include_directories(${TARGET} PUBLIC ${CMAKE_SOURCE_DIR}/include)
+    target_include_directories(${TARGET}
+        PUBLIC
+            ${CMAKE_CURRENT_BINARY_DIR}
+            ${CMAKE_SOURCE_DIR}/include
+    )
     target_link_libraries(${TARGET}
         PUBLIC
             Boost::boost

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 
 project(Cucumber-Cpp)
 
+option(CUKE_ENABLE_SHARED_LIB   "Generate a shared library" OFF)
 option(CUKE_USE_STATIC_BOOST    "Statically link Boost (except boost::test)" ${WIN32})
 option(CUKE_USE_STATIC_GTEST    "Statically link Google Test" ON)
 option(CUKE_DISABLE_BOOST_TEST  "Disable boost:test" OFF)

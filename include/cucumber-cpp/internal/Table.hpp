@@ -1,6 +1,8 @@
 #ifndef CUKE_TABLE_HPP_
 #define CUKE_TABLE_HPP_
 
+#include "CukeExport.hpp"
+
 #include <vector>
 #include <map>
 #include <string>
@@ -9,7 +11,7 @@
 namespace cucumber {
 namespace internal {
 
-class Table {
+class CUCUMBER_CPP_EXPORT Table {
 private:
     typedef std::vector<std::string> basic_type;
 public:
