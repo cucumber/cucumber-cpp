@@ -63,6 +63,7 @@ class HookRegistrar {
 public:
     typedef std::list< boost::shared_ptr<Hook> > hook_list_type;
     typedef std::list< boost::shared_ptr<AroundStepHook> > aroundhook_list_type;
+    typedef bool(*StepMatchingHook)(const boost::cmatch&);
 
     virtual ~HookRegistrar();
 
@@ -84,6 +85,9 @@ public:
     void addAfterAllHook(const boost::shared_ptr<AfterAllHook>& afterAllHook);
     void execAfterAllHooks();
 
+    void setStepMatchingHook(StepMatchingHook hook);
+    bool execStepMatchingHook(const boost::cmatch& originalMatch);
+
 private:
     void execHooks(HookRegistrar::hook_list_type &hookList, Scenario *scenario);
 
@@ -94,6 +98,7 @@ protected:
     hook_list_type& afterStepHooks();
     hook_list_type& afterHooks();
     hook_list_type& afterAllHooks();
+    StepMatchingHook& stepMatchingHook();
 };
 
 

@@ -1,4 +1,5 @@
 #include <cucumber-cpp/internal/utils/Regex.hpp>
+#include <cucumber-cpp/internal/hook/HookRegistrar.hpp>
 #include <boost/make_shared.hpp>
 
 namespace cucumber {
@@ -26,7 +27,8 @@ boost::shared_ptr<RegexMatch> Regex::find(const std::string &expression) const {
 
 FindRegexMatch::FindRegexMatch(const boost::regex &regexImpl, const std::string &expression) {
     boost::cmatch matchResults;
-    regexMatched = boost::regex_search(expression.c_str(), matchResults, regexImpl, boost::regex_constants::match_extra);
+    regexMatched = boost::regex_search(expression.c_str(), matchResults, regexImpl, boost::regex_constants::match_extra)
+                   && HookRegistrar().execStepMatchingHook(matchResults);
     if (regexMatched) {
         for (boost::cmatch::size_type i = 1; i < matchResults.size(); ++i) {
             RegexSubmatch s;
