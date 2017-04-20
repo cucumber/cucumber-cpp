@@ -2,6 +2,7 @@
 #define CUKE_WIREPROTOCOL_HPP_
 
 #include "ProtocolHandler.hpp"
+#include "../../CukeDll.hpp"
 #include "../../CukeEngine.hpp"
 #include <boost/shared_ptr.hpp>
 
@@ -14,7 +15,7 @@ namespace internal {
 
 class WireResponseVisitor;
 
-class WireResponse {
+class CUKE_API_ WireResponse {
 public:
     WireResponse() {};
 
@@ -23,12 +24,12 @@ public:
     virtual ~WireResponse() {};
 };
 
-class SuccessResponse : public WireResponse {
+class CUKE_API_ SuccessResponse : public WireResponse {
 public:
     void accept(WireResponseVisitor& visitor) const;
 };
 
-class FailureResponse : public WireResponse {
+class CUKE_API_ FailureResponse : public WireResponse {
 private:
     const std::string message, exceptionType;
 
@@ -41,7 +42,7 @@ public:
     void accept(WireResponseVisitor& visitor) const;
 };
 
-class PendingResponse : public WireResponse {
+class CUKE_API_ PendingResponse : public WireResponse {
 private:
     const std::string message;
 
@@ -53,7 +54,7 @@ public:
     void accept(WireResponseVisitor& visitor) const;
 };
 
-class StepMatchesResponse : public WireResponse {
+class CUKE_API_ StepMatchesResponse : public WireResponse {
 private:
     const std::vector<StepMatch> matchingSteps;
 
@@ -64,7 +65,7 @@ public:
     void accept(WireResponseVisitor& visitor) const;
 };
 
-class SnippetTextResponse : public WireResponse {
+class CUKE_API_ SnippetTextResponse : public WireResponse {
 private:
     const std::string stepSnippet;
 
@@ -76,7 +77,7 @@ public:
     void accept(WireResponseVisitor& visitor) const;
 };
 
-class WireResponseVisitor {
+class CUKE_API_ WireResponseVisitor {
 public:
     virtual void visit(const SuccessResponse& response) = 0;
     virtual void visit(const FailureResponse& response) = 0;
@@ -91,7 +92,7 @@ public:
 /**
  * Wire protocol request command.
  */
-class WireCommand {
+class CUKE_API_ WireCommand {
 public:
     /**
      * Runs the command on the provided engine
@@ -105,7 +106,7 @@ public:
     virtual ~WireCommand() {};
 };
 
-class WireMessageCodecException : public std::exception {
+class CUKE_API_ WireMessageCodecException : public std::exception {
 private:
     const char *description;
 
@@ -123,7 +124,7 @@ public:
 /**
  * Transforms wire messages into commands and responses to messages.
  */
-class WireMessageCodec {
+class CUKE_API_ WireMessageCodec {
 public:
     /**
      * Decodes a wire message into a command.
@@ -151,7 +152,7 @@ public:
 /**
  * WireMessageCodec implementation with JsonSpirit.
  */
-class JsonSpiritWireMessageCodec : public WireMessageCodec {
+class CUKE_API_ JsonSpiritWireMessageCodec : public WireMessageCodec {
 public:
     JsonSpiritWireMessageCodec();
     boost::shared_ptr<WireCommand> decode(const std::string &request) const;
@@ -162,7 +163,7 @@ public:
  * Wire protocol handler, delegating JSON encoding and decoding to a
  * codec object and running commands on a provided engine instance.
  */
-class WireProtocolHandler : public ProtocolHandler {
+class CUKE_API_ WireProtocolHandler : public ProtocolHandler {
 private:
     const WireMessageCodec& codec;
     CukeEngine& engine;

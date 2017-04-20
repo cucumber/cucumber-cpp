@@ -1,5 +1,6 @@
 #include "step/StepManager.hpp"
 #include "hook/HookRegistrar.hpp"
 #include "ContextManager.hpp"
+#include "CukeDll.hpp"
 #include "Macros.hpp"
 #include "drivers/DriverSelector.hpp"

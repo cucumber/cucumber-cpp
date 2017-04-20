@@ -13,7 +13,7 @@ namespace internal {
  * Currently it is a wrapper around CukeCommands. It will have its own
  * implementation when feature #31 is complete.
  */
-class CukeEngineImpl : public CukeEngine {
+class CUKE_API_ CukeEngineImpl : public CukeEngine {
 private:
     CukeCommands cukeCommands;
 

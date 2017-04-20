@@ -1,6 +1,8 @@
 #ifndef CUKE_CUKEENGINE_HPP_
 #define CUKE_CUKEENGINE_HPP_
 
+#include "CukeDll.hpp"
+
 #include <string>
 #include <vector>
 
@@ -9,13 +11,13 @@
 namespace cucumber {
 namespace internal {
 
-class StepMatchArg {
+class CUKE_API_ StepMatchArg {
 public:
     std::string value;
     int position;
 };
 
-class StepMatch {
+class CUKE_API_ StepMatch {
 public:
     std::string id;
     std::vector<StepMatchArg> args;
@@ -23,7 +25,7 @@ public:
     std::string regexp;
 };
 
-class InvokeException {
+class CUKE_API_ InvokeException {
 private:
     const std::string message;
 
@@ -36,7 +38,7 @@ public:
     virtual ~InvokeException() {}
 };
 
-class InvokeFailureException : public InvokeException {
+class CUKE_API_ InvokeFailureException : public InvokeException {
 private:
     const std::string exceptionType;
 
@@ -47,7 +49,7 @@ public:
     const std::string getExceptionType() const;
 };
 
-class PendingStepException : public InvokeException {
+class CUKE_API_ PendingStepException : public InvokeException {
 public:
     PendingStepException(const std::string & message);
     PendingStepException(const PendingStepException &rhs);
@@ -59,7 +61,7 @@ public:
  * It uses standard types (as much as possible) to be easier to call.
  * Returns standard types if possible.
  */
-class CukeEngine {
+class CUKE_API_ CukeEngine {
 private:
     typedef std::vector<std::string> string_array;
     typedef boost::multi_array<std::string, 2> string_2d_array;

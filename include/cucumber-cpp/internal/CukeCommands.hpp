@@ -2,6 +2,7 @@
 #define CUKE_CUKECOMMANDS_HPP_
 
 #include "ContextManager.hpp"
+#include "CukeDll.hpp"
 #include "Scenario.hpp"
 #include "Table.hpp"
 #include "step/StepManager.hpp"
@@ -21,7 +22,7 @@ using boost::shared_ptr;
 /**
  * Legacy class to be removed when feature #31 is complete, substituted by CukeEngineImpl.
  */
-class CukeCommands {
+class CUKE_API_ CukeCommands {
 public:
 	CukeCommands();
 	virtual ~CukeCommands();

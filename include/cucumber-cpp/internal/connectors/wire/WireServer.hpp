@@ -2,6 +2,7 @@
 #define CUKE_WIRESERVER_HPP_
 
 #include "ProtocolHandler.hpp"
+#include "../../CukeDll.hpp"
 
 #include <string>
 
@@ -19,7 +20,7 @@ using namespace boost::asio::local;
 /**
  * Socket server that calls a protocol handler line by line
  */
-class SocketServer {
+class CUKE_API_ SocketServer {
 public:
     /**
       * Constructor for DI
@@ -46,7 +47,7 @@ protected:
 /**
  * Socket server that calls a protocol handler line by line
  */
-class TCPSocketServer : public SocketServer {
+class CUKE_API_ TCPSocketServer : public SocketServer {
 public:
     /**
      * Type definition for TCP port

@@ -4,6 +4,7 @@ project(Cucumber-Cpp)
 
 set(CUKE_USE_STATIC_BOOST ${WIN32} CACHE BOOL "Statically link Boost (except boost::test)")
 set(CUKE_USE_STATIC_GTEST ON CACHE BOOL "Statically link Google Test")
+set(CUKE_ENABLE_SHARED_LIB OFF CACHE BOOL "Generate a shared library")
 
 set(CUKE_DISABLE_BOOST_TEST OFF CACHE BOOL "Disable boost:test")
 set(CUKE_DISABLE_GTEST OFF CACHE BOOL "Disable Google Test framework")

@@ -12,6 +12,7 @@
 #include <boost/shared_ptr.hpp>
 using boost::shared_ptr;
 
+#include "../CukeDll.hpp"
 #include "../Table.hpp"
 #include "../utils/Regex.hpp"
 
@@ -22,7 +23,7 @@ typedef unsigned int step_id_type;
 
 class StepInfo;
 
-class SingleStepMatch {
+class CUKE_API_ SingleStepMatch {
 public:
     typedef RegexMatch::submatches_type submatches_type;
 
@@ -33,7 +34,7 @@ public:
 };
 
 
-class MatchResult {
+class CUKE_API_ MatchResult {
 public:
     typedef std::vector<SingleStepMatch> match_results_type;
 
@@ -48,7 +49,7 @@ private:
 };
 
 
-class InvokeArgs {
+class CUKE_API_ InvokeArgs {
     typedef std::vector<std::string> args_type;
 public:
     typedef args_type::size_type size_type;
@@ -71,7 +72,7 @@ enum InvokeResultType {
     PENDING
 };
 
-class InvokeResult {
+class CUKE_API_ InvokeResult {
 private:
     InvokeResultType type;
     std::string description;
@@ -94,7 +95,7 @@ public:
 };
 
 
-class StepInfo : public boost::enable_shared_from_this<StepInfo> {
+class CUKE_API_ StepInfo : public boost::enable_shared_from_this<StepInfo> {
 public:
     StepInfo(const std::string &stepMatcher, const std::string source);
     SingleStepMatch matches(const std::string &stepDescription) const;
@@ -109,7 +110,7 @@ private:
 };
 
 
-class BasicStep {
+class CUKE_API_ BasicStep {
 public:
     InvokeResult invoke(const InvokeArgs *pArgs);
 
@@ -143,7 +144,7 @@ public:
 };
 
 
-class StepManager {
+class CUKE_API_ StepManager {
 protected:
     typedef std::map<step_id_type, boost::shared_ptr<const StepInfo> > steps_type;
 
