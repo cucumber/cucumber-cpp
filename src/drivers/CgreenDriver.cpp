@@ -92,6 +92,13 @@ int CukeCgreenInterceptor::cgreenPrinter(const char* format, ...) {
 
     va_end(argPtr);
 
+    std::string blackBoxInfo = "\"initCgreenTest\"";
+    std::size_t position = cgreenOutput.find(blackBoxInfo);
+
+    if(position != std::string::npos) {
+        cgreenOutput.resize(position);
+    }
+
     return cgreenOutput.length();
 }
 
