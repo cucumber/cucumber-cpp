@@ -1,21 +1,19 @@
 #include <cgreen/cgreen.h>
 #include <cgreen/mocks.h>
-
 #include <cucumber-cpp/autodetect.hpp>
+#include "FizzBuzzReporter.h"
 
 using cucumber::ScenarioScope;
 using namespace cgreen;
 
-extern "C" {
-#include "FizzBuzzReporter.h"
-};
+static const size_t REPORT_STRING_LEN = 512;
 
 struct FizzBuzzState {
     char reportBuffer[REPORT_STRING_LEN];
 };
 
 // mocked version of printf
-int printf(const char *__restrict __format, ...) {
+int printf(const char *, ...) {
     // do nothing
     return (int)mock();
 }
@@ -28,7 +26,7 @@ GIVEN("^I have passed (.*) into fizzBuzzReporter") {
     // expect mocked function to be called
     expect(printf);
 
-    fizzBuzzReporter(input, context->reportBuffer);
+    fizzBuzzReporter(input, context->reportBuffer, REPORT_STRING_LEN);
 }
 
 THEN("^the result should be (.*)$") {

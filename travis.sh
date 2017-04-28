@@ -30,6 +30,19 @@ killXvfb () {
     fi
 }
 
+if [ -n "${FORMAT:-}" ]; then
+    # Reformat all code changed since this branch forked from the default branch
+    git fetch origin HEAD
+    if [ "${TRAVIS_PULL_REQUEST:-false}" = "false" ]; then
+        BASE_HEAD="$(git rev-parse FETCH_HEAD)"
+    else
+        BASE_HEAD="$(git merge-base FETCH_HEAD HEAD)"
+    fi
+    git clang-format-3.8 --binary=/usr/bin/clang-format-3.8 --style=file --commit="${BASE_HEAD}"
+    # Assert that all changes adhere to the asked for style
+    exec git diff --exit-code
+fi
+
 CTEST_OUTPUT_ON_FAILURE=ON
 export CTEST_OUTPUT_ON_FAILURE
 
@@ -50,7 +63,9 @@ cmake -E chdir build cmake \
     ${VALGRIND_TESTS:+"-DVALGRIND_TESTS=${VALGRIND_TESTS}"} \
     ${GMOCK_PATH:-"-DGMOCK_VER=${GMOCK_VER}"} \
     ${GMOCK_PATH:+"-DGMOCK_SRC_DIR=${GMOCK_PATH}"} \
+    -DCMAKE_PREFIX_PATH=${HOME}/usr \
     ..
+
 cmake --build build
 cmake --build build --target test
 cmake --build build --target features
@@ -59,7 +74,9 @@ startXvfb # Start virtual X display server
 
 for TEST in \
     build/examples/Calc/GTestCalculatorSteps \
+    build/examples/Calc/QtTestCalculatorSteps \
     build/examples/Calc/BoostCalculatorSteps \
+    build/examples/Calc/CgreenCalculatorSteps \
     build/examples/Calc/FuncArgsCalculatorSteps \
 ; do
     if [ -f "${TEST}" ]; then
@@ -72,12 +89,25 @@ done
 
 for TEST in \
     build/examples/CalcQt/GTestCalculatorQtSteps \
+    build/examples/CalcQt/QtTestCalculatorQtSteps \
     build/examples/CalcQt/BoostCalculatorQtSteps \
+    build/examples/CalcQt/CgreenCalculatorQtSteps \
 ; do
     if [ -f "${TEST}" -a -n "${DISPLAY:-}" ]; then
         "${TEST}" 2> /dev/null &
         sleep 1
         cucumber examples/CalcQt
+        wait %
+    fi
+done
+
+for TEST in \
+    build/examples/FizzBuzz/FizzBuzzSteps \
+; do
+    if [ -f "${TEST}" ]; then
+        "${TEST}" > /dev/null &
+        sleep 1
+        cucumber examples/FizzBuzz
         wait %
     fi
 done
@@ -92,13 +122,4 @@ if [ -f "${TEST}" ]; then
     wait %
 fi
 
-if [ -n "${XVFBPID:-}" ]; then
-    kill $XVFBPID
-    wait
-fi
-
-CGREEN=build/examples/FizzBuzz/FizzBuzzSteps
-if [ -f $CGREEN ]; then
-    $CGREEN >/dev/null &
-    cucumber examples/FizzBuzz
-fi
+killXvfb

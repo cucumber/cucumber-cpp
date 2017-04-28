@@ -7,15 +7,15 @@
  */
 
 // printf included to provide and example of how to mock with cgreen
-void fizzBuzzReporter(unsigned int input, char* const reportBuffer) {
+void fizzBuzzReporter(const unsigned int input, char* const reportBuffer, const size_t bufferSize) {
     if((input % 15) == 0) {
-        snprintf(reportBuffer, REPORT_STRING_LEN, "FIZZBUZZ");
+        snprintf(reportBuffer, bufferSize, "FIZZBUZZ");
     } else if((input % 3) == 0) {
-        snprintf(reportBuffer, REPORT_STRING_LEN, "FIZZ");
+        snprintf(reportBuffer, bufferSize, "FIZZ");
     } else if((input % 5) == 0) {
-        snprintf(reportBuffer, REPORT_STRING_LEN, "BUZZ");
+        snprintf(reportBuffer, bufferSize, "BUZZ");
     } else {
-        snprintf(reportBuffer, REPORT_STRING_LEN, "%u", input);
+        snprintf(reportBuffer, bufferSize, "%u", input);
     }
 
     printf("%u reports %s\n", input, reportBuffer);

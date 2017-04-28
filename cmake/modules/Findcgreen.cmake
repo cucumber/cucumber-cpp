@@ -30,7 +30,9 @@
 # ``CGREEN_RUNNER``
 #   cgreen-runner executable
 
-find_path(CGREEN_INCLUDE_DIR cgreen/cgreen.h)
+include(FindPackageHandleStandardArgs)
+
+find_path(CGREEN_INCLUDE_DIR "cgreen/cgreen.h")
 find_library(CGREEN_LIBRARY NAMES cgreen libcgreen)
 find_program(CGREEN_RUNNER cgreen-runner)
 mark_as_advanced(CGREEN_INCLUDE_DIR CGREEN_LIBRARY CGREEN_RUNNER)
@@ -39,8 +41,15 @@ find_package_handle_standard_args(cgreen
   REQUIRED_VARS CGREEN_LIBRARY CGREEN_INCLUDE_DIR CGREEN_RUNNER)
 
 if(CGREEN_FOUND)
-  set(CGREEN_LIBRARIES ${CGREEN_LIBRARY})
-  set(CGREEN_INCLUDE_DIRS "${CGREEN_INCLUDE_DIR}")
-  set(CGREEN_EXECUTABLE "${CGREEN_RUNNER}")
+  add_library(Cgreen::Cgreen UNKNOWN IMPORTED)
+  set_target_properties(Cgreen::Cgreen PROPERTIES
+      IMPORTED_LINK_INTERFACE_LANGUAGES "C"
+      IMPORTED_LOCATION "${CGREEN_LIBRARY}"
+      INTERFACE_INCLUDE_DIRECTORIES "${CGREEN_INCLUDE_DIR}"
+  )
+  add_executable(Cgreen::runner IMPORTED)
+  set_target_properties(Cgreen::runner PROPERTIES
+      IMPORTED_LOCATION "${CGREEN_RUNNER}"
+  )
 endif()
 
