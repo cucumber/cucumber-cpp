@@ -21,11 +21,18 @@
 // **************                 CUKE OBJECTS                 ************** //
 // ************************************************************************** //
 
+#if defined(CUKE_ENABLE_BREAKPOINT_SUPPORT)
+#define CUKE_BODY_WITH_BREAKPOINT_SUPPORT bodyIfCompiledWithBreakpointSupport();
+#else
+#define CUKE_BODY_WITH_BREAKPOINT_SUPPORT
+#endif
+
 #define CUKE_OBJECT_(class_name, parent_class, registration_fn)           \
 class class_name : public parent_class {                                  \
 public:                                                                   \
     void body();                                                          \
 private:                                                                  \
+    CUKE_BODY_WITH_BREAKPOINT_SUPPORT;                                    \
     static const int cukeRegId;                                           \
 };                                                                        \
 const int class_name ::cukeRegId = registration_fn ;                      \
