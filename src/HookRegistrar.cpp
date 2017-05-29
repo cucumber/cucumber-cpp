@@ -132,11 +132,11 @@ void HookRegistrar::setStepMatchingHook(StepMatchingHook hook) {
 }
 
 bool HookRegistrar::execStepMatchingHook(const boost::cmatch& originalMatch) {
-    return stepMatchingHook() == nullptr || stepMatchingHook()(originalMatch);
+    return stepMatchingHook() == NULL || stepMatchingHook()(originalMatch);
 }
 
 HookRegistrar::StepMatchingHook& HookRegistrar::stepMatchingHook() {
-    static StepMatchingHook stepMatchingHook = nullptr;
+    static StepMatchingHook stepMatchingHook = NULL;
     return stepMatchingHook;
 }
 
