@@ -67,7 +67,7 @@ Here is an [Example](https://github.com/cucumber/bool/pull/12) of this process i
   - Change `HISTORY.md` renaming the "In Git" section with the
     release number and date
   - Commit with message `Updated history file for the X.Y release`
-  - Tag this commit with `vX.Y`
+  - Create an annotated tag for this commit named `vX.Y`
 - New development branch commit (e.g. [da60995](https://github.com/cucumber/cucumber-cpp/commit/da609956fcd42046e5182c6226acd7e53dd7754e)):
   - Add new "In Git" section to `HISTORY.md`
   - Commit with message `Preparing history file for next development release`

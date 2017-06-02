@@ -35,5 +35,6 @@
 - [ ] It is my own work, its copyright is implicitly assigned to the project and no substantial part of it has been copied from other sources (including [Stack Overflow](https://stackoverflow.com/)). In rare occasions this is acceptable, like in CMake modules where the original copyright information should be kept.
 - [ ] I'm using the same code standards as the existing code (indentation, spacing, variable naming, ...).
 - [ ] I've added tests for my code.
-- [ ] My change requires a change to the documentation and I have updated the documentation accordingly.
+- [ ] I have verified whether my change requires changes to the documentation
+- [ ] My change either requires no documentation change or I've updated the documentation accordingly.
 - [ ] My branch has been rebased to master, keeping only relevant commits.
