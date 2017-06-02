@@ -6,7 +6,7 @@ None yet
 
 ### Bugfixes
 
-None yet
+* Allow running all GTest cases without filter separation ([#144](https://github.com/cucumber/cucumber-cpp/pull/144) Giel van Schijndel)
 
 ## [0.4](https://github.com/cucumber/cucumber-cpp/compare/v0.3.1...v0.4) (31 March 2017)
 
