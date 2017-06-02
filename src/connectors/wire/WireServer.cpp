@@ -45,7 +45,11 @@ TCPSocketServer::TCPSocketServer(const ProtocolHandler *protocolHandler) :
 }
 
 void TCPSocketServer::listen(const port_type port) {
-    doListen(acceptor, tcp::endpoint(tcp::v4(), port));
+    listen(tcp::endpoint(tcp::v4(), port));
+}
+
+void TCPSocketServer::listen(const tcp::endpoint endpoint) {
+    doListen(acceptor, endpoint);
     acceptor.set_option(tcp::no_delay(true));
 }
 
