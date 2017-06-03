@@ -22,6 +22,8 @@ matrix:
     - os: linux
       compiler: gcc
       env: GMOCK_VER=1.8.0 VALGRIND_TESTS=ON
+    - os: linux
+      env: FORMAT=1
     - os: osx
       compiler: clang
       env: GMOCK_VER=1.8.0
@@ -32,6 +34,7 @@ matrix:
 addons:
   apt:
     packages:
+      - clang-format-3.8
       - libboost-thread-dev 
       - libboost-system-dev
       - libboost-regex-dev
