@@ -17,7 +17,7 @@ with [CPP].
 
 It relies on a few executables:
 
-* [cmake](https://cmake.org/download/) 2.8.12 or later.
+* [cmake](https://cmake.org/download/) 3.1 or later.
   Required to setup environment and build software
 
 It relies on a few libraries:
