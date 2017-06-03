@@ -104,8 +104,8 @@ public:
     Regex regex;
     const std::string source;
 private:
+    // Shut up MSVC warning C4512: assignment operator could not be generated
     StepInfo& operator=(const StepInfo& other);
-    
 };
 
 
