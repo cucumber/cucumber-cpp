@@ -9,6 +9,7 @@
 #include "json_spirit_value.h"
 
 #include <cassert>
+#include <cwctype>
 #include <sstream>
 #include <iomanip>
 
@@ -77,7 +78,7 @@ namespace json_spirit
 
             const wint_t unsigned_c( ( c >= 0 ) ? c : 256 + c );
 
-            if( iswprint( unsigned_c ) )
+            if( std::iswprint( unsigned_c ) )
             {
                 result += c;
             }
