@@ -37,6 +37,13 @@ endif()
 
 if(CUKE_ENABLE_SHARED_LIB)
     set(CUKE_LINKAGE SHARED)
+    list(APPEND CUKE_DEP_LIBRARIES
+         Boost::filesystem
+         Boost::program_options
+         Boost::regex
+         Boost::thread
+         Boost::unit_test_framework
+         )
 else()
     set(CUKE_LINKAGE STATIC)
 endif()
