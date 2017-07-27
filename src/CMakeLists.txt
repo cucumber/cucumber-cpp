@@ -59,10 +59,6 @@ generate_export_header(cucumber-cpp
     EXPORT_FILE_NAME "CukeExport.hpp"
 )
 
-generate_export_header(cucumber-cpp-nomain
-    EXPORT_FILE_NAME "CukeExport.hpp"
-)
-
 target_include_directories(cucumber-cpp-nomain PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(cucumber-cpp PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
