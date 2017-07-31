@@ -6,7 +6,7 @@
 namespace cucumber {
 namespace internal {
 
-class Scenario {
+class CUCUMBER_CPP_EXPORT Scenario {
 public:
     Scenario(const TagExpression::tag_list& tags = TagExpression::tag_list());
 

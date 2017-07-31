@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include "CukeExport.hpp"
+
 #include "../utils/ContextManagerTestDouble.hpp"
 
 using namespace std;

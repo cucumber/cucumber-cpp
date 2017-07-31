@@ -4,6 +4,7 @@ project(Cucumber-Cpp)
 
 set(CUKE_USE_STATIC_BOOST ${WIN32} CACHE BOOL "Statically link Boost (except boost::test)")
 set(CUKE_USE_STATIC_GTEST ON CACHE BOOL "Statically link Google Test")
+set(CUKE_ENABLE_SHARED_LIB OFF CACHE BOOL "Generate a shared library")
 
 set(CUKE_DISABLE_BOOST_TEST OFF CACHE BOOL "Disable boost:test")
 set(CUKE_DISABLE_GTEST OFF CACHE BOOL "Disable Google Test framework")
@@ -50,6 +51,8 @@ if(NOT CUKE_DISABLE_BOOST_TEST)
     set(Boost_USE_STATIC_LIBS OFF)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_TEST_DYN_LINK")
     find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS unit_test_framework)
+    # Save the unit test library in Boost_LIBRARIES for use in tests/CMakeLists.txt
+    set(CUKE_BOOST_TEST_LIBS ${Boost_LIBRARIES})
 endif()
 
 if(CUKE_USE_STATIC_BOOST)
@@ -74,7 +77,12 @@ set(CUKE_EXTRA_LIBRARIES ${CUKE_EXTRA_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost
 #
 
 if(NOT CUKE_DISABLE_GTEST)
-    set(GTEST_USE_STATIC_LIBS ${CUKE_USE_STATIC_GTEST})
+    if(CUKE_ENABLE_SHARED_LIB)
+        # TODO: Comment here
+        set(GTEST_USE_STATIC_LIBS OFF)
+    else()
+        set(GTEST_USE_STATIC_LIBS ${CUKE_USE_STATIC_GTEST})
+    endif()
     if(NOT GMOCK_ROOT)
         set(GMOCK_ROOT "${CMAKE_CURRENT_BINARY_DIR}/gmock")
     endif()
@@ -92,6 +100,7 @@ if(NOT CUKE_DISABLE_GTEST)
             GMock::Main
             )
     endif()
+    message("${CUKE_GMOCK_LIBRARIES}")
 endif()
 
 #

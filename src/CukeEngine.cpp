@@ -39,5 +39,11 @@ PendingStepException::PendingStepException(const PendingStepException &rhs) :
     InvokeException(rhs) {
 }
 
+CukeEngine::CukeEngine() {
+}
+
+CukeEngine::~CukeEngine() {
+}
+
 }
 }
