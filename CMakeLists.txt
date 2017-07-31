@@ -78,9 +78,11 @@ set(CUKE_EXTRA_LIBRARIES ${CUKE_EXTRA_LIBRARIES} ${Boost_THREAD_LIBRARY} ${Boost
 
 if(NOT CUKE_DISABLE_GTEST)
     if(CUKE_ENABLE_SHARED_LIB)
-        set(GTEST_USE_STATIC_LIBS ON)
+        # TODO: Comment here
+        set(GTEST_USE_STATIC_LIBS OFF)
+    else()
+        set(GTEST_USE_STATIC_LIBS ${CUKE_USE_STATIC_GTEST})
     endif()
-    set(GTEST_USE_STATIC_LIBS ${CUKE_USE_STATIC_GTEST})
     if(NOT GMOCK_ROOT)
         set(GMOCK_ROOT "${CMAKE_CURRENT_BINARY_DIR}/gmock")
     endif()
@@ -98,6 +100,7 @@ if(NOT CUKE_DISABLE_GTEST)
             GMock::Main
             )
     endif()
+    message("${CUKE_GMOCK_LIBRARIES}")
 endif()
 
 #
