@@ -13,6 +13,8 @@
 using boost::shared_ptr;
 
 #include "../Table.hpp"
+#include "../utils/FunctionSignature.hpp"
+#include "../utils/IndexSequence.hpp"
 #include "../utils/Regex.hpp"
 
 namespace cucumber {
@@ -125,6 +127,30 @@ protected:
 
     template<class T> const T getInvokeArg();
     const InvokeArgs *getArgs();
+
+#if __cplusplus < 201103L
+    // Special case for zero arguments, only thing we bother to support on C++98
+    template <typename Derived, typename R>
+    R invokeBodyWithIndexedArgs(FunctionArgs<>, index_sequence<>) {
+        return dynamic_cast<Derived&>(*this).bodyWithArgs();
+    }
+#else
+    template <typename Derived, typename R, typename... Args, std::size_t... N>
+    R invokeBodyWithIndexedArgs(FunctionArgs<Args...>, index_sequence<N...>) {
+        return dynamic_cast<Derived&>(*this).bodyWithArgs(pArgs->getInvokeArg<Args>(N)...);
+    }
+#endif
+
+    template <typename Derived, typename Signature>
+    typename FunctionSignature<Signature>::result_type invokeBodyWithArgs() {
+        typedef typename FunctionSignature<Signature>::result_type result_type;
+        typedef typename FunctionSignature<Signature>::args_type   args_type;
+        currentArgIndex = args_type::size;
+        return invokeBodyWithIndexedArgs<Derived, result_type>(
+                args_type(),
+                make_index_sequence<args_type::size>());
+    }
+
 private:
     // FIXME: awful hack because of Boost::Test
     InvokeResult currentResult;

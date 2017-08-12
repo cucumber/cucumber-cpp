@@ -4,12 +4,21 @@
 #include "Tag.hpp"
 #include "../Scenario.hpp"
 #include "../step/StepManager.hpp"
+#include "../utils/FunctionSignature.hpp"
+#include "../utils/IndexSequence.hpp"
 
 #include <boost/make_shared.hpp>
 #include <boost/smart_ptr.hpp>
+#include <boost/static_assert.hpp>
 using boost::shared_ptr;
 
 #include <list>
+
+#ifdef BOOST_STATIC_ASSERT_MSG
+    #define CUKE_STATIC_ASSERT(cond, msg) BOOST_STATIC_ASSERT_MSG(cond, msg)
+#else
+    #define CUKE_STATIC_ASSERT(cond, msg) BOOST_STATIC_ASSERT(cond)
+#endif
 
 namespace cucumber {
 namespace internal {
@@ -27,6 +36,21 @@ public:
     virtual void body() = 0;
 protected:
     bool tagsMatch(Scenario *scenario);
+
+    template <typename Derived, typename R>
+    R invokeBodyWithIndexedArgs(FunctionArgs<>, index_sequence<>) {
+        return dynamic_cast<Derived&>(*this).bodyWithArgs();
+    }
+
+    template <typename Derived, typename Signature>
+    typename FunctionSignature<Signature>::result_type invokeBodyWithArgs() {
+        typedef typename FunctionSignature<Signature>::result_type result_type;
+        typedef typename FunctionSignature<Signature>::args_type   args_type;
+        CUKE_STATIC_ASSERT(args_type::size == 0, "Hooks don't support function arguments.");
+        return invokeBodyWithIndexedArgs<Derived, result_type>(
+                args_type(),
+                make_index_sequence<args_type::size>());
+    }
 private:
     shared_ptr<TagExpression> tagExpression;
 };
