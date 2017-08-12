@@ -7,14 +7,15 @@
 #include <string>
 #include <vector>
 
-#if __cplusplus >= 201103L
-    #include <type_traits>
-#endif
-
+#include <boost/config.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 using boost::shared_ptr;
+
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+    #include <type_traits>
+#endif
 
 #include "../Table.hpp"
 #include "../utils/FunctionSignature.hpp"
@@ -132,7 +133,7 @@ protected:
     template<class T> const T getInvokeArg();
     const InvokeArgs *getArgs();
 
-#if __cplusplus < 201103L
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
     // Special case for zero arguments, only thing we bother to support on C++98
     template <typename Derived, typename R>
     R invokeBodyWithIndexedArgs(FunctionArgs<>, index_sequence<>) {

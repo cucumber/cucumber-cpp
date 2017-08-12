@@ -1,13 +1,15 @@
 #ifndef CUKE_FUNCTIONSIGNATURE_HPP_
 #define CUKE_FUNCTIONSIGNATURE_HPP_
 
+#include <boost/config.hpp>
+
 namespace cucumber {
 namespace internal {
 
 template <typename>
 struct FunctionSignature;
 
-#if __cplusplus < 201103L
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
 // Special case for zero arguments, only thing we bother to support on C++98
 template <typename = void>
 struct FunctionArgs

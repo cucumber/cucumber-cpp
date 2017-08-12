@@ -3,6 +3,7 @@
 #include <cucumber-cpp/internal/step/StepMacros.hpp>
 #include "../utils/CukeCommandsFixture.hpp"
 
+#include <boost/config.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 
@@ -84,7 +85,7 @@ public:
     }
 };
 
-#if __cplusplus >= 201103L
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
 class CheckAllParametersWithFuncArgs : public CheckAllParameters {
 public:
 #define ARGS (                                              \
