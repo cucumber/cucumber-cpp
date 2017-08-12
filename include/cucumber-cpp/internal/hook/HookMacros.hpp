@@ -11,12 +11,13 @@
 BEFORE_WITH_NAME_(CUKE_GEN_OBJECT_NAME_, "" #__VA_ARGS__) \
 /**/
 
-#define BEFORE_WITH_NAME_(step_name, tag_expression)     \
-CUKE_OBJECT_(                                            \
-    step_name,                                           \
-    ::cucumber::internal::BeforeHook,                    \
-    BEFORE_HOOK_REGISTRATION_(step_name, tag_expression) \
-)                                                        \
+#define BEFORE_WITH_NAME_(step_name, tag_expression)      \
+CUKE_OBJECT_(                                             \
+    step_name,                                            \
+    ::cucumber::internal::BeforeHook,                     \
+    BEFORE_HOOK_REGISTRATION_(step_name, tag_expression), \
+    ()                                                    \
+)                                                         \
 /**/
 
 #define BEFORE_HOOK_REGISTRATION_(step_name, tag_expression)        \
@@ -31,12 +32,13 @@ CUKE_OBJECT_(                                            \
 AROUND_STEP_WITH_NAME_(CUKE_GEN_OBJECT_NAME_, "" #__VA_ARGS__) \
 /**/
 
-#define AROUND_STEP_WITH_NAME_(step_name, tag_expression)     \
-CUKE_OBJECT_(                                                 \
-    step_name,                                                \
-    ::cucumber::internal::AroundStepHook,                     \
-    AROUND_STEP_HOOK_REGISTRATION_(step_name, tag_expression) \
-)                                                             \
+#define AROUND_STEP_WITH_NAME_(step_name, tag_expression)      \
+CUKE_OBJECT_(                                                  \
+    step_name,                                                 \
+    ::cucumber::internal::AroundStepHook,                      \
+    AROUND_STEP_HOOK_REGISTRATION_(step_name, tag_expression), \
+    ()                                                         \
+)                                                              \
 /**/
 
 #define AROUND_STEP_HOOK_REGISTRATION_(step_name, tag_expression)       \
@@ -51,12 +53,13 @@ CUKE_OBJECT_(                                                 \
 AFTER_STEP_WITH_NAME_(CUKE_GEN_OBJECT_NAME_, "" #__VA_ARGS__) \
 /**/
 
-#define AFTER_STEP_WITH_NAME_(step_name, tag_expression)     \
-CUKE_OBJECT_(                                                \
-    step_name,                                               \
-    ::cucumber::internal::AfterStepHook,                     \
-    AFTER_STEP_HOOK_REGISTRATION_(step_name, tag_expression) \
-)                                                            \
+#define AFTER_STEP_WITH_NAME_(step_name, tag_expression)      \
+CUKE_OBJECT_(                                                 \
+    step_name,                                                \
+    ::cucumber::internal::AfterStepHook,                      \
+    AFTER_STEP_HOOK_REGISTRATION_(step_name, tag_expression), \
+    ()                                                        \
+)                                                             \
 /**/
 
 #define AFTER_STEP_HOOK_REGISTRATION_(step_name, tag_expression)       \
@@ -72,12 +75,13 @@ CUKE_OBJECT_(                                                \
 AFTER_WITH_NAME_(CUKE_GEN_OBJECT_NAME_, "" #__VA_ARGS__) \
 /**/
 
-#define AFTER_WITH_NAME_(step_name, tag_expression)     \
-CUKE_OBJECT_(                                           \
-    step_name,                                          \
-    ::cucumber::internal::AfterHook,                    \
-    AFTER_HOOK_REGISTRATION_(step_name, tag_expression) \
-)                                                       \
+#define AFTER_WITH_NAME_(step_name, tag_expression)      \
+CUKE_OBJECT_(                                            \
+    step_name,                                           \
+    ::cucumber::internal::AfterHook,                     \
+    AFTER_HOOK_REGISTRATION_(step_name, tag_expression), \
+    ()                                                   \
+)                                                        \
 /**/
 
 #define AFTER_HOOK_REGISTRATION_(step_name, tag_expression)        \
@@ -96,7 +100,8 @@ BEFORE_ALL_WITH_NAME_(CUKE_GEN_OBJECT_NAME_)             \
 CUKE_OBJECT_(                                            \
     step_name,                                           \
     ::cucumber::internal::BeforeAllHook,                 \
-    BEFORE_ALL_HOOK_REGISTRATION_(step_name)             \
+    BEFORE_ALL_HOOK_REGISTRATION_(step_name),            \
+    ()                                                   \
 )                                                        \
 /**/
 
@@ -116,7 +121,8 @@ AFTER_ALL_WITH_NAME_(CUKE_GEN_OBJECT_NAME_)             \
 CUKE_OBJECT_(                                           \
     step_name,                                          \
     ::cucumber::internal::AfterAllHook,                 \
-    AFTER_ALL_HOOK_REGISTRATION_(step_name)             \
+    AFTER_ALL_HOOK_REGISTRATION_(step_name),            \
+    ()                                                  \
 )                                                       \
 /**/
 
