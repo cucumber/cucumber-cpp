@@ -36,6 +36,11 @@ if(GMOCK_FOUND)
     cuke_add_test(unit/TagTest)
 
     cuke_add_driver_test(integration/drivers/GTestDriverTest ${CUKE_GTEST_LIBRARIES})
+
+    list(FIND CMAKE_CXX_COMPILE_FEATURES cxx_variadic_templates HAS_VARIADIC_TEMPLATES)
+    if(HAS_VARIADIC_TEMPLATES GREATER -1)
+	target_compile_features(CukeCommandsTest PRIVATE cxx_variadic_templates)
+    endif()
 endif()
 
 if(Boost_UNIT_TEST_FRAMEWORK_FOUND)

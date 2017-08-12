@@ -19,15 +19,14 @@ cmake --build build
 cmake --build build --target test
 cmake --build build --target features
 
-GTEST=build/examples/Calc/GTestCalculatorSteps
-BOOST=build/examples/Calc/BoostCalculatorSteps
-if [ -f $GTEST ]; then
-    $GTEST >/dev/null &
-    cucumber examples/Calc
-    wait
-fi
-if [ -f $BOOST ]; then
-    $BOOST >/dev/null &
-    cucumber examples/Calc
-    wait
-fi
+for CALC_EXAMPLE in \
+    build/examples/Calc/GTestCalculatorSteps \
+    build/examples/Calc/BoostCalculatorSteps \
+    build/examples/Calc/FuncArgsCalculatorSteps \
+; do
+    if [ -f "${CALC_EXAMPLE}" ]; then
+        "${CALC_EXAMPLE}" > /dev/null &
+        cucumber examples/Calc
+        wait
+    fi
+done
