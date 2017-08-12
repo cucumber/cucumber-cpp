@@ -7,7 +7,7 @@
 
 namespace {
 
-void acceptWireProtocol(int port, const std::string& unixPath, bool verbose) {
+void acceptWireProtocol(const std::string& host, int port, const std::string& unixPath, bool verbose) {
     using namespace ::cucumber::internal;
     CukeEngineImpl cukeEngine;
     JsonSpiritWireMessageCodec wireCodec;
@@ -27,9 +27,9 @@ void acceptWireProtocol(int port, const std::string& unixPath, bool verbose) {
     {
         TCPSocketServer* const tcpServer = new TCPSocketServer(&protocolHandler);
         server.reset(tcpServer);
-        tcpServer->listen(port);
+        tcpServer->listen(tcp::endpoint(boost::asio::ip::address::from_string(host), port));
         if (verbose)
-            std::clog << "Listening on port " << tcpServer->listenEndpoint() << std::endl;
+            std::clog << "Listening on " << tcpServer->listenEndpoint() << std::endl;
     }
     server->acceptOnce();
 }
@@ -42,6 +42,7 @@ int main(int argc, char **argv) {
     optionDescription.add_options()
         ("help,h", "help for cucumber-cpp")
         ("verbose,v", "verbose output")
+        ("listen,l", value<std::string>(), "listening address of wireserver")
         ("port,p", value<int>(), "listening port of wireserver, use '0' (zero) to select an ephemeral port")
 #if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
         ("unix,u", value<std::string>(), "listening unix socket of wireserver (disables listening on port)")
@@ -54,6 +55,11 @@ int main(int argc, char **argv) {
     if (optionVariableMap.count("help")) {
         std::cerr << optionDescription << std::endl;
         exit(1);
+    }
+
+    std::string listenHost("127.0.0.1");
+    if (optionVariableMap.count("listen")) {
+        listenHost = optionVariableMap["listen"].as<std::string>();
     }
 
     int port = 3902;
@@ -74,7 +80,7 @@ int main(int argc, char **argv) {
     }
 
     try {
-        acceptWireProtocol(port, unixPath, verbose);
+        acceptWireProtocol(listenHost, port, unixPath, verbose);
     } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
         exit(1);

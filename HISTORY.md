@@ -2,7 +2,7 @@
 
 ### New Features
 
-None yet
+* Listen on localhost by default to avoid firewall warnings ([#158](https://github.com/cucumber/cucumber-cpp/pull/158) Nik Reiman)
 
 ### Bugfixes
 

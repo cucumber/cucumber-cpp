@@ -100,6 +100,7 @@ TEST_F(TCPSocketServerTest, exitsOnFirstConnectionClosed) {
     // given
     tcp::iostream client(server->listenEndpoint());
     ASSERT_THAT(client, IsConnected());
+    ASSERT_THAT(server->listenEndpoint().address().to_string(), std::string("0.0.0.0"));
 
     // when
     client.close();
@@ -140,6 +141,34 @@ TEST_F(TCPSocketServerTest, receiveAndSendsSingleLineMassages) {
     EXPECT_THAT(client, EventuallyReceives("A"));
     EXPECT_THAT(client, EventuallyReceives("B"));
     EXPECT_THAT(client, EventuallyReceives("C"));
+}
+
+class TCPSocketServerLocalhostTest : public SocketServerTest {
+protected:
+  boost::scoped_ptr<TCPSocketServer> server;
+
+  virtual SocketServer* createListeningServer() {
+      server.reset(new TCPSocketServer(&protocolHandler));
+      server->listen(tcp::endpoint(boost::asio::ip::address::from_string("127.0.0.1"), 0));
+      return server.get();
+  }
+
+  virtual void destroyListeningServer() {
+      server.reset();
+  }
+};
+
+TEST_F(TCPSocketServerLocalhostTest, listensOnLocalhost) {
+    // given
+    tcp::iostream client(server->listenEndpoint());
+    ASSERT_THAT(client, IsConnected());
+    ASSERT_THAT(server->listenEndpoint().address().to_string(), std::string("127.0.0.1"));
+
+    // when
+    client.close();
+
+    // then
+    EXPECT_THAT(serverThread, EventuallyTerminates());
 }
 
 #if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)

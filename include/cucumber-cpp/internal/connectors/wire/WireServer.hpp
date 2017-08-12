@@ -64,6 +64,11 @@ public:
     void listen(const port_type port);
 
     /**
+     * Bind and listen to a TCP port on the given endpoint
+     */
+    void listen(const tcp::endpoint endpoint);
+
+    /**
      * Endpoint (IP address and port number) that this server is currently
      * listening on.
      *
