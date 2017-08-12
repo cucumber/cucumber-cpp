@@ -7,6 +7,10 @@
 #include <string>
 #include <vector>
 
+#if __cplusplus >= 201103L
+    #include <type_traits>
+#endif
+
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
@@ -137,7 +141,9 @@ protected:
 #else
     template <typename Derived, typename R, typename... Args, std::size_t... N>
     R invokeBodyWithIndexedArgs(FunctionArgs<Args...>, index_sequence<N...>) {
-        return dynamic_cast<Derived&>(*this).bodyWithArgs(pArgs->getInvokeArg<Args>(N)...);
+        return dynamic_cast<Derived&>(*this).bodyWithArgs(
+                pArgs->getInvokeArg<typename std::decay<Args>::type>(N)...
+            );
     }
 #endif
 
