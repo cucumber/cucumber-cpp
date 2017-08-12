@@ -8,6 +8,7 @@
 
 * Allow running all GTest cases without filter separation ([#144](https://github.com/cucumber/cucumber-cpp/pull/144) Giel van Schijndel)
 * Fix QNX build by depending on standard C++ instead of specific implementation ([#156](https://github.com/cucumber/cucumber-cpp/issues/156) Giel van Schijndel)
+* Ensure CMake 3.1+ is available, 2.8.12 wasn't enough for quite a while ([#152](https://github.com/cucumber/cucumber-cpp/pull/152) Giel van Schijndel)
 
 ## [0.4](https://github.com/cucumber/cucumber-cpp/compare/v0.3.1...v0.4) (31 March 2017)
 
