@@ -21,6 +21,9 @@ matrix:
     - os: linux
       compiler: gcc
       env: GMOCK_VER=1.8.0 VALGRIND_TESTS=ON
+    - os: linux
+      compiler: gcc
+      env: GMOCK_VER=1.8.0 COVERALLS=ON
 
 addons:
   apt:
@@ -35,6 +38,8 @@ addons:
       - google-mock
       - ninja-build
       - valgrind
+      - lcov
+      - curl
 
 before_install:
   - if [[ "${TRAVIS_OS_NAME}" = "osx" ]]; then brew update && brew install ninja; fi

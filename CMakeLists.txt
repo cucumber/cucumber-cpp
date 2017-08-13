@@ -13,8 +13,18 @@ set(CUKE_ENABLE_EXAMPLES OFF CACHE BOOL "Enable the examples")
 set(GMOCK_SRC_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
 set(GMOCK_VER "1.7.0" CACHE STRING "Google Mock framework version to be used")
 option(VALGRIND_TESTS "Run tests within Valgrind" OFF)
+option(COVERALLS "Run coverage tests for Coveralls" OFF)
 
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH} 
+    ${PROJECT_SOURCE_DIR}/cmake/modules
+    ${PROJECT_SOURCE_DIR}/coveralls-cmake/cmake
+)
+
+if(COVERALLS)
+	include(Coveralls)
+	coveralls_turn_on_coverage()
+endif()
 
 #
 # Generic Compiler Flags
@@ -163,12 +173,20 @@ endif()
 #
 
 set(CUKE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
 include_directories(${CUKE_INCLUDE_DIR})
-
 set(CUKE_LIBRARIES cucumber-cpp ${CUKE_EXTRA_LIBRARIES})
-
 add_subdirectory(src)
+
+#
+# Coveralls
+#
+
+if(COVERALLS)
+	coveralls_setup(
+        "${COVER_SOURCES}" 
+        on
+        "${PROJECT_SOURCE_DIR}/coveralls-cmake/cmake")
+endif()
 
 #
 # Tests
@@ -232,3 +250,4 @@ endif()
 if(CUKE_ENABLE_EXAMPLES)
     add_subdirectory(examples)
 endif()
+
