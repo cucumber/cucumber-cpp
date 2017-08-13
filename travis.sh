@@ -15,16 +15,15 @@ cmake -E chdir build cmake \
     -G Ninja \
     -DCUKE_ENABLE_EXAMPLES=on \
     ${VALGRIND_TESTS:+"-DVALGRIND_TESTS=${VALGRIND_TESTS}"} \
-    ${COVERALLS:+"-DCOVERALLS=${COVERALLS}"} \
-    ${COVERALLS:+"-DCMAKE_BUILD_TYPE=Debug"} \
+    ${COVERAGE:+"-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS='--coverage' -DCMAKE_LINK_INTERFACE_LIBRARIES='gcov'"} \
     ${GMOCK_PATH:-"-DGMOCK_VER=${GMOCK_VER}"} \
     ${GMOCK_PATH:+"-DGMOCK_SRC_DIR=${GMOCK_PATH}"} \
     ..
 cmake --build build
-if [ "${COVERALLS}" = "ON" ]
-    then cmake --build build --target coveralls
+cmake --build build --target test
+if [ "${COVERAGE}" = "ON" ]; then
+    ~/.local/bin/coveralls --exclude examples --exclude tests --gcov-options '\-lp'
 else
-    cmake --build build --target test
     cmake --build build --target features
 
     GTEST=build/examples/Calc/GTestCalculatorSteps
