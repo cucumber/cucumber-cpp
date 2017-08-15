@@ -1,8 +1,6 @@
 set PATH=C:\Ruby200\bin;%BOOST_LIBRARYDIR%;%PATH%
 if defined MINGW_ROOT set PATH=%MINGW_ROOT%\bin;C:\msys64\usr\bin\;%PATH%
-REM if defined QT_DIR set PATH=%QT_DIR%\bin;%PATH%
 if "%CMAKE_GENERATOR%"=="NMake Makefiles" call "%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" %PLATFORM%
-echo %PATH%
 
 git submodule init
 git submodule update

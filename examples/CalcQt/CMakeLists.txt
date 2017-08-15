@@ -1,13 +1,12 @@
 project(CalcQt)
 
-set(CALCQT_HEADERS src/CalculatorWidget.h)
-include_directories(src)
+set(CALCQT_HEADERS )
 
 if(QT_LIBRARIES)
     add_library(libcalcqt src/CalculatorWidget.cpp)
     target_link_libraries(libcalcqt ${QT_LIBRARIES})
     
-    add_executable(calcqt src/CalcQt.cpp)
+    add_executable(calcqt src/CalcQt.cpp src/CalculatorWidget.h)
     target_link_libraries(calcqt libcalcqt ${QT_LIBRARIES})
 
     if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
