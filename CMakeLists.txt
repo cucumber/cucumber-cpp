@@ -200,6 +200,9 @@ else()
         set(CUKE_COMPILE_DYNAMIC_CPP_STEPS '"${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}" --target e2e-steps')
 
         function(add_feature_target TARGET_NAME)
+            if(CMAKE_GENERATOR STREQUAL "Ninja")
+                list(APPEND ARGN --color)
+            endif()
             add_custom_target(${TARGET_NAME}
                 COMMAND ${CUCUMBER_RUBY}
                 TEST_FEATURES_DIR=${CUKE_TEST_FEATURES_DIR}
@@ -209,7 +212,7 @@ else()
                 DYNAMIC_CPP_STEPS_OBJ=${CUKE_DYNAMIC_CPP_STEPS_OBJ}
                 COMPILE_DYNAMIC_CPP_STEPS=${CUKE_COMPILE_DYNAMIC_CPP_STEPS}
                 CUCUMBER_RUBY=${CUCUMBER_RUBY}
-                ${ARGV1} ${ARGV2} ${ARGV3} ${ARGV4} ${ARGV5} ${ARGV6}
+                ${ARGN}
                 ${CUKE_FEATURES_DIR}
                 DEPENDS cucumber-cpp
                 )
