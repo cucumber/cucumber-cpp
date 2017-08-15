@@ -200,8 +200,15 @@ else()
         set(CUKE_COMPILE_DYNAMIC_CPP_STEPS '"${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}" --target e2e-steps')
 
         function(add_feature_target TARGET_NAME)
+            # Ensure we get colored output from cucumber and give it direct terminal access if
+            # possible. Direct terminal access would cause the output to be displayed as it's being
+            # produced instead of when cucumber is finished.
             if(CMAKE_GENERATOR STREQUAL "Ninja")
                 list(APPEND ARGN --color)
+            endif()
+            set(USES_TERMINAL)
+            if(NOT CMAKE_VERSION VERSION_LESS 3.2)
+                set(USES_TERMINAL USES_TERMINAL)
             endif()
             add_custom_target(${TARGET_NAME}
                 COMMAND ${CUCUMBER_RUBY}
@@ -215,6 +222,7 @@ else()
                 ${ARGN}
                 ${CUKE_FEATURES_DIR}
                 DEPENDS cucumber-cpp
+                ${USES_TERMINAL}
                 )
         endfunction(add_feature_target)
 
