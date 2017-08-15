@@ -6,9 +6,7 @@ bundle install
 
 CTEST_OUTPUT_ON_FAILURE=ON
 export CTEST_OUTPUT_ON_FAILURE
-
 export COVERALLS_SERVICE_NAME=travis-ci
-export COVERALLS_REPO_TOKEN=ThdhpdagGJJVJj0KFGdSgdpzRLALbNAIg
 
 cmake -E make_directory build
 cmake -E chdir build cmake \
