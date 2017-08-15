@@ -37,7 +37,7 @@ endif()
 
 if(UNIX AND (
        (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    OR (CMAKE_CXX_COMPILER_ID STREQUAL "GCC" AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.9))
+    OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.9))
     AND CMAKE_GENERATOR STREQUAL "Ninja")
   # These compilers generate coloured output, but by default only when their output channel is a
   # terminal (TTY/PTY). Ninja however captures all output in a pipe (per-subprocess), disabling
