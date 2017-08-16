@@ -102,7 +102,7 @@ public:
     }
 
     void body() {
-        return invokeBodyWithArgs<CheckAllParametersWithFuncArgs, void ARGS>();
+        return invokeBodyWithArgs<void ARGS>(*this);
     }
 #undef ARGS
 };

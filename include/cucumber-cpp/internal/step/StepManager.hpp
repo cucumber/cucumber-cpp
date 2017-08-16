@@ -135,25 +135,26 @@ protected:
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
     // Special case for zero arguments, only thing we bother to support on C++98
-    template <typename Derived, typename R>
-    R invokeBodyWithIndexedArgs(FunctionArgs<>, index_sequence<>) {
-        return dynamic_cast<Derived&>(*this).bodyWithArgs();
+    template <typename R, typename Derived>
+    static R invokeBodyWithIndexedArgs(Derived& that, FunctionArgs<>, index_sequence<>) {
+        return that.bodyWithArgs();
     }
 #else
-    template <typename Derived, typename R, typename... Args, std::size_t... N>
-    R invokeBodyWithIndexedArgs(FunctionArgs<Args...>, index_sequence<N...>) {
-        return dynamic_cast<Derived&>(*this).bodyWithArgs(
-                pArgs->getInvokeArg<typename std::decay<Args>::type>(N)...
+    template <typename R, typename Derived, typename... Args, std::size_t... N>
+    static R invokeBodyWithIndexedArgs(Derived& that, FunctionArgs<Args...>, index_sequence<N...>) {
+        return that.bodyWithArgs(
+                that.pArgs->template getInvokeArg<typename std::decay<Args>::type>(N)...
             );
     }
 #endif
 
-    template <typename Derived, typename Signature>
-    typename FunctionSignature<Signature>::result_type invokeBodyWithArgs() {
+    template <typename Signature, typename Derived>
+    static typename FunctionSignature<Signature>::result_type invokeBodyWithArgs(Derived& that) {
         typedef typename FunctionSignature<Signature>::result_type result_type;
         typedef typename FunctionSignature<Signature>::args_type   args_type;
-        currentArgIndex = args_type::size;
-        return invokeBodyWithIndexedArgs<Derived, result_type>(
+        that.currentArgIndex = args_type::size;
+        return invokeBodyWithIndexedArgs<result_type>(
+                that,
                 args_type(),
                 make_index_sequence<args_type::size>());
     }

@@ -37,17 +37,18 @@ public:
 protected:
     bool tagsMatch(Scenario *scenario);
 
-    template <typename Derived, typename R>
-    R invokeBodyWithIndexedArgs(FunctionArgs<>, index_sequence<>) {
-        return dynamic_cast<Derived&>(*this).bodyWithArgs();
+    template <typename R, typename Derived>
+    static R invokeBodyWithIndexedArgs(Derived& that, FunctionArgs<>, index_sequence<>) {
+        return that.bodyWithArgs();
     }
 
-    template <typename Derived, typename Signature>
-    typename FunctionSignature<Signature>::result_type invokeBodyWithArgs() {
+    template <typename Signature, typename Derived>
+    static typename FunctionSignature<Signature>::result_type invokeBodyWithArgs(Derived& that) {
         typedef typename FunctionSignature<Signature>::result_type result_type;
         typedef typename FunctionSignature<Signature>::args_type   args_type;
         CUKE_STATIC_ASSERT(args_type::size == 0, "Hooks don't support function arguments.");
-        return invokeBodyWithIndexedArgs<Derived, result_type>(
+        return invokeBodyWithIndexedArgs<result_type>(
+                that,
                 args_type(),
                 make_index_sequence<args_type::size>());
     }
