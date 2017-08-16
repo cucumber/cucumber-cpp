@@ -1,9 +1,8 @@
 project(CalcQt)
 
-set(CALCQT_HEADERS )
-
 if(QT_LIBRARIES)
     add_library(libcalcqt src/CalculatorWidget.cpp src/CalculatorWidget.h)
+    set_target_properties(libcalcqt PROPERTIES AUTOMOC ON)
     target_include_directories(libcalcqt PUBLIC src)
     target_link_libraries(libcalcqt ${QT_LIBRARIES})
     

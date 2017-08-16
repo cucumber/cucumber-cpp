@@ -132,9 +132,6 @@ if(NOT CUKE_DISABLE_QT)
             include(${QT_USE_FILE})
         endif()
     endif()
-    if(QT_LIBRARIES)
-        set(CMAKE_AUTOMOC ON)
-    endif()
 endif()
 
 #
@@ -253,16 +250,5 @@ endif()
 
 if(CUKE_ENABLE_EXAMPLES)
     add_subdirectory(examples)
-
-    #check if c++11 is needed
-    if(${Qt5Core_FOUND})
-        if(NOT ${Qt5Core_VERSION_STRING} VERSION_LESS 5.7)
-            message(STATUS "C++11 is needed from Qt version 5.7.0, building with c++11 enabled")
-            set_target_properties(calcqt libcalcqt PROPERTIES
-              CXX_STANDARD 11
-              CXX_STANDARD_REQUIRED ON
-            )
-        endif()
-    endif()
 endif()
 
