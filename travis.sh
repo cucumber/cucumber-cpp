@@ -20,9 +20,7 @@ cmake -E chdir build cmake \
 cmake --build build
 cmake --build build --target test
 if [ "${COVERAGE}" = "ON" ]; then
-g++ --version
-gcov --version
-    ~/.local/bin/coveralls --verbose --exclude build --exclude features --exclude examples --exclude tests --gcov-options '\-lp'
+    ~/.local/bin/coveralls --verbose -r build --exclude build --exclude features --exclude examples --exclude tests --gcov-options '\-lp'
 else
     cmake --build build --target features
 
