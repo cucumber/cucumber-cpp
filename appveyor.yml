@@ -56,6 +56,9 @@ test_script:
 - cmd: cmake --build build --target test
 - cmd: cmake --build build --target features
 
+after_test:
+- cmd: for /r %%v in (TEST-*.xml) do curl -s -F "file=@%%v;filename=%%~nxv" https://ci.appveyor.com/api/testresults/junit/%APPVEYOR_JOB_ID%
+
 notifications:
 - provider: Email
   to:

@@ -220,6 +220,7 @@ else()
                 DYNAMIC_CPP_STEPS_OBJ=${CUKE_DYNAMIC_CPP_STEPS_OBJ}
                 COMPILE_DYNAMIC_CPP_STEPS=${CUKE_COMPILE_DYNAMIC_CPP_STEPS}
                 CUCUMBER_RUBY=${CUCUMBER_RUBY}
+                --format=junit "--out=${CMAKE_BINARY_DIR}/features"
                 ${ARGN}
                 ${CUKE_FEATURES_DIR}
                 DEPENDS cucumber-cpp
