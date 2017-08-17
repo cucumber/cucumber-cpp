@@ -3,12 +3,14 @@
 ### New Features
 
 * Listen on localhost by default to avoid firewall warnings ([#158](https://github.com/cucumber/cucumber-cpp/pull/158) Nik Reiman)
+* Enable Qt framework in CI and refactoring of CI configuration ([#160](https://github.com/cucumber/cucumber-cpp/pull/160) Kamil Strzempowicz & Giel van Schijndel)
 
 ### Bugfixes
 
 * Allow running all GTest cases without filter separation ([#144](https://github.com/cucumber/cucumber-cpp/pull/144) Giel van Schijndel)
 * Fix QNX build by depending on standard C++ instead of specific implementation ([#156](https://github.com/cucumber/cucumber-cpp/issues/156) Giel van Schijndel)
 * Ensure CMake 3.1+ is available, 2.8.12 wasn't enough for quite a while ([#152](https://github.com/cucumber/cucumber-cpp/pull/152) Giel van Schijndel)
+
 
 ## [0.4](https://github.com/cucumber/cucumber-cpp/compare/v0.3.1...v0.4) (31 March 2017)
 
@@ -27,6 +29,8 @@
 * Fixed `defs.hpp` deprecation warning on MSVC ([#124](https://github.com/cucumber/cucumber-cpp/pull/124) Antoine Allard)
 * Fixed parallel build ([#135](https://github.com/cucumber/cucumber-cpp/pull/135) Giel van Schijndel)
 * Fixed memory leaks and better memory management ([#134](https://github.com/cucumber/cucumber-cpp/pull/134) Giel van Schijndel)
+* Got rid of clang warning - fix for issue #119 ([#138](https://github.com/cucumber/cucumber-cpp/pull/138) Kamil Strzempowicz, [f933ad1](https://github.com/paoloambrosio/cucumber-cpp/commit/f933ad1983cf15cc0573532f98b5457bc1ba2a18) Paolo Ambrosio)
+
 
 ## [0.3.1](https://github.com/cucumber/cucumber-cpp/compare/v0.3...v0.3.1) (11 April 2016)
 
@@ -40,6 +44,7 @@
 ### Bugfixes
 
 None
+
 
 ## [0.3](https://github.com/cucumber/cucumber-cpp/compare/v0.2...v0.3) (22 December 2013)
 
