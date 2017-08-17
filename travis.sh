@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e #break script on non-zero exitcode from any command
 set -x #display command being executed
+
 gem install bundler
 bundle install
 
@@ -19,8 +20,14 @@ cmake --build build
 cmake --build build --target test
 cmake --build build --target features
 
+QTTEST=build/examples/Calc/QtTestCalculatorSteps
 GTEST=build/examples/Calc/GTestCalculatorSteps
 BOOST=build/examples/Calc/BoostCalculatorSteps
+if [ -f $QTTEST ]; then
+    $QTTEST >/dev/null &
+    cucumber examples/Calc
+    wait
+fi
 if [ -f $GTEST ]; then
     $GTEST >/dev/null &
     cucumber examples/Calc

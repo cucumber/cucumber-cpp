@@ -15,6 +15,13 @@ set(CUKE_SOURCES
     connectors/wire/WireProtocolCommands.cpp
     )
 
+if(QT5_FOUND)
+    qt5_wrap_cpp(MOC_FILE ../include/cucumber-cpp/internal/drivers/QtTestDriver.hpp)
+    list(APPEND CUKE_SOURCES drivers/QtTestDriver.cpp)
+    list(APPEND CUKE_SOURCES ${MOC_FILE})
+    list(APPEND CUKE_DEP_LIBRARIES ${QT_LIBRARIES})
+endif()
+
 if(GTEST_FOUND)
     list(APPEND CUKE_DEP_LIBRARIES GTest::GTest)
     list(APPEND CUKE_SOURCES drivers/GTestDriver.cpp)

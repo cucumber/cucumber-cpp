@@ -1,6 +1,5 @@
 language: cpp
 os:
-  - osx
   - linux
 sudo: required
 dist: trusty
@@ -13,14 +12,19 @@ env:
   - GMOCK_PATH=/usr/src/gmock #1.6.0 from ubuntu trusty repo
 matrix:
   exclude:
-    - os: osx
-      env: GMOCK_PATH=/usr/src/gmock
-    - os: osx
-      compiler: gcc #does anyone on osx use it?
+    - os: linux
+      compiler: gcc
+      env: GMOCK_VER=1.8.0
   include:
     - os: linux
       compiler: gcc
       env: GMOCK_VER=1.8.0 VALGRIND_TESTS=ON
+    - os: osx
+      compiler: clang
+      env: GMOCK_VER=1.8.0 QTDIR=/usr/local/Cellar/qt5/5.8.0_1
+    - os: osx
+      compiler: clang
+      env: GMOCK_VER=1.7.0
 
 addons:
   apt:
@@ -35,9 +39,10 @@ addons:
       - google-mock
       - ninja-build
       - valgrind
+      - qtbase5-dev
 
 before_install:
-  - if [[ "${TRAVIS_OS_NAME}" = "osx" ]]; then brew update && brew install ninja; fi
+  - if [[ "${TRAVIS_OS_NAME}" = "osx" ]]; then brew update && brew install ninja qt5; fi
 
 script: ./travis.sh 
 

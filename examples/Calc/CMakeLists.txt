@@ -14,3 +14,8 @@ if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
     add_executable(BoostCalculatorSteps features/step_definitions/BoostCalculatorSteps)
     target_link_libraries(BoostCalculatorSteps Calc ${CUKE_LIBRARIES} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 endif()
+
+if(QT5_FOUND)
+    add_executable(QtTestCalculatorSteps features/step_definitions/QtTestCalculatorSteps)
+    target_link_libraries(QtTestCalculatorSteps Calc ${QT_LIBRARIES} ${CUKE_LIBRARIES})
+endif()
