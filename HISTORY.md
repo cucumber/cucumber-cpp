@@ -27,6 +27,7 @@
 * Fixed `defs.hpp` deprecation warning on MSVC ([#124](https://github.com/cucumber/cucumber-cpp/pull/124) Antoine Allard)
 * Fixed parallel build ([#135](https://github.com/cucumber/cucumber-cpp/pull/135) Giel van Schijndel)
 * Fixed memory leaks and better memory management ([#134](https://github.com/cucumber/cucumber-cpp/pull/134) Giel van Schijndel)
+* Fixed clang warning about bad `typeid` usage ([#138](https://github.com/cucumber/cucumber-cpp/pull/138) Kamil Strzempowicz)
 
 ## [0.3.1](https://github.com/cucumber/cucumber-cpp/compare/v0.3...v0.3.1) (11 April 2016)
 
