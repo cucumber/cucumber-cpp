@@ -1,7 +1,5 @@
 project(FeatureShowcase)
 
-include_directories(${CUKE_INCLUDE_DIRS})
-
 if(GMOCK_FOUND)
     function(add_cucumber_executable)
         add_executable(FeatureShowcaseSteps ${ARGV})
