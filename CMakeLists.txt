@@ -14,7 +14,7 @@ set(GMOCK_SRC_DIR "" CACHE STRING "Google Mock framework sources path (otherwise
 set(GMOCK_VER "1.7.0" CACHE STRING "Google Mock framework version to be used")
 option(VALGRIND_TESTS "Run tests within Valgrind" OFF)
 
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 #
 # Generic Compiler Flags

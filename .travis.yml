@@ -16,11 +16,14 @@ matrix:
     - os: osx
       env: GMOCK_PATH=/usr/src/gmock
     - os: osx
-      compiler: gcc #does anyone on osx use it?
+      compiler: gcc
   include:
     - os: linux
       compiler: gcc
       env: GMOCK_VER=1.8.0 VALGRIND_TESTS=ON
+    - os: linux
+      compiler: gcc
+      env: GMOCK_VER=1.8.0 COVERAGE=ON
 
 addons:
   apt:
@@ -35,8 +38,11 @@ addons:
       - google-mock
       - ninja-build
       - valgrind
+      - lcov
+      - curl
 
 before_install:
+  - pip install --user cpp-coveralls
   - if [[ "${TRAVIS_OS_NAME}" = "osx" ]]; then brew update && brew install ninja; fi
 
 script: ./travis.sh 
