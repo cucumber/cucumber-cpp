@@ -2,18 +2,19 @@ cmake_minimum_required(VERSION 3.1)
 
 project(Cucumber-Cpp)
 
-set(CUKE_USE_STATIC_BOOST ${WIN32} CACHE BOOL "Statically link Boost (except boost::test)")
-set(CUKE_USE_STATIC_GTEST ON CACHE BOOL "Statically link Google Test")
-
-set(CUKE_DISABLE_BOOST_TEST OFF CACHE BOOL "Disable boost:test")
-set(CUKE_DISABLE_GTEST OFF CACHE BOOL "Disable Google Test framework")
-set(CUKE_DISABLE_UNIT_TESTS OFF CACHE BOOL "Disable unit tests")
-set(CUKE_DISABLE_E2E_TESTS OFF CACHE BOOL "Disable end-to-end tests")
-set(CUKE_ENABLE_EXAMPLES OFF CACHE BOOL "Enable the examples")
+option(CUKE_USE_STATIC_BOOST    "Statically link Boost (except boost::test)" ${WIN32})
+option(CUKE_USE_STATIC_GTEST    "Statically link Google Test" ON)
+option(CUKE_DISABLE_BOOST_TEST  "Disable boost:test" OFF)
+option(CUKE_DISABLE_GTEST       "Disable Google Test framework" OFF)
+option(CUKE_DISABLE_UNIT_TESTS  "Disable unit tests" OFF)
+option(CUKE_DISABLE_E2E_TESTS   "Disable end-to-end tests" OFF)
+option(CUKE_ENABLE_EXAMPLES     "Enable the examples" OFF)
+option(VALGRIND_TESTS           "Run tests within Valgrind" OFF)
+option(CUKE_DISABLE_QT          "Disable using Qt framework" OFF)
 set(GMOCK_SRC_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
 set(GMOCK_VER "1.7.0" CACHE STRING "Google Mock framework version to be used")
-option(VALGRIND_TESTS "Run tests within Valgrind" OFF)
 
+set(ignoreMe "${QT_QMAKE_EXECUTABLE}") #supress warning
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 #
@@ -113,6 +114,27 @@ if(NOT CUKE_DISABLE_GTEST)
 endif()
 
 #
+# Qt
+#
+
+if(NOT CUKE_DISABLE_QT)
+    find_package(Qt5Core)
+    find_package(Qt5Widgets)
+    find_package(Qt5Test)
+
+    if(${Qt5Core_FOUND} AND ${Qt5Widgets_FOUND} AND ${Qt5Test_FOUND})
+        message(STATUS "Found Qt version: ${Qt5Core_VERSION_STRING}")
+        set(QT_LIBRARIES Qt5::Core Qt5::Widgets Qt5::Test)
+    else()
+        find_package(Qt4 COMPONENTS QtCore QtGui QtTest)
+        if(QT4_FOUND)
+            set(QT_LIBRARIES Qt4::QtCore Qt4::QtGui Qt4::QtTest)
+            include(${QT_USE_FILE})
+        endif()
+    endif()
+endif()
+
+#
 # Valgrind
 #
 
@@ -163,11 +185,8 @@ endif()
 #
 
 set(CUKE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
 include_directories(${CUKE_INCLUDE_DIR})
-
 set(CUKE_LIBRARIES cucumber-cpp ${CUKE_EXTRA_LIBRARIES})
-
 add_subdirectory(src)
 
 #
@@ -245,3 +264,4 @@ endif()
 if(CUKE_ENABLE_EXAMPLES)
     add_subdirectory(examples)
 endif()
+

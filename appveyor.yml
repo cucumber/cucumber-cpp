@@ -2,59 +2,52 @@ version: "{branch}-ci-{build}"
 os: Visual Studio 2015
 
 environment:
-  RUBY_VERSION: 200
   matrix:
-  - build: mingw
-    platform: x86
+  - CMAKE_GENERATOR: 'MSYS Makefiles'
     MINGW_ARCH: i686
-    MSYSTEM: MINGW32
     MINGW_ROOT: C:\msys64\mingw32
     BOOST_ROOT: C:\msys64\mingw32
     BOOST_LIBRARYDIR: C:\msys64\mingw32\lib
     BOOST_INCLUDEDIR: C:\msys64\mingw32\include\boost
-    CMAKE_GENERATOR: 'MSYS Makefiles'
-  - build: mingw
-    platform: x64
+    QT_DIR: C:\Qt\5.8\mingw53_32
+  - CMAKE_GENERATOR: 'MSYS Makefiles'
     MINGW_ARCH: x86_64
-    MSYSTEM: MINGW64
     MINGW_ROOT: C:\msys64\mingw64
     BOOST_ROOT: C:\msys64\mingw64
     BOOST_LIBRARYDIR: C:\msys64\mingw64\lib
     BOOST_INCLUDEDIR: C:\msys64\mingw64\include\boost
-    CMAKE_GENERATOR: 'MSYS Makefiles'
-  - build: msvc
+  - CMAKE_GENERATOR: 'NMake Makefiles'
     platform: x86
     BOOST_ROOT: C:\Libraries\boost_1_59_0
     BOOST_LIBRARYDIR: C:\Libraries\boost_1_59_0\lib32-msvc-14.0
     BOOST_INCLUDEDIR: C:\Libraries\boost_1_59_0\boost
-    CMAKE_GENERATOR: 'NMake Makefiles'
-  - build: msvc
+    QT_DIR: C:\Qt\5.8\msvc2015
+  - CMAKE_GENERATOR: 'NMake Makefiles'
     platform: x64
     BOOST_ROOT: C:\Libraries\boost_1_59_0
     BOOST_INCLUDEDIR: C:\Libraries\boost_1_59_0\boost
     BOOST_LIBRARYDIR: C:\Libraries\boost_1_59_0\lib64-msvc-14.0
-    CMAKE_GENERATOR: 'NMake Makefiles'
+    QT_DIR: C:\Qt\5.8\msvc2015_64
 
 install:
+- set PATH=C:\Ruby200\bin;%BOOST_LIBRARYDIR%;%PATH%
+- if defined MINGW_ROOT set PATH=%MINGW_ROOT%\bin;C:\msys64\usr\bin\;%PATH%
+- if "%CMAKE_GENERATOR%"=="NMake Makefiles" call "%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" %PLATFORM%
+- if defined MINGW_ARCH bash -lc "pacman --needed --noconfirm -S mingw-w64-%MINGW_ARCH%-boost"
 - git submodule init
 - git submodule update
-- set PATH=C:\Ruby%RUBY_VERSION%\bin;%BOOST_LIBRARYDIR%;%PATH%
-- gem install bundle
-- bundle install
-- bundle env
-- if "%build%"=="mingw" set PATH=%MINGW_ROOT%\bin;C:\msys64\usr\bin\;%PATH%
-- if "%build%"=="mingw" bash -lc "pacman --needed --noconfirm -S mingw-w64-%MINGW_ARCH%-boost
+- call gem install bundle
+- call bundle install
 
 build_script:
-- cmd: if "%build%"=="msvc" call "%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" %PLATFORM%
-- cmd: cmake -E make_directory build
-- cmd: cmake -E chdir build cmake -G "%CMAKE_GENERATOR%" -DCUKE_ENABLE_EXAMPLES=ON -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_INCLUDEDIR="%BOOST_INCLUDEDIR%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" ..
-- cmd: cmake --build build
+- cmake -E make_directory build
+- cmake -E chdir build cmake -G "%CMAKE_GENERATOR%" -DCUKE_ENABLE_EXAMPLES=on -DBOOST_ROOT="%BOOST_ROOT%" -DBOOST_INCLUDEDIR="%BOOST_INCLUDEDIR%" -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR%" -DCMAKE_PREFIX_PATH="%QT_DIR%" ..
+- cmake --build build
 
 test_script:
-- cmd: set CTEST_OUTPUT_ON_FAILURE=ON
-- cmd: cmake --build build --target test
-- cmd: cmake --build build --target features
+- set CTEST_OUTPUT_ON_FAILURE=ON
+- cmake --build build --target test
+- cmake --build build --target features
 
 after_test:
 - cmd: for /r %%v in (TEST-*.xml) do curl -s -F "file=@%%v;filename=%%~nxv" https://ci.appveyor.com/api/testresults/junit/%APPVEYOR_JOB_ID%
