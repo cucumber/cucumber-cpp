@@ -18,7 +18,6 @@ using boost::shared_ptr;
 #endif
 
 #include "../Table.hpp"
-#include "../utils/FunctionSignature.hpp"
 #include "../utils/IndexSequence.hpp"
 #include "../utils/Regex.hpp"
 
@@ -135,29 +134,27 @@ protected:
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
     // Special case for zero arguments, only thing we bother to support on C++98
-    template <typename R, typename Derived>
-    static R invokeBodyWithIndexedArgs(Derived& that, FunctionArgs<>, index_sequence<>) {
-        return that.bodyWithArgs();
+    template <typename Derived, typename R>
+    static R invokeWithArgs(Derived& that, R (Derived::* f)()) {
+        return (that.*f)();
     }
 #else
-    template <typename R, typename Derived, typename... Args, std::size_t... N>
-    static R invokeBodyWithIndexedArgs(Derived& that, FunctionArgs<Args...>, index_sequence<N...>) {
-        return that.bodyWithArgs(
+    template <typename Derived, typename R, typename... Args, std::size_t... N>
+    static R invokeWithIndexedArgs(Derived& that, R (Derived::* f)(Args...), index_sequence<N...>) {
+        return (that.*f)(
                 that.pArgs->template getInvokeArg<typename std::decay<Args>::type>(N)...
             );
     }
-#endif
 
-    template <typename Signature, typename Derived>
-    static typename FunctionSignature<Signature>::result_type invokeBodyWithArgs(Derived& that) {
-        typedef typename FunctionSignature<Signature>::result_type result_type;
-        typedef typename FunctionSignature<Signature>::args_type   args_type;
-        that.currentArgIndex = args_type::size;
-        return invokeBodyWithIndexedArgs<result_type>(
+    template <typename Derived, typename R, typename... Args>
+    static R invokeWithArgs(Derived& that, R (Derived::* f)(Args...)) {
+        that.currentArgIndex = sizeof...(Args);
+        return invokeWithIndexedArgs(
                 that,
-                args_type(),
-                make_index_sequence<args_type::size>());
+                f,
+                index_sequence_for<Args...>{});
     }
+#endif
 
 private:
     // FIXME: awful hack because of Boost::Test

@@ -3,7 +3,9 @@
 
 #include <boost/config.hpp>
 
-#if __cplusplus < 201402L && !(_MSC_VER > 1800) || defined(BOOST_NO_VARIADIC_TEMPLATES)
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+
+#if __cplusplus < 201402L && !(_MSC_VER > 1800)
     #include <cstddef> // for std::size_t
 #else
     #include <utility>
@@ -12,18 +14,7 @@
 namespace cucumber {
 namespace internal {
 
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
-// Special case for zero, only thing we bother to support on C++98
-template <typename = void>
-struct index_sequence {
-    typedef index_sequence type;
-};
-
-template <std::size_t N>
-struct make_index_sequence;
-
-template <> struct make_index_sequence<0> : public index_sequence< > {};
-#elif __cplusplus < 201402L && !(_MSC_VER > 1800)
+#if __cplusplus < 201402L && !(_MSC_VER > 1800)
 // Based on https://stackoverflow.com/questions/17424477/implementation-c14-make-integer-sequence
 
 template <std::size_t... N>
@@ -53,12 +44,17 @@ struct make_index_sequence : public concat_index_sequence<
 
 template <> struct make_index_sequence<0> : public index_sequence< > {};
 template <> struct make_index_sequence<1> : public index_sequence<0> {};
+
+template <typename... Ts>
+using index_sequence_for = make_index_sequence<sizeof...(Ts)>;
 #else
 using ::std::index_sequence;
-using ::std::make_index_sequence;
+using ::std::index_sequence_for;
 #endif
 
 }
 }
+
+#endif /* !BOOST_NO_VARIADIC_TEMPLATES */
 
 #endif /* CUKE_INDEXSEQ_HPP_ */

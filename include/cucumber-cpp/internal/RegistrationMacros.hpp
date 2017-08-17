@@ -25,7 +25,7 @@
 class class_name : public parent_class {                                  \
 public:                                                                   \
     void body() {                                                         \
-        return invokeBodyWithArgs<void args>(*this);                      \
+        return invokeWithArgs(*this, &class_name::bodyWithArgs);          \
     }                                                                     \
     void bodyWithArgs args;                                               \
 private:                                                                  \
