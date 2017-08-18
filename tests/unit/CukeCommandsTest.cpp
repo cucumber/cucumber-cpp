@@ -88,13 +88,12 @@ public:
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 class CheckAllParametersWithFuncArgs : public CheckAllParameters {
 public:
-#define ARGS (                                              \
-            const int          got_arg_0_int                \
-          , const double       got_arg_1_double             \
-          , const std::string  got_arg_2_string             \
-          , const std::string& got_arg_3_string_with_spaces \
-          )
-    void bodyWithArgs ARGS {
+    void bodyWithArgs(
+            const int          got_arg_0_int
+          , const double       got_arg_1_double
+          , const std::string  got_arg_2_string
+          , const std::string& got_arg_3_string_with_spaces
+          ) {
         EXPECT_EQ(arg_0_int, got_arg_0_int);
         EXPECT_EQ(arg_1_double, got_arg_1_double);
         EXPECT_EQ(arg_2_string, got_arg_2_string);
@@ -104,7 +103,6 @@ public:
     void body() {
         return invokeWithArgs(*this, &CheckAllParametersWithFuncArgs::bodyWithArgs);
     }
-#undef ARGS
 };
 
 TEST_F(CukeCommandsTest, invokeHandlesParametersWithFuncArgs) {
