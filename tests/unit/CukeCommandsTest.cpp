@@ -3,6 +3,7 @@
 #include <cucumber-cpp/internal/step/StepMacros.hpp>
 #include "../utils/CukeCommandsFixture.hpp"
 
+#include <boost/config.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 
@@ -84,6 +85,34 @@ public:
     }
 };
 
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+class CheckAllParametersWithFuncArgs : public CheckAllParameters {
+public:
+#define ARGS (                                              \
+            const int          got_arg_0_int                \
+          , const double       got_arg_1_double             \
+          , const std::string  got_arg_2_string             \
+          , const std::string& got_arg_3_string_with_spaces \
+          )
+    void bodyWithArgs ARGS {
+        EXPECT_EQ(arg_0_int, got_arg_0_int);
+        EXPECT_EQ(arg_1_double, got_arg_1_double);
+        EXPECT_EQ(arg_2_string, got_arg_2_string);
+        EXPECT_EQ(arg_3_string_with_spaces, got_arg_3_string_with_spaces);
+    }
+
+    void body() {
+        return invokeWithArgs(*this, &CheckAllParametersWithFuncArgs::bodyWithArgs);
+    }
+#undef ARGS
+};
+
+TEST_F(CukeCommandsTest, invokeHandlesParametersWithFuncArgs) {
+    // The real test is in TestClass::body()
+    runStepBodyTest<CheckAllParametersWithFuncArgs>();
+}
+#endif
+
 TEST_F(CukeCommandsTest, matchesCorrectly) {
     addStepWithMatcher(STATIC_MATCHER);
     MatchResult result = stepMatches(STATIC_MATCHER);
@@ -91,12 +120,12 @@ TEST_F(CukeCommandsTest, matchesCorrectly) {
 }
 
 TEST_F(CukeCommandsTest, invokeHandlesParametersWithoutMacro) {
-    // The real test is in CheckAllParameters::body()
+    // The real test is in TestClass::body()
     runStepBodyTest<CheckAllParametersWithoutMacro>();
 }
 
 TEST_F(CukeCommandsTest, invokeHandlesParametersWithMacro) {
-    // The real test is in CheckAllParameters::body()
+    // The real test is in TestClass::body()
     runStepBodyTest<CheckAllParametersWithMacro>();
 }
 

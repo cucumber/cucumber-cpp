@@ -4,6 +4,7 @@
 
 * Listen on localhost by default to avoid firewall warnings ([#158](https://github.com/cucumber/cucumber-cpp/pull/158) Nik Reiman)
 * Better integrate Qt into buildsystem, it can now be disabled, and test it in CI ([#160](https://github.com/cucumber/cucumber-cpp/pull/160) Kamil Strzempowicz & Giel van Schijndel)
+* Support taking regex captures as arguments to the step definition's function ([#159](https://github.com/cucumber/cucumber-cpp/pull/159) Giel van Schijndel)
 
 ### Bugfixes
 

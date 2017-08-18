@@ -7,12 +7,18 @@
 #include <string>
 #include <vector>
 
+#include <boost/config.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 using boost::shared_ptr;
 
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+    #include <type_traits>
+#endif
+
 #include "../Table.hpp"
+#include "../utils/IndexSequence.hpp"
 #include "../utils/Regex.hpp"
 
 namespace cucumber {
@@ -125,6 +131,31 @@ protected:
 
     template<class T> const T getInvokeArg();
     const InvokeArgs *getArgs();
+
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+    // Special case for zero arguments, only thing we bother to support on C++98
+    template <typename Derived, typename R>
+    static R invokeWithArgs(Derived& that, R (Derived::* f)()) {
+        return (that.*f)();
+    }
+#else
+    template <typename Derived, typename R, typename... Args, std::size_t... N>
+    static R invokeWithIndexedArgs(Derived& that, R (Derived::* f)(Args...), index_sequence<N...>) {
+        return (that.*f)(
+                that.pArgs->template getInvokeArg<typename std::decay<Args>::type>(N)...
+            );
+    }
+
+    template <typename Derived, typename R, typename... Args>
+    static R invokeWithArgs(Derived& that, R (Derived::* f)(Args...)) {
+        that.currentArgIndex = sizeof...(Args);
+        return invokeWithIndexedArgs(
+                that,
+                f,
+                index_sequence_for<Args...>{});
+    }
+#endif
+
 private:
     // FIXME: awful hack because of Boost::Test
     InvokeResult currentResult;

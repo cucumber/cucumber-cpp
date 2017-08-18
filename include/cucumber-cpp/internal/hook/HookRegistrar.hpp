@@ -27,6 +27,11 @@ public:
     virtual void body() = 0;
 protected:
     bool tagsMatch(Scenario *scenario);
+
+    template <typename Derived, typename R>
+    static R invokeWithArgs(Derived& that, R (Derived::* f)()) {
+        return (that.*f)();
+    }
 private:
     shared_ptr<TagExpression> tagExpression;
 };

@@ -6,6 +6,14 @@ target_include_directories(Calc PUBLIC src)
 if(GMOCK_FOUND)
     add_executable(GTestCalculatorSteps features/step_definitions/GTestCalculatorSteps)
     target_link_libraries(GTestCalculatorSteps Calc ${CUKE_LIBRARIES} ${CUKE_GTEST_LIBRARIES})
+
+    list(FIND CMAKE_CXX_COMPILE_FEATURES cxx_variadic_templates HAS_VARIADIC_TEMPLATES)
+    if(HAS_VARIADIC_TEMPLATES GREATER -1)
+        add_executable(FuncArgsCalculatorSteps features/step_definitions/FuncArgsCalculatorSteps)
+        target_link_libraries(FuncArgsCalculatorSteps Calc ${CUKE_LIBRARIES} ${CUKE_GTEST_LIBRARIES})
+
+        target_compile_features(FuncArgsCalculatorSteps PRIVATE cxx_variadic_templates)
+    endif()
 endif()
 
 if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
