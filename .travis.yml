@@ -17,10 +17,10 @@ matrix:
       env: GMOCK_VER=1.8.0 VALGRIND_TESTS=ON
     - os: osx
       compiler: clang
-      env: GMOCK_VER=1.8.0 QT_DIR=/usr/local/Cellar/qt5/5.8.0_1
+      env: GMOCK_VER=1.8.0
     - os: osx
       compiler: clang
-      env: GMOCK_VER=1.7.0 QT_DIR=/usr/local/Cellar/qt5/5.8.0_1
+      env: GMOCK_VER=1.7.0
 
 addons:
   apt:
