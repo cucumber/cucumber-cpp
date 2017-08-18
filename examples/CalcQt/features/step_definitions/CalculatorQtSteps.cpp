@@ -5,8 +5,19 @@
 
 #include "CalculatorWidget.h"
 
-static int argc = 0;
-static QApplication app(argc, 0);
+/// Helper class to ensure that QApplication gets destroyed before main() returns
+/// and that CalculatorWidget gets destroyed before QApplication gets destroyed.
+struct CalculatorCtx {
+    CalculatorCtx()
+      : argc(0)
+      , app(argc, NULL)
+    {}
+
+    int argc;
+    QApplication app;
+    CalculatorWidget calculator;
+};
+
 static int milliseconds = -1;
 
 int millisecondsToWait() {
@@ -22,52 +33,52 @@ std::istream& operator>> (std::istream& in, QString& val) { std::string s; in >>
 std::ostream& operator<< (std::ostream& out, const QString& val) { out << val.toLatin1().data(); return out; }
 
 GIVEN("^I just turned on the calculator$") {
-    cucumber::ScenarioScope<CalculatorWidget> calculator;
-    calculator->move(0, 0);
-    calculator->show();
+    cucumber::ScenarioScope<CalculatorCtx> ctx;
+    ctx->calculator.move(0, 0);
+    ctx->calculator.show();
 #if QT_VERSION >= 0x050000
-    QTest::qWaitForWindowExposed(calculator.get());
+    QTest::qWaitForWindowExposed(&ctx->calculator);
 #else
-    QTest::qWaitForWindowShown(calculator.get());
+    QTest::qWaitForWindowShown(&ctx->calculator);
 #endif
     QTest::qWait(millisecondsToWait());
 }
 
 WHEN("^I press (\\d+)$") {
     REGEX_PARAM(unsigned int, n);
-    cucumber::ScenarioScope<CalculatorWidget> calculator;
-    QTest::keyClick(calculator.get(), Qt::Key_0 + n, Qt::NoModifier, millisecondsToWait());
+    cucumber::ScenarioScope<CalculatorCtx> ctx;
+    QTest::keyClick(&ctx->calculator, Qt::Key_0 + n, Qt::NoModifier, millisecondsToWait());
 }
 
 WHEN("^I press add") {
-    cucumber::ScenarioScope<CalculatorWidget> calculator;
-    QTest::keyClick(calculator.get(), Qt::Key_Plus, Qt::NoModifier, millisecondsToWait());
+    cucumber::ScenarioScope<CalculatorCtx> ctx;
+    QTest::keyClick(&ctx->calculator, Qt::Key_Plus, Qt::NoModifier, millisecondsToWait());
 }
 
 WHEN("^I press calculate") {
-    cucumber::ScenarioScope<CalculatorWidget> calculator;
-    QTest::keyClick(calculator.get(), Qt::Key_Return, Qt::NoModifier, millisecondsToWait());
+    cucumber::ScenarioScope<CalculatorCtx> ctx;
+    QTest::keyClick(&ctx->calculator, Qt::Key_Return, Qt::NoModifier, millisecondsToWait());
 }
 
 WHEN("^I press clear") {
-    cucumber::ScenarioScope<CalculatorWidget> calculator;
-    QTest::keyClick(calculator.get(), Qt::Key_Escape, Qt::NoModifier, millisecondsToWait());
+    cucumber::ScenarioScope<CalculatorCtx> ctx;
+    QTest::keyClick(&ctx->calculator, Qt::Key_Escape, Qt::NoModifier, millisecondsToWait());
 }
 
 WHEN("^I press subtract") {
-    cucumber::ScenarioScope<CalculatorWidget> calculator;
-    QTest::keyClick(calculator.get(), Qt::Key_Minus, Qt::NoModifier, millisecondsToWait());
+    cucumber::ScenarioScope<CalculatorCtx> ctx;
+    QTest::keyClick(&ctx->calculator, Qt::Key_Minus, Qt::NoModifier, millisecondsToWait());
 }
 
 THEN("^the display should be empty$") {
-    cucumber::ScenarioScope<CalculatorWidget> calculator;
-    EXPECT_EQ(calculator->display().size(), 0);
+    cucumber::ScenarioScope<CalculatorCtx> ctx;
+    EXPECT_EQ(ctx->calculator.display().size(), 0);
     QTest::qWait(millisecondsToWait());
 }
 
 THEN("^the display should show (.*)$") {
     REGEX_PARAM(QString, expected);
-    cucumber::ScenarioScope<CalculatorWidget> calculator;
-    EXPECT_EQ(expected, calculator->display());
+    cucumber::ScenarioScope<CalculatorCtx> ctx;
+    EXPECT_EQ(expected, ctx->calculator.display());
     QTest::qWait(millisecondsToWait());
 }
