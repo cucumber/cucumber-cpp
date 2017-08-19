@@ -28,14 +28,54 @@ cmake --build build
 cmake --build build --target test
 cmake --build build --target features
 
-for CALC_EXAMPLE in \
+# Start virtual X display server
+
+# Starting Xvfb hangs on OSX, that's why we do this on Linux only now
+if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+    DISPLAY=:99
+    export DISPLAY
+
+    # Xvfb sends SIGUSR1 to its parent when it finished startup, this causes the 'wait' below to stop waiting
+    trap : USR1
+    (trap '' USR1; Xvfb $DISPLAY -screen 0 640x480x8 -nolisten tcp > /dev/null 2>&1) &
+    XVFBPID=$!
+    wait || :
+    trap '' USR1
+    if ! kill -0 $XVFBPID 2> /dev/null; then
+        echo "Xvfb failed to start" >&2
+        exit 1
+    fi
+else
+    unset DISPLAY
+fi
+
+for TEST in \
     build/examples/Calc/GTestCalculatorSteps \
     build/examples/Calc/BoostCalculatorSteps \
     build/examples/Calc/FuncArgsCalculatorSteps \
 ; do
-    if [ -f "${CALC_EXAMPLE}" ]; then
-        "${CALC_EXAMPLE}" > /dev/null &
+    if [ -f "${TEST}" ]; then
+        "${TEST}" > /dev/null &
+        sleep 1
         cucumber examples/Calc
-        wait
+        wait %
     fi
 done
+
+for TEST in \
+    build/examples/CalcQt/GTestCalculatorQtSteps \
+    build/examples/CalcQt/BoostCalculatorQtSteps \
+; do
+    if [ -f "${TEST}" -a -n "${DISPLAY:-}" ]; then
+        "${TEST}" 2> /dev/null &
+        sleep 1
+        cucumber examples/CalcQt
+        wait %
+    fi
+done
+
+if [ -n "${XVFBPID:-}" ]; then
+    # Stop virtual X display server
+    kill $XVFBPID
+    wait
+fi

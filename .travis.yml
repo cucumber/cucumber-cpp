@@ -36,6 +36,7 @@ addons:
       - ninja-build
       - valgrind
       - qtbase5-dev
+      - xvfb
 
 before_install:
   - if [[ "${TRAVIS_OS_NAME}" = "osx" ]]; then brew update && brew install ninja qt5; fi
