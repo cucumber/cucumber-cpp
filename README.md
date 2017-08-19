@@ -15,6 +15,9 @@ If you need to ask a question, don't open a ticket on GitHub! Please post
 your question on the Cucumber discussion group instead, prefixing the title
 with [CPP].
 
+If you want to contribute code to the project, guidelines are in the
+[`CONTRIBUTING.md` file](https://github.com/cucumber/cucumber-cpp/blob/master/CONTRIBUTING.md).
+
 It relies on a few executables:
 
 * [cmake](https://cmake.org/download/) 3.1 or later.
