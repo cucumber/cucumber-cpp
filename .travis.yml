@@ -43,7 +43,7 @@ addons:
 install:
   - if [[ "${TRAVIS_OS_NAME}" = "osx" ]]; then brew update && brew install ninja qt5; fi
   - if [ -n "${COVERALLS_SERVICE_NAME}" ]; then gem install coveralls-lcov; fi
-  - if [ -n "${COVERALLS_SERVICE_NAME}" ]; then wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.13.orig.tar.gz; tar xf lcov_1.13.orig.tar.gz; sudo make -C lcov-1.13/ install; fi
+  - if [ -n "${COVERALLS_SERVICE_NAME}" ]; then wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.13.orig.tar.gz && tar xf lcov_1.13.orig.tar.gz && make -C lcov-1.13 "PREFIX=${HOME}/.local" install && export PATH="${PATH}:${HOME}/.local/bin"; fi
 # we have to build lcov on our own as version 1.10 in apt is incompatible with coveralls gem; It is not possible to install lcov from deb as it doesn't recognize installed perl package.
 
 script: ./travis.sh
