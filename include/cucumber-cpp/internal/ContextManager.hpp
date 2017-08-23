@@ -9,27 +9,24 @@
 
 namespace cucumber {
 
-using boost::shared_ptr;
-using boost::weak_ptr;
-
 namespace internal {
 
-typedef std::vector<shared_ptr<void> > contexts_type;
+typedef std::vector<boost::shared_ptr<void> > contexts_type;
 
 class ContextManager {
 public:
     void purgeContexts();
-    template<class T> weak_ptr<T> addContext();
+    template<class T> boost::weak_ptr<T> addContext();
 
 protected:
     static contexts_type contexts;
 };
 
 template<class T>
-weak_ptr<T> ContextManager::addContext() {
-    shared_ptr<T> shared(boost::make_shared<T>());
+boost::weak_ptr<T> ContextManager::addContext() {
+    boost::shared_ptr<T> shared(boost::make_shared<T>());
     contexts.push_back(shared);
-    return weak_ptr<T> (shared);
+    return boost::weak_ptr<T> (shared);
 }
 
 }
@@ -45,12 +42,12 @@ public:
 
 private:
     internal::ContextManager contextManager;
-    shared_ptr<T> context;
-    static weak_ptr<T> contextReference;
+    boost::shared_ptr<T> context;
+    static boost::weak_ptr<T> contextReference;
 };
 
 template<class T>
-weak_ptr<T> ScenarioScope<T>::contextReference;
+boost::weak_ptr<T> ScenarioScope<T>::contextReference;
 
 template<class T>
 ScenarioScope<T>::ScenarioScope() {

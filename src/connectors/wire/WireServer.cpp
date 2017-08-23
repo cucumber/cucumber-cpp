@@ -4,6 +4,7 @@
 namespace cucumber {
 namespace internal {
 
+using namespace boost::asio;
 using namespace boost::asio::ip;
 #if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
 using namespace boost::asio::local;

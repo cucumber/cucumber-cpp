@@ -1,6 +1,5 @@
 #include <cucumber-cpp/internal/hook/HookRegistrar.hpp>
 #include <cucumber-cpp/internal/CukeCommands.hpp>
-#include <boost/make_shared.hpp>
 
 namespace cucumber {
 namespace internal {

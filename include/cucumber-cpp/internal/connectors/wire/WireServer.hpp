@@ -10,12 +10,6 @@
 namespace cucumber {
 namespace internal {
 
-using namespace boost::asio;
-using namespace boost::asio::ip;
-#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
-using namespace boost::asio::local;
-#endif
-
 /**
  * Socket server that calls a protocol handler line by line
  */
@@ -33,13 +27,13 @@ public:
 
 protected:
     const ProtocolHandler *protocolHandler;
-    io_service ios;
+    boost::asio::io_service ios;
 
     template <typename Protocol, typename Service>
-    void doListen(basic_socket_acceptor<Protocol, Service>& acceptor,
+    void doListen(boost::asio::basic_socket_acceptor<Protocol, Service>& acceptor,
             const typename Protocol::endpoint& endpoint);
     template <typename Protocol, typename Service>
-    void doAcceptOnce(basic_socket_acceptor<Protocol, Service>& acceptor);
+    void doAcceptOnce(boost::asio::basic_socket_acceptor<Protocol, Service>& acceptor);
     void processStream(std::iostream &stream);
 };
 
@@ -66,7 +60,7 @@ public:
     /**
      * Bind and listen to a TCP port on the given endpoint
      */
-    void listen(const tcp::endpoint endpoint);
+    void listen(const boost::asio::ip::tcp::endpoint endpoint);
 
     /**
      * Endpoint (IP address and port number) that this server is currently
@@ -75,12 +69,12 @@ public:
      * @throw boost::system::system_error when not listening on any socket or
      *        the endpoint cannot be determined.
      */
-    tcp::endpoint listenEndpoint() const;
+    boost::asio::ip::tcp::endpoint listenEndpoint() const;
 
     virtual void acceptOnce();
 
 private:
-    tcp::acceptor acceptor;
+    boost::asio::ip::tcp::acceptor acceptor;
 };
 
 #if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
@@ -105,14 +99,14 @@ public:
      * @throw boost::system::system_error when not listening on any socket or
      *        the endpoint cannot be determined.
      */
-    stream_protocol::endpoint listenEndpoint() const;
+    boost::asio::local::stream_protocol::endpoint listenEndpoint() const;
 
     virtual void acceptOnce();
 
     ~UnixSocketServer();
 
 private:
-    stream_protocol::acceptor acceptor;
+    boost::asio::local::stream_protocol::acceptor acceptor;
 };
 #endif
 

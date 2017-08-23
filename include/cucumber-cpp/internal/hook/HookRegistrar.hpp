@@ -6,8 +6,7 @@
 #include "../step/StepManager.hpp"
 
 #include <boost/make_shared.hpp>
-#include <boost/smart_ptr.hpp>
-using boost::shared_ptr;
+#include <boost/shared_ptr.hpp>
 
 #include <list>
 
