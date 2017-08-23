@@ -196,7 +196,7 @@ public:
     }
 };
 
-static std::map<std::string, boost::shared_ptr<CommandDecoder> > commandDecodersMap =
+static const std::map<std::string, boost::shared_ptr<CommandDecoder> > commandDecodersMap =
   boost::assign::map_list_of<std::string, boost::shared_ptr<CommandDecoder> >
     ("begin_scenario", boost::make_shared< BeginScenarioDecoder >())
     ("end_scenario"  , boost::make_shared< EndScenarioDecoder   >())
@@ -215,13 +215,15 @@ boost::shared_ptr<WireCommand> JsonSpiritWireMessageCodec::decode(const std::str
         mArray & jsonRequest = json.get_array();
         mValue & jsonCommand = jsonRequest[0];
 
-        CommandDecoder *commandDecoder = commandDecodersMap[jsonCommand.get_str()].get();
-        if (commandDecoder != NULL) {
+        const std::map<std::string, boost::shared_ptr<CommandDecoder> >::const_iterator
+            commandDecoder = commandDecodersMap.find(jsonCommand.get_str());
+        if (commandDecoder != commandDecodersMap.end()
+         && commandDecoder->second) {
             mValue jsonArgs;
             if (jsonRequest.size() > 1) {
                 jsonArgs = jsonRequest[1];
             }
-            return commandDecoder->decode(jsonArgs);
+            return commandDecoder->second->decode(jsonArgs);
         }
     } catch (...) {
         // LOG Error decoding wire protocol command
