@@ -87,16 +87,10 @@ void SnippetTextResponse::accept(WireResponseVisitor& visitor) const {
  */
 
 
-class CommandDecoder {
-public:
-  virtual ~CommandDecoder() { }
-  virtual boost::shared_ptr<WireCommand> decode(const mValue & jsonArgs) const = 0;
-};
+namespace {
+    typedef boost::shared_ptr<WireCommand> (*CommandDecoder)(const mValue& jsonArgs);
 
-
-class ScenarioDecoder : public CommandDecoder {
-protected:
-    CukeEngine::tags_type getTags(const mValue & jsonArgs) const {
+    CukeEngine::tags_type getScenarioTags(const mValue& jsonArgs) {
         CukeEngine::tags_type tags;
         if (!jsonArgs.is_null()) {
             const mArray & jsonTags = jsonArgs.get_obj().find("tags")->second.get_array();
@@ -106,63 +100,22 @@ protected:
         }
         return tags;
     }
-};
 
-
-class BeginScenarioDecoder : public ScenarioDecoder {
-public:
-    boost::shared_ptr<WireCommand> decode(const mValue & jsonArgs) const {
-        return boost::make_shared<BeginScenarioCommand>(getTags(jsonArgs));
+    boost::shared_ptr<WireCommand> BeginScenarioDecoder(const mValue& jsonArgs) {
+        return boost::make_shared<BeginScenarioCommand>(getScenarioTags(jsonArgs));
     }
-};
 
-
-class EndScenarioDecoder : public ScenarioDecoder {
-public:
-    boost::shared_ptr<WireCommand> decode(const mValue & jsonArgs) const {
-        return boost::make_shared<EndScenarioCommand>(getTags(jsonArgs));
+    boost::shared_ptr<WireCommand> EndScenarioDecoder(const mValue& jsonArgs) {
+        return boost::make_shared<EndScenarioCommand>(getScenarioTags(jsonArgs));
     }
-};
 
-
-class StepMatchesDecoder : public CommandDecoder {
-public:
-    boost::shared_ptr<WireCommand> decode(const mValue & jsonArgs) const {
+    boost::shared_ptr<WireCommand> StepMatchesDecoder(const mValue& jsonArgs) {
         mObject stepMatchesArgs(jsonArgs.get_obj());
-        const std::string & nameToMatch(stepMatchesArgs["name_to_match"].get_str());
+        const std::string& nameToMatch(stepMatchesArgs["name_to_match"].get_str());
         return boost::make_shared<StepMatchesCommand>(nameToMatch);
     }
-};
 
-
-class InvokeDecoder : public CommandDecoder {
-public:
-    boost::shared_ptr<WireCommand> decode(const mValue & jsonArgs) const {
-        mObject invokeParams(jsonArgs.get_obj());
-
-        CukeEngine::invoke_args_type args;
-        CukeEngine::invoke_table_type tableArg;
-        const std::string & id(invokeParams["id"].get_str());
-        fillInvokeArgs(invokeParams, args, tableArg);
-        return boost::make_shared<InvokeCommand>(id, args, tableArg);
-    }
-
-private:
-    void fillInvokeArgs(
-            const mObject & invokeParams,
-            CukeEngine::invoke_args_type & args,
-            CukeEngine::invoke_table_type & tableArg) const {
-        const mArray & jsonArgs(invokeParams.find("args")->second.get_array());
-        for (mArray::const_iterator i = jsonArgs.begin(); i != jsonArgs.end(); ++i) {
-            if (i->type() == str_type) {
-                args.push_back(i->get_str());
-            } else if (i->type() == array_type) {
-                fillTableArg(i->get_array(), tableArg);
-            }
-        }
-    }
-
-    void fillTableArg(const mArray & jsonTableArg, CukeEngine::invoke_table_type & tableArg) const {
+    void fillTableArg(const mArray& jsonTableArg, CukeEngine::invoke_table_type& tableArg) {
         typedef mArray::size_type size_type;
         size_type rows = jsonTableArg.size();
         if (rows > 0) {
@@ -182,27 +135,48 @@ private:
             // TODO: Invalid table (no column specified)
         }
     }
-};
 
+    void fillInvokeArgs(
+            const mObject&                 invokeParams,
+            CukeEngine::invoke_args_type&  args,
+            CukeEngine::invoke_table_type& tableArg) {
+        const mArray & jsonArgs(invokeParams.find("args")->second.get_array());
+        for (mArray::const_iterator i = jsonArgs.begin(); i != jsonArgs.end(); ++i) {
+            if (i->type() == str_type) {
+                args.push_back(i->get_str());
+            } else if (i->type() == array_type) {
+                fillTableArg(i->get_array(), tableArg);
+            }
+        }
+    }
 
-class SnippetTextDecoder : public CommandDecoder {
-public:
-    boost::shared_ptr<WireCommand> decode(const mValue & jsonArgs) const {
+    boost::shared_ptr<WireCommand> InvokeDecoder(const mValue& jsonArgs) {
+        mObject invokeParams(jsonArgs.get_obj());
+
+        CukeEngine::invoke_args_type args;
+        CukeEngine::invoke_table_type tableArg;
+        const std::string & id(invokeParams["id"].get_str());
+        fillInvokeArgs(invokeParams, args, tableArg);
+        return boost::make_shared<InvokeCommand>(id, args, tableArg);
+    }
+
+    boost::shared_ptr<WireCommand> SnippetTextDecoder(const mValue& jsonArgs) {
         mObject snippetTextArgs(jsonArgs.get_obj());
         const std::string & stepKeyword(snippetTextArgs["step_keyword"].get_str());
         const std::string & stepName(snippetTextArgs["step_name"].get_str());
         const std::string & multilineArgClass(snippetTextArgs["multiline_arg_class"].get_str());
         return boost::make_shared<SnippetTextCommand>(stepKeyword, stepName, multilineArgClass);
     }
-};
+}
 
-static const std::map<std::string, boost::shared_ptr<CommandDecoder> > commandDecodersMap =
-  boost::assign::map_list_of<std::string, boost::shared_ptr<CommandDecoder> >
-    ("begin_scenario", boost::make_shared< BeginScenarioDecoder >())
-    ("end_scenario"  , boost::make_shared< EndScenarioDecoder   >())
-    ("step_matches"  , boost::make_shared< StepMatchesDecoder   >())
-    ("invoke"        , boost::make_shared< InvokeDecoder        >())
-    ("snippet_text"  , boost::make_shared< SnippetTextDecoder   >());
+static const std::map<std::string, CommandDecoder> commandDecodersMap =
+  boost::assign::map_list_of<std::string, CommandDecoder>
+    ("begin_scenario", BeginScenarioDecoder)
+    ("end_scenario"  , EndScenarioDecoder  )
+    ("step_matches"  , StepMatchesDecoder  )
+    ("invoke"        , InvokeDecoder       )
+    ("snippet_text"  , SnippetTextDecoder  )
+  ;
 
 
 JsonSpiritWireMessageCodec::JsonSpiritWireMessageCodec() {};
@@ -215,7 +189,7 @@ boost::shared_ptr<WireCommand> JsonSpiritWireMessageCodec::decode(const std::str
         mArray & jsonRequest = json.get_array();
         mValue & jsonCommand = jsonRequest[0];
 
-        const std::map<std::string, boost::shared_ptr<CommandDecoder> >::const_iterator
+        const std::map<std::string, CommandDecoder>::const_iterator
             commandDecoder = commandDecodersMap.find(jsonCommand.get_str());
         if (commandDecoder != commandDecodersMap.end()
          && commandDecoder->second) {
@@ -223,7 +197,7 @@ boost::shared_ptr<WireCommand> JsonSpiritWireMessageCodec::decode(const std::str
             if (jsonRequest.size() > 1) {
                 jsonArgs = jsonRequest[1];
             }
-            return commandDecoder->second->decode(jsonArgs);
+            return commandDecoder->second(jsonArgs);
         }
     } catch (...) {
         // LOG Error decoding wire protocol command
