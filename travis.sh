@@ -20,6 +20,8 @@ cmake -E chdir build cmake \
     -G Ninja \
     -DCUKE_ENABLE_EXAMPLES=on \
     ${CMAKE_PREFIX_PATH:+"-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"} \
+    ${COVERALLS_SERVICE_NAME:+"-DCMAKE_BUILD_TYPE=Debug"} \
+    ${COVERALLS_SERVICE_NAME:+"-DCMAKE_CXX_FLAGS='--coverage'"} \
     ${VALGRIND_TESTS:+"-DVALGRIND_TESTS=${VALGRIND_TESTS}"} \
     ${GMOCK_PATH:-"-DGMOCK_VER=${GMOCK_VER}"} \
     ${GMOCK_PATH:+"-DGMOCK_SRC_DIR=${GMOCK_PATH}"} \
@@ -78,4 +80,16 @@ if [ -n "${XVFBPID:-}" ]; then
     # Stop virtual X display server
     kill $XVFBPID
     wait
+fi
+
+if [ -n "${COVERALLS_SERVICE_NAME}" ]; then
+    lcov --directory ./build --capture  --output-file coverage.info
+    lcov --remove coverage.info "/usr/*" --output-file coverage.info
+    lcov --remove coverage.info "${TRAVIS_BUILD_DIR}/build/*" --output-file coverage.info
+    lcov --remove coverage.info "${TRAVIS_BUILD_DIR}/tests/*" --output-file coverage.info
+    lcov --remove coverage.info "${TRAVIS_BUILD_DIR}/features/*" --output-file coverage.info
+    lcov --remove coverage.info "${TRAVIS_BUILD_DIR}/examples/*" --output-file coverage.info
+    lcov --remove coverage.info "${TRAVIS_BUILD_DIR}/include/json_spirit/*" --output-file coverage.info
+    lcov --list coverage.info
+    coveralls-lcov coverage.info
 fi

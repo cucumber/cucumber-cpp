@@ -1,6 +1,5 @@
 language: cpp
-os:
-  - linux
+os: linux
 sudo: required
 dist: trusty
 compiler:
@@ -12,6 +11,9 @@ env:
   - GMOCK_PATH=/usr/src/gmock #1.6.0 from ubuntu trusty repo
 matrix:
   include:
+    - os: linux
+      compiler: gcc
+      env: GMOCK_VER=1.8.0 COVERALLS_SERVICE_NAME=travis-ci
     - os: linux
       compiler: gcc
       env: GMOCK_VER=1.8.0 VALGRIND_TESTS=ON
@@ -38,9 +40,12 @@ addons:
       - qtbase5-dev
       - xvfb
 
-before_install:
+install:
   - if [[ "${TRAVIS_OS_NAME}" = "osx" ]]; then brew update && brew install ninja qt5; fi
+  - if [ -n "${COVERALLS_SERVICE_NAME}" ]; then gem install coveralls-lcov; fi
+  - if [ -n "${COVERALLS_SERVICE_NAME}" ]; then wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.13.orig.tar.gz; tar xf lcov_1.13.orig.tar.gz; sudo make -C lcov-1.13/ install; fi
+# we have to build lcov on our own as version 1.10 in apt is incompatible with coveralls gem; It is not possible to install lcov from deb as it doesn't recognize installed perl package.
 
-script: ./travis.sh 
+script: ./travis.sh
 
 # default notifications: https://docs.travis-ci.com/user/notifications#Notifications
