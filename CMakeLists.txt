@@ -217,7 +217,13 @@ else()
         add_executable(e2e-steps EXCLUDE_FROM_ALL ${CUKE_DYNAMIC_CPP_STEPS})
         # Mark this file as generated so it isn't required at CMake generation time (it is necessary when the target gets built though)
         set_source_files_properties(${CUKE_DYNAMIC_CPP_STEPS} PROPERTIES GENERATED TRUE)
-        target_link_libraries(e2e-steps ${CUKE_LIBRARIES})
+        target_link_libraries(e2e-steps PRIVATE ${CUKE_LIBRARIES})
+        #Boost test lib required for boost specific scenario "Predicate Message"
+        if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
+            target_link_libraries(e2e-steps PRIVATE ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+        else()
+            set(CUKE_E2E_TAGS "--tags ~@boost")
+        endif()
 
         set(CUKE_COMPILE_DYNAMIC_CPP_STEPS '"${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}" --target e2e-steps')
 
@@ -242,6 +248,7 @@ else()
                 COMPILE_DYNAMIC_CPP_STEPS=${CUKE_COMPILE_DYNAMIC_CPP_STEPS}
                 CUCUMBER_RUBY=${CUCUMBER_RUBY}
                 --format=junit "--out=${CMAKE_BINARY_DIR}/features"
+                ${CUKE_E2E_TAGS}
                 ${ARGN}
                 ${CUKE_FEATURES_DIR}
                 DEPENDS cucumber-cpp
@@ -249,9 +256,9 @@ else()
                 )
         endfunction(add_feature_target)
 
-        add_feature_target(features --format progress)
-        add_feature_target(features-pretty --format pretty)
-        add_feature_target(features-wip --format pretty --tags @wip)
+        add_feature_target(features         --format progress)
+        add_feature_target(features-pretty  --format pretty)
+        add_feature_target(features-wip     --format pretty --tags @wip)
 
     else()
         message(WARNING "Could not find Cucumber: skipping end-to-end tests")

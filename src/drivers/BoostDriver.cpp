@@ -60,8 +60,8 @@ public:
     void log_exception_finish( std::ostream& ) {};
 
     void log_entry_start( std::ostream&, log_entry_data const&, log_entry_types /*let*/) {};
-    void log_entry_value( std::ostream&, const_string /*value*/);
-    void log_entry_value( std::ostream&, lazy_ostream const& /*value*/) {};
+    void log_entry_value( std::ostream&, const_string value);
+    void log_entry_value( std::ostream&, lazy_ostream const& value);
     void log_entry_finish( std::ostream&) {};
 
     void entry_context_start( std::ostream&, log_level /*l*/) {}
@@ -79,7 +79,11 @@ void CukeBoostLogInterceptor::reset() {
 /*
  * Threshold level set to log_all_errors, so we should be fine logging everything
  */
-void CukeBoostLogInterceptor::log_entry_value( std::ostream&, const_string value) {
+void CukeBoostLogInterceptor::log_entry_value(std::ostream&, const_string value) {
+    description << value;
+}
+
+void CukeBoostLogInterceptor::log_entry_value(std::ostream&, lazy_ostream const& value) {
     description << value;
 }
 

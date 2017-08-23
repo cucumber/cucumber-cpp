@@ -1,4 +1,8 @@
 Given /^a step definition file with:$/ do |code|
+    set_code code
+end
+
+Given /^a step definition file with support code including:$/ do |code|
     append_support_code code
 end
 
