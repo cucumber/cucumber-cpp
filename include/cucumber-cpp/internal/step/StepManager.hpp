@@ -180,7 +180,7 @@ protected:
 public:
     static step_id_type addStep(boost::shared_ptr<StepInfo> stepInfo);
     static MatchResult stepMatches(const std::string &stepDescription);
-    static const boost::shared_ptr<const StepInfo>& getStep(step_id_type id);
+    static const boost::shared_ptr<const StepInfo> getStep(step_id_type id);
 protected:
     static steps_type& steps();
 };
