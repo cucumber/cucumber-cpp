@@ -19,7 +19,7 @@ public:
         return result;
     }
 
-    const InvokeArgs *getLatestArgsPassed() {
+    const InvokeArgs *getLatestArgsPassed() const {
         return latestArgsPtr;
     }
 
@@ -73,8 +73,8 @@ protected:
     std::stringstream markers;
 
     InvokeResult execStep(const InvokeResult &result) {
-        boost::shared_ptr<FakeStepInfo> step(boost::make_shared<FakeStepInfo>(&markers, result));
-        StepCallChain scc(0, step, &NO_INVOKE_ARGS, aroundHooks);
+        const FakeStepInfo step(&markers, result);
+        StepCallChain scc(0, &step, &NO_INVOKE_ARGS, aroundHooks);
         return scc.exec();
     }
 
@@ -88,7 +88,7 @@ protected:
 };
 
 TEST_F(StepCallChainTest, failsIfNoStep) {
-    StepCallChain scc(0, boost::shared_ptr<StepInfo>(), &NO_INVOKE_ARGS, aroundHooks);
+    StepCallChain scc(0, NULL, &NO_INVOKE_ARGS, aroundHooks);
     EXPECT_FALSE(scc.exec().isSuccess());
     EXPECT_EQ("", markers.str());
 }
@@ -125,12 +125,12 @@ TEST_F(StepCallChainTest, aroundHooksAreInvokedInTheCorrectOrder) {
 }
 
 TEST_F(StepCallChainTest, argsArePassedToTheStep) {
-    boost::shared_ptr<FakeStepInfo> step(boost::make_shared<FakeStepInfo>(&markers, InvokeResult::success()));
-    StepCallChain scc(0, step, &NO_INVOKE_ARGS, aroundHooks);
+    const FakeStepInfo step(&markers, InvokeResult::success());
+    StepCallChain scc(0, &step, &NO_INVOKE_ARGS, aroundHooks);
 
-    EXPECT_NE(&NO_INVOKE_ARGS, step->getLatestArgsPassed());
+    EXPECT_NE(&NO_INVOKE_ARGS, step.getLatestArgsPassed());
     scc.exec();
-    EXPECT_EQ(&NO_INVOKE_ARGS, step->getLatestArgsPassed());
+    EXPECT_EQ(&NO_INVOKE_ARGS, step.getLatestArgsPassed());
 }
 
 TEST_F(StepCallChainTest, aroundHooksCanStopTheCallChain) {

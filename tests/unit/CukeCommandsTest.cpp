@@ -111,7 +111,7 @@ TEST_F(CukeCommandsTest, invokeHandlesParametersWithFuncArgs) {
 TEST_F(CukeCommandsTest, matchesCorrectly) {
     addStepWithMatcher(STATIC_MATCHER);
     MatchResult result = stepMatches(STATIC_MATCHER);
-    EXPECT_EQ(stepInfoPtr->id, result.getResultSet().at(0).stepInfo->id);
+    EXPECT_EQ(stepId, result.getResultSet().at(0).stepInfo->id);
 }
 
 TEST_F(CukeCommandsTest, invokeHandlesParametersWithoutMacro) {

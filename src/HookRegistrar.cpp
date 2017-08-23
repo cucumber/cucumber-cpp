@@ -63,7 +63,7 @@ HookRegistrar::aroundhook_list_type& HookRegistrar::aroundStepHooks() {
     return aroundStepHooks;
 }
 
-InvokeResult HookRegistrar::execStepChain(Scenario *scenario, const boost::shared_ptr<const StepInfo>& stepInfo, const InvokeArgs *pArgs) {
+InvokeResult HookRegistrar::execStepChain(Scenario *scenario, const StepInfo* const stepInfo, const InvokeArgs *pArgs) {
     StepCallChain scc(scenario, stepInfo, pArgs, aroundStepHooks());
     return scc.exec();
 }
@@ -131,7 +131,7 @@ void HookRegistrar::execAfterAllHooks() {
 
 StepCallChain::StepCallChain(
     Scenario *scenario,
-    const boost::shared_ptr<const StepInfo>& stepInfo,
+    const StepInfo* const stepInfo,
     const InvokeArgs *pStepArgs,
     HookRegistrar::aroundhook_list_type &aroundHooks
 ) :

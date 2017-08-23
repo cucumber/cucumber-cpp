@@ -104,7 +104,7 @@ protected:
     }
 
     void invokeStep() {
-        invoke(stepInfoPtr->id, &NO_INVOKE_ARGS);
+        invoke(stepId, &NO_INVOKE_ARGS);
     }
 
     void endScenario() {

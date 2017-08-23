@@ -6,7 +6,6 @@
 #include "StepManagerTestDouble.hpp"
 
 #include <boost/make_shared.hpp>
-#include <boost/shared_ptr.hpp>
 
 using namespace cucumber::internal;
 using boost::shared_ptr;
@@ -21,19 +20,18 @@ public:
     const static std::string STATIC_MATCHER;
 
 protected:
-    shared_ptr<StepInfo> stepInfoPtr;
+    step_id_type stepId;
 
     template<class T>
     void runStepBodyTest() {
         addStepToManager<T>(STATIC_MATCHER);
         const InvokeArgs spArgs(T::buildInvokeArgs());
-        invoke(stepInfoPtr->id, &spArgs);
+        invoke(stepId, &spArgs);
     }
 
     template<class T>
     void addStepToManager(const std::string &matcher) {
-        stepInfoPtr = boost::make_shared< StepInvoker<T> >(matcher, "");
-        stepManager.addStep(stepInfoPtr);
+        stepId = stepManager.addStep(boost::make_shared< StepInvoker<T> >(matcher, ""));
     }
 
     virtual void TearDown() {

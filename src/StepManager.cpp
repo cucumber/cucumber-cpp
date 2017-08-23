@@ -124,12 +124,12 @@ MatchResult StepManager::stepMatches(const std::string &stepDescription) {
     return matchResult;
 }
 
-const boost::shared_ptr<const StepInfo> StepManager::getStep(step_id_type id) {
+const StepInfo* StepManager::getStep(step_id_type id) {
     const steps_type::const_iterator step = steps().find(id);
     if (step == steps().end()) {
-        return boost::shared_ptr<const StepInfo>();
+        return NULL;
     }
-    return step->second;
+    return step->second.get();
 }
 
 /**
