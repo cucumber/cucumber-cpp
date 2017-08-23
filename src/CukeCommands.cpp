@@ -1,4 +1,5 @@
 #include "cucumber-cpp/internal/CukeCommands.hpp"
+#include "cucumber-cpp/internal/hook/HookRegistrar.hpp"
 
 #include <sstream>
 #include <boost/algorithm/string.hpp>
@@ -14,22 +15,22 @@ CukeCommands::CukeCommands() : hasStarted(false) {
 
 CukeCommands::~CukeCommands() {
     if (hasStarted) {
-        hookRegistrar.execAfterAllHooks();
+        HookRegistrar::execAfterAllHooks();
     }
 }
 
 void CukeCommands::beginScenario(const TagExpression::tag_list& tags) {
     if (!hasStarted) {
         hasStarted = true;
-        hookRegistrar.execBeforeAllHooks();
+        HookRegistrar::execBeforeAllHooks();
     }
 
     currentScenario = boost::make_shared<Scenario>(tags);
-    hookRegistrar.execBeforeHooks(currentScenario.get());
+    HookRegistrar::execBeforeHooks(currentScenario.get());
 }
 
 void CukeCommands::endScenario() {
-    hookRegistrar.execAfterHooks(currentScenario.get());
+    HookRegistrar::execAfterHooks(currentScenario.get());
     contextManager.purgeContexts();
     currentScenario.reset();
 }
@@ -59,8 +60,8 @@ MatchResult CukeCommands::stepMatches(const std::string description) const {
 
 InvokeResult CukeCommands::invoke(step_id_type id, const InvokeArgs *pArgs) {
     const StepInfo* const stepInfo = stepManager.getStep(id);
-    InvokeResult result = hookRegistrar.execStepChain(currentScenario.get(), stepInfo, pArgs);
-    hookRegistrar.execAfterStepHooks(currentScenario.get());
+    InvokeResult result = HookRegistrar::execStepChain(currentScenario.get(), stepInfo, pArgs);
+    HookRegistrar::execAfterStepHooks(currentScenario.get());
     return result;
 }
 

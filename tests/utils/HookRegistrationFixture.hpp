@@ -51,7 +51,7 @@ public:
 
 class HookRegistrarDouble : public HookRegistrar {
 public:
-    void execAroundStepHooks(Scenario *scenario) {
+    static void execAroundStepHooks(Scenario *scenario) {
         EmptyCallableStep emptyStep;
         aroundhook_list_type &ash = aroundStepHooks();
         for (HookRegistrar::aroundhook_list_type::const_iterator h = ash.begin(); h != ash.end(); ++h) {
@@ -64,7 +64,6 @@ static const InvokeArgs NO_INVOKE_ARGS;
 
 class HookRegistrationTest : public CukeCommandsFixture {
 protected:
-    HookRegistrarDouble hookRegistrar;
     shared_ptr<Scenario> emptyScenario;
 
     HookRegistrationTest() {
@@ -77,25 +76,25 @@ protected:
 
     std::string beforeHookOrder() {
         clearHookCallMarkers();
-        hookRegistrar.execBeforeHooks(getEmptyScenario());
+        HookRegistrarDouble::execBeforeHooks(getEmptyScenario());
         return getHookCallMarkers();
     }
 
     std::string aroundStepHookOrder() {
         clearHookCallMarkers();
-        hookRegistrar.execAroundStepHooks(getEmptyScenario());
+        HookRegistrarDouble::execAroundStepHooks(getEmptyScenario());
         return getHookCallMarkers();
     }
 
     std::string afterStepHookOrder() {
         clearHookCallMarkers();
-        hookRegistrar.execAfterStepHooks(getEmptyScenario());
+        HookRegistrarDouble::execAfterStepHooks(getEmptyScenario());
         return getHookCallMarkers();
     }
 
     std::string afterHookOrder() {
         clearHookCallMarkers();
-        hookRegistrar.execAfterHooks(getEmptyScenario());
+        HookRegistrarDouble::execAfterHooks(getEmptyScenario());
         return getHookCallMarkers();
     }
 

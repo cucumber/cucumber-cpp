@@ -5,7 +5,6 @@
 #include "Scenario.hpp"
 #include "Table.hpp"
 #include "step/StepManager.hpp"
-#include "hook/HookRegistrar.hpp"
 
 #include <map>
 #include <string>
@@ -38,7 +37,6 @@ protected:
 
 private:
     StepManager stepManager;
-    HookRegistrar hookRegistrar;
     ContextManager contextManager;
     bool hasStarted;
 
