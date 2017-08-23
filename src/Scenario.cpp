@@ -1,5 +1,4 @@
 #include <cucumber-cpp/internal/Scenario.hpp>
-#include <boost/make_shared.hpp>
 
 namespace cucumber {
 namespace internal {

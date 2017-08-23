@@ -33,7 +33,7 @@ protected:
         return (that.*f)();
     }
 private:
-    shared_ptr<TagExpression> tagExpression;
+    AndTagExpression tagExpression;
 };
 
 class BeforeHook : public Hook {

@@ -4,9 +4,6 @@
 #include <string>
 #include <vector>
 
-#include <boost/shared_ptr.hpp>
-using boost::shared_ptr;
-
 #include "../utils/Regex.hpp"
 
 namespace cucumber {
@@ -17,16 +14,16 @@ public:
     typedef std::vector<std::string> tag_list;
 
     virtual ~TagExpression() { }
-    virtual bool matches(const tag_list &tags) = 0;
+    virtual bool matches(const tag_list &tags) const = 0;
 };
 
 class OrTagExpression : public TagExpression {
 public:
     OrTagExpression(const std::string &csvTagNotation);
-    bool matches(const tag_list &tags);
+    bool matches(const tag_list &tags) const;
 
 private:
-    bool orTagMatchesTagList(const std::string &currentOrTag, const tag_list &tags);
+    bool orTagMatchesTagList(const std::string &currentOrTag, const tag_list &tags) const;
 
     tag_list orTags;
 
@@ -35,11 +32,12 @@ private:
 
 class AndTagExpression : public TagExpression {
 public:
+    AndTagExpression();
     AndTagExpression(const std::string &csvTagNotation);
-    bool matches(const tag_list &tags);
+    bool matches(const tag_list &tags) const;
 
 private:
-    typedef std::list<shared_ptr<OrTagExpression> > or_expressions_type;
+    typedef std::vector<OrTagExpression> or_expressions_type;
     or_expressions_type orExpressions;
 
     static Regex & csvTagNotationRegex();

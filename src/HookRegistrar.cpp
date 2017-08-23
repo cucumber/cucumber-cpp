@@ -17,11 +17,11 @@ void Hook::skipHook() {
 }
 
 void Hook::setTags(const std::string &csvTagNotation) {
-    tagExpression = boost::make_shared<AndTagExpression>(csvTagNotation);
+    tagExpression = AndTagExpression(csvTagNotation);
 }
 
 bool Hook::tagsMatch(Scenario *scenario) {
-    return !scenario || tagExpression->matches(scenario->getTags());
+    return !scenario || tagExpression.matches(scenario->getTags());
 }
 
 void AroundStepHook::invokeHook(Scenario *scenario, CallableStep *step) {
