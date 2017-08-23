@@ -10,7 +10,7 @@ namespace internal {
 class StepInfoNoOp : public StepInfo {
 public:
     StepInfoNoOp(const std::string &stepMatcher, const std::string source) : StepInfo(stepMatcher, source) {}
-    InvokeResult invokeStep(const InvokeArgs *pArgs) const {
+    InvokeResult invokeStep(const InvokeArgs*) const {
         return InvokeResult::success();
     }
 };
@@ -24,7 +24,7 @@ public:
         description(description) {
     }
 
-    InvokeResult invokeStep(const InvokeArgs *pArgs) const {
+    InvokeResult invokeStep(const InvokeArgs*) const {
         return InvokeResult::pending(description);
     }
 };

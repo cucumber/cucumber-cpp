@@ -81,7 +81,7 @@ void CukeBoostLogInterceptor::reset() {
  */
 void CukeBoostLogInterceptor::log_entry_value( std::ostream&, const_string value) {
     description << value;
-};
+}
 
 const InvokeResult CukeBoostLogInterceptor::getResult() const {
     std::string d = description.str();

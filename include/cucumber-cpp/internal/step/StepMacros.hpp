@@ -10,12 +10,10 @@
 #define CUKE_STEP_GET_MATCHER_(step_matcher, ...) step_matcher
 #define CUKE_STEP_GET_ARGS_(step_matcher, args, ...) args
 
-#define CUKE_STEP_(...)                  \
-CUKE_STEP_WITH_NAME_(                    \
-    CUKE_GEN_OBJECT_NAME_,               \
-    CUKE_STEP_GET_MATCHER_(__VA_ARGS__), \
-    CUKE_STEP_GET_ARGS_(__VA_ARGS__, ()) \
-)                                        \
+#define CUKE_STEP_(...)                                            \
+    CUKE_STEP_WITH_NAME_(CUKE_GEN_OBJECT_NAME_,                    \
+                         CUKE_STEP_GET_MATCHER_(__VA_ARGS__, ()),  \
+                         CUKE_STEP_GET_ARGS_(__VA_ARGS__, (), ())) \
 /**/
 
 #define CUKE_STEP_WITH_NAME_(step_name, step_matcher, args) \

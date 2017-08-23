@@ -24,6 +24,6 @@ THEN(PENDING_MATCHER_2) {
 
 using namespace cucumber::internal;
 
-int main(int argc, char **argv) {
+int main() {
     return DriverTest().run();
 }

@@ -160,8 +160,7 @@ void StepCallChain::execStep() {
     }
 }
 
-
-CallableStepChain::CallableStepChain(StepCallChain *scc) : scc(scc) {};
+CallableStepChain::CallableStepChain(StepCallChain* scc) : scc(scc) {}
 
 void CallableStepChain::call() {
     scc->execNext();

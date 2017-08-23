@@ -98,7 +98,6 @@ THEN("^the calculator does not return ([\\d\\.]+)$") {
     REGEX_PARAM(double, expected);
 
     ScenarioScope<RpnCalculator> calc;
-    double value = calc->value();
     verifyNotEqual(calc->value(), expected);
 }
 

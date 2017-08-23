@@ -65,7 +65,7 @@ private:
     }
 };
 
-int main(int argc, char **argv) {
+int main() {
     BoostDriverTest test;
     return test.run();
 }

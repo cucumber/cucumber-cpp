@@ -178,8 +178,7 @@ static const std::map<std::string, CommandDecoder> commandDecodersMap =
     ("snippet_text"  , SnippetTextDecoder  )
   ;
 
-
-JsonSpiritWireMessageCodec::JsonSpiritWireMessageCodec() {};
+JsonSpiritWireMessageCodec::JsonSpiritWireMessageCodec() {}
 
 boost::shared_ptr<WireCommand> JsonSpiritWireMessageCodec::decode(const std::string &request) const {
     std::istringstream is(request);

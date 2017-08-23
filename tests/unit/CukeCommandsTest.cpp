@@ -40,11 +40,6 @@ const string CheckAllParameters::arg_2_string("fortytwo");
 const string CheckAllParameters::arg_3_string_with_spaces("forty two");
 
 class CheckAllParametersWithoutMacro : public CheckAllParameters {
-private:
-    int int_arg;
-    double double_arg;
-    string string_arg;
-
 public:
     void body() {
         EXPECT_EQ(arg_0_int, getArgs()->getInvokeArg<int>(0));
