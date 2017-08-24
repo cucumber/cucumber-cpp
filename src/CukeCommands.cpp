@@ -55,11 +55,11 @@ const std::string CukeCommands::escapeCString(const std::string str) const {
 }
 
 MatchResult CukeCommands::stepMatches(const std::string description) const {
-    return stepManager.stepMatches(description);
+    return StepManager::stepMatches(description);
 }
 
 InvokeResult CukeCommands::invoke(step_id_type id, const InvokeArgs *pArgs) {
-    const StepInfo* const stepInfo = stepManager.getStep(id);
+    const StepInfo* const stepInfo = StepManager::getStep(id);
     InvokeResult result = HookRegistrar::execStepChain(currentScenario.get(), stepInfo, pArgs);
     HookRegistrar::execAfterStepHooks(currentScenario.get());
     return result;

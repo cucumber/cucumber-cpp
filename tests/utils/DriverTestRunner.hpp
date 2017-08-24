@@ -93,7 +93,7 @@ protected:
 
     CukeCommands cukeCommands;
 private:
-    StepManagerTestDouble stepManager;
+    typedef StepManagerTestDouble StepManager;
     ContextListener listener;
 
     int failedTests;
@@ -104,8 +104,8 @@ private:
         failedTests += testSuccessState ? 0 : 1;
     }
 
-    step_id_type getStepIdFromMatcher(const std::string &stepMatcher) {
-        return stepManager.getStepId(stepMatcher);
+    step_id_type getStepIdFromMatcher(const std::string& stepMatcher) {
+        return StepManager::getStepId(stepMatcher);
     }
 
     void invokeRunsTests() {

@@ -15,7 +15,8 @@ class EmptyStep : public GenericStep {
 };
 
 class CukeCommandsFixture : public ::testing::Test, public CukeCommands {
-    StepManagerTestDouble stepManager;
+    typedef StepManagerTestDouble StepManager;
+
 public:
     const static std::string STATIC_MATCHER;
 
@@ -31,11 +32,11 @@ protected:
 
     template<class T>
     void addStepToManager(const std::string &matcher) {
-        stepId = stepManager.addStep(boost::make_shared< StepInvoker<T> >(matcher, ""));
+        stepId = StepManager::addStep(boost::make_shared<StepInvoker<T> >(matcher, ""));
     }
 
     virtual void TearDown() {
-        stepManager.clearSteps();
+        StepManager::clearSteps();
     }
 };
 

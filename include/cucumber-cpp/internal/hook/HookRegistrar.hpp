@@ -5,6 +5,7 @@
 #include "../Scenario.hpp"
 #include "../step/StepManager.hpp"
 
+#include <boost/config.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 
@@ -96,6 +97,14 @@ protected:
     static hook_list_type& afterStepHooks();
     static hook_list_type& afterHooks();
     static hook_list_type& afterAllHooks();
+
+private:
+    // We're a singleton so don't allow instances
+    HookRegistrar()
+#ifndef BOOST_NO_DELETED_FUNCTIONS
+        = delete
+#endif
+        ;
 };
 
 

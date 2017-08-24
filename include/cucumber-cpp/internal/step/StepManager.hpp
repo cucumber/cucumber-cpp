@@ -183,6 +183,14 @@ public:
     static const StepInfo* getStep(step_id_type id);
 protected:
     static steps_type& steps();
+
+private:
+    // We're a singleton so don't allow instances
+    StepManager()
+#ifndef BOOST_NO_DELETED_FUNCTIONS
+        = delete
+#endif
+        ;
 };
 
 

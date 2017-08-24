@@ -36,7 +36,6 @@ protected:
 	const std::string escapeCString(const std::string str) const;
 
 private:
-    StepManager stepManager;
     ContextManager contextManager;
     bool hasStarted;
 
