@@ -17,7 +17,9 @@ public:
 const int ManualStep::cukeRegId = ::cucumber::internal::registerStep<ManualStep>(MANUAL_STEP_MATCHER, "C:\\Path\\With/Barward/And\\Forward/Slashes.cpp", 42);
 
 TEST(StepRegistrationTest, manualRegistration) {
-    EXPECT_TRUE(StepManager::stepMatches(MANUAL_STEP_MATCHER));
+    // static_cast is necessary for GTest <= 1.7 and C++ >= 2011 because it
+    // doesn't support contextually-convertible-to-bool
+    EXPECT_TRUE(static_cast<bool>(StepManager::stepMatches(MANUAL_STEP_MATCHER)));
     EXPECT_EQ("Slashes.cpp:42", StepManager::getStep(ManualStep::cukeRegId)->source);
 }
 
@@ -30,7 +32,7 @@ WHEN(WHEN_MATCHER) {}
 THEN(THEN_MATCHER) {}
 
 TEST(StepRegistrationTest, macroRegistration) {
-    EXPECT_TRUE(StepManager::stepMatches(GIVEN_MATCHER));
-    EXPECT_TRUE(StepManager::stepMatches(WHEN_MATCHER));
-    EXPECT_TRUE(StepManager::stepMatches(THEN_MATCHER));
+    EXPECT_TRUE(static_cast<bool>(StepManager::stepMatches(GIVEN_MATCHER)));
+    EXPECT_TRUE(static_cast<bool>(StepManager::stepMatches(WHEN_MATCHER)));
+    EXPECT_TRUE(static_cast<bool>(StepManager::stepMatches(THEN_MATCHER)));
 }
