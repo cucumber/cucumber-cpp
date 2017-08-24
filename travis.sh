@@ -76,6 +76,16 @@ for TEST in \
     fi
 done
 
+# Test unix sockets
+SOCK=cucumber.wire.sock
+TEST=build/examples/FeatureShowcase/FeatureShowcaseSteps
+if [ -f "${TEST}" ]; then
+    echo "unix: ${SOCK}" > examples/FeatureShowcase/features/step_definitions/cucumber.wire
+    "${TEST}" --unix "${SOCK}" > /dev/null &
+    cucumber examples/FeatureShowcase
+    wait %
+fi
+
 if [ -n "${XVFBPID:-}" ]; then
     # Stop virtual X display server
     kill $XVFBPID
