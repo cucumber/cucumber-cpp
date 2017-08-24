@@ -45,7 +45,9 @@ public:
     const match_results_type& getResultSet();
     void addMatch(SingleStepMatch match);
 
-    operator void *();
+#ifndef BOOST_NO_EXPLICIT_CONVERSION_OPERATORS
+    explicit
+#endif
     operator bool() const;
 
 private:

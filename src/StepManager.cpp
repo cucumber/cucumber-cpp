@@ -25,10 +25,6 @@ SingleStepMatch::operator const void *() const {
     return stepInfo.get();
 }
 
-MatchResult::operator void *() {
-    return (void *) resultSet.size();
-}
-
 MatchResult::operator bool() const {
     return !resultSet.empty();
 }
