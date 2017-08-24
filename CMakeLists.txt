@@ -24,7 +24,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_INIT} -Wall -Wextra ${CMAKE_CXX_FLAGS}")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Weffc++")
     # TODO: A better fix should handle ld's --as-needed flag
-    if(UNIX)
+    if(UNIX AND NOT APPLE)
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Xlinker '--no-as-needed'")
     endif()
 elseif(MSVC)
