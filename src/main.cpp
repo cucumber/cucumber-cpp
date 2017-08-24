@@ -23,6 +23,9 @@ void acceptWireProtocol(const std::string& host, int port, const std::string& un
             std::clog << "Listening on socket " << unixServer->listenEndpoint() << std::endl;
     }
     else
+#else
+    // Prevent warning about unused parameter
+    static_cast<void>(unixPath);
 #endif
     {
         TCPSocketServer* const tcpServer = new TCPSocketServer(&protocolHandler);
