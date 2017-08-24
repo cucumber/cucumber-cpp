@@ -10,7 +10,7 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Changed
 
-* Renamed HISTORY.md to CHANGELOG.md and updated to bring inline with [cucumber/cucumber #251](https://github.com/cucumber/cucumber/issues/251)
+* Renamed HISTORY.md to CHANGELOG.md and updated to bring inline with [cucumber/cucumber #251](https://github.com/cucumber/cucumber/issues/251) ([#166](https://github.com/cucumber/cucumber-cpp/pull/166) [jaysonesmith](https://github.com/jaysonesmith))
 
 ### Fixed
 
