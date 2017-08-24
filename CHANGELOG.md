@@ -1,12 +1,18 @@
+Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) on how to contribute to Cucumber.
+
 ## In Git
 
-### New Features
+### Added
 
 * Listen on localhost by default to avoid firewall warnings ([#158](https://github.com/cucumber/cucumber-cpp/pull/158) Nik Reiman)
 * Better integrate Qt into buildsystem, it can now be disabled, and test it in CI ([#160](https://github.com/cucumber/cucumber-cpp/pull/160) Kamil Strzempowicz & Giel van Schijndel)
 * Support taking regex captures as arguments to the step definition's function ([#159](https://github.com/cucumber/cucumber-cpp/pull/159) Giel van Schijndel)
 
-### Bugfixes
+### Changed
+
+* Renamed HISTORY.md to CHANGELOG.md and updated to bring inline with [cucumber/cucumber #251](https://github.com/cucumber/cucumber/issues/251) ([#166](https://github.com/cucumber/cucumber-cpp/pull/166) [jaysonesmith](https://github.com/jaysonesmith))
+
+### Fixed
 
 * Allow running all GTest cases without filter separation ([#144](https://github.com/cucumber/cucumber-cpp/pull/144) Giel van Schijndel)
 * Fix QNX build by depending on standard C++ instead of specific implementation ([#156](https://github.com/cucumber/cucumber-cpp/issues/156) Giel van Schijndel)
