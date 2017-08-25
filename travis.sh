@@ -93,13 +93,15 @@ if [ -n "${XVFBPID:-}" ]; then
 fi
 
 if [ -n "${COVERALLS_SERVICE_NAME}" ]; then
-    lcov --directory ./build --capture  --output-file coverage.info
-    lcov --remove coverage.info "/usr/*" --output-file coverage.info
-    lcov --remove coverage.info "${TRAVIS_BUILD_DIR}/build/*" --output-file coverage.info
-    lcov --remove coverage.info "${TRAVIS_BUILD_DIR}/tests/*" --output-file coverage.info
-    lcov --remove coverage.info "${TRAVIS_BUILD_DIR}/features/*" --output-file coverage.info
-    lcov --remove coverage.info "${TRAVIS_BUILD_DIR}/examples/*" --output-file coverage.info
-    lcov --remove coverage.info "${TRAVIS_BUILD_DIR}/3rdparty/*" --output-file coverage.info
+    lcov --directory build --capture --output-file coverage.info
+    lcov --remove coverage.info \
+        "${PWD}/3rdparty/*" \
+        "${PWD}/build/*" \
+        "${PWD}/examples/*" \
+        "${PWD}/features/*" \
+        "${PWD}/tests/*" \
+        "/usr/*" \
+        --output-file coverage.info
     lcov --list coverage.info
     coveralls-lcov coverage.info
 fi
