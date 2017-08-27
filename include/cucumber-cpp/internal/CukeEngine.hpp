@@ -1,6 +1,7 @@
 #ifndef CUKE_CUKEENGINE_HPP_
 #define CUKE_CUKEENGINE_HPP_
 
+#include <cstddef>
 #include <string>
 #include <vector>
 
@@ -12,7 +13,7 @@ namespace internal {
 class StepMatchArg {
 public:
     std::string value;
-    int position;
+    std::ptrdiff_t position;
 };
 
 class StepMatch {

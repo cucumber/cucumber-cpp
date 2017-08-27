@@ -25,14 +25,18 @@ boost::shared_ptr<RegexMatch> Regex::find(const std::string &expression) const {
 }
 
 FindRegexMatch::FindRegexMatch(const boost::regex &regexImpl, const std::string &expression) {
-    boost::cmatch matchResults;
-    regexMatched = boost::regex_search(expression.c_str(), matchResults, regexImpl, boost::regex_constants::match_extra);
+    boost::smatch matchResults;
+    regexMatched = boost::regex_search(
+        expression, matchResults, regexImpl, boost::regex_constants::match_extra);
     if (regexMatched) {
-        for (boost::cmatch::size_type i = 1; i < matchResults.size(); ++i) {
-            RegexSubmatch s;
-            s.value = matchResults.str(i);
-            s.position = matchResults.position(i);
-            submatches.push_back(s);
+        boost::smatch::const_iterator i = matchResults.begin();
+        if (i != matchResults.end())
+            ++i;
+        for (; i != matchResults.end(); ++i) {
+            if (i->matched) {
+                RegexSubmatch s = {*i, i->first - expression.begin()};
+                submatches.push_back(s);
+            }
         }
     }
 }
@@ -42,17 +46,13 @@ boost::shared_ptr<RegexMatch> Regex::findAll(const std::string &expression) cons
 }
 
 FindAllRegexMatch::FindAllRegexMatch(const boost::regex &regexImpl, const std::string &expression) {
-    regexMatched = false;
     boost::sregex_token_iterator i(expression.begin(), expression.end(), regexImpl, 1, boost::regex_constants::match_continuous);
-    boost::sregex_token_iterator j;
-    while (i != j) {
-        regexMatched = true;
-        RegexSubmatch s;
-        s.value = *i;
-        s.position = -1;
+    const boost::sregex_token_iterator end;
+    for (; i != end; ++i) {
+        RegexSubmatch s = {*i, -1};
         submatches.push_back(s);
-        ++i;
     }
+    regexMatched = !submatches.empty();
 }
 
 }

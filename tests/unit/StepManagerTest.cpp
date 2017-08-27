@@ -19,7 +19,7 @@ protected:
     const static char *another_matcher;
     const static char *no_match;
     const static char *a_third_matcher;
-    const map<int, string> no_params;
+    const map<std::ptrdiff_t, string> no_params;
 
     int getUniqueMatchIdOrZeroFor(const string &stepMatch) {
         MatchResult::match_results_type resultSet = getResultSetFor(stepMatch);
@@ -30,7 +30,7 @@ protected:
         }
     }
 
-    int countMatches(const string &stepMatch) {
+    size_t countMatches(const string &stepMatch) {
         return getResultSetFor(stepMatch).size();
     }
 
@@ -42,7 +42,7 @@ protected:
         return (countMatches(stepMatch) > 0);
     }
 
-    bool extractedParamsAre(const string stepMatch, map<int, string> params) {
+    bool extractedParamsAre(const string stepMatch, map<std::ptrdiff_t, string> params) {
         MatchResult::match_results_type resultSet = getResultSetFor(stepMatch);
         if (resultSet.size() != 1) {
             return false; // more than one match

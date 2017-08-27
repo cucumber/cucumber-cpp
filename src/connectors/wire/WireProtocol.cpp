@@ -268,7 +268,7 @@ namespace {
                 BOOST_FOREACH(StepMatchArg ma, m.args) {
                     mObject jsonMa;
                     jsonMa["val"] = ma.value;
-                    jsonMa["pos"] = ma.position;
+                    jsonMa["pos"] = static_cast<boost::int64_t>(ma.position);
                     jsonArgs.push_back(jsonMa);
                 }
                 jsonM["args"] = jsonArgs;

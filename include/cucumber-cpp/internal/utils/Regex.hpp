@@ -1,6 +1,7 @@
 #ifndef CUKE_REGEX_HPP_
 #define CUKE_REGEX_HPP_
 
+#include <cstddef>
 #include <vector>
 
 #include <boost/shared_ptr.hpp>
@@ -11,7 +12,7 @@ namespace internal {
 
 struct RegexSubmatch {
     std::string value;
-    int position;
+    std::ptrdiff_t position;
 };
 
 
