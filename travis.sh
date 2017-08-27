@@ -2,9 +2,6 @@
 set -e #break script on non-zero exitcode from any command
 set -x #display command being executed
 
-gem install bundler
-bundle install
-
 CTEST_OUTPUT_ON_FAILURE=ON
 export CTEST_OUTPUT_ON_FAILURE
 

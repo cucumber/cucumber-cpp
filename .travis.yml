@@ -42,6 +42,8 @@ addons:
 
 install:
   - if [[ "${TRAVIS_OS_NAME}" = "osx" ]]; then brew update && brew install ninja qt5; fi
+  - gem install bundler
+  - bundle install
   # TODO: Revert to the following line when https://github.com/okkez/coveralls-lcov/pull/9 is merged and released.
   #- if [ -n "${COVERALLS_SERVICE_NAME}" ]; then gem install coveralls-lcov; fi
   - if [ -n "${COVERALLS_SERVICE_NAME}" ]; then gem install specific_install && gem specific_install -l https://github.com/muggenhor/coveralls-lcov.git -b branch-coverage; fi

@@ -31,6 +31,7 @@ FindRegexMatch::FindRegexMatch(const boost::regex &regexImpl, const std::string 
     if (regexMatched) {
         boost::smatch::const_iterator i = matchResults.begin();
         if (i != matchResults.end())
+            // Skip capture group 0 which is the whole match, not a user marked sub-expression
             ++i;
         for (; i != matchResults.end(); ++i) {
             if (i->matched) {
