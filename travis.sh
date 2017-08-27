@@ -91,17 +91,3 @@ if [ -n "${XVFBPID:-}" ]; then
     kill $XVFBPID
     wait
 fi
-
-if [ -n "${COVERALLS_SERVICE_NAME}" ]; then
-    lcov --rc lcov_branch_coverage=1 --directory build --capture --output-file coverage.info
-    lcov --rc lcov_branch_coverage=1 --remove coverage.info \
-        "${PWD}/3rdparty/*" \
-        "${PWD}/build/*" \
-        "${PWD}/examples/*" \
-        "${PWD}/features/*" \
-        "${PWD}/tests/*" \
-        "/usr/*" \
-        --output-file coverage.info
-    lcov --rc lcov_branch_coverage=1 --list coverage.info
-    coveralls-lcov coverage.info
-fi
