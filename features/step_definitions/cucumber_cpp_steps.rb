@@ -13,3 +13,9 @@ end
 Then /^a step definition snippet with (".*") is suggested$/ do |regex_string|
     assert_partial_output("(#{regex_string}) {", all_output)
 end
+
+Then /^the scenario fails with message "([^"]*)"$/ do |message|
+  assert_partial_output(message, all_output)
+  assert_success false
+end
+
