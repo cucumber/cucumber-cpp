@@ -2,6 +2,34 @@
 set -e #break script on non-zero exitcode from any command
 set -x #display command being executed
 
+startXvfb () {
+# Xvfb sends SIGUSR1 to its parent when it finished startup, this causes the 'wait' below to stop waiting
+# Starting Xvfb hangs on OSX, that's why we do this on Linux only now
+    if [[ "${TRAVIS_OS_NAME}" = "linux" ]]; then
+        trap : USR1
+        (trap '' USR1; Xvfb $DISPLAY -screen 0 640x480x8 -nolisten tcp > /dev/null 2>&1) &
+        XVFBPID=$!
+        wait || :
+        trap '' USR1
+        if ! kill -0 $XVFBPID 2> /dev/null; then
+            echo "Xvfb failed to start" >&2
+            exit 1
+        fi
+    else
+        sudo Xvfb $DISPLAY -screen 0 640x480x8 -nolisten tcp > /dev/null 2>&1 &
+        XVFBPID=$!
+        sleep 5 
+    fi
+}
+
+killXvfb () {
+    if [ -n "${XVFBPID:-}" ]; then
+        # Stop virtual X display server
+        sudo kill $XVFBPID
+        wait
+    fi
+}
+
 CTEST_OUTPUT_ON_FAILURE=ON
 export CTEST_OUTPUT_ON_FAILURE
 
@@ -27,26 +55,7 @@ cmake --build build
 cmake --build build --target test
 cmake --build build --target features
 
-# Start virtual X display server
-
-# Starting Xvfb hangs on OSX, that's why we do this on Linux only now
-if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-    DISPLAY=:99
-    export DISPLAY
-
-    # Xvfb sends SIGUSR1 to its parent when it finished startup, this causes the 'wait' below to stop waiting
-    trap : USR1
-    (trap '' USR1; Xvfb $DISPLAY -screen 0 640x480x8 -nolisten tcp > /dev/null 2>&1) &
-    XVFBPID=$!
-    wait || :
-    trap '' USR1
-    if ! kill -0 $XVFBPID 2> /dev/null; then
-        echo "Xvfb failed to start" >&2
-        exit 1
-    fi
-else
-    unset DISPLAY
-fi
+startXvfb # Start virtual X display server
 
 for TEST in \
     build/examples/Calc/GTestCalculatorSteps \
@@ -83,8 +92,4 @@ if [ -f "${TEST}" ]; then
     wait %
 fi
 
-if [ -n "${XVFBPID:-}" ]; then
-    # Stop virtual X display server
-    kill $XVFBPID
-    wait
-fi
+killXvfb
