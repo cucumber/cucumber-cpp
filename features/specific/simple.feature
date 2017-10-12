@@ -12,7 +12,7 @@ Feature: Simple Feature
         Scenario: Scenario name
           Given a step
       """
-    And a step definition file with:
+    And a step definition file with support code including:
       """
       #include <iostream>
 

@@ -228,6 +228,10 @@ CUKE_STEP_("^#{step_name}$") {
 EOF
   end
 
+  def set_code(code)
+    @support_code = code
+  end
+
   def append_support_code(code)
     helper_functions = get_absolute_path('../support/HelperFunctions.hpp');
     @support_code ||= <<-EOF
