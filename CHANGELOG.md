@@ -14,6 +14,7 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Fixed
 
+* Fix issue #81 by intercepting messages from BOOST_*_MESSAGE macros ([#164](https://github.com/cucumber/cucumber-cpp/pull/164) Kamil Strzempowicz)
 * Allow running all GTest cases without filter separation ([#144](https://github.com/cucumber/cucumber-cpp/pull/144) Giel van Schijndel)
 * Fix QNX build by depending on standard C++ instead of specific implementation ([#156](https://github.com/cucumber/cucumber-cpp/issues/156) Giel van Schijndel)
 * Ensure CMake 3.1+ is available, 2.8.12 wasn't enough for quite a while ([#152](https://github.com/cucumber/cucumber-cpp/pull/152) Giel van Schijndel)
