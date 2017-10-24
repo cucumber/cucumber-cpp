@@ -65,8 +65,13 @@ public:
     void log_entry_finish( std::ostream&) {};
 
     void entry_context_start( std::ostream&, log_level /*l*/) {}
+#if BOOST_VERSION >= 106500
+    void log_entry_context( std::ostream&, log_level /*l*/, const_string /*value*/) {}
+    void entry_context_finish( std::ostream&, log_level /*l*/ ) {}
+#else
     void log_entry_context( std::ostream&, const_string /*value*/) {}
     void entry_context_finish( std::ostream& ) {}
+#endif
 
 private:
     std::stringstream description;
