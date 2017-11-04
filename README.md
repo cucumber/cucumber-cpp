@@ -33,7 +33,7 @@ It relies on a few libraries:
   Optional for the GTest driver. By default downloaded and built by CMake.
 * [GMock](http://code.google.com/p/googlemock/) 1.6 or later.
   Optional for the internal test suite. By default downloaded and built by CMake.
-* [Qt 4 or 5](http://qt-project.org/). Optional for the CalcQt example.
+* [Qt 4 or 5](http://qt-project.org/). Optional for the CalcQt example and QtTest driver (only Qt 5).
 
 This header-only library is included in the source code:
 

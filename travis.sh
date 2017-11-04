@@ -72,6 +72,7 @@ startXvfb # Start virtual X display server
 
 for TEST in \
     build/examples/Calc/GTestCalculatorSteps \
+    build/examples/Calc/QtTestCalculatorSteps \
     build/examples/Calc/BoostCalculatorSteps \
     build/examples/Calc/FuncArgsCalculatorSteps \
 ; do
@@ -85,6 +86,7 @@ done
 
 for TEST in \
     build/examples/CalcQt/GTestCalculatorQtSteps \
+    build/examples/CalcQt/QtTestCalculatorQtSteps \
     build/examples/CalcQt/BoostCalculatorQtSteps \
 ; do
     if [ -f "${TEST}" -a -n "${DISPLAY:-}" ]; then
