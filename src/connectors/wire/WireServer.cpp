@@ -18,11 +18,11 @@ SocketServer::SocketServer(const ProtocolHandler *protocolHandler) :
 #if BOOST_VERSION <= 106500
 template <typename Protocol, typename Service>
 void SocketServer::doListen(basic_socket_acceptor<Protocol, Service>& acceptor,
-        const typename Protocol::endpoint& endpoint) {
+                            const typename Protocol::endpoint& endpoint) {
 #else
 template <typename Protocol>
 void SocketServer::doListen(basic_socket_acceptor<Protocol>& acceptor,
-        const typename Protocol::endpoint& endpoint) {
+                            const typename Protocol::endpoint& endpoint) {
 #endif
     if (acceptor.is_open())
         throw boost::system::system_error(boost::asio::error::already_open);
