@@ -29,11 +29,19 @@ protected:
     const ProtocolHandler *protocolHandler;
     boost::asio::io_service ios;
 
+#if BOOST_VERSION <= 106500
     template <typename Protocol, typename Service>
     void doListen(boost::asio::basic_socket_acceptor<Protocol, Service>& acceptor,
             const typename Protocol::endpoint& endpoint);
     template <typename Protocol, typename Service>
     void doAcceptOnce(boost::asio::basic_socket_acceptor<Protocol, Service>& acceptor);
+#else
+    template <typename Protocol>
+    void doListen(boost::asio::basic_socket_acceptor<Protocol>& acceptor,
+            const typename Protocol::endpoint& endpoint);
+    template <typename Protocol>
+    void doAcceptOnce(boost::asio::basic_socket_acceptor<Protocol>& acceptor);
+#endif
     void processStream(std::iostream &stream);
 };
 
