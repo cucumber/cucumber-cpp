@@ -19,6 +19,7 @@ public:
       * Constructor for DI
       */
     SocketServer(const ProtocolHandler *protocolHandler);
+    virtual ~SocketServer() {}
 
     /**
      * Accept one connection
