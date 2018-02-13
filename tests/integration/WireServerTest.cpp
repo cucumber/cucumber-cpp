@@ -23,8 +23,9 @@ namespace fs = boost::filesystem;
 
 static const time_duration THREAD_TEST_TIMEOUT = milliseconds(4000);
 
-MATCHER(IsConnected, std::string(negation ? "is not" : "is") +
-        " connected") { return arg.good(); }
+MATCHER(IsConnected, std::string(negation ? "is not" : "is") + " connected") {
+    return arg.good();
+}
 
 MATCHER(HasTerminated, "") {
     return !arg.joinable();
@@ -54,7 +55,7 @@ MATCHER_P(EventuallyReceives, value, "") {
 
 class MockProtocolHandler : public ProtocolHandler {
 public:
-    MOCK_CONST_METHOD1(handle, std::string(const std::string &request));
+    MOCK_CONST_METHOD1(handle, std::string(const std::string& request));
 };
 
 class SocketServerTest : public Test {
