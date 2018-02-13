@@ -71,8 +71,9 @@ foreach(TARGET
 )
     target_include_directories(${TARGET}
         PUBLIC
-            ${CMAKE_CURRENT_BINARY_DIR}
-            ${CMAKE_SOURCE_DIR}/include
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+            $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
     )
     target_link_libraries(${TARGET}
         PUBLIC
@@ -102,3 +103,12 @@ target_link_libraries(cucumber-cpp
     PRIVATE
         Boost::program_options
 )
+
+install(TARGETS cucumber-cpp-nomain
+    ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS cucumber-cpp
+    ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})

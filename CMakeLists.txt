@@ -251,8 +251,13 @@ endif()
 #
 # Cucumber-Cpp
 #
+set (CMAKE_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_PREFIX}")
+set (CMAKE_INSTALL_LIBDIR "${CMAKE_INSTALL_PREFIX}/lib")
+set (CMAKE_INSTALL_BINDIR "${CMAKE_INSTALL_PREFIX}/bin")
 
 set(CUKE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+install(DIRECTORY ${CUKE_INCLUDE_DIR} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
 add_subdirectory(3rdparty/json_spirit)
 add_subdirectory(src)
 

@@ -64,13 +64,16 @@ git submodule update
 cmake -E make_directory build
 
 # Generate Makefiles
-cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on ..
+cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on -DCMAKE_INSTALL_PREFIX=${prefix} ..
 
 # Build cucumber-cpp and tests
 cmake --build build
 
 # Run unit tests
 cmake --build build --target test
+
+# Run install
+cmake --build build --target install
 
 # Check implementation against common cucumber test suite
 cmake --build build --target features
