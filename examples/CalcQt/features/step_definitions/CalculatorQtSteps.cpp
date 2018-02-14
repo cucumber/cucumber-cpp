@@ -36,12 +36,16 @@ GIVEN("^I just turned on the calculator$") {
     cucumber::ScenarioScope<CalculatorCtx> ctx;
     ctx->calculator.move(0, 0);
     ctx->calculator.show();
-    bool _; //just to suppress warning
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-result"
 #if QT_VERSION >= 0x050000
-    _ = QTest::qWaitForWindowExposed(&ctx->calculator);
+    QTest::qWaitForWindowExposed(&ctx->calculator);
 #else
-    _ = QTest::qWaitForWindowShown(&ctx->calculator);
+    QTest::qWaitForWindowShown(&ctx->calculator);
 #endif
+#pragma clang diagnostic pop
+
     QTest::qWait(millisecondsToWait());
 }
 
