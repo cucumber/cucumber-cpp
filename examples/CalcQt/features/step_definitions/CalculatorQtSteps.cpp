@@ -36,10 +36,11 @@ GIVEN("^I just turned on the calculator$") {
     cucumber::ScenarioScope<CalculatorCtx> ctx;
     ctx->calculator.move(0, 0);
     ctx->calculator.show();
+    bool _; //just to suppress warning
 #if QT_VERSION >= 0x050000
-    QTest::qWaitForWindowExposed(&ctx->calculator);
+    _ = QTest::qWaitForWindowExposed(&ctx->calculator);
 #else
-    QTest::qWaitForWindowShown(&ctx->calculator);
+    _ = QTest::qWaitForWindowShown(&ctx->calculator);
 #endif
     QTest::qWait(millisecondsToWait());
 }
