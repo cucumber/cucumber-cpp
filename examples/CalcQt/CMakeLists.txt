@@ -28,5 +28,4 @@ if(QT_LIBRARIES)
         add_executable(CgreenCalculatorQtSteps features/step_definitions/CgreenCalculatorQtSteps)
         target_link_libraries(CgreenCalculatorQtSteps libcalcqt ${CUKE_LIBRARIES} Cgreen::Cgreen ${QT_LIBRARIES})
     endif()
-
 endif()

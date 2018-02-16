@@ -51,7 +51,7 @@ to run the functional test suite.
 To install the Ruby prerequisites:
 
 ```
-gem install bundler
+gem install bundler // For windows: gem install bundle
 bundle install
 ```
 
