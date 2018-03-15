@@ -9,7 +9,7 @@ if(QT_LIBRARIES)
     add_executable(calcqt src/CalcQt.cpp)
     target_link_libraries(calcqt libcalcqt ${QT_LIBRARIES})
 
-    if(Qt5TEST_FOUND)
+    if(Qt5Test_FOUND)
         add_executable(QtTestCalculatorQtSteps features/step_definitions/QtTestCalculatorQtSteps)
         target_link_libraries(QtTestCalculatorQtSteps PRIVATE libcalcqt ${QT_LIBRARIES} ${CUKE_LIBRARIES})
     endif()

@@ -26,7 +26,7 @@ if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
     list(APPEND CUKE_SOURCES drivers/BoostDriver.cpp)
 endif()
 
-if(Qt5TEST_FOUND)
+if(Qt5Test_FOUND)
     qt5_wrap_cpp(MOC_FILE ../include/cucumber-cpp/internal/drivers/QtTestDriver.hpp)
     list(APPEND CUKE_SOURCES ${MOC_FILE})
     list(APPEND CUKE_SOURCES drivers/QtTestDriver.cpp)

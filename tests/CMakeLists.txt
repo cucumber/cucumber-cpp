@@ -48,7 +48,7 @@ if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
     cuke_add_driver_test(integration/drivers/BoostDriverTest ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 endif()
 
-if(Qt5TEST_FOUND)
+if(Qt5Test_FOUND)
     cuke_add_driver_test(integration/drivers/QtTestDriverTest ${QT_LIBRARIES})
 endif()
 
