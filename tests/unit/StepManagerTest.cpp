@@ -12,9 +12,11 @@ using namespace cucumber::internal;
 
 class StepManagerTest : public ::testing::Test {
 public:
+    virtual ~StepManagerTest() {}
     typedef StepManagerTestDouble StepManager;
 
 protected:
+    StepManagerTest() {}
     const static char *a_matcher;
     const static char *another_matcher;
     const static char *no_match;
