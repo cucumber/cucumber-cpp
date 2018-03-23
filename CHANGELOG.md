@@ -15,6 +15,7 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Fixed
 
+* Fixing Visual Studio 2013 error: no appropriate default constructor available ([#188](https://github.com/cucumber/cucumber-cpp/pull/188) Antoine Allard)
 * Fix issue #81 by intercepting messages from BOOST_*_MESSAGE macros ([#164](https://github.com/cucumber/cucumber-cpp/pull/164) Kamil Strzempowicz)
 * Allow running all GTest cases without filter separation ([#144](https://github.com/cucumber/cucumber-cpp/pull/144) Giel van Schijndel)
 * Fix QNX build by depending on standard C++ instead of specific implementation ([#156](https://github.com/cucumber/cucumber-cpp/issues/156) Giel van Schijndel)
