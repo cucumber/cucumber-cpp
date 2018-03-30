@@ -36,11 +36,19 @@ GIVEN("^I just turned on the calculator$") {
     cucumber::ScenarioScope<CalculatorCtx> ctx;
     ctx->calculator.move(0, 0);
     ctx->calculator.show();
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-result"
+#endif
 #if QT_VERSION >= 0x050000
     QTest::qWaitForWindowExposed(&ctx->calculator);
 #else
     QTest::qWaitForWindowShown(&ctx->calculator);
 #endif
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+
     QTest::qWait(millisecondsToWait());
 }
 
