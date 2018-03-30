@@ -15,6 +15,12 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Fixed
 
+* Remove -werror compiler flag to fix failing build with clang ([#184](https://github.com/cucumber/cucumber-cpp/pull/184) Kamil Strzempowicz)
+* Add missing virtual destructor in base class SocketServer used by TCPSocketServer and UnixSocketServer ([#183](https://github.com/cucumber/cucumber-cpp/pull/183) Matthieu Longo)
+* Fix breaking changes in API of boost-1.66.0 ([#180](https://github.com/cucumber/cucumber-cpp/pull/180)  Matthieu Longo)
+* Fix conflicting "using std" declaration with "using boost::thread" ([#181](https://github.com/cucumber/cucumber-cpp/pull/181)  Matthieu Longo)
+* Fix building with boost > 1.64 by adding 2 new methods to BoostLogInterceptor ([#175](https://github.com/cucumber/cucumber-cpp/pull/175) Kamil Strzempowicz)
+* Fixing Visual Studio 2013 error: no appropriate default constructor available ([#188](https://github.com/cucumber/cucumber-cpp/pull/188) Antoine Allard)
 * Fix issue #81 by intercepting messages from BOOST_*_MESSAGE macros ([#164](https://github.com/cucumber/cucumber-cpp/pull/164) Kamil Strzempowicz)
 * Allow running all GTest cases without filter separation ([#144](https://github.com/cucumber/cucumber-cpp/pull/144) Giel van Schijndel)
 * Fix QNX build by depending on standard C++ instead of specific implementation ([#156](https://github.com/cucumber/cucumber-cpp/issues/156) Giel van Schijndel)

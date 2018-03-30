@@ -16,7 +16,6 @@ using namespace boost::asio::ip;
 #if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
 using namespace boost::asio::local;
 #endif
-using namespace std;
 using namespace testing;
 using boost::bind;
 using boost::thread;
@@ -24,8 +23,9 @@ namespace fs = boost::filesystem;
 
 static const time_duration THREAD_TEST_TIMEOUT = milliseconds(4000);
 
-MATCHER(IsConnected, string(negation ? "is not" : "is") +
-        " connected") { return arg.good(); }
+MATCHER(IsConnected, std::string(negation ? "is not" : "is") + " connected") {
+    return arg.good();
+}
 
 MATCHER(HasTerminated, "") {
     return !arg.joinable();
@@ -55,7 +55,7 @@ MATCHER_P(EventuallyReceives, value, "") {
 
 class MockProtocolHandler : public ProtocolHandler {
 public:
-    MOCK_CONST_METHOD1(handle, string(const string &request));
+    MOCK_CONST_METHOD1(handle, std::string(const std::string& request));
 };
 
 class SocketServerTest : public Test {
@@ -134,8 +134,8 @@ TEST_F(TCPSocketServerTest, receiveAndSendsSingleLineMassages) {
     ASSERT_THAT(client, IsConnected());
 
     // when
-    client << "1" << flush << "2" << endl << flush;
-    client << "3" << endl << "4" << endl << flush;
+    client << "1" << std::flush << "2" << std::endl << std::flush;
+    client << "3" << std::endl << "4" << std::endl << std::flush;
 
     // then
     EXPECT_THAT(client, EventuallyReceives("A"));
@@ -204,7 +204,7 @@ TEST_F(UnixSocketServerTest, fullLifecycle) {
 
     // traffic flows
     stream_protocol::iostream client(socketName);
-    client << "X" << endl << flush;
+    client << "X" << std::endl << std::flush;
     EXPECT_THAT(client, EventuallyReceives("Y"));
 
     // client disconnection terminates server
