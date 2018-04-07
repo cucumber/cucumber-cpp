@@ -11,8 +11,8 @@ env:
   global:
     - DISPLAY=:99
   matrix:
-    - GMOCK_VER=1.8.0 
-    - GMOCK_VER=1.7.0 
+    - GMOCK_VER=1.8.0
+    - GMOCK_VER=1.7.0
     - GMOCK_PATH=/usr/src/gmock #1.6.0 from ubuntu trusty repo
 matrix:
   include:
@@ -31,14 +31,22 @@ matrix:
       compiler: clang
       env: GMOCK_VER=1.7.0
 
+before_script:
+  - git clone https://github.com/cgreen-devs/cgreen.git
+  - git -C cgreen checkout 7030597
+  - cmake -E make_directory cgreen/build
+  - cmake -E chdir cgreen/build cmake -G Ninja -DCMAKE_INSTALL_PREFIX:PATH=${HOME}/usr ..
+  - cmake --build cgreen/build
+  - cmake --build cgreen/build --target install
+
 addons:
   apt:
     packages:
       - clang-format-3.8
-      - libboost-thread-dev 
+      - libboost-thread-dev
       - libboost-system-dev
       - libboost-regex-dev
-      - libboost-date-time-dev 
+      - libboost-date-time-dev
       - libboost-filesystem-dev
       - libboost-program-options-dev
       - libboost-test-dev

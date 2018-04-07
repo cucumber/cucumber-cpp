@@ -6,6 +6,7 @@ option(CUKE_USE_STATIC_BOOST    "Statically link Boost (except boost::test)" ${W
 option(CUKE_USE_STATIC_GTEST    "Statically link Google Test" ON)
 option(CUKE_DISABLE_BOOST_TEST  "Disable boost:test" OFF)
 option(CUKE_DISABLE_GTEST       "Disable Google Test framework" OFF)
+option(CUKE_DISABLE_CGREEN      "Disable Cgreen Test framework" OFF)
 option(CUKE_DISABLE_UNIT_TESTS  "Disable unit tests" OFF)
 option(CUKE_DISABLE_E2E_TESTS   "Disable end-to-end tests" OFF)
 option(CUKE_ENABLE_EXAMPLES     "Enable the examples" OFF)
@@ -136,6 +137,14 @@ if(NOT CUKE_DISABLE_QT)
             include(${QT_USE_FILE})
         endif()
     endif()
+endif()
+
+#
+# cgreen
+#
+
+if(NOT CUKE_DISABLE_CGREEN)
+    find_package(cgreen)
 endif()
 
 #
