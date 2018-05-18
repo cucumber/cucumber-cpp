@@ -1,4 +1,5 @@
 #include <cucumber-cpp/internal/CukeEngineImpl.hpp>
+#include <cucumber-cpp/internal/CukeExport.hpp>
 #include <cucumber-cpp/internal/connectors/wire/WireServer.hpp>
 #include <cucumber-cpp/internal/connectors/wire/WireProtocol.hpp>
 #include <iostream>
@@ -39,7 +40,7 @@ void acceptWireProtocol(const std::string& host, int port, const std::string& un
 
 }
 
-int main(int argc, char **argv) {
+int CUCUMBER_CPP_EXPORT main(int argc, char** argv) {
     using boost::program_options::value;
     boost::program_options::options_description optionDescription("Allowed options");
     optionDescription.add_options()
