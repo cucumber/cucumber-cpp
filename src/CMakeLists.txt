@@ -44,11 +44,20 @@ if(CMAKE_EXTRA_GENERATOR OR MSVC_IDE)
     list(APPEND CUKE_SOURCES ${CUKE_HEADERS})
 endif()
 
+# Library for unit tests relying on internals
+add_library(cucumber-cpp-internal STATIC ${CUKE_SOURCES})
+
 add_library(cucumber-cpp-nomain ${CUKE_SOURCES})
 add_library(cucumber-cpp ${CUKE_SOURCES} main.cpp)
 
-set_target_properties(cucumber-cpp cucumber-cpp-nomain PROPERTIES
-    DEFINE_SYMBOL cucumber_cpp_EXPORTS
+set_target_properties(
+    cucumber-cpp-internal
+    cucumber-cpp
+    cucumber-cpp-nomain
+    PROPERTIES
+        DEFINE_SYMBOL cucumber_cpp_EXPORTS
+        CXX_VISIBILITY_PRESET hidden
+        VISIBILITY_INLINES_HIDDEN ON
 )
 
 generate_export_header(cucumber-cpp
@@ -56,6 +65,7 @@ generate_export_header(cucumber-cpp
 )
 
 foreach(TARGET
+        cucumber-cpp-internal
         cucumber-cpp-nomain
         cucumber-cpp
 )
@@ -75,6 +85,11 @@ foreach(TARGET
             json_spirit.header
             ${CUKE_EXTRA_PRIVATE_LIBRARIES}
     )
+    # Don't export or import symbols for statically linked libraries
+    get_property(type TARGET ${TARGET} PROPERTY TYPE)
+    if(NOT "${type}" MATCHES "^(SHARED|MODULE)_LIBRARY$")
+        target_compile_definitions(${TARGET} PUBLIC CUCUMBER_CPP_STATIC_DEFINE)
+    endif()
     if(MINGW)
         target_link_libraries(${TARGET}
             PRIVATE
