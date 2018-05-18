@@ -1,7 +1,7 @@
 #ifndef CUKE_WIRESERVER_HPP_
 #define CUKE_WIRESERVER_HPP_
 
-#include "CukeExport.hpp"
+#include <cucumber-cpp/internal/CukeExport.hpp>
 #include "ProtocolHandler.hpp"
 
 #include <string>

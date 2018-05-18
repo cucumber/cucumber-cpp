@@ -1,7 +1,7 @@
 #ifndef CUKE_TABLE_HPP_
 #define CUKE_TABLE_HPP_
 
-#include "CukeExport.hpp"
+#include <cucumber-cpp/internal/CukeExport.hpp>
 
 #include <vector>
 #include <map>

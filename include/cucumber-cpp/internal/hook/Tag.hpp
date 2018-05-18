@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "CukeExport.hpp"
+#include <cucumber-cpp/internal/CukeExport.hpp>
 #include "../utils/Regex.hpp"
 
 namespace cucumber {

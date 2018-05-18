@@ -1,7 +1,7 @@
 #ifndef CUKE_HOOKREGISTRAR_HPP_
 #define CUKE_HOOKREGISTRAR_HPP_
 
-#include "CukeExport.hpp"
+#include <cucumber-cpp/internal/CukeExport.hpp>
 #include "Tag.hpp"
 #include "../Scenario.hpp"
 #include "../step/StepManager.hpp"

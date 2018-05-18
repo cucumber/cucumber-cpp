@@ -57,7 +57,7 @@ set_target_properties(cucumber-cpp cucumber-cpp-nomain PROPERTIES
 )
 
 generate_export_header(cucumber-cpp
-    EXPORT_FILE_NAME "CukeExport.hpp"
+    EXPORT_FILE_NAME "cucumber-cpp/internal/CukeExport.hpp"
 )
 
 foreach(TARGET

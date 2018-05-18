@@ -2,7 +2,7 @@
 #define CUKE_CUKEENGINE_IMPL_HPP_
 
 #include "CukeEngine.hpp"
-#include "CukeExport.hpp"
+#include <cucumber-cpp/internal/CukeExport.hpp>
 #include "CukeCommands.hpp"
 
 namespace cucumber {

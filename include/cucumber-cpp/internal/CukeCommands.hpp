@@ -2,7 +2,7 @@
 #define CUKE_CUKECOMMANDS_HPP_
 
 #include "ContextManager.hpp"
-#include "CukeExport.hpp"
+#include <cucumber-cpp/internal/CukeExport.hpp>
 #include "Scenario.hpp"
 #include "Table.hpp"
 #include "step/StepManager.hpp"

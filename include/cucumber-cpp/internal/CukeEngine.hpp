@@ -7,7 +7,7 @@
 
 #include <boost/multi_array.hpp>
 
-#include "CukeExport.hpp"
+#include <cucumber-cpp/internal/CukeExport.hpp>
 
 namespace cucumber {
 namespace internal {

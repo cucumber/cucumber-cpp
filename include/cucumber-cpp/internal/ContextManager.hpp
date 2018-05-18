@@ -1,7 +1,7 @@
 #ifndef CUKE_CONTEXTMANAGER_HPP_
 #define CUKE_CONTEXTMANAGER_HPP_
 
-#include "CukeExport.hpp"
+#include <cucumber-cpp/internal/CukeExport.hpp>
 
 #include <vector>
 

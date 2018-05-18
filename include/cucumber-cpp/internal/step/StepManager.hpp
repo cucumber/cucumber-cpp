@@ -16,7 +16,7 @@
     #include <type_traits>
 #endif
 
-#include "CukeExport.hpp"
+#include <cucumber-cpp/internal/CukeExport.hpp>
 #include "../Table.hpp"
 #include "../utils/IndexSequence.hpp"
 #include "../utils/Regex.hpp"
