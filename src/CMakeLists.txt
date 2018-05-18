@@ -25,6 +25,7 @@ endif()
 if(TARGET Boost::unit_test_framework)
     list(APPEND CUKE_EXTRA_PRIVATE_LIBRARIES Boost::unit_test_framework)
     list(APPEND CUKE_SOURCES drivers/BoostDriver.cpp)
+    list(APPEND CUKE_DEP_LIBRARIES ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
 endif()
 
 if(TARGET Qt::Test)
