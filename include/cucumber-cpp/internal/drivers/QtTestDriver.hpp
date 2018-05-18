@@ -2,12 +2,13 @@
 #define CUKE_QTTESTDRIVER_HPP_
 
 #include "../step/StepManager.hpp"
+#include <cucumber-cpp/internal/CukeExport.hpp>
 #include <QObject>
 
 namespace cucumber {
 namespace internal {
 
-class QtTestStep : public BasicStep {
+class CUCUMBER_CPP_EXPORT QtTestStep : public BasicStep {
     friend class QtTestObject;
 
 public:
