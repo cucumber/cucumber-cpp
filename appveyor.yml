@@ -17,15 +17,15 @@ environment:
     BOOST_INCLUDEDIR: C:\msys64\mingw64\include\boost
     CMAKE_GENERATOR: 'MSYS Makefiles'
   - MSVC_ARCH: x86
-    BOOST_ROOT: C:\Libraries\boost_1_59_0
-    BOOST_LIBRARYDIR: C:\Libraries\boost_1_59_0\lib32-msvc-14.0
-    BOOST_INCLUDEDIR: C:\Libraries\boost_1_59_0\boost
+    BOOST_ROOT: C:\Libraries\boost_1_60_0
+    BOOST_LIBRARYDIR: C:\Libraries\boost_1_60_0\lib32-msvc-14.0
+    BOOST_INCLUDEDIR: C:\Libraries\boost_1_60_0\boost
     CMAKE_GENERATOR: 'NMake Makefiles'
     QT_DIR: C:\Qt\5.8\msvc2015
   - MSVC_ARCH: x64
-    BOOST_ROOT: C:\Libraries\boost_1_59_0
-    BOOST_INCLUDEDIR: C:\Libraries\boost_1_59_0\boost
-    BOOST_LIBRARYDIR: C:\Libraries\boost_1_59_0\lib64-msvc-14.0
+    BOOST_ROOT: C:\Libraries\boost_1_60_0
+    BOOST_INCLUDEDIR: C:\Libraries\boost_1_60_0\boost
+    BOOST_LIBRARYDIR: C:\Libraries\boost_1_60_0\lib64-msvc-14.0
     CMAKE_GENERATOR: 'NMake Makefiles'
     QT_DIR: C:\Qt\5.8\msvc2015_64
 
