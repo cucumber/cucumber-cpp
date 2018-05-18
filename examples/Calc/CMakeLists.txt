@@ -1,6 +1,6 @@
 project(Calc)
 
-add_library(Calc src/Calculator)
+add_library(Calc STATIC src/Calculator)
 target_include_directories(Calc INTERFACE src)
 
 if(TARGET GTest::GTest)

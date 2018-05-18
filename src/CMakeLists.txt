@@ -43,14 +43,8 @@ if(CMAKE_EXTRA_GENERATOR OR MSVC_IDE)
     list(APPEND CUKE_SOURCES ${CUKE_HEADERS})
 endif()
 
-if(CUKE_ENABLE_SHARED_LIB)
-    set(CUKE_LINKAGE SHARED)
-else()
-    set(CUKE_LINKAGE STATIC)
-endif()
-
-add_library(cucumber-cpp-nomain ${CUKE_LINKAGE} ${CUKE_SOURCES})
-add_library(cucumber-cpp ${CUKE_LINKAGE} ${CUKE_SOURCES} main.cpp)
+add_library(cucumber-cpp-nomain ${CUKE_SOURCES})
+add_library(cucumber-cpp ${CUKE_SOURCES} main.cpp)
 
 set_target_properties(cucumber-cpp cucumber-cpp-nomain PROPERTIES
     DEFINE_SYMBOL cucumber_cpp_EXPORTS
