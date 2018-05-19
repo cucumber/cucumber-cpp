@@ -317,6 +317,8 @@ else()
                 ${ARGN}
                 ${CUKE_FEATURES_DIR}
                 ${USES_TERMINAL}
+                # Execute in same directory as where DLLs appear on Windows
+                WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src
                 )
         endfunction(add_feature_target)
 
