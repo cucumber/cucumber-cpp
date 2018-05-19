@@ -265,6 +265,9 @@ if(NOT (${GMOCK_LIBRARY_EXISTS} AND ${GTEST_LIBRARY_EXISTS}))
         set(GTEST_CMAKE_ARGS -DBUILD_SHARED_LIBS=ON)
         set(GTEST_LIBRARY_PREFIX ${CMAKE_SHARED_LIBRARY_PREFIX})
     endif()
+    if(WIN32)
+        list(APPEND GTEST_CMAKE_ARGS -Dgtest_disable_pthreads=ON)
+    endif()
 
     if("${GMOCK_SRC_DIR}" STREQUAL "")
         message(STATUS "Downloading GMock / GTest version ${GMOCK_VER} from git")
@@ -285,7 +288,6 @@ if(NOT (${GMOCK_LIBRARY_EXISTS} AND ${GTEST_LIBRARY_EXISTS}))
                 LOG_CONFIGURE ON
                 LOG_BUILD ON
                 CMAKE_ARGS
-                    -Dgtest_disable_pthreads=${MINGW}
                     ${GTEST_CMAKE_ARGS}
                 BINARY_DIR ${GTEST_BIN_DIR}
                 BUILD_BYPRODUCTS
@@ -309,7 +311,6 @@ if(NOT (${GMOCK_LIBRARY_EXISTS} AND ${GTEST_LIBRARY_EXISTS}))
                 LOG_CONFIGURE ON
                 LOG_BUILD ON
                 CMAKE_ARGS
-                    -Dgtest_disable_pthreads=${MINGW}
                     ${GTEST_CMAKE_ARGS}
                 BINARY_DIR ${GMOCK_BIN_DIR}
                 BUILD_BYPRODUCTS
@@ -351,7 +352,6 @@ if(NOT (${GMOCK_LIBRARY_EXISTS} AND ${GTEST_LIBRARY_EXISTS}))
                 LOG_CONFIGURE ON
                 LOG_BUILD ON
                 CMAKE_ARGS
-                    -Dgtest_disable_pthreads=${MINGW}
                     ${GTEST_CMAKE_ARGS}
                 BINARY_DIR "${GMOCK_BIN_DIR}"
                 BUILD_BYPRODUCTS
@@ -412,7 +412,6 @@ if(NOT (${GMOCK_LIBRARY_EXISTS} AND ${GTEST_LIBRARY_EXISTS}))
             LOG_CONFIGURE ON
             LOG_BUILD ON
             CMAKE_ARGS
-                -Dgtest_disable_pthreads=${MINGW}
                 ${GTEST_CMAKE_ARGS}
             BINARY_DIR "${GMOCK_BIN_DIR}"
             BUILD_BYPRODUCTS
