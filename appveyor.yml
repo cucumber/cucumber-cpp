@@ -48,6 +48,7 @@ test_script:
 - set CTEST_OUTPUT_ON_FAILURE=ON
 - cmake --build build --target test
 - cmake --build build --target features
+- cmake --build build --target install
 
 after_test:
 - for /r %%v in (TEST-*.xml) do curl -s -F "file=@%%v;filename=%%~nxv" https://ci.appveyor.com/api/testresults/junit/%APPVEYOR_JOB_ID%
