@@ -1,7 +1,13 @@
 cmake_minimum_required(VERSION 3.1)
 
+if(NOT CMAKE_VERSION VERSION_LESS "3.3")
+    # Don't ignore visibility related properties for non-SHARED targets
+    cmake_policy(SET CMP0063 NEW)
+endif()
+
 project(Cucumber-Cpp)
 
+option(BUILD_SHARED_LIBS        "Generate shared libraries" OFF)
 option(CUKE_USE_STATIC_BOOST    "Statically link Boost (except boost::test)" ${WIN32})
 option(CUKE_USE_STATIC_GTEST    "Statically link Google Test" ON)
 option(CUKE_DISABLE_BOOST_TEST  "Disable boost:test" OFF)
@@ -311,6 +317,8 @@ else()
                 ${ARGN}
                 ${CUKE_FEATURES_DIR}
                 ${USES_TERMINAL}
+                # Execute in same directory as where DLLs appear on Windows
+                WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src
                 )
         endfunction(add_feature_target)
 

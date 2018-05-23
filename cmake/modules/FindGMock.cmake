@@ -260,6 +260,15 @@ if(NOT (${GMOCK_LIBRARY_EXISTS} AND ${GTEST_LIBRARY_EXISTS}))
 
     if(GTEST_USE_STATIC_LIBS)
         set(GTEST_CMAKE_ARGS -Dgtest_force_shared_crt:BOOL=ON -DBUILD_SHARED_LIBS=OFF)
+        if(BUILD_SHARED_LIBS)
+            list(APPEND GTEST_CMAKE_ARGS
+                -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+                -Dgtest_hide_internal_symbols=ON
+                -DCMAKE_CXX_VISIBILITY_PRESET=hidden
+                -DCMAKE_VISIBILITY_INLINES_HIDDEN=ON
+                -DCMAKE_POLICY_DEFAULT_CMP0063=NEW
+            )
+        endif()
         set(GTEST_LIBRARY_PREFIX ${CMAKE_STATIC_LIBRARY_PREFIX})
     else()
         set(GTEST_CMAKE_ARGS -DBUILD_SHARED_LIBS=ON)

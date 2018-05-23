@@ -2,11 +2,12 @@
 #define CUKE_GENERICDRIVER_HPP_
 
 #include "../step/StepManager.hpp"
+#include <cucumber-cpp/internal/CukeExport.hpp>
 
 namespace cucumber {
 namespace internal {
 
-class GenericStep : public BasicStep {
+class CUCUMBER_CPP_EXPORT GenericStep : public BasicStep {
 protected:
     virtual const InvokeResult invokeStepBody();
 };

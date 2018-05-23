@@ -1,6 +1,8 @@
 #ifndef CUKE_CONTEXTMANAGER_HPP_
 #define CUKE_CONTEXTMANAGER_HPP_
 
+#include <cucumber-cpp/internal/CukeExport.hpp>
+
 #include <vector>
 
 #include <boost/make_shared.hpp>
@@ -13,7 +15,7 @@ namespace internal {
 
 typedef std::vector<boost::shared_ptr<void> > contexts_type;
 
-class ContextManager {
+class CUCUMBER_CPP_EXPORT ContextManager {
 public:
     void purgeContexts();
     template<class T> boost::weak_ptr<T> addContext();

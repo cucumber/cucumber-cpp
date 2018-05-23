@@ -1,7 +1,7 @@
 project(CalcQt)
 
 if(TARGET Qt::Core AND TARGET Qt::Gui AND TARGET Qt::Widgets AND TARGET Qt::Test)
-    add_library(libcalcqt src/CalculatorWidget.cpp src/CalculatorWidget.h)
+    add_library(libcalcqt STATIC src/CalculatorWidget.cpp src/CalculatorWidget.h)
     set_target_properties(libcalcqt PROPERTIES AUTOMOC ON)
     target_include_directories(libcalcqt INTERFACE src)
     target_link_libraries(libcalcqt

@@ -16,6 +16,7 @@
     #include <type_traits>
 #endif
 
+#include <cucumber-cpp/internal/CukeExport.hpp>
 #include "../Table.hpp"
 #include "../utils/IndexSequence.hpp"
 #include "../utils/Regex.hpp"
@@ -27,7 +28,7 @@ typedef unsigned int step_id_type;
 
 class StepInfo;
 
-class SingleStepMatch {
+class CUCUMBER_CPP_EXPORT SingleStepMatch {
 public:
     typedef RegexMatch::submatches_type submatches_type;
 
@@ -37,8 +38,7 @@ public:
     submatches_type submatches;
 };
 
-
-class MatchResult {
+class CUCUMBER_CPP_EXPORT MatchResult {
 public:
     typedef std::vector<SingleStepMatch> match_results_type;
 
@@ -54,8 +54,7 @@ private:
     match_results_type resultSet;
 };
 
-
-class InvokeArgs {
+class CUCUMBER_CPP_EXPORT InvokeArgs {
     typedef std::vector<std::string> args_type;
 public:
     typedef args_type::size_type size_type;
@@ -78,7 +77,7 @@ enum InvokeResultType {
     PENDING
 };
 
-class InvokeResult {
+class CUCUMBER_CPP_EXPORT InvokeResult {
 private:
     InvokeResultType type;
     std::string description;
@@ -100,8 +99,7 @@ public:
     const std::string &getDescription() const;
 };
 
-
-class StepInfo : public boost::enable_shared_from_this<StepInfo> {
+class CUCUMBER_CPP_EXPORT StepInfo : public boost::enable_shared_from_this<StepInfo> {
 public:
     StepInfo(const std::string &stepMatcher, const std::string source);
     SingleStepMatch matches(const std::string &stepDescription) const;
@@ -115,8 +113,7 @@ private:
     StepInfo& operator=(const StepInfo& other);
 };
 
-
-class BasicStep {
+class CUCUMBER_CPP_EXPORT BasicStep {
 public:
     InvokeResult invoke(const InvokeArgs *pArgs);
 
@@ -174,8 +171,7 @@ public:
     InvokeResult invokeStep(const InvokeArgs *args) const;
 };
 
-
-class StepManager {
+class CUCUMBER_CPP_EXPORT StepManager {
 protected:
     typedef std::map<step_id_type, boost::shared_ptr<const StepInfo> > steps_type;
 
