@@ -104,11 +104,25 @@ target_link_libraries(cucumber-cpp
         Boost::program_options
 )
 
-install(TARGETS cucumber-cpp-nomain
+include(GNUInstallDirs)
+install(DIRECTORY ${CUKE_INCLUDE_DIR}/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/cucumber-cpp/internal/CukeExport.hpp"
+    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/cucumber-cpp/internal"
+)
+install(
+    TARGETS
+        cucumber-cpp-nomain
+        cucumber-cpp
+    EXPORT   CucumberCpp
     ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(TARGETS cucumber-cpp
-    ARCHIVE  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    LIBRARY  DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR})
+    RUNTIME  DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+install(
+    EXPORT      CucumberCpp
+    NAMESPACE   CucumberCpp::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
+    FILE        CucumberCppConfig.cmake
+)
