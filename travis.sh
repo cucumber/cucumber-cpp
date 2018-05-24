@@ -5,7 +5,7 @@ set -x #display command being executed
 startXvfb () {
 # Xvfb sends SIGUSR1 to its parent when it finished startup, this causes the 'wait' below to stop waiting
 # Starting Xvfb hangs on OSX, that's why we do this on Linux only now
-    if [[ "${TRAVIS_OS_NAME}" = "linux" ]]; then
+    if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
         trap : USR1
         (trap '' USR1; Xvfb $DISPLAY -screen 0 640x480x8 -nolisten tcp > /dev/null 2>&1) &
         XVFBPID=$!
