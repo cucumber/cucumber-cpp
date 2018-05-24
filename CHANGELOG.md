@@ -16,7 +16,7 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Fixed
 
-* Remove -werror compiler flag to fix failing build with clang ([#184](https://github.com/cucumber/cucumber-cpp/pull/184) Kamil Strzempowicz)
+* Fix compiler warning ([#192](https://github.com/cucumber/cucumber-cpp/issues/192) [Giel van Schijndel](https://github.com/muggenhor)), ([#184](https://github.com/cucumber/cucumber-cpp/pull/184) [Kamil Strzempowicz](https://github.com/konserw))
 * Add missing virtual destructor in base class SocketServer used by TCPSocketServer and UnixSocketServer ([#183](https://github.com/cucumber/cucumber-cpp/pull/183) Matthieu Longo)
 * Fix breaking changes in API of boost-1.66.0 ([#180](https://github.com/cucumber/cucumber-cpp/pull/180)  Matthieu Longo)
 * Fix conflicting "using std" declaration with "using boost::thread" ([#181](https://github.com/cucumber/cucumber-cpp/pull/181)  Matthieu Longo)
