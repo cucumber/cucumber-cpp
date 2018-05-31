@@ -9,6 +9,7 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 * Better integrate Qt into buildsystem, it can now be disabled, and test it in CI ([#160](https://github.com/cucumber/cucumber-cpp/pull/160) Kamil Strzempowicz & Giel van Schijndel)
 * Support taking regex captures as arguments to the step definition's function ([#159](https://github.com/cucumber/cucumber-cpp/pull/159) Giel van Schijndel)
 * Support building as shared library on Windows and hide internal symbols on all platforms ([#147](https://github.com/cucumber/cucumber-cpp/pull/147) [Nik Reiman](https://github.com/nre-ableton))
+* Support installing library targets along with headers ([#182](https://github.com/cucumber/cucumber-cpp/pull/182) [Matthieu](https://github.com/matlo607))
 
 ### Changed
 
