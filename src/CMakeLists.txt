@@ -75,6 +75,11 @@ foreach(TARGET
             $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
             $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
     )
+    # Declaring json_spirit.header to be a direct dependency with target_link_libraries breaks installation
+    target_include_directories(${TARGET} SYSTEM
+        PRIVATE
+            $<TARGET_PROPERTY:json_spirit.header,INTERFACE_INCLUDE_DIRECTORIES>
+    )
     target_link_libraries(${TARGET}
         PUBLIC
             Boost::boost
@@ -83,7 +88,6 @@ foreach(TARGET
             Boost::date_time
             Boost::filesystem
             Boost::thread
-            json_spirit.header
             ${CUKE_EXTRA_PRIVATE_LIBRARIES}
     )
     # Don't export or import symbols for statically linked libraries
