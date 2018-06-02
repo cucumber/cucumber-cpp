@@ -24,6 +24,8 @@ matrix:
       env: GMOCK_VER=1.8.0 VALGRIND_TESTS=ON
     - os: linux
       env: FORMAT=1
+    - os: linux
+      env: GMOCK_VER=1.8.0 BUILD_SHARED_LIBS=OFF
     - os: osx
       compiler: clang
       env: GMOCK_VER=1.8.0

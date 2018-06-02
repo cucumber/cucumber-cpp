@@ -57,7 +57,7 @@ cmake -E make_directory build
 cmake -E chdir build cmake \
     -G Ninja \
     -DCUKE_ENABLE_EXAMPLES=on \
-    -DBUILD_SHARED_LIBS=ON \
+    -DBUILD_SHARED_LIBS="${BUILD_SHARED_LIBS:-ON}" \
     -DCMAKE_INSTALL_PREFIX=${HOME}/.local \
     ${CMAKE_PREFIX_PATH:+"-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"} \
     ${COVERALLS_SERVICE_NAME:+"-DCMAKE_BUILD_TYPE=Debug"} \
