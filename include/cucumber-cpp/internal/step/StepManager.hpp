@@ -98,6 +98,7 @@ public:
 class CUKE_API_ StepInfo : public boost::enable_shared_from_this<StepInfo> {
 public:
     StepInfo(const std::string &stepMatcher, const std::string source);
+    virtual ~StepInfo() = 0;
     SingleStepMatch matches(const std::string &stepDescription) const;
     virtual InvokeResult invokeStep(const InvokeArgs * pArgs) const = 0;
 
@@ -111,6 +112,7 @@ private:
 
 class CUKE_API_ BasicStep {
 public:
+    virtual ~BasicStep() = 0;
     InvokeResult invoke(const InvokeArgs *pArgs);
 
 protected:

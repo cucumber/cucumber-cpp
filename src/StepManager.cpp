@@ -12,6 +12,10 @@ StepInfo::StepInfo(const std::string &stepMatcher, const std::string source) :
 }
 
 
+StepInfo::~StepInfo() {
+}
+
+
 SingleStepMatch StepInfo::matches(const std::string &stepDescription) const {
     SingleStepMatch stepMatch;
     shared_ptr<RegexMatch> regexMatch(regex.find(stepDescription));
@@ -139,6 +143,10 @@ const boost::shared_ptr<const StepInfo>& StepManager::getStep(step_id_type id) {
 StepManager::steps_type& StepManager::steps() const {
     static steps_type steps;
     return steps;
+}
+
+
+BasicStep::~BasicStep() {
 }
 
 

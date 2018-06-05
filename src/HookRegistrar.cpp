@@ -5,6 +5,12 @@
 namespace cucumber {
 namespace internal {
 
+CallableStep::~CallableStep() {
+}
+
+Hook::~Hook() {
+}
+
 void Hook::invokeHook(Scenario *scenario, CallableStep *) {
     if (tagsMatch(scenario)) {
         body();

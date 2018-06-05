@@ -17,11 +17,13 @@ namespace internal {
 
 class CUKE_API_ CallableStep {
 public:
+    virtual ~CallableStep() = 0;
     virtual void call() = 0;
 };
 
 class CUKE_API_ Hook {
 public:
+    virtual ~Hook() = 0;
     void setTags(const std::string &csvTagNotation);
     virtual void invokeHook(Scenario *scenario, CallableStep *step);
     virtual void skipHook();
