@@ -11,6 +11,7 @@ StepInfo::StepInfo(const std::string &stepMatcher, const std::string source) :
     id = ++currentId;
 }
 
+
 SingleStepMatch StepInfo::matches(const std::string &stepDescription) const {
     SingleStepMatch stepMatch;
     shared_ptr<RegexMatch> regexMatch(regex.find(stepDescription));
@@ -178,4 +179,3 @@ const InvokeArgs *BasicStep::getArgs() {
 
 }
 }
-

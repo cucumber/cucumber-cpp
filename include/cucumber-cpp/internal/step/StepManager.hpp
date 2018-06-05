@@ -53,9 +53,9 @@ class CUKE_API_ InvokeArgs {
     typedef std::vector<std::string> args_type;
 public:
     typedef args_type::size_type size_type;
-    
+
     InvokeArgs() { }
- 
+
     void addArg(const std::string arg);
     Table & getVariableTableArg();
 
@@ -106,7 +106,6 @@ public:
     const std::string source;
 private:
     StepInfo& operator=(const StepInfo& other);
-    
 };
 
 
