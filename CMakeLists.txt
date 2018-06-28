@@ -20,7 +20,17 @@ option(VALGRIND_TESTS           "Run tests within Valgrind" OFF)
 set(GMOCK_SRC_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
 set(GMOCK_VER "1.7.0" CACHE STRING "Google Mock framework version to be used")
 
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
+#
+# Conan support
+#
+
+if (EXISTS "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    message(STATUS "conan_basic_setup()")
+    conan_basic_setup()
+endif()
+
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/modules;${CMAKE_MODULE_PATH}")
 
 #
 # Generic Compiler Flags
