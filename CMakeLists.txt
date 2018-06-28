@@ -112,6 +112,11 @@ if(Boost_SYSTEM_LIBRARY AND NOT TARGET Boost::system)
         "IMPORTED_LOCATION" "${Boost_SYSTEM_LIBRARY}"
         "INTERFACE_LINK_LIBRARIES" "Boost::boost"
     )
+    if(Boost_USE_STATIC_LIBS)
+        set_target_properties(Boost::system PROPERTIES
+            "COMPILE_DEFINITIONS" BOOST_ERROR_CODE_HEADER_ONLY=1
+        )
+    endif()
 endif()
 if(Boost_FILESYSTEM_LIBRARY AND NOT TARGET Boost::filesystem)
     add_library(Boost::filesystem ${LIBRARY_TYPE} IMPORTED)
