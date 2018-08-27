@@ -46,6 +46,10 @@ Cucumber-Cpp uses the wire protocol at the moment, so you will need
 Cucumber-Ruby installed and available on the path. It is also needed
 to run the functional test suite.
 
+Please mind that Cucumber-Cpp is not compatible with Cucumber-Ruby 3.x
+due to a [bug in its wire protocol](https://github.com/cucumber/cucumber-ruby/issues/1183)
+implementation.
+
 To install the Ruby prerequisites:
 
 ```
