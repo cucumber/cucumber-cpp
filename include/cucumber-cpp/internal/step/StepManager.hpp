@@ -103,7 +103,8 @@ class CUCUMBER_CPP_EXPORT StepInfo : public boost::enable_shared_from_this<StepI
 public:
     StepInfo(const std::string &stepMatcher, const std::string source);
 
-    // [Visual Studio] silence false positive "warning C4265: class has virtual
+    // [Visual Studio] [clang]
+    // silence false positive "warning C4265: class has virtual
     // functions, but destructor is not virtual" requiring virtual destructors
     // for every class that has virtual functions.
     virtual ~StepInfo() {}
@@ -121,14 +122,10 @@ private:
 
 class CUCUMBER_CPP_EXPORT BasicStep {
 public:
-    // [Visual Studio] silence false positive "warning C4265: class has virtual
-    // functions, but destructor is not virtual" requiring virtual destructors
-    // for every class that has virtual functions.
-    virtual ~BasicStep() {}
-
     InvokeResult invoke(const InvokeArgs *pArgs);
 
 protected:
+    ~BasicStep() {}
     typedef const Table table_type;
     typedef const Table::hashes_type table_hashes_type;
 
