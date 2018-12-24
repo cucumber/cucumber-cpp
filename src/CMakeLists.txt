@@ -72,7 +72,7 @@ foreach(TARGET
     target_include_directories(${TARGET}
         PUBLIC
             $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+            $<BUILD_INTERFACE:${CUKE_INCLUDE_DIR}>
             $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
     )
     # Declaring json_spirit.header to be a direct dependency with target_link_libraries breaks installation
