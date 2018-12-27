@@ -5,6 +5,12 @@ if(NOT CMAKE_VERSION VERSION_LESS "3.3")
     cmake_policy(SET CMP0063 NEW)
 endif()
 
+if (NOT CMAKE_VERSION VERSION_LESS "3.13")
+    # CMP0077: option() honors normal variables
+    # https://cmake.org/cmake/help/latest/policy/CMP0077.html
+    cmake_policy(SET CMP0077 NEW)
+endif()
+
 project(Cucumber-Cpp)
 
 option(BUILD_SHARED_LIBS        "Generate shared libraries" OFF)
