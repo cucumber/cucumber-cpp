@@ -10,17 +10,49 @@ project(Cucumber-Cpp)
 option(BUILD_SHARED_LIBS        "Generate shared libraries" OFF)
 option(CUKE_USE_STATIC_BOOST    "Statically link Boost (except boost::test)" ${WIN32})
 option(CUKE_USE_STATIC_GTEST    "Statically link Google Test" ON)
-option(CUKE_DISABLE_BOOST_TEST  "Disable boost:test" OFF)
-option(CUKE_DISABLE_GTEST       "Disable Google Test framework" OFF)
-option(CUKE_DISABLE_UNIT_TESTS  "Disable unit tests" OFF)
-option(CUKE_DISABLE_E2E_TESTS   "Disable end-to-end tests" OFF)
-option(CUKE_ENABLE_EXAMPLES     "Enable the examples" OFF)
-option(CUKE_DISABLE_QT          "Disable using Qt framework" OFF)
-option(VALGRIND_TESTS           "Run tests within Valgrind" OFF)
+option(CUKE_ENABLE_BOOST_TEST   "Enable Boost.Test framework" ON)
+option(CUKE_ENABLE_EXAMPLES     "Build examples" OFF)
+option(CUKE_ENABLE_GTEST        "Enable Google Test framework" ON)
+option(CUKE_ENABLE_QT           "Enable Qt framework" ON)
+option(CUKE_TESTS_E2E           "Enable end-to-end tests" ON)
+option(CUKE_TESTS_UNIT          "Enable unit tests" ON)
+option(CUKE_TESTS_VALGRIND      "Enable tests within Valgrind" OFF)
 set(GMOCK_SRC_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
 set(GMOCK_VER "1.7.0" CACHE STRING "Google Mock framework version to be used")
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
+
+#
+# Option deprecation: if deprecated option is defined
+# then print a warning and use its value instead
+#
+
+function(option_depr_message old prefer)
+    message (DEPRECATION "${old} is deprecated in favor of ${prefer}")
+endfunction()
+
+function(option_depr old prefer)
+    if(DEFINED ${old})
+        option_depr_message(${old} ${prefer})
+        set (${prefer} ${${old}} CACHE BOOL "Set from deprecated ${old}" FORCE)
+    endif()
+endfunction()
+
+function(option_depr_invert old prefer)
+    if(DEFINED ${old})
+        option_depr_message(${old} ${prefer})
+        set (${prefer} $<NOT:${${old}}> CACHE BOOL "Set from deprecated ${old}" FORCE)
+    endif()
+endfunction()
+
+
+option_depr_invert (CUKE_DISABLE_BOOST_TEST   CUKE_ENABLE_BOOST_TEST)
+option_depr_invert (CUKE_DISABLE_GTEST        CUKE_ENABLE_GTEST)
+option_depr_invert (CUKE_DISABLE_QT           CUKE_ENABLE_QT)
+option_depr_invert (CUKE_DISABLE_E2E_TESTS    CUKE_TESTS_E2E)
+option_depr_invert (CUKE_DISABLE_UNIT_TESTS   CUKE_TESTS_UNIT)
+option_depr        (VALGRIND_TESTS            CUKE_TESTS_VALGRIND)
+
 
 #
 # Generic Compiler Flags
@@ -70,7 +102,7 @@ endif()
 
 set(Boost_USE_STATIC_RUNTIME OFF)
 set(CUKE_CORE_BOOST_LIBS thread system regex date_time program_options filesystem)
-if(NOT CUKE_DISABLE_BOOST_TEST)
+if(CUKE_ENABLE_BOOST_TEST)
     # "An external test runner utility is required to link with dynamic library" (Boost User's Guide)
     set(Boost_USE_STATIC_LIBS OFF)
     set(CMAKE_CXX_FLAGS "-DBOOST_TEST_DYN_LINK ${CMAKE_CXX_FLAGS}")
@@ -158,7 +190,7 @@ endif()
 # GTest
 #
 
-if(NOT CUKE_DISABLE_GTEST)
+if(CUKE_ENABLE_GTEST)
     set(GTEST_USE_STATIC_LIBS ${CUKE_USE_STATIC_GTEST})
     if(NOT GMOCK_ROOT)
         set(GMOCK_ROOT "${CMAKE_CURRENT_BINARY_DIR}/gmock")
@@ -170,7 +202,7 @@ endif()
 # Qt
 #
 
-if(NOT CUKE_DISABLE_QT)
+if(CUKE_ENABLE_QT)
     find_package(Qt5Core)
     find_package(Qt5Gui)
     find_package(Qt5Widgets)
@@ -210,7 +242,7 @@ endif()
 # Valgrind
 #
 
-if(VALGRIND_TESTS)
+if(CUKE_TESTS_VALGRIND)
     find_package(Valgrind REQUIRED)
     set(VALGRIND_ARGS --error-exitcode=2 --leak-check=full --undef-value-errors=no)
     if(NOT VALGRIND_VERSION_STRING VERSION_LESS 3.9)
@@ -265,14 +297,14 @@ add_subdirectory(src)
 # Tests
 #
 
-if(CUKE_DISABLE_UNIT_TESTS)
-    message(STATUS "Skipping unit tests")
-else()
+if(CUKE_TESTS_UNIT)
     enable_testing()
     add_subdirectory(tests)
+else()
+    message(STATUS "Skipping unit tests")
 endif()
 
-if(CUKE_DISABLE_E2E_TESTS)
+if(NOT CUKE_TESTS_E2E)
     message(STATUS "Skipping end-to-end tests")
 else()
     find_program(CUCUMBER_RUBY cucumber)
