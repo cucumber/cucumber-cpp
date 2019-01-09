@@ -22,9 +22,6 @@ public:
 
 class CUCUMBER_CPP_EXPORT Hook {
 public:
-    // [Visual Studio] silence false positive "warning C4265: class has virtual
-    // functions, but destructor is not virtual" requiring virtual destructors
-    // for every class that has virtual functions.
     virtual ~Hook() {}
 
     void setTags(const std::string &csvTagNotation);
