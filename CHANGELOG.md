@@ -8,8 +8,9 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Fixed
 
-* Fix statically linking `boost_system` ([#197](https://github.com/cucumber/cucumber-cpp/pull/197) Matthieu Longo)
+* Statically linking `boost_system` ([#197](https://github.com/cucumber/cucumber-cpp/pull/197) Matthieu Longo)
 * Unable to `add_subdirectory(cucumber-cpp)` ([#211](https://github.com/cucumber/cucumber-cpp/pull/211) Sergey Bon)
+* Warning C4265 on Visual Studio ([#195](https://github.com/cucumber/cucumber-cpp/pull/195) Matthieu Longo)
 
 ## [0.5](https://github.com/cucumber/cucumber-cpp/compare/v0.4...v0.5) (2 July 2018)
 
