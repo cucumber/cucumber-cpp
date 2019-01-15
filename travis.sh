@@ -70,7 +70,9 @@ cmake --build build
 cmake --build build --target test
 cmake --build build --target features
 
-startXvfb # Start virtual X display server
+#
+# Execute Calc examples
+#
 
 for TEST in \
     build/examples/Calc/GTestCalculatorSteps \
@@ -78,20 +80,24 @@ for TEST in \
     build/examples/Calc/BoostCalculatorSteps \
     build/examples/Calc/FuncArgsCalculatorSteps \
 ; do
-    if [ -f "${TEST}" ]; then
-        "${TEST}" > /dev/null &
-        sleep 1
-        cucumber examples/Calc
-        wait %
-    fi
+    "${TEST}" > /dev/null &
+    sleep 1
+    cucumber examples/Calc
+    wait %
 done
+
+#
+# Execute QtCalc examples
+#
+
+startXvfb # Start virtual X display server
 
 for TEST in \
     build/examples/CalcQt/GTestCalculatorQtSteps \
     build/examples/CalcQt/QtTestCalculatorQtSteps \
     build/examples/CalcQt/BoostCalculatorQtSteps \
 ; do
-    if [ -f "${TEST}" -a -n "${DISPLAY:-}" ]; then
+    if [ -n "${DISPLAY:-}" ]; then
         "${TEST}" 2> /dev/null &
         sleep 1
         cucumber examples/CalcQt
@@ -99,16 +105,18 @@ for TEST in \
     fi
 done
 
-# Test unix sockets
+killXvfb
+
+#
+# Execute feature showcase on Unix socket
+#
+
 SOCK=cucumber.wire.sock
 TEST=build/examples/FeatureShowcase/FeatureShowcaseSteps
-if [ -f "${TEST}" ]; then
-    echo "unix: ${SOCK}" > examples/FeatureShowcase/features/step_definitions/cucumber.wire
-    "${TEST}" --unix "${SOCK}" > /dev/null &
-    cucumber examples/FeatureShowcase
-    wait %
-fi
+echo "unix: ${SOCK}" > examples/FeatureShowcase/features/step_definitions/cucumber.wire
+"${TEST}" --unix "${SOCK}" > /dev/null &
+cucumber examples/FeatureShowcase
+wait %
 
-killXvfb
 
 cmake --build build --target install
