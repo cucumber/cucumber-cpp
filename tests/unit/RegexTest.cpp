@@ -46,6 +46,22 @@ TEST(RegexTest, matchesRegexWithSubmatches) {
     EXPECT_EQ("69", match->getSubmatches()[1].value);
 }
 
+TEST(RegexTest, matchesRegexWithOptionalSubmatches) {
+    Regex sum("^(\\d+)\\+(\\d+)(?:\\+(\\d+))?=(\\d+)$");
+
+    shared_ptr<RegexMatch> match(sum.find("1+2+3=6"));
+    EXPECT_TRUE(match->matches());
+    ASSERT_EQ(4, match->getSubmatches().size());
+
+    match = shared_ptr<RegexMatch>(sum.find("42+27=69"));
+    EXPECT_TRUE(match->matches());
+    ASSERT_EQ(4, match->getSubmatches().size());
+    EXPECT_EQ("42", match->getSubmatches()[0].value);
+    EXPECT_EQ("27", match->getSubmatches()[1].value);
+    EXPECT_EQ("", match->getSubmatches()[2].value);
+    EXPECT_EQ("69", match->getSubmatches()[3].value);
+}
+
 TEST(RegexTest, findAllDoesNotMatchIfNoTokens) {
     Regex sum("([^,]+)(?:,|$)");
     shared_ptr<RegexMatch> match(sum.findAll(""));
