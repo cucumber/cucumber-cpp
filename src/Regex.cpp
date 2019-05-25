@@ -37,6 +37,8 @@ FindRegexMatch::FindRegexMatch(const boost::regex &regexImpl, const std::string 
             if (i->matched) {
                 RegexSubmatch s = {*i, i->first - expression.begin()};
                 submatches.push_back(s);
+            } else {
+                submatches.push_back(RegexSubmatch());
             }
         }
     }
