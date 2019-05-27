@@ -17,6 +17,7 @@ namespace internal {
 
 class CUCUMBER_CPP_EXPORT CallableStep {
 public:
+    virtual ~CallableStep() = 0;
     virtual void call() = 0;
 };
 
@@ -66,6 +67,7 @@ class CUCUMBER_CPP_EXPORT HookRegistrar {
 public:
     typedef std::list< boost::shared_ptr<Hook> > hook_list_type;
     typedef std::list< boost::shared_ptr<AroundStepHook> > aroundhook_list_type;
+    typedef bool (*StepMatchingHook)(const boost::smatch&);
 
     static void addBeforeHook(boost::shared_ptr<BeforeHook> afterHook);
     static void execBeforeHooks(Scenario *scenario);
@@ -85,6 +87,9 @@ public:
     static void addAfterAllHook(boost::shared_ptr<AfterAllHook> afterAllHook);
     static void execAfterAllHooks();
 
+    static void setStepMatchingHook(StepMatchingHook hook);
+    static bool execStepMatchingHook(const boost::smatch& originalMatch);
+
 private:
     static void execHooks(HookRegistrar::hook_list_type &hookList, Scenario *scenario);
 
@@ -95,6 +100,7 @@ protected:
     static hook_list_type& afterStepHooks();
     static hook_list_type& afterHooks();
     static hook_list_type& afterAllHooks();
+    static StepMatchingHook& stepMatchingHook();
 
 private:
     // We're a singleton so don't allow instances
