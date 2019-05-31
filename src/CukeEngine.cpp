@@ -16,29 +16,6 @@ const std::string InvokeException::getMessage() const {
 }
 
 
-InvokeFailureException::InvokeFailureException(const std::string & message, const std::string & exceptionType) :
-        InvokeException(message),
-        exceptionType(exceptionType) {
-}
-
-InvokeFailureException::InvokeFailureException(const InvokeFailureException &rhs) :
-    InvokeException(rhs),
-    exceptionType(rhs.exceptionType) {
-}
-
-const std::string InvokeFailureException::getExceptionType() const {
-    return exceptionType;
-}
-
-
-PendingStepException::PendingStepException(const std::string & message) :
-        InvokeException(message) {
-}
-
-PendingStepException::PendingStepException(const PendingStepException &rhs) :
-    InvokeException(rhs) {
-}
-
 CukeEngine::CukeEngine() {}
 
 CukeEngine::~CukeEngine() {}

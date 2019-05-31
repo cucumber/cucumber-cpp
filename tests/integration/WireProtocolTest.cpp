@@ -17,7 +17,10 @@ class MockCukeEngine : public CukeEngine {
 public:
     MOCK_CONST_METHOD1(stepMatches, std::vector<StepMatch>(const std::string & name));
     MOCK_METHOD1(endScenario, void(const tags_type & tags));
-    MOCK_METHOD3(invokeStep, void(const std::string & id, const invoke_args_type & args, const invoke_table_type & tableArg));
+    MOCK_METHOD3(invokeStep,
+                 InvokeResult(const std::string& id,
+                              const invoke_args_type& args,
+                              const invoke_table_type& tableArg));
     MOCK_METHOD1(beginScenario, void(const tags_type & tags));
     MOCK_CONST_METHOD3(snippetText, std::string(const std::string & keyword, const std::string & name, const std::string & multilineArgClass));
 };
@@ -263,35 +266,42 @@ TEST_F(WireMessageCodecTest, handlesSnippetTextResponse) {
 TEST(WireCommandsTest, succesfulInvokeReturnsSuccess) {
     MockCukeEngine engine;
     InvokeCommand invokeCommand("x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type());
-    EXPECT_CALL(engine, invokeStep(_, _, _))
-            .Times(1);
+    EXPECT_CALL(engine, invokeStep(_, _, _)).Times(1).WillOnce(Return(InvokeResult::success()));
 
     boost::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
     EXPECT_PTRTYPE(SuccessResponse, response.get());
 }
 
-TEST(WireCommandsTest, throwingFailureInvokeReturnsFailure) {
+TEST(WireCommandsTest, failingInvokeReturnsFailure) {
     MockCukeEngine engine;
     InvokeCommand invokeCommand("x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type());
-    EXPECT_CALL(engine, invokeStep(_, _, _))
-            .Times(1)
-            .WillOnce(Throw(InvokeFailureException("A", "B")));
+    EXPECT_CALL(engine, invokeStep(_, _, _)).Times(1).WillOnce(Return(InvokeResult::failure("A")));
 
     boost::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
     EXPECT_PTRTYPE(FailureResponse, response.get());
-    // TODO Test A and B
+    EXPECT_EQ(static_cast<const FailureResponse&>(*response).getMessage(), "A");
 }
 
-TEST(WireCommandsTest, throwingPendingStepReturnsPending) {
+TEST(WireCommandsTest, pendingStepReturnsPending) {
     MockCukeEngine engine;
     InvokeCommand invokeCommand("x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type());
-    EXPECT_CALL(engine, invokeStep(_, _, _))
-            .Times(1)
-            .WillOnce(Throw(PendingStepException("S")));
+    EXPECT_CALL(engine, invokeStep(_, _, _)).Times(1).WillOnce(Return(InvokeResult::pending("S")));
 
     boost::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
     EXPECT_PTRTYPE(PendingResponse, response.get());
-    // TODO Test S
+    EXPECT_EQ(static_cast<const PendingResponse&>(*response).getMessage(), "S");
+}
+
+TEST(WireCommandsTest, throwingInvokeExceptionReturnsFailure) {
+    MockCukeEngine engine;
+    InvokeCommand invokeCommand(
+        "x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type());
+    EXPECT_CALL(engine, invokeStep(_, _, _)).Times(1).WillOnce(Throw(InvokeException("ex")));
+
+    boost::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
+    EXPECT_PTRTYPE(FailureResponse, response.get());
+    EXPECT_EQ(static_cast<const FailureResponse&>(*response).getMessage(), "ex");
+    EXPECT_EQ(static_cast<const FailureResponse&>(*response).getExceptionType(), "InvokeException");
 }
 
 TEST(WireCommandsTest, throwingAnythingInvokeReturnsFailure) {
@@ -303,7 +313,7 @@ TEST(WireCommandsTest, throwingAnythingInvokeReturnsFailure) {
 
     boost::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
     EXPECT_PTRTYPE(FailureResponse, response.get());
-    // TODO Test empty
+    EXPECT_EQ(static_cast<const FailureResponse&>(*response).getMessage(), "");
 }
 
 

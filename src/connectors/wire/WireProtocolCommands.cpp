@@ -49,12 +49,20 @@ InvokeCommand::InvokeCommand(const std::string & stepId,
 
 boost::shared_ptr<WireResponse> InvokeCommand::run(CukeEngine& engine) const {
     try {
-        engine.invokeStep(stepId, args, tableArg);
-        return boost::make_shared<SuccessResponse>();
-    } catch (const InvokeFailureException& e) {
-        return boost::make_shared<FailureResponse>(e.getMessage(), e.getExceptionType());
-    } catch (const PendingStepException& e) {
-        return boost::make_shared<PendingResponse>(e.getMessage());
+        InvokeResult commandResult = engine.invokeStep(stepId, args, tableArg);
+
+        switch (commandResult.getType()) {
+        case SUCCESS:
+            return boost::make_shared<SuccessResponse>();
+        case FAILURE:
+            return boost::make_shared<FailureResponse>(commandResult.getDescription(), "");
+        case PENDING:
+            return boost::make_shared<PendingResponse>(commandResult.getDescription());
+        }
+
+        return boost::make_shared<FailureResponse>("Unknown result");
+    } catch (const InvokeException& e) {
+        return boost::make_shared<FailureResponse>(e.getMessage(), "InvokeException");
     } catch (...) {
         return boost::make_shared<FailureResponse>();
     }

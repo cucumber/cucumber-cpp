@@ -8,6 +8,7 @@
 #include <boost/multi_array.hpp>
 
 #include <cucumber-cpp/internal/CukeExport.hpp>
+#include <cucumber-cpp/internal/step/StepManager.hpp>
 
 namespace cucumber {
 namespace internal {
@@ -39,23 +40,6 @@ public:
     virtual ~InvokeException() {}
 };
 
-class CUCUMBER_CPP_EXPORT InvokeFailureException : public InvokeException {
-private:
-    const std::string exceptionType;
-
-public:
-    InvokeFailureException(const std::string & message, const std::string & exceptionType);
-    InvokeFailureException(const InvokeFailureException &rhs);
-
-    const std::string getExceptionType() const;
-};
-
-class CUCUMBER_CPP_EXPORT PendingStepException : public InvokeException {
-public:
-    PendingStepException(const std::string & message);
-    PendingStepException(const PendingStepException &rhs);
-};
-
 /**
  * The entry point to Cucumber.
  *
@@ -84,9 +68,13 @@ public:
     /**
      * Invokes a step passing arguments to it.
      *
-     * @throws InvokeException if the test fails or it is pending
+     * @throws InvokeException if something unexpected happen during the execution of the step
+     * (failing or pending steps are expected, they will not trigger an exception).
      */
-    virtual void invokeStep(const std::string & id, const invoke_args_type & args, const invoke_table_type & tableArg) = 0;
+    virtual InvokeResult invokeStep(const std::string& id,
+                                    const invoke_args_type& args,
+                                    const invoke_table_type& tableArg)
+        = 0;
 
     /**
      * Ends a scenario.

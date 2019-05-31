@@ -44,7 +44,9 @@ void CukeEngineImpl::beginScenario(const tags_type & tags) {
     cukeCommands.beginScenario(tags);
 }
 
-void CukeEngineImpl::invokeStep(const std::string & id, const invoke_args_type & args, const invoke_table_type & tableArg) {
+InvokeResult CukeEngineImpl::invokeStep(const std::string& id,
+                                        const invoke_args_type& args,
+                                        const invoke_table_type& tableArg) {
     typedef invoke_table_type::index table_index;
 
     InvokeArgs commandArgs;
@@ -71,19 +73,10 @@ void CukeEngineImpl::invokeStep(const std::string & id, const invoke_args_type &
         throw InvokeException("Unable to decode arguments");
     }
 
-    InvokeResult commandResult;
     try {
-        commandResult = cukeCommands.invoke(convertId(id), &commandArgs);
+        return cukeCommands.invoke(convertId(id), &commandArgs);
     } catch (...) {
         throw InvokeException("Uncatched exception");
-    }
-    switch (commandResult.getType()) {
-    case SUCCESS:
-        return;
-    case FAILURE:
-        throw InvokeFailureException(commandResult.getDescription(), "");
-    case PENDING:
-        throw PendingStepException(commandResult.getDescription());
     }
 }
 
