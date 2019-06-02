@@ -77,26 +77,47 @@ enum InvokeResultType {
     PENDING
 };
 
+class Embedding {
+public:
+    std::string src, mime, label;
+
+    Embedding(const std::string& src, const std::string& mime, const std::string& label);
+    Embedding(const Embedding& other);
+
+    Embedding& operator=(const Embedding& rhs);
+};
+
 class CUCUMBER_CPP_EXPORT InvokeResult {
 private:
     InvokeResultType type;
     std::string description;
+    std::vector<Embedding> embeddings;
 
-    InvokeResult(const InvokeResultType type, const char *description);
+    InvokeResult(const InvokeResultType type, const std::string& description);
+
+    InvokeResult(const InvokeResultType type,
+                 const std::string& description,
+                 const std::vector<Embedding>& embeddings);
+
 public:
     InvokeResult();
     InvokeResult(const InvokeResult &ir);
     InvokeResult& operator= (const InvokeResult& rhs);
 
-    static InvokeResult success();
-    static InvokeResult failure(const char *description);
-    static InvokeResult failure(const std::string &description);
-    static InvokeResult pending(const char *description);
+    static InvokeResult success(const std::vector<Embedding>& embeddings
+                                = std::vector<Embedding>());
+    static InvokeResult failure(const std::string& description,
+                                const std::vector<Embedding>& embeddings
+                                = std::vector<Embedding>());
+    static InvokeResult pending(const std::string& description);
+
+    void setEmbeddings(const std::vector<Embedding>& embeddings);
 
     bool isSuccess() const;
     bool isPending() const;
     InvokeResultType getType() const;
     const std::string &getDescription() const;
+    const std::vector<Embedding>& getEmbeddings() const;
 };
 
 class CUCUMBER_CPP_EXPORT StepInfo : public boost::enable_shared_from_this<StepInfo> {
@@ -129,8 +150,16 @@ protected:
     virtual const InvokeResult invokeStepBody() = 0;
     virtual void body() = 0;
 
-    void pending(const char *description);
-    void pending();
+    void pending(const std::string& description = "");
+
+    // Add embedded content to the current step in the report.
+    //
+    // For text, use either the text/plain or text/html mime type.
+    // For images, use one of those mime types: image/png, image/gif, image/jpg, image/jpeg.
+    // src must be either:
+    //   - the path to a local file.
+    //   - a base64-encoded image (the mime type must be suffixed with ";base64").
+    void embed(const std::string& src, const std::string& mime, const std::string& label);
 
     template<class T> const T getInvokeArg();
     const InvokeArgs *getArgs();
@@ -165,6 +194,8 @@ private:
 
     const InvokeArgs *pArgs;
     InvokeArgs::size_type currentArgIndex;
+
+    std::vector<Embedding> embeddings;
 };
 
 

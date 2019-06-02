@@ -26,19 +26,30 @@ public:
 };
 
 class CUCUMBER_CPP_EXPORT SuccessResponse : public WireResponse {
+private:
+    const std::vector<Embedding> embeddings;
+
 public:
+    SuccessResponse(const std::vector<Embedding>& embeddings = std::vector<Embedding>());
+
+    const std::vector<Embedding>& getEmbeddings() const;
+
     void accept(WireResponseVisitor& visitor) const;
 };
 
 class CUCUMBER_CPP_EXPORT FailureResponse : public WireResponse {
 private:
     const std::string message, exceptionType;
+    const std::vector<Embedding> embeddings;
 
 public:
-    FailureResponse(const std::string & message = "", const std::string & exceptionType = "");
+    FailureResponse(const std::string& message = "",
+                    const std::string& exceptionType = "",
+                    const std::vector<Embedding>& embeddings = std::vector<Embedding>());
 
     const std::string getMessage() const;
     const std::string getExceptionType() const;
+    const std::vector<Embedding>& getEmbeddings() const;
 
     void accept(WireResponseVisitor& visitor) const;
 };

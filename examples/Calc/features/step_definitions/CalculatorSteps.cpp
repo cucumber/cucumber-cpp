@@ -25,12 +25,19 @@ WHEN("^I press add") {
 WHEN("^I press divide") {
     ScenarioScope<CalcCtx> context;
 
+    embed("Some text", "text/plain", "Embedded text");
+
     context->result = context->calc.divide();
 }
 
 THEN("^the result should be (.*) on the screen$") {
     REGEX_PARAM(double, expected);
     ScenarioScope<CalcCtx> context;
+
+    embed("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5E"
+          "rkJggg==",
+          "image/png;base64",
+          "Embedded image");
 
     EXPECT_EQ(expected, context->result);
 }

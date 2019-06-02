@@ -23,15 +23,21 @@ namespace internal {
  * Responses
  */
 
+SuccessResponse::SuccessResponse(const std::vector<Embedding>& embeddings)
+    : embeddings(embeddings) {}
+
+const std::vector<Embedding>& SuccessResponse::getEmbeddings() const {
+    return embeddings;
+}
 
 void SuccessResponse::accept(WireResponseVisitor& visitor) const {
     visitor.visit(*this);
 }
 
-FailureResponse::FailureResponse(const std::string & message, const std::string & exceptionType) :
-    message(message),
-    exceptionType(exceptionType) {
-}
+FailureResponse::FailureResponse(const std::string& message,
+                                 const std::string& exceptionType,
+                                 const std::vector<Embedding>& embeddings)
+    : message(message), exceptionType(exceptionType), embeddings(embeddings) {}
 
 const std::string FailureResponse::getMessage() const {
     return message;
@@ -39,6 +45,10 @@ const std::string FailureResponse::getMessage() const {
 
 const std::string FailureResponse::getExceptionType() const {
     return exceptionType;
+}
+
+const std::vector<Embedding>& FailureResponse::getEmbeddings() const {
+    return embeddings;
 }
 
 void FailureResponse::accept(WireResponseVisitor& visitor) const {
@@ -226,6 +236,22 @@ namespace {
             jsonOutput.push_back(*detail);
         }
 
+        mArray convertEmbeddings(const std::vector<Embedding>& embeddings) {
+            mArray embedList;
+
+            for (std::vector<Embedding>::const_iterator it = embeddings.begin();
+                 it < embeddings.end();
+                 ++it) {
+                mObject embedObject;
+                embedObject["src"] = it->src;
+                embedObject["mime_type"] = it->mime;
+                embedObject["label"] = it->label;
+                embedList.push_back(embedObject);
+            }
+
+            return embedList;
+        }
+
     public:
         std::string encode(const WireResponse& response) {
             jsonOutput.clear();
@@ -234,8 +260,19 @@ namespace {
             return write_string(v, false);
         }
 
-        void visit(const SuccessResponse& /*response*/) {
-            success();
+        void visit(const SuccessResponse& response) {
+            mObject detailObject;
+
+            if (!response.getEmbeddings().empty()) {
+                detailObject["embeddings"] = convertEmbeddings(response.getEmbeddings());
+            }
+
+            if (detailObject.empty()) {
+                success();
+            } else {
+                const mValue detail(detailObject);
+                success(&detail);
+            }
         }
 
         void visit(const FailureResponse& response) {
@@ -245,6 +282,9 @@ namespace {
             }
             if (!response.getExceptionType().empty()) {
                 detailObject["exception"] = response.getExceptionType();
+            }
+            if (!response.getEmbeddings().empty()) {
+                detailObject["embeddings"] = convertEmbeddings(response.getEmbeddings());
             }
             if (detailObject.empty()) {
                 fail();

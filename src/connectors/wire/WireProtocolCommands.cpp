@@ -49,13 +49,14 @@ InvokeCommand::InvokeCommand(const std::string & stepId,
 
 boost::shared_ptr<WireResponse> InvokeCommand::run(CukeEngine& engine) const {
     try {
-        InvokeResult commandResult = engine.invokeStep(stepId, args, tableArg);
+        const InvokeResult commandResult = engine.invokeStep(stepId, args, tableArg);
 
         switch (commandResult.getType()) {
         case SUCCESS:
-            return boost::make_shared<SuccessResponse>();
+            return boost::make_shared<SuccessResponse>(commandResult.getEmbeddings());
         case FAILURE:
-            return boost::make_shared<FailureResponse>(commandResult.getDescription(), "");
+            return boost::make_shared<FailureResponse>(
+                commandResult.getDescription(), "", commandResult.getEmbeddings());
         case PENDING:
             return boost::make_shared<PendingResponse>(commandResult.getDescription());
         }
