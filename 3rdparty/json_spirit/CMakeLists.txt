@@ -8,6 +8,7 @@ target_sources(json_spirit.header INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/json_spirit_stream_reader.h
     ${CMAKE_CURRENT_SOURCE_DIR}/json_spirit_utils.h
     ${CMAKE_CURRENT_SOURCE_DIR}/json_spirit_value.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/json_spirit_writer_options.h
     ${CMAKE_CURRENT_SOURCE_DIR}/json_spirit_writer_template.h
 )
 target_include_directories(json_spirit.header SYSTEM
@@ -22,5 +23,6 @@ add_library(json_spirit STATIC EXCLUDE_FROM_ALL
     ${CMAKE_CURRENT_SOURCE_DIR}/json_spirit_value.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/json_spirit_writer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/json_spirit_writer.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/json_spirit_writer_options.h
 )
 target_link_libraries(json_spirit PUBLIC json_spirit.header)
