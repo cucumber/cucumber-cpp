@@ -77,10 +77,7 @@ TEST(RegexTest, findReportsCodepointPositions) {
     EXPECT_TRUE(match->matches());
     ASSERT_EQ(2, match->getSubmatches().size());
     EXPECT_EQ(5, match->getSubmatches()[0].position);
-    // EXPECTED:
-    // EXPECT_EQ(18, match->getSubmatches()[1].position);
-    // ACTUAL
-    EXPECT_EQ(28, match->getSubmatches()[1].position);
+    EXPECT_EQ(18, match->getSubmatches()[1].position);
 }
 
 TEST(RegexTest, findAllExtractsTheFirstGroupOfEveryToken) {

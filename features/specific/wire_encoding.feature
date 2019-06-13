@@ -24,13 +24,7 @@ Feature: Wire Encoding Feature
       """
     When Cucumber runs the feature
     Then the step output should contain:
-    # EXPECTED
-    #   """
-    #   カラオケ機ASCII
-    #   
-    #   """
-    # ACTUAL
       """
-      \\u00E3\\u0082\\u00AB\\u00E3\\u0083\\u00A9\\u00E3\\u0082\\u00AA\\u00E3\\u0082\\u00B1\\u00E6\\u00A9\\u009FASCII
+      カラオケ機ASCII
 
       """
