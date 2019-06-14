@@ -256,6 +256,52 @@ TEST_F(WireMessageCodecTest, handlesSnippetTextResponse) {
     EXPECT_THAT(codec.encode(response), StrEq("[\"success\",\"GIVEN(...)\"]"));
 }
 
+TEST_F(WireMessageCodecTest, encodesResponseUsingRawUtf8) {
+    std::vector<StepMatch> matches;
+    StepMatch sm1;
+    sm1.id = "1234";
+    sm1.regexp = "Some (.+) regexp (.+)";
+    StepMatchArg sm1arg1;
+    sm1arg1.value = "カラオケ機";
+    sm1arg1.position = 5;
+    sm1.args.push_back(sm1arg1);
+    StepMatchArg sm1arg2;
+    sm1arg2.value = "ASCII";
+    sm1arg2.position = 18;
+    sm1.args.push_back(sm1arg2);
+    matches.push_back(sm1);
+    StepMatchesResponse response(matches);
+
+    // clang-format off
+    // EXPECTED:
+    // EXPECT_THAT(codec.encode(response), StrEq(
+    //         "[\"success\",[{"
+    //             "\"args\":[{"
+    //                 "\"pos\":5,"
+    //                 "\"val\":\"カラオケ機\""
+    //             "},{"
+    //                 "\"pos\":18,"
+    //                 "\"val\":\"ASCII\""
+    //             "}],"
+    //             "\"id\":\"1234\","
+    //             "\"regexp\":\"Some (.+) regexp (.+)\""
+    //         "}]]"));
+    // ACTUAL:
+    EXPECT_THAT(codec.encode(response), StrEq(
+            "[\"success\",[{"
+                "\"args\":[{"
+                    "\"pos\":5,"
+                    "\"val\":\"\\u00E3\\u0082\\u00AB\\u00E3\\u0083\\u00A9\\u00E3\\u0082\\u00AA\\u00E3\\u0082\\u00B1\\u00E6\\u00A9\\u009F\""
+                "},{"
+                    "\"pos\":18,"
+                    "\"val\":\"ASCII\""
+                "}],"
+                "\"id\":\"1234\","
+                "\"regexp\":\"Some (.+) regexp (.+)\""
+            "}]]"));
+    // clang-format on
+}
+
 /*
  * Command response
  */
