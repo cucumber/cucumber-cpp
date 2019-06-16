@@ -53,19 +53,14 @@ Table & InvokeArgs::getVariableTableArg() {
 Embedding::Embedding(const std::string& src, const std::string& mime, const std::string& label)
     : src(src), mime(mime), label(label) {}
 
-Embedding::Embedding(const Embedding& other)
-    : src(other.src), mime(other.mime), label(other.label) {}
-
-Embedding& Embedding::operator=(const Embedding& rhs) {
-    src = rhs.src;
-    mime = rhs.mime;
-    label = rhs.label;
-
-    return *this;
+bool operator==(const Embedding& lhs, const Embedding& rhs) {
+    return lhs.src == rhs.src && lhs.mime == rhs.mime && lhs.label == rhs.label;
 }
 
-InvokeResult::InvokeResult(const InvokeResultType type, const std::string& description)
-    : type(type), description(description), embeddings() {}
+std::ostream& operator<<(std::ostream& os, const Embedding& e) {
+    return os << "{src: \"" << e.src << "\"; mime_type: \"" << e.mime << "\"; label: \"" << e.label
+              << "\"}";
+}
 
 InvokeResult::InvokeResult(const InvokeResultType type,
                            const std::string& description,

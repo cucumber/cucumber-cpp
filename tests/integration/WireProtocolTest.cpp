@@ -13,21 +13,6 @@ using namespace testing;
 
 using boost::assign::list_of;
 
-namespace cucumber {
-namespace internal {
-
-void PrintTo(const Embedding& embedding, std::ostream* os) {
-    *os << "{src: \"" << embedding.src << "\"; mime_type: \"" << embedding.mime << "\"; label: \""
-        << embedding.label << "\"}";
-}
-
-bool operator==(const Embedding& lhs, const Embedding& rhs) {
-    return lhs.src == rhs.src && lhs.mime == rhs.mime && lhs.label == rhs.label;
-}
-
-} // namespace internal
-} // namespace cucumber
-
 class MockCukeEngine : public CukeEngine {
 public:
     MOCK_CONST_METHOD1(stepMatches, std::vector<StepMatch>(const std::string & name));

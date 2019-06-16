@@ -82,10 +82,11 @@ public:
     std::string src, mime, label;
 
     Embedding(const std::string& src, const std::string& mime, const std::string& label);
-    Embedding(const Embedding& other);
-
-    Embedding& operator=(const Embedding& rhs);
 };
+
+bool operator==(const Embedding& lhs, const Embedding& rhs);
+
+std::ostream& operator<<(std::ostream& os, const Embedding& e);
 
 class CUCUMBER_CPP_EXPORT InvokeResult {
 private:
@@ -93,11 +94,9 @@ private:
     std::string description;
     std::vector<Embedding> embeddings;
 
-    InvokeResult(const InvokeResultType type, const std::string& description);
-
     InvokeResult(const InvokeResultType type,
                  const std::string& description,
-                 const std::vector<Embedding>& embeddings);
+                 const std::vector<Embedding>& embeddings = std::vector<Embedding>());
 
 public:
     InvokeResult();
