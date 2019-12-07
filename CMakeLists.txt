@@ -22,6 +22,8 @@ option(CUKE_ENABLE_GTEST        "Enable Google Test framework" ON)
 option(CUKE_ENABLE_QT           "Enable Qt framework" ON)
 option(CUKE_TESTS_E2E           "Enable end-to-end tests" ON)
 option(CUKE_TESTS_UNIT          "Enable unit tests" ON)
+set(CUKE_ENABLE_SANITIZER       "OFF" CACHE STRING "Sanitizer to use for checking")
+set_property(CACHE CUKE_ENABLE_SANITIZER PROPERTY STRINGS OFF "address" "thread" "undefined")
 option(CUKE_TESTS_VALGRIND      "Enable tests within Valgrind" OFF)
 set(GMOCK_SRC_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
 set(GMOCK_VER "1.7.0" CACHE STRING "Google Mock framework version to be used")
@@ -243,6 +245,25 @@ if(CUKE_ENABLE_QT)
         endif()
     endif()
 endif()
+
+
+#
+# Sanitizers
+#
+
+if(CUKE_ENABLE_SANITIZER AND NOT ${CUKE_ENABLE_SANITIZER} EQUAL "OFF")
+    message("Disabling valgrind when a sanitizer is enabled")
+    set(CUKE_TESTS_VALGRIND OFF)
+
+    if (WIN32)
+        message(WARNING "The use of the sanatizers on Windows is not tested")
+    endif()
+
+    add_compile_options("-fsanitize=${CUKE_ENABLE_SANITIZER}")
+    add_link_options("-fsanitize=${CUKE_ENABLE_SANITIZER}")
+endif()
+
+
 
 #
 # Valgrind
