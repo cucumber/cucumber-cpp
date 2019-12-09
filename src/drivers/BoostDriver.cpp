@@ -65,12 +65,17 @@ public:
     void log_entry_finish( std::ostream&) {};
 
     void entry_context_start( std::ostream&, log_level /*l*/) {}
+
 #if BOOST_VERSION >= 106500
     void log_entry_context( std::ostream&, log_level /*l*/, const_string /*value*/) {}
     void entry_context_finish( std::ostream&, log_level /*l*/ ) {}
 #else
     void log_entry_context( std::ostream&, const_string /*value*/) {}
     void entry_context_finish( std::ostream& ) {}
+#endif
+
+#if BOOST_VERSION >= 107100
+    virtual void log_build_info(std::ostream&, bool /*log_build_info = true*/) {}
 #endif
 
 private:
