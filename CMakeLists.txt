@@ -91,7 +91,7 @@ if(UNIX AND (
   # itself is writing to a pipe instead of a terminal. As a result this should give us the best of
   # both worlds: coloured output when we're running in a terminal, plain output for editors, IDEs,
   # etc.
-  set(CMAKE_CXX_FLAGS "-fdiagnostics-color=always ${CMAKE_CXX_FLAGS}" CACHE STRING "" FORCE)
+  set(CMAKE_CXX_FLAGS "-fdiagnostics-color=always ${CMAKE_CXX_FLAGS}")
 endif()
 
 #
