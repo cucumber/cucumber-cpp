@@ -76,8 +76,10 @@ cmake --build build
 # Run unit tests
 cmake --build build --target test
 
-# Run install
+# Run install (you may need sudo)
 cmake --build build --target install
+# Or, alternatively
+make -C build install
 
 # Check implementation against common cucumber test suite
 cmake --build build --target features
