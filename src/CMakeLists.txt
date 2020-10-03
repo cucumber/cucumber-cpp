@@ -132,12 +132,12 @@ install(
 )
 
 configure_file(
-    "${PROJECT_SOURCE_DIR}/cmake/cucumber-cpp.pc.in"
+    "${PROJECT_SOURCE_DIR}/src/cmake/cucumber-cpp.pc.in"
     "${CMAKE_CURRENT_BINARY_DIR}/generated/cucumber-cpp.pc"
     @ONLY
 )
 configure_file(
-    "${PROJECT_SOURCE_DIR}/cmake/cucumber-cpp-nomain.pc.in"
+    "${PROJECT_SOURCE_DIR}/src/cmake/cucumber-cpp-nomain.pc.in"
     "${CMAKE_CURRENT_BINARY_DIR}/generated/cucumber-cpp-nomain.pc"
     @ONLY
 )

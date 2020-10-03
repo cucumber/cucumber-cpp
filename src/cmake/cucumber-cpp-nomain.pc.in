@@ -3,7 +3,7 @@ includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
 
 Name: cucumber-cpp-nomain
 Description: Cucumber C++ (without main() function)
-Version: @PROJECT_VERSION@
+Version: 0.6
 URL: https://github.com/cucumber/cucumber-cpp
 Libs: -L${libdir} -lcucumber-cpp-nomain @CMAKE_THREAD_LIBS_INIT@
 Cflags: -I${includedir}
