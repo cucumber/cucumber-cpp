@@ -130,3 +130,20 @@ install(
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
     FILE        CucumberCppConfig.cmake
 )
+
+configure_file(
+    "${PROJECT_SOURCE_DIR}/cmake/cucumber-cpp.pc.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/generated/cucumber-cpp.pc"
+    @ONLY
+)
+configure_file(
+    "${PROJECT_SOURCE_DIR}/cmake/cucumber-cpp-nomain.pc.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/generated/cucumber-cpp-nomain.pc"
+    @ONLY
+)
+install(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/generated/cucumber-cpp.pc"
+        "${CMAKE_CURRENT_BINARY_DIR}/generated/cucumber-cpp-nomain.pc"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
+)

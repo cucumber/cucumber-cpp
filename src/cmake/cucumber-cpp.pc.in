@@ -1,0 +1,9 @@
+libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+
+Name: cucumber-cpp
+Description: Cucumber C++ (with main() function)
+Version: @PROJECT_VERSION@
+URL: https://github.com/cucumber/cucumber-cpp
+Libs: -L${libdir} -lcucumber-cpp @CMAKE_THREAD_LIBS_INIT@
+Cflags: -I${includedir}
