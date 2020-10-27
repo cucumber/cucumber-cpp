@@ -50,7 +50,7 @@ public:
     // Formatter
     void log_start( std::ostream&, counter_t /*test_cases_amount*/) {};
     void log_finish( std::ostream&) {};
-    void log_build_info( std::ostream&) {};
+    void log_build_info( std::ostream&, bool /*log_build_info*/) {};
 
     void test_unit_start( std::ostream&, test_unit const& /*tu*/) {};
     void test_unit_finish( std::ostream&, test_unit const& /*tu*/, unsigned long /*elapsed*/) {};
