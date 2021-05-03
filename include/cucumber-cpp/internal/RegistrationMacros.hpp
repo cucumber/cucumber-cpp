@@ -1,6 +1,12 @@
 #ifndef CUKE_REGISTRATIONMACROS_HPP_
 #define CUKE_REGISTRATIONMACROS_HPP_
 
+#if __cplusplus >= 201103L
+#define CUKE_OVERRIDE override
+#else
+#define CUKE_OVERRIDE
+#endif
+
 // ************************************************************************** //
 // **************            OBJECT NAMING MACROS              ************** //
 // ************************************************************************** //
@@ -24,7 +30,7 @@
 #define CUKE_OBJECT_(class_name, parent_class, registration_fn, args)     \
 class class_name : public parent_class {                                  \
 public:                                                                   \
-    void body() {                                                         \
+    void body() CUKE_OVERRIDE {                                           \
         return invokeWithArgs(*this, &class_name::bodyWithArgs);          \
     }                                                                     \
     void bodyWithArgs args;                                               \
