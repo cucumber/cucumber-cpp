@@ -51,7 +51,7 @@ public:
     void log_start( std::ostream&, counter_t /*test_cases_amount*/) {};
     void log_finish( std::ostream&) {};
 #if BOOST_VERSION >= 107000
-    void log_build_info( std::ostream&, bool /*log_build_info*/) {};
+    void log_build_info(std::ostream&, bool /*log_build_info*/){};
 #else
     void log_build_info( std::ostream&) {};
 #endif
