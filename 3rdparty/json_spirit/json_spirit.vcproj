@@ -199,6 +199,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\json_spirit_writer_options.h"
+				>
+			</File>
+			<File
 				RelativePath=".\json_spirit_writer_template.h"
 				>
 			</File>

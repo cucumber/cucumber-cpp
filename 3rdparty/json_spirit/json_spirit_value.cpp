@@ -1,8 +1,6 @@
-/* Copyright (c) 2007 John W Wilkinson
+//          Copyright John W. Wilkinson 2007 - 2014
+// Distributed under the MIT License, see accompanying file LICENSE.txt
 
-   This source code can be used for any purpose as long as
-   this comment is retained. */
-
-// json spirit version 2.00
+// json spirit version 4.08
 
 #include "json_spirit_value.h"
