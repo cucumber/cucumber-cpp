@@ -50,41 +50,52 @@ Table & InvokeArgs::getVariableTableArg() {
     return tableArg;
 }
 
+Embedding::Embedding(const std::string& src, const std::string& mime, const std::string& label)
+    : src(src), mime(mime), label(label) {}
 
-InvokeResult::InvokeResult(const InvokeResultType type, const char *description) :
-    type(type) {
-    if (description) { this->description = description; };
+bool operator==(const Embedding& lhs, const Embedding& rhs) {
+    return lhs.src == rhs.src && lhs.mime == rhs.mime && lhs.label == rhs.label;
 }
+
+std::ostream& operator<<(std::ostream& os, const Embedding& e) {
+    return os << "{src: \"" << e.src << "\"; mime_type: \"" << e.mime << "\"; label: \"" << e.label
+              << "\"}";
+}
+
+InvokeResult::InvokeResult(const InvokeResultType type,
+                           const std::string& description,
+                           const std::vector<Embedding>& embeddings)
+    : type(type), description(description), embeddings(embeddings) {}
 
 InvokeResult::InvokeResult() :
     type(FAILURE) {
 }
 
-InvokeResult::InvokeResult(const InvokeResult &ir) :
-    type(ir.type),
-    description(ir.description) {
-}
+InvokeResult::InvokeResult(const InvokeResult& ir)
+    : type(ir.type), description(ir.description), embeddings(ir.embeddings) {}
 
 InvokeResult& InvokeResult::operator= (const InvokeResult &rhs) {
     this->type = rhs.type;
     this->description = rhs.description;
+    this->embeddings = rhs.embeddings;
     return *this;
 }
 
-InvokeResult InvokeResult::success() {
-    return InvokeResult(SUCCESS, 0);
+InvokeResult InvokeResult::success(const std::vector<Embedding>& embeddings) {
+    return InvokeResult(SUCCESS, "", embeddings);
 }
 
-InvokeResult InvokeResult::failure(const char *description) {
-    return InvokeResult(FAILURE, description);
+InvokeResult InvokeResult::failure(const std::string& description,
+                                   const std::vector<Embedding>& embeddings) {
+    return InvokeResult(FAILURE, description, embeddings);
 }
 
-InvokeResult InvokeResult::failure(const std::string &description) {
-    return InvokeResult(FAILURE, description.c_str());
-}
-
-InvokeResult InvokeResult::pending(const char *description) {
+InvokeResult InvokeResult::pending(const std::string& description) {
     return InvokeResult(PENDING, description);
+}
+
+void InvokeResult::setEmbeddings(const std::vector<Embedding>& embeddings) {
+    this->embeddings = embeddings;
 }
 
 bool InvokeResult::isSuccess() const {
@@ -103,6 +114,9 @@ const std::string &InvokeResult::getDescription() const {
     return description;
 }
 
+const std::vector<Embedding>& InvokeResult::getEmbeddings() const {
+    return embeddings;
+}
 
 step_id_type StepManager::addStep(boost::shared_ptr<StepInfo> stepInfo) {
     return steps().insert(std::make_pair(stepInfo->id, stepInfo)).first->first;
@@ -142,31 +156,33 @@ InvokeResult BasicStep::invoke(const InvokeArgs *pArgs) {
     this->pArgs = pArgs;
     currentArgIndex = 0;
     currentResult = InvokeResult::success();
+    embeddings.clear();
     try {
         InvokeResult returnedResult = invokeStepBody();
         if (currentResult.isPending()) {
             return currentResult;
         } else {
+            returnedResult.setEmbeddings(embeddings);
             return returnedResult;
         }
     } catch (const std::exception& ex) {
-        return InvokeResult::failure(ex.what());
+        return InvokeResult::failure(ex.what(), embeddings);
     } catch (const std::string& ex) {
-        return InvokeResult::failure(ex);
+        return InvokeResult::failure(ex, embeddings);
     } catch (const char *ex) {
-        return InvokeResult::failure(ex);
+        return InvokeResult::failure(ex, embeddings);
     } catch (...) {
         // Cucumber needs a description here
-        return InvokeResult::failure("Unknown exception");
+        return InvokeResult::failure("Unknown exception", embeddings);
     }
 }
 
-void BasicStep::pending() {
-    pending(0);
+void BasicStep::pending(const std::string& description) {
+    currentResult = InvokeResult::pending(description);
 }
 
-void BasicStep::pending(const char *description) {
-    currentResult = InvokeResult::pending(description);
+void BasicStep::embed(const std::string& src, const std::string& mime, const std::string& label) {
+    embeddings.push_back(Embedding(src, mime, label));
 }
 
 const InvokeArgs *BasicStep::getArgs() {

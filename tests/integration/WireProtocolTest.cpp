@@ -17,7 +17,10 @@ class MockCukeEngine : public CukeEngine {
 public:
     MOCK_CONST_METHOD1(stepMatches, std::vector<StepMatch>(const std::string & name));
     MOCK_METHOD1(endScenario, void(const tags_type & tags));
-    MOCK_METHOD3(invokeStep, void(const std::string & id, const invoke_args_type & args, const invoke_table_type & tableArg));
+    MOCK_METHOD3(invokeStep,
+                 InvokeResult(const std::string& id,
+                              const invoke_args_type& args,
+                              const invoke_table_type& tableArg));
     MOCK_METHOD1(beginScenario, void(const tags_type & tags));
     MOCK_CONST_METHOD3(snippetText, std::string(const std::string & keyword, const std::string & name, const std::string & multilineArgClass));
 };
@@ -191,9 +194,28 @@ TEST_F(WireMessageCodecTest, handlesSnippetTextMessage) {
  * Response encoding
  */
 
-TEST_F(WireMessageCodecTest, handlesSuccessResponse) {
+TEST_F(WireMessageCodecTest, handlesSimpleSuccessResponse) {
     SuccessResponse response;
     EXPECT_THAT(codec.encode(response), StrEq("[\"success\"]"));
+}
+
+TEST_F(WireMessageCodecTest, handlesDetailedSuccessResponse) {
+    Embedding embedding1("Some text", "text/plain", "Embedded text");
+    Embedding embedding2("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAh"
+                         "KmMIQAAAABJRU5ErkJggg==",
+                         "image/png;base64",
+                         "Embedded image");
+    std::vector<Embedding> embeddings = list_of(embedding1)(embedding2);
+
+    SuccessResponse response(embeddings);
+    // clang-format off
+    EXPECT_THAT(codec.encode(response), StrEq(
+            "[\"success\",{"
+                "\"embeddings\":["
+                    "{\"label\":\"Embedded text\",\"mime_type\":\"text/plain\",\"src\":\"Some text\"},"
+                    "{\"label\":\"Embedded image\",\"mime_type\":\"image/png;base64\",\"src\":\"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==\"}]"
+            "}]"));
+    // clang-format on
 }
 
 TEST_F(WireMessageCodecTest, handlesSimpleFailureResponse) {
@@ -202,12 +224,24 @@ TEST_F(WireMessageCodecTest, handlesSimpleFailureResponse) {
 }
 
 TEST_F(WireMessageCodecTest, handlesDetailedFailureResponse) {
-    FailureResponse response("My message","ExceptionClassName");
+    Embedding embedding1("Some text", "text/plain", "Embedded text");
+    Embedding embedding2("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAh"
+                         "KmMIQAAAABJRU5ErkJggg==",
+                         "image/png;base64",
+                         "Embedded image");
+    std::vector<Embedding> embeddings = list_of(embedding1)(embedding2);
+
+    FailureResponse response("My message", "ExceptionClassName", embeddings);
+    // clang-format off
     EXPECT_THAT(codec.encode(response), StrEq(
-            "[\"fail\",{"
-                "\"exception\":\"ExceptionClassName\","
-                "\"message\":\"My message\""
-            "}]"));
+                "[\"fail\",{"
+                    "\"embeddings\":["
+                        "{\"label\":\"Embedded text\",\"mime_type\":\"text/plain\",\"src\":\"Some text\"},"
+                        "{\"label\":\"Embedded image\",\"mime_type\":\"image/png;base64\",\"src\":\"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==\"}],"
+                    "\"exception\":\"ExceptionClassName\","
+                    "\"message\":\"My message\""
+                "}]"));
+    // clang-format off
 }
 
 TEST_F(WireMessageCodecTest, handlesPendingResponse) {
@@ -263,35 +297,90 @@ TEST_F(WireMessageCodecTest, handlesSnippetTextResponse) {
 TEST(WireCommandsTest, succesfulInvokeReturnsSuccess) {
     MockCukeEngine engine;
     InvokeCommand invokeCommand("x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type());
-    EXPECT_CALL(engine, invokeStep(_, _, _))
-            .Times(1);
+    EXPECT_CALL(engine, invokeStep(_, _, _)).Times(1).WillOnce(Return(InvokeResult::success()));
 
     boost::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
     EXPECT_PTRTYPE(SuccessResponse, response.get());
+    EXPECT_THAT(static_cast<const SuccessResponse&>(*response).getEmbeddings(), IsEmpty());
 }
 
-TEST(WireCommandsTest, throwingFailureInvokeReturnsFailure) {
+TEST(WireCommandsTest, succesfulInvokeWithEmbeddingsReturnsSuccess) {
+    Embedding embedding1("Some text", "text/plain", "Embedded text");
+    Embedding embedding2("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAh"
+                         "KmMIQAAAABJRU5ErkJggg==",
+                         "image/png;base64",
+                         "Embedded image");
+    std::vector<Embedding> embeddings = list_of(embedding1)(embedding2);
+
+    MockCukeEngine engine;
+    InvokeCommand invokeCommand(
+        "x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type());
+    EXPECT_CALL(engine, invokeStep(_, _, _))
+        .Times(1)
+        .WillOnce(Return(InvokeResult::success(embeddings)));
+
+    boost::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
+    EXPECT_PTRTYPE(SuccessResponse, response.get());
+    EXPECT_THAT(static_cast<const SuccessResponse&>(*response).getEmbeddings(),
+                ElementsAre(embedding1, embedding2));
+}
+
+TEST(WireCommandsTest, failingInvokeReturnsFailure) {
     MockCukeEngine engine;
     InvokeCommand invokeCommand("x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type());
-    EXPECT_CALL(engine, invokeStep(_, _, _))
-            .Times(1)
-            .WillOnce(Throw(InvokeFailureException("A", "B")));
+    EXPECT_CALL(engine, invokeStep(_, _, _)).Times(1).WillOnce(Return(InvokeResult::failure("A")));
 
     boost::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
     EXPECT_PTRTYPE(FailureResponse, response.get());
-    // TODO Test A and B
+    EXPECT_EQ(static_cast<const FailureResponse&>(*response).getMessage(), "A");
+    EXPECT_EQ(static_cast<const FailureResponse&>(*response).getExceptionType(), "");
+    EXPECT_THAT(static_cast<const FailureResponse&>(*response).getEmbeddings(), IsEmpty());
 }
 
-TEST(WireCommandsTest, throwingPendingStepReturnsPending) {
+TEST(WireCommandsTest, failingInvokeWithEmbeddingsReturnsFailure) {
+    Embedding embedding1("Some text", "text/plain", "Embedded text");
+    Embedding embedding2("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAh"
+                         "KmMIQAAAABJRU5ErkJggg==",
+                         "image/png;base64",
+                         "Embedded image");
+    std::vector<Embedding> embeddings = list_of(embedding1)(embedding2);
+
+    MockCukeEngine engine;
+    InvokeCommand invokeCommand(
+        "x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type());
+    EXPECT_CALL(engine, invokeStep(_, _, _))
+        .Times(1)
+        .WillOnce(Return(InvokeResult::failure("A", embeddings)));
+
+    boost::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
+    EXPECT_PTRTYPE(FailureResponse, response.get());
+    EXPECT_EQ(static_cast<const FailureResponse&>(*response).getMessage(), "A");
+    EXPECT_EQ(static_cast<const FailureResponse&>(*response).getExceptionType(), "");
+    EXPECT_THAT(static_cast<const FailureResponse&>(*response).getEmbeddings(),
+                ElementsAre(embedding1, embedding2));
+}
+
+TEST(WireCommandsTest, pendingStepReturnsPending) {
     MockCukeEngine engine;
     InvokeCommand invokeCommand("x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type());
-    EXPECT_CALL(engine, invokeStep(_, _, _))
-            .Times(1)
-            .WillOnce(Throw(PendingStepException("S")));
+    EXPECT_CALL(engine, invokeStep(_, _, _)).Times(1).WillOnce(Return(InvokeResult::pending("S")));
 
     boost::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
     EXPECT_PTRTYPE(PendingResponse, response.get());
-    // TODO Test S
+    EXPECT_EQ(static_cast<const PendingResponse&>(*response).getMessage(), "S");
+}
+
+TEST(WireCommandsTest, throwingInvokeExceptionReturnsFailure) {
+    MockCukeEngine engine;
+    InvokeCommand invokeCommand(
+        "x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type());
+    EXPECT_CALL(engine, invokeStep(_, _, _)).Times(1).WillOnce(Throw(InvokeException("ex")));
+
+    boost::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
+    EXPECT_PTRTYPE(FailureResponse, response.get());
+    EXPECT_EQ(static_cast<const FailureResponse&>(*response).getMessage(), "ex");
+    EXPECT_EQ(static_cast<const FailureResponse&>(*response).getExceptionType(), "InvokeException");
+    EXPECT_THAT(static_cast<const FailureResponse&>(*response).getEmbeddings(), IsEmpty());
 }
 
 TEST(WireCommandsTest, throwingAnythingInvokeReturnsFailure) {
@@ -303,7 +392,9 @@ TEST(WireCommandsTest, throwingAnythingInvokeReturnsFailure) {
 
     boost::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
     EXPECT_PTRTYPE(FailureResponse, response.get());
-    // TODO Test empty
+    EXPECT_EQ(static_cast<const FailureResponse&>(*response).getMessage(), "");
+    EXPECT_EQ(static_cast<const FailureResponse&>(*response).getExceptionType(), "");
+    EXPECT_THAT(static_cast<const FailureResponse&>(*response).getEmbeddings(), IsEmpty());
 }
 
 

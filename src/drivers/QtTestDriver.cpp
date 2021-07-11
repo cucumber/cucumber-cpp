@@ -24,7 +24,7 @@ const InvokeResult QtTestStep::invokeStepBody() {
     } else {
         file.open();
         QTextStream ts(&file);
-        return InvokeResult::failure(ts.readAll().toLocal8Bit());
+        return InvokeResult::failure(ts.readAll().toStdString());
     }
 }
 
