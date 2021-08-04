@@ -256,6 +256,38 @@ TEST_F(WireMessageCodecTest, handlesSnippetTextResponse) {
     EXPECT_THAT(codec.encode(response), StrEq("[\"success\",\"GIVEN(...)\"]"));
 }
 
+TEST_F(WireMessageCodecTest, encodesResponseUsingRawUtf8) {
+    std::vector<StepMatch> matches;
+    StepMatch sm1;
+    sm1.id = "1234";
+    sm1.regexp = "Some (.+) regexp (.+)";
+    StepMatchArg sm1arg1;
+    sm1arg1.value = "カラオケ機";
+    sm1arg1.position = 5;
+    sm1.args.push_back(sm1arg1);
+    StepMatchArg sm1arg2;
+    sm1arg2.value = "ASCII";
+    sm1arg2.position = 18;
+    sm1.args.push_back(sm1arg2);
+    matches.push_back(sm1);
+    StepMatchesResponse response(matches);
+
+    // clang-format off
+    EXPECT_THAT(codec.encode(response), StrEq(
+            "[\"success\",[{"
+                "\"args\":[{"
+                    "\"pos\":5,"
+                    "\"val\":\"カラオケ機\""
+                "},{"
+                    "\"pos\":18,"
+                    "\"val\":\"ASCII\""
+                "}],"
+                "\"id\":\"1234\","
+                "\"regexp\":\"Some (.+) regexp (.+)\""
+            "}]]"));
+    // clang-format on
+}
+
 /*
  * Command response
  */

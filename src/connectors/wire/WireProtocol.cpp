@@ -3,6 +3,7 @@
 
 #include <json_spirit/json_spirit_reader_template.h>
 #include <json_spirit/json_spirit_writer_template.h>
+#include <json_spirit/json_spirit_writer_options.h>
 
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
@@ -231,7 +232,7 @@ namespace {
             jsonOutput.clear();
             response.accept(*this);
             const mValue v(jsonOutput);
-            return write_string(v, false);
+            return write_string(v, ::raw_utf8);
         }
 
         void visit(const SuccessResponse& /*response*/) {
