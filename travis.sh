@@ -40,7 +40,7 @@ if [ -n "${FORMAT:-}" ]; then
     fi
     git clang-format-3.8 --binary=/usr/bin/clang-format-3.8 --style=file --commit="${BASE_HEAD}"
     # Assert that all changes adhere to the asked for style
-    exec git diff --exit-code
+    exec git diff --exit-code -- . ":!3rdparty"
 fi
 
 CTEST_OUTPUT_ON_FAILURE=ON

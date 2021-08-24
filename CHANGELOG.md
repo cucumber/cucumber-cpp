@@ -12,6 +12,8 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 * Unable to `add_subdirectory(cucumber-cpp)` ([#211](https://github.com/cucumber/cucumber-cpp/pull/211) Sergey Bon)
 * Warning C4265 on Visual Studio ([#195](https://github.com/cucumber/cucumber-cpp/pull/195) Matthieu Longo)
 * Fix handling of optional regex captures ([#221](https://github.com/cucumber/cucumber-cpp/pull/221) Alain Martin)
+* Fix compilation with Boost 1.70.0 ([#225](https://github.com/cucumber/cucumber-cpp/pull/225) Krystian Młynarczyk)
+* Support step definitions with multi-byte characters ([#224](https://github.com/cucumber/cucumber-cpp/pull/224) Spencer Rudnick)
 
 ## [0.5](https://github.com/cucumber/cucumber-cpp/compare/v0.4...v0.5) (2 July 2018)
 

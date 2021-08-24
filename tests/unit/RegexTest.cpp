@@ -70,6 +70,16 @@ TEST(RegexTest, findAllDoesNotMatchIfNoTokens) {
     EXPECT_EQ(0, match->getSubmatches().size());
 }
 
+TEST(RegexTest, findReportsCodepointPositions) {
+    Regex twoArgs("Some (.+) regexp (.+)");
+    shared_ptr<RegexMatch> match(twoArgs.find("Some カラオケ機 regexp ASCII"));
+
+    EXPECT_TRUE(match->matches());
+    ASSERT_EQ(2, match->getSubmatches().size());
+    EXPECT_EQ(5, match->getSubmatches()[0].position);
+    EXPECT_EQ(18, match->getSubmatches()[1].position);
+}
+
 TEST(RegexTest, findAllExtractsTheFirstGroupOfEveryToken) {
     Regex sum("([^,]+)(?:,|$)");
     shared_ptr<RegexMatch> match(sum.findAll("a,b,cc"));
