@@ -1,9 +1,9 @@
 name: cucumber-cpp ubuntu-latest
 
 on: 
-  pull_request:
-    branches: [ main ]
-  push:
+  #pull_request:
+  #  branches: [ main ]
+  #push:
   workflow_dispatch:
 
 env:
@@ -21,7 +21,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    -name: setup environment
+    - name: setup environment
       run: |
         sudo apt-get install libboost1.71-all-dev
   
