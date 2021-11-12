@@ -136,6 +136,16 @@ else()
     find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS ${CUKE_CORE_BOOST_LIBS} REQUIRED)
 endif()
 
+# according to: https://www.boost.org/users/history/version_1_76_0.html
+# C++11 (above) is required by boost::regex since v1.76.0
+if(Boost_VERSION VERSION_GREATER_EQUAL "1.76.0")
+    if(NOT DEFINED CMAKE_CXX_STANDARD)
+        set(CMAKE_CXX_STANDARD 11)
+    elseif(CMAKE_CXX_STANDARD LESS 11)
+        message(FATAL_ERROR "C++11 (above) is required by boost::regex version: ${Boost_VERSION}")
+    endif()
+endif()
+
 # Create import targets for CMake versions older than 3.5 (actually older FindBoost.cmake)
 if(Boost_USE_STATIC_LIBS)
     set(LIBRARY_TYPE STATIC)
