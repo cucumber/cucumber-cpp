@@ -26,7 +26,17 @@ set(CUKE_ENABLE_SANITIZER       "OFF" CACHE STRING "Sanitizer to use for checkin
 set_property(CACHE CUKE_ENABLE_SANITIZER PROPERTY STRINGS OFF "address" "thread" "undefined")
 option(CUKE_TESTS_VALGRIND      "Enable tests within Valgrind" OFF)
 set(GMOCK_SRC_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
-set(GMOCK_VER "1.7.0" CACHE STRING "Google Mock framework version to be used")
+set(GMOCK_VER "1.11.0" CACHE STRING "Google Mock framework version to be used")
+
+# according to: https://github.com/google/googletest/tree/release-1.10.0#18x-release
+# the 1.8.x is the last release that works with pre-C++11 compilers.
+if(GMOCK_VER VERSION_GREATER_EQUAL "1.9.0")
+    if(NOT DEFINED CMAKE_CXX_STANDARD)
+        set(CMAKE_CXX_STANDARD 11)
+    elseif(CMAKE_CXX_STANDARD LESS 11)
+        message(FATAL_ERROR "C++11 (above) is required by googletest version: ${GMOCK_VER}")
+    endif()
+endif()
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
 
