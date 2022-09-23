@@ -10,7 +10,7 @@ class CalculatorWidget : public QWidget {
 
 public:
 
-    CalculatorWidget(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    CalculatorWidget(QWidget *parent = 0);
 
     QString display();
 
