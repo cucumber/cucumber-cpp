@@ -11,8 +11,8 @@ if(TARGET GTest::GTest)
     endfunction()
 
     add_cucumber_executable(
-        features/step_definitions/TagSteps
-        features/step_definitions/TableSteps
+        features/step_definitions/TagSteps.cpp
+        features/step_definitions/TableSteps.cpp
     )
 endif()
 

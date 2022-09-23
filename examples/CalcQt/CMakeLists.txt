@@ -16,7 +16,7 @@ if(TARGET Qt::Core AND TARGET Qt::Gui AND TARGET Qt::Widgets AND TARGET Qt::Test
     add_executable(calcqt src/CalcQt.cpp)
     target_link_libraries(calcqt PRIVATE libcalcqt Qt::Widgets)
 
-    add_executable(QtTestCalculatorQtSteps features/step_definitions/QtTestCalculatorQtSteps)
+    add_executable(QtTestCalculatorQtSteps features/step_definitions/QtTestCalculatorQtSteps.cpp)
     target_link_libraries(QtTestCalculatorQtSteps PRIVATE libcalcqt Qt::Test cucumber-cpp)
 
     if(TARGET Boost::unit_test_framework)
@@ -25,7 +25,7 @@ if(TARGET Qt::Core AND TARGET Qt::Gui AND TARGET Qt::Widgets AND TARGET Qt::Test
     endif()
 
     if(TARGET GTest::GTest)
-        add_executable(GTestCalculatorQtSteps features/step_definitions/GTestCalculatorQtSteps)
+        add_executable(GTestCalculatorQtSteps features/step_definitions/GTestCalculatorQtSteps.cpp)
         target_link_libraries(GTestCalculatorQtSteps PRIVATE libcalcqt cucumber-cpp GTest::GTest Qt::Test)
     endif()
 
