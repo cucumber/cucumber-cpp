@@ -1,4 +1,4 @@
-Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) on how to contribute to Cucumber.
+Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/main/CONTRIBUTING.md) on how to contribute to Cucumber.
 
 ## In Git
 

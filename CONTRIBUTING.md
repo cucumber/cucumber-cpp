@@ -17,12 +17,12 @@ Before you can contribute, you have to be able to build the source and run tests
 
 The process for using git/github is similar to the [Github-Flow](http://scottchacon.com/2011/08/31/github-flow.html)
 
-* **Anything** in the master branch is good enough to release
+* **Anything** in the main branch is good enough to release
 * Working on nontrivial features
-    + Create a descriptively named branch off of master
+    + Create a descriptively named branch off of main
     + Commit to that branch locally and regularly
     + Push your work to the same named branch on the server
-    + Regularly rebase this branch from master to keep it up to date
+    + Regularly rebase this branch from main to keep it up to date
 * Open a pull request
     + When you need feedback or help
     + You think the branch is ready for merging (you can use the [hub](https://github.com/defunkt/hub#git-pull-request) command-line tool)
@@ -71,4 +71,4 @@ Here is an [Example](https://github.com/cucumber/bool/pull/12) of this process i
 - New development branch commit (e.g. [da60995](https://github.com/cucumber/cucumber-cpp/commit/da609956fcd42046e5182c6226acd7e53dd7754e)):
   - Add new "In Git" section to `CHANGELOG.md`
   - Commit with message `Preparing history file for next development release`
-- Push commits and tags to master
+- Push commits and tags to main

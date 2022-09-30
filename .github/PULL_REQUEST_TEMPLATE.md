@@ -37,4 +37,4 @@
 - [ ] I've added tests for my code.
 - [ ] I have verified whether my change requires changes to the documentation
 - [ ] My change either requires no documentation change or I've updated the documentation accordingly.
-- [ ] My branch has been rebased to master, keeping only relevant commits.
+- [ ] My branch has been rebased to main, keeping only relevant commits.
