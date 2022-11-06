@@ -6,7 +6,7 @@
 #include <QPushButton>
 #include <QSignalMapper>
 
-CalculatorWidget::CalculatorWidget(QWidget *parent, Qt::WindowFlags flags) : QWidget(parent, flags) {
+CalculatorWidget::CalculatorWidget(QWidget *parent) : QWidget(parent) {
     QGridLayout *layout = new QGridLayout(this);
     layout->setSizeConstraint(QLayout::SetFixedSize);
     setLayout(layout);
