@@ -28,6 +28,7 @@ environment:
     BOOST_LIBRARYDIR: C:\Libraries\boost_1_60_0\lib64-msvc-14.0
     CMAKE_GENERATOR: 'NMake Makefiles'
     QT_DIR: C:\Qt\5.8\msvc2015_64
+    VC_VARS: 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat'
 
 install:
 - git submodule init
@@ -37,7 +38,7 @@ install:
 - bundle install
 - if defined MINGW_ROOT set PATH=%MINGW_ROOT%\bin;C:\msys64\usr\bin\;%PATH%
 - if defined MINGW_ARCH bash -lc "pacman --needed --noconfirm -S mingw-w64-%MINGW_ARCH%-boost"
-- if defined MSVC_ARCH call "%VS140COMNTOOLS%\..\..\VC\vcvarsall.bat" %MSVC_ARCH%
+- if defined VC_VARS call "%VC_VARS%"
 
 build_script:
 - cmake -E make_directory build
