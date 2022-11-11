@@ -1,5 +1,5 @@
 version: "{branch}-ci-{build}"
-os: Visual Studio 2015
+os: Visual Studio 2022
 
 environment:
   matrix:
@@ -32,7 +32,7 @@ environment:
 install:
 - git submodule init
 - git submodule update
-- set PATH=C:\Ruby200\bin;%BOOST_LIBRARYDIR%;%PATH%
+- set PATH=%BOOST_LIBRARYDIR%;%PATH%
 - gem install bundle
 - bundle install
 - if defined MINGW_ROOT set PATH=%MINGW_ROOT%\bin;C:\msys64\usr\bin\;%PATH%
