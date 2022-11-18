@@ -39,6 +39,13 @@ install:
 - if defined MINGW_ROOT set PATH=%MINGW_ROOT%\bin;C:\msys64\usr\bin\;%PATH%
 - if defined MINGW_ARCH bash -lc "pacman --needed --noconfirm -S mingw-w64-%MINGW_ARCH%-boost"
 - if defined VC_VARS call "%VC_VARS%"
+- git clone https://github.com/google/googletest.git
+- cd googletest
+- mkdir build
+- cd build
+- cmake ..
+- cmake --build . --parallel
+- cmake --install .
 
 build_script:
 - cmake -E make_directory build
