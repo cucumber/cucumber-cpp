@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.23)
 
 if(NOT CMAKE_VERSION VERSION_LESS "3.3")
     # Don't ignore visibility related properties for non-SHARED targets
@@ -223,7 +223,7 @@ if(CUKE_ENABLE_GTEST)
     if(NOT GMOCK_ROOT)
         set(GMOCK_ROOT "${CMAKE_CURRENT_BINARY_DIR}/gmock")
     endif()
-    find_package(GMock REQUIRED)
+    find_package(GTest REQUIRED)
 endif()
 
 #
