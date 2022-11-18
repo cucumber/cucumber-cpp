@@ -219,6 +219,14 @@ endif()
 #
 
 if(CUKE_ENABLE_GTEST)
+    include(FetchContent)
+    FetchContent_Declare(
+      googletest
+      GIT_REPOSITORY https://github.com/google/googletest.git
+      GIT_TAG        release-1.11.0
+    )
+    FetchContent_MakeAvailable(googletest)
+
     set(GTEST_USE_STATIC_LIBS ${CUKE_USE_STATIC_GTEST})
     if(NOT GMOCK_ROOT)
         set(GMOCK_ROOT "${CMAKE_CURRENT_BINARY_DIR}/gmock")
