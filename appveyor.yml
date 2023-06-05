@@ -25,13 +25,13 @@ environment:
   - MSVC_ARCH: x64
     BOOST_ROOT: C:\Libraries\boost_1_77_0
     BOOST_INCLUDEDIR: C:\Libraries\boost_1_77_0\boost
-    BOOST_LIBRARYDIR: C:\Libraries\boost_1_77_0\lib64-msvc-14.0
+    BOOST_LIBRARYDIR: C:\Libraries\boost_1_77_0\lib64-msvc-14.2
     CMAKE_GENERATOR: 'NMake Makefiles'
     QT_DIR: C:\Qt\5.8\msvc2015_64
     VC_VARS: 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat'
 
 install:
-- dir /s /b C:\libboost*.lib
+#- dir /s /b C:\libboost*.lib
 - git submodule init
 - git submodule update
 - set PATH=%BOOST_LIBRARYDIR%;%PATH%
