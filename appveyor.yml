@@ -31,7 +31,7 @@ environment:
     VC_VARS: 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat'
 
 install:
-- find / -name "libboost*.lib"
+- dir /s /b C:\libboost*.lib
 - git submodule init
 - git submodule update
 - set PATH=%BOOST_LIBRARYDIR%;%PATH%
