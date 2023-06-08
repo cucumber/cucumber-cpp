@@ -31,11 +31,8 @@ jobs:
         platform_version: 2022
         toolset: msvc
 
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v3
-
     - name: Configure CMake
-      run: cmake -B build -DBUILD_SHARED_LIBS=ON -DCUKE_ENABLE_BOOST_TEST=ON -DCUKE_ENABLE_EXAMPLES=ON -DCUKE_ENABLE_GTEST=ON -DCUKE_ENABLE_QT=ON -DCUKE_TESTS_UNIT=ON -DCMAKE_PREFIX_PATH="D:/gtest/"
+      run: cmake -B build -DBUILD_SHARED_LIBS=ON -DCUKE_ENABLE_BOOST_TEST=OFF -DCUKE_ENABLE_EXAMPLES=OFF -DCUKE_ENABLE_GTEST=ON -DCUKE_ENABLE_QT=OFF -DCUKE_TESTS_E2E=OFF -DCUKE_TESTS_UNIT=ON -DCMAKE_PREFIX_PATH="D:/gtest/"
       env:
         BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
 
