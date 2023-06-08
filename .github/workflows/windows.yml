@@ -25,13 +25,16 @@ jobs:
 
     - name: Install Boost
       uses: MarkusJx/install-boost@v2.4.1
+      id: install-boost
       with:
         boost_version: 1.81.0
         platform_version: 2022
         toolset: msvc
 
     - name: Configure CMake
-      run: cmake -B build -DCUKE_ENABLE_EXAMPLES=ON -DBUILD_SHARED_LIBS=ON
+      run: cmake -B build -DCUKE_ENABLE_EXAMPLES=ON -DBUILD_SHARED_LIBS=ON -DCMAKE_PREFIX_PATH="D:/gtest/"
+      env:
+        BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
 
     - name: Build project
       run: cmake --build build
