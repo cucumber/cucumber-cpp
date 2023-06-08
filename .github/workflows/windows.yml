@@ -20,8 +20,24 @@ jobs:
     - name: Set up MSVC
       uses: microsoft/setup-msbuild@v1.0.2
 
-#    - name: Install CMake
-#      uses: Kitware/setup-cmake@v1
+    - name: Install Boost
+      run: |
+        curl -L -o boost.zip https://boostorg.jfrog.io/artifactory/main/release/1.82.0/source/boost_1_82_0.zip
+        7z x boost.zip -obuild/boost
+        rm boost.zip
+        cd build/boost/boost_1_82_0
+        bootstrap.bat
+        b2 install --prefix=C:/boost/
+
+    - name: Install Google Test
+      run: |
+        curl -L -o gtest.zip https://github.com/google/googletest/archive/refs/tags/v1.13.0.zip
+        7z x gtest.zip -obuild/gtest
+        rm gtest.zip
+        cd build/gtest/googletest-release-1.13.0
+        cmake .
+        cmake build . --parallel
+        cmake install --prefix=C:/googletest/
 
     - name: Configure CMake
       run: cmake -B build -DCUKE_ENABLE_EXAMPLES=ON -DBUILD_SHARED_LIBS=ON
