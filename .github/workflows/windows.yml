@@ -20,22 +20,15 @@ jobs:
     - name: Set up MSVC
       uses: microsoft/setup-msbuild@v1.0.2
 
+    - name: Install Google Test
+      uses: MarkusJx/googletest-installer@v1.1
+
     - name: Install Boost
       uses: MarkusJx/install-boost@v2.4.1
       with:
         boost_version: 1.81.0
         platform_version: 2022
         toolset: msvc
-
-    - name: Install Google Test
-      run: |
-        curl -L -o gtest.zip https://github.com/google/googletest/archive/refs/tags/v1.13.0.zip
-        7z x gtest.zip -obuild/gtest
-        rm gtest.zip
-        cd build/gtest/googletest-release-1.13.0
-        cmake .
-        cmake build . --parallel
-        cmake install --prefix=C:/googletest/
 
     - name: Configure CMake
       run: cmake -B build -DCUKE_ENABLE_EXAMPLES=ON -DBUILD_SHARED_LIBS=ON
