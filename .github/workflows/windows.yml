@@ -21,13 +21,12 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Install Boost
-      run: |
-        curl -L -o boost.zip https://boostorg.jfrog.io/artifactory/main/release/1.82.0/source/boost_1_82_0.zip
-        7z x boost.zip -obuild/boost
-        rm boost.zip
-        cd build/boost/boost_1_82_0
-        bootstrap.bat
-        b2 install --prefix=C:/boost/
+      uses: egor-tensin/build-boost@v1
+      with:
+        version: 1.82.0
+        libraries: thread system regex date_time program_options filesystem unit_test_framework
+        platform: x64
+        configuration: Release
 
     - name: Install Google Test
       run: |
