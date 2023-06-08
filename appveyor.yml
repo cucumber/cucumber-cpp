@@ -48,7 +48,7 @@ install:
 
 build_script:
 - cmake -E make_directory build
-- cmake -E chdir build cmake -G "%CMAKE_GENERATOR%" -DCUKE_ENABLE_EXAMPLES=ON -DBUILD_SHARED_LIBS=ON -DBOOST_ROOT="%BOOST_ROOT%" -DCMAKE_PREFIX_PATH="%QT_DIR%;C:/Program Files (x86)/googletest-distribution" ..
+- cmake -E chdir build cmake -G "%CMAKE_GENERATOR%" -DCUKE_ENABLE_EXAMPLES=ON -DBUILD_SHARED_LIBS=ON -DBOOST_ROOT="%BOOST_ROOT%" -DCMAKE_PREFIX_PATH="%QT_DIR%;\"C:/Program Files (x86)/googletest-distribution/\"" ..
 - cmake --build build
 
 test_script:
