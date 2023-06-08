@@ -1,0 +1,34 @@
+name: cucumber-cpp windows
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+  workflow_dispatch:
+
+env:
+  BUILD_TYPE: Debug
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up MSVC
+      uses: microsoft/setup-msbuild@v1.0.2
+
+#    - name: Install CMake
+#      uses: Kitware/setup-cmake@v1
+
+    - name: Configure CMake
+      run: cmake -B build -DCUKE_ENABLE_EXAMPLES=ON -DBUILD_SHARED_LIBS=ON
+
+    - name: Build project
+      run: cmake --build build
+
+    - name: Run tests
+      run: ctest -C Release --output-on-failure
+
