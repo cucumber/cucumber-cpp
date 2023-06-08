@@ -21,12 +21,11 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Install Boost
-      uses: egor-tensin/build-boost@v1
+      uses: MarkusJx/install-boost@v2.4.1
       with:
-        version: 1.82.0
-        libraries: thread system regex date_time program_options filesystem unit_test_framework
-        platform: x64
-        configuration: Release
+        boost_version: 1.81.0
+        platform_version: 2022
+        toolset: msvc
 
     - name: Install Google Test
       run: |
