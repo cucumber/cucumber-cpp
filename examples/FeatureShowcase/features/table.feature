@@ -1,6 +1,6 @@
 # language: en
 Feature: Table
-  In order to explain how to use tagbles
+  In order to explain how to use tables
   I have to make this silly example
 
   Scenario: No tag
