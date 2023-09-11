@@ -353,6 +353,11 @@ if(NOT (${GMOCK_LIBRARY_EXISTS} AND ${GTEST_LIBRARY_EXISTS}))
                 set(GMOCK_LIBRARY "${GMOCK_BIN_DIR}/lib/${CMAKE_CFG_INTDIR}/${GTEST_LIBRARY_PREFIX}gmock${CMAKE_STATIC_LIBRARY_SUFFIX}")
                 set(GMOCK_MAIN_LIBRARY "${GMOCK_BIN_DIR}/lib/${CMAKE_CFG_INTDIR}/${GTEST_LIBRARY_PREFIX}gmock_main${CMAKE_STATIC_LIBRARY_SUFFIX}")
             endif()
+            if(GMOCK_VER VERSION_GREATER_EQUAL "1.12.1")
+                set(GTEST_TAG_PREFIX "v")
+            else()
+                set(GTEST_TAG_PREFIX "release-")
+            endif()
             mark_as_advanced(GTEST_LIBRARY)
             mark_as_advanced(GTEST_MAIN_LIBRARY)
             mark_as_advanced(GMOCK_LIBRARY)
@@ -361,7 +366,7 @@ if(NOT (${GMOCK_LIBRARY_EXISTS} AND ${GTEST_LIBRARY_EXISTS}))
             externalproject_add(
                 gmock
                 GIT_REPOSITORY "https://github.com/google/googletest.git"
-                GIT_TAG "release-${GMOCK_VER}"
+                GIT_TAG "${GTEST_TAG_PREFIX}${GMOCK_VER}"
                 PREFIX ${GMOCK_ROOT}
                 INSTALL_COMMAND ""
                 LOG_DOWNLOAD ON
