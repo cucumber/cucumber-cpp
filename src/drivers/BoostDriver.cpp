@@ -3,7 +3,6 @@
 #include <sstream>
 
 #include <boost/function.hpp>
-#include <boost/scoped_ptr.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/unit_test_log_formatter.hpp>
 #include <boost/thread/once.hpp>

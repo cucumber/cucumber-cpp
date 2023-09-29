@@ -8,9 +8,7 @@
 #include <vector>
 
 #include <boost/config.hpp>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/make_shared.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
     #include <type_traits>
@@ -34,7 +32,7 @@ public:
 
     operator const void *() const;
 
-    boost::shared_ptr<const StepInfo> stepInfo;
+    std::shared_ptr<const StepInfo> stepInfo;
     submatches_type submatches;
 };
 
@@ -99,7 +97,7 @@ public:
     const std::string &getDescription() const;
 };
 
-class CUCUMBER_CPP_EXPORT StepInfo : public boost::enable_shared_from_this<StepInfo> {
+class CUCUMBER_CPP_EXPORT StepInfo : public std::enable_shared_from_this<StepInfo> {
 public:
     StepInfo(const std::string &stepMatcher, const std::string source);
 
@@ -178,10 +176,10 @@ public:
 
 class CUCUMBER_CPP_EXPORT StepManager {
 protected:
-    typedef std::map<step_id_type, boost::shared_ptr<const StepInfo> > steps_type;
+    typedef std::map<step_id_type, std::shared_ptr<const StepInfo> > steps_type;
 
 public:
-    static step_id_type addStep(boost::shared_ptr<StepInfo> stepInfo);
+    static step_id_type addStep(std::shared_ptr<StepInfo> stepInfo);
     static MatchResult stepMatches(const std::string &stepDescription);
     static const StepInfo* getStep(step_id_type id);
 protected:
@@ -213,7 +211,7 @@ static inline std::string toSourceString(const char *filePath, const int line) {
 
 template<class T>
 static int registerStep(const std::string &stepMatcher, const char *file, const int line) {
-   return StepManager::addStep(boost::make_shared< StepInvoker<T> >(stepMatcher, toSourceString(file, line)));
+   return StepManager::addStep(std::make_shared< StepInvoker<T> >(stepMatcher, toSourceString(file, line)));
 }
 
 template<typename T>

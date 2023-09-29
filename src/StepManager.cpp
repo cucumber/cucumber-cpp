@@ -13,7 +13,7 @@ StepInfo::StepInfo(const std::string &stepMatcher, const std::string source) :
 
 SingleStepMatch StepInfo::matches(const std::string &stepDescription) const {
     SingleStepMatch stepMatch;
-    boost::shared_ptr<RegexMatch> regexMatch(regex.find(stepDescription));
+    std::shared_ptr<RegexMatch> regexMatch(regex.find(stepDescription));
     if (regexMatch->matches()) {
         stepMatch.stepInfo = shared_from_this();
         stepMatch.submatches = regexMatch->getSubmatches();
@@ -104,14 +104,14 @@ const std::string &InvokeResult::getDescription() const {
 }
 
 
-step_id_type StepManager::addStep(boost::shared_ptr<StepInfo> stepInfo) {
+step_id_type StepManager::addStep(std::shared_ptr<StepInfo> stepInfo) {
     return steps().insert(std::make_pair(stepInfo->id, stepInfo)).first->first;
 }
 
 MatchResult StepManager::stepMatches(const std::string &stepDescription) {
     MatchResult matchResult;
     for (steps_type::iterator iter = steps().begin(); iter != steps().end(); ++iter) {
-        const boost::shared_ptr<const StepInfo>& stepInfo = iter->second;
+        const std::shared_ptr<const StepInfo>& stepInfo = iter->second;
         SingleStepMatch currentMatch = stepInfo->matches(stepDescription);
         if (currentMatch) {
             matchResult.addMatch(currentMatch);

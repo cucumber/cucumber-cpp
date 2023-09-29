@@ -3,7 +3,7 @@
 #include <gmock/gmock.h>
 
 #include <boost/filesystem/operations.hpp>
-#include <boost/scoped_ptr.hpp>
+#include <memory>
 #include <boost/thread.hpp>
 #include <boost/timer.hpp>
 
@@ -61,7 +61,7 @@ class SocketServerTest : public Test {
 
 protected:
     StrictMock<MockProtocolHandler> protocolHandler;
-    boost::scoped_ptr<thread> serverThread;
+    std::unique_ptr<thread> serverThread;
 
     virtual void SetUp() {
         SocketServer* server = createListeningServer();
@@ -82,7 +82,7 @@ protected:
 
 class TCPSocketServerTest : public SocketServerTest {
 protected:
-    boost::scoped_ptr<TCPSocketServer> server;
+    std::unique_ptr<TCPSocketServer> server;
 
     virtual SocketServer* createListeningServer() {
         server.reset(new TCPSocketServer(&protocolHandler));
@@ -144,7 +144,7 @@ TEST_F(TCPSocketServerTest, receiveAndSendsSingleLineMassages) {
 
 class TCPSocketServerLocalhostTest : public SocketServerTest {
 protected:
-  boost::scoped_ptr<TCPSocketServer> server;
+  std::unique_ptr<TCPSocketServer> server;
 
   virtual SocketServer* createListeningServer() {
       server.reset(new TCPSocketServer(&protocolHandler));
@@ -173,7 +173,7 @@ TEST_F(TCPSocketServerLocalhostTest, listensOnLocalhost) {
 #if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
 class UnixSocketServerTest : public SocketServerTest {
 protected:
-    boost::scoped_ptr<UnixSocketServer> server;
+    std::unique_ptr<UnixSocketServer> server;
 
     virtual SocketServer* createListeningServer() {
         fs::path socket = fs::temp_directory_path() / fs::unique_path();

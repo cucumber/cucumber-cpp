@@ -2,7 +2,7 @@
 #define CUKE_WIREPROTOCOL_COMMANDS_HPP_
 
 #include "WireProtocol.hpp"
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace cucumber {
 namespace internal {
@@ -19,7 +19,7 @@ class BeginScenarioCommand : public ScenarioCommand {
 public:
     BeginScenarioCommand(const CukeEngine::tags_type& tags);
 
-    boost::shared_ptr<WireResponse> run(CukeEngine& engine) const;
+    std::shared_ptr<WireResponse> run(CukeEngine& engine) const;
 };
 
 
@@ -27,7 +27,7 @@ class EndScenarioCommand : public ScenarioCommand {
 public:
     EndScenarioCommand(const CukeEngine::tags_type& tags);
 
-    boost::shared_ptr<WireResponse> run(CukeEngine& engine) const;
+    std::shared_ptr<WireResponse> run(CukeEngine& engine) const;
 };
 
 
@@ -38,7 +38,7 @@ private:
 public:
     StepMatchesCommand(const std::string & stepName);
 
-    boost::shared_ptr<WireResponse> run(CukeEngine& engine) const;
+    std::shared_ptr<WireResponse> run(CukeEngine& engine) const;
 };
 
 
@@ -53,7 +53,7 @@ public:
                   const CukeEngine::invoke_args_type& args,
                   const CukeEngine::invoke_table_type& tableArg);
 
-    boost::shared_ptr<WireResponse> run(CukeEngine& engine) const;
+    std::shared_ptr<WireResponse> run(CukeEngine& engine) const;
 };
 
 
@@ -66,13 +66,13 @@ public:
                        const std::string & name,
                        const std::string & multilineArgClass);
 
-    boost::shared_ptr<WireResponse> run(CukeEngine& engine) const;
+    std::shared_ptr<WireResponse> run(CukeEngine& engine) const;
 };
 
 
 class FailingCommand : public WireCommand {
 public:
-    boost::shared_ptr<WireResponse> run(CukeEngine& engine) const;
+    std::shared_ptr<WireResponse> run(CukeEngine& engine) const;
 };
 
 }

@@ -4,7 +4,7 @@
 #include <cucumber-cpp/internal/connectors/wire/WireProtocol.hpp>
 #include <iostream>
 #include <boost/program_options.hpp>
-#include <boost/scoped_ptr.hpp>
+#include <memory>
 
 namespace {
 
@@ -13,7 +13,7 @@ void acceptWireProtocol(const std::string& host, int port, const std::string& un
     CukeEngineImpl cukeEngine;
     JsonSpiritWireMessageCodec wireCodec;
     WireProtocolHandler protocolHandler(wireCodec, cukeEngine);
-    boost::scoped_ptr<SocketServer> server;
+    std::unique_ptr<SocketServer> server;
 #if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
     if (!unixPath.empty())
     {

@@ -94,7 +94,7 @@ TEST_F(StepCallChainTest, failsIfNoStep) {
 }
 
 TEST_F(StepCallChainTest, stepExecutionReturnsTheExpectedResult) {
-    boost::shared_ptr<MarkingAroundStepHook> hook(boost::make_shared<MarkingAroundStepHook>());
+    std::shared_ptr<MarkingAroundStepHook> hook(std::make_shared<MarkingAroundStepHook>());
 
     execStepAndCheckSuccess();
 
@@ -109,10 +109,10 @@ TEST_F(StepCallChainTest, stepExecutionReturnsTheExpectedResult) {
 }
 
 TEST_F(StepCallChainTest, aroundHooksAreInvokedInTheCorrectOrder) {
-    boost::shared_ptr<MarkingAroundStepHook>
-        hook1(boost::make_shared<MarkingAroundStepHook>("1", &markers))
-      , hook2(boost::make_shared<MarkingAroundStepHook>("2", &markers))
-      , hook3(boost::make_shared<MarkingAroundStepHook>("3", &markers))
+    std::shared_ptr<MarkingAroundStepHook>
+        hook1(std::make_shared<MarkingAroundStepHook>("1", &markers))
+      , hook2(std::make_shared<MarkingAroundStepHook>("2", &markers))
+      , hook3(std::make_shared<MarkingAroundStepHook>("3", &markers))
       ;
 
     aroundHooks.push_back(hook1);
@@ -134,10 +134,10 @@ TEST_F(StepCallChainTest, argsArePassedToTheStep) {
 }
 
 TEST_F(StepCallChainTest, aroundHooksCanStopTheCallChain) {
-    boost::shared_ptr<MarkingAroundStepHook>
-        hook1(boost::make_shared<MarkingAroundStepHook >("1", &markers))
-      , hook2(boost::make_shared<BlockingAroundStepHook>("2", &markers))
-      , hook3(boost::make_shared<MarkingAroundStepHook >("3", &markers))
+    std::shared_ptr<MarkingAroundStepHook>
+        hook1(std::make_shared<MarkingAroundStepHook >("1", &markers))
+      , hook2(std::make_shared<BlockingAroundStepHook>("2", &markers))
+      , hook3(std::make_shared<MarkingAroundStepHook >("3", &markers))
       ;
 
     aroundHooks.push_back(hook1);

@@ -3,12 +3,11 @@
 
 #include <sstream>
 #include <boost/algorithm/string.hpp>
-#include <boost/make_shared.hpp>
 
 namespace cucumber {
 namespace internal {
 
-shared_ptr<Scenario> CukeCommands::currentScenario;
+std::shared_ptr<Scenario> CukeCommands::currentScenario;
 
 CukeCommands::CukeCommands() : hasStarted(false) {
 }
@@ -25,7 +24,7 @@ void CukeCommands::beginScenario(const TagExpression::tag_list& tags) {
         HookRegistrar::execBeforeAllHooks();
     }
 
-    currentScenario = boost::make_shared<Scenario>(tags);
+    currentScenario = std::make_shared<Scenario>(tags);
     HookRegistrar::execBeforeHooks(currentScenario.get());
 }
 

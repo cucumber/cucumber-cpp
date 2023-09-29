@@ -5,7 +5,7 @@
 
 #include "CukeCommandsFixture.hpp"
 
-#include <boost/make_shared.hpp>
+#include <memory>
 #include <sstream>
 
 using namespace cucumber::internal;
@@ -64,10 +64,10 @@ static const InvokeArgs NO_INVOKE_ARGS;
 
 class HookRegistrationTest : public CukeCommandsFixture {
 protected:
-    shared_ptr<Scenario> emptyScenario;
+    std::shared_ptr<Scenario> emptyScenario;
 
     HookRegistrationTest() {
-        emptyScenario = boost::make_shared<Scenario>();
+        emptyScenario = std::make_shared<Scenario>();
     }
 
     Scenario *getEmptyScenario() {

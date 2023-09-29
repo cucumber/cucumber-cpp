@@ -5,10 +5,10 @@
 #include <cucumber-cpp/internal/drivers/GenericDriver.hpp>
 #include "StepManagerTestDouble.hpp"
 
-#include <boost/make_shared.hpp>
+#include <gtest/gtest.h>
+#include <memory>
 
 using namespace cucumber::internal;
-using boost::shared_ptr;
 
 class EmptyStep : public GenericStep {
     void body() {}
@@ -32,7 +32,7 @@ protected:
 
     template<class T>
     void addStepToManager(const std::string &matcher) {
-        stepId = StepManager::addStep(boost::make_shared<StepInvoker<T> >(matcher, ""));
+        stepId = StepManager::addStep(std::make_shared<StepInvoker<T> >(matcher, ""));
     }
 
     virtual void TearDown() {
