@@ -28,14 +28,12 @@ option(CUKE_TESTS_VALGRIND      "Enable tests within Valgrind" OFF)
 set(GMOCK_SRC_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
 set(GMOCK_VER "1.11.0" CACHE STRING "Google Mock framework version to be used")
 
-# according to: https://github.com/google/googletest/tree/release-1.10.0#18x-release
-# the 1.8.x is the last release that works with pre-C++11 compilers.
-if(GMOCK_VER VERSION_GREATER_EQUAL "1.9.0")
-    if(NOT DEFINED CMAKE_CXX_STANDARD)
-        set(CMAKE_CXX_STANDARD 11)
-    elseif(CMAKE_CXX_STANDARD LESS 11)
-        message(FATAL_ERROR "C++11 (above) is required by googletest version: ${GMOCK_VER}")
-    endif()
+if(NOT DEFINED CMAKE_CXX_STANDARD)
+    set(CMAKE_CXX_STANDARD 14)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    set(CMAKE_CXX_EXTENSIONS OFF)
+elseif(CMAKE_CXX_STANDARD LESS 14)
+    message(FATAL_ERROR "C++14 (above) is required")
 endif()
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
@@ -136,16 +134,6 @@ else()
     find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS ${CUKE_CORE_BOOST_LIBS} REQUIRED)
 endif()
 
-# according to: https://www.boost.org/users/history/version_1_76_0.html
-# C++11 (above) is required by boost::regex since v1.76.0
-if(Boost_VERSION VERSION_GREATER_EQUAL "1.76.0")
-    if(NOT DEFINED CMAKE_CXX_STANDARD)
-        set(CMAKE_CXX_STANDARD 11)
-    elseif(CMAKE_CXX_STANDARD LESS 11)
-        message(FATAL_ERROR "C++11 (above) is required by boost::regex version: ${Boost_VERSION}")
-    endif()
-endif()
-
 # Create import targets for CMake versions older than 3.5 (actually older FindBoost.cmake)
 if(Boost_USE_STATIC_LIBS)
     set(LIBRARY_TYPE STATIC)
@@ -238,10 +226,6 @@ if(CUKE_ENABLE_QT)
 
     if(Qt5Core_FOUND AND Qt5Gui_FOUND AND Qt5Widgets_FOUND AND Qt5Test_FOUND)
         message(STATUS "Found Qt version: ${Qt5Core_VERSION_STRING}")
-        if(NOT Qt5Core_VERSION_STRING VERSION_LESS 5.7 AND (NOT DEFINED CMAKE_CXX_STANDARD OR NOT CMAKE_CXX_STANDARD STREQUAL 98))
-            message(STATUS "C++11 is needed from Qt version 5.7.0, building with c++11 enabled")
-            set(CMAKE_CXX_STANDARD 11)
-        endif()
         if(Qt5Core_VERSION_STRING VERSION_LESS 5.15.0)
             add_library(Qt::Core    INTERFACE IMPORTED)
             add_library(Qt::Gui     INTERFACE IMPORTED)
