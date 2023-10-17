@@ -21,7 +21,7 @@ If you want to contribute code to the project, guidelines are in the
 
 It relies on a few executables:
 
-* [cmake](https://cmake.org/download/) 3.1 or later.
+* [cmake](https://cmake.org/download/) 3.5 or later.
   Required to setup environment and build software
 
 It relies on a few libraries:
