@@ -1,0 +1,54 @@
+name: run all
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: setup environment
+      run: |
+        sudo apt-get install --no-install-recommends \
+        cmake \
+        g++ \
+        git \
+        libboost-date-time-dev \
+        libboost-filesystem-dev \
+        libboost-program-options-dev \
+        libboost-regex-dev \
+        libboost-system-dev \
+        libboost-test-dev \
+        libboost-thread-dev \
+        make \
+        ninja-build \
+        qtbase5-dev \
+        ruby \
+        ruby-dev \
+        xvfb
+
+    - name: install ruby tools
+      run: |
+        sudo gem install bundler
+        sudo bundle install
+
+    - name: install gtest
+      run: |
+        git clone https://github.com/google/googletest.git
+        cd googletest
+        mkdir build
+        cd build
+        cmake ../
+        cmake --build . --parallel
+        sudo cmake --install .
+
+    - name: build and run
+      run: |
+        export DISPLAY=:99
+        ./run-all.sh
+
