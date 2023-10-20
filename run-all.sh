@@ -85,6 +85,6 @@ echo "unix: ${SOCK}" > examples/FeatureShowcase/features/step_definitions/cucumb
 wait %
 
 mkdir -p coverage
-gcovr build/ --html-details --output coverage/index.html
+gcovr build/ --html-details --output coverage/index.html --xml coverage/cobertura.xml
 
 cmake --build build --target install

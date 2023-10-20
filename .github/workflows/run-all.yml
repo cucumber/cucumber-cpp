@@ -56,3 +56,17 @@ jobs:
         export DISPLAY=:99
         ./run-all.sh
 
+    - name: code coverage summary report
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: coverage/cobertura.xml
+        indicators: false
+        hide_complexity: true
+        format: markdown
+        output: file
+
+    - name: publish code coverage summary
+      run: |
+        echo '# Code Coverage Report' >> $GITHUB_STEP_SUMMARY
+        cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+
