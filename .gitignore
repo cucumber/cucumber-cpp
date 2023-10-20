@@ -7,6 +7,8 @@
 
 # Build artifacts
 /build/
+/coverage/
+/.local/
 
 # vim swap files
 *.swp
