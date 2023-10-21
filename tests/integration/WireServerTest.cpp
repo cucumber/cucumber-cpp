@@ -4,23 +4,21 @@
 
 #include <boost/filesystem/operations.hpp>
 #include <memory>
-#include <boost/thread.hpp>
-#include <boost/timer.hpp>
+#include <thread>
+#include <chrono>
 
 #include <stdlib.h>
 #include <sstream>
 
 using namespace cucumber::internal;
-using namespace boost::posix_time;
 using namespace boost::asio::ip;
 #if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
 using namespace boost::asio::local;
 #endif
 using namespace testing;
-using boost::thread;
 namespace fs = boost::filesystem;
 
-static const time_duration THREAD_TEST_TIMEOUT = milliseconds(4000);
+static const auto THREAD_TEST_TIMEOUT = std::chrono::milliseconds(4000);
 
 MATCHER(IsConnected, std::string(negation ? "is not" : "is") + " connected") {
     return arg.good();
@@ -31,7 +29,8 @@ MATCHER(HasTerminated, "") {
 }
 
 MATCHER(EventuallyTerminates, "") {
-    return arg->timed_join(THREAD_TEST_TIMEOUT);
+    const std::future_status status = arg.wait_for(THREAD_TEST_TIMEOUT);
+    return status == std::future_status::ready;
 }
 
 MATCHER_P(EventuallyReceives, value, "") {
@@ -61,18 +60,15 @@ class SocketServerTest : public Test {
 
 protected:
     StrictMock<MockProtocolHandler> protocolHandler;
-    std::unique_ptr<thread> serverThread;
+    std::future<void> serverThread{};
 
     virtual void SetUp() {
         SocketServer* server = createListeningServer();
-        serverThread.reset(new thread(&SocketServer::acceptOnce, server));
+        serverThread = std::async(std::launch::async, &SocketServer::acceptOnce, server);
     }
 
     virtual void TearDown() {
-        if (serverThread) {
-            serverThread->timed_join(THREAD_TEST_TIMEOUT);
-            serverThread.reset();
-        }
+        serverThread.wait_for(THREAD_TEST_TIMEOUT);
         destroyListeningServer();
     }
 

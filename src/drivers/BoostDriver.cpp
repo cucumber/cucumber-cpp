@@ -5,7 +5,7 @@
 #include <boost/function.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/unit_test_log_formatter.hpp>
-#include <boost/thread/once.hpp>
+#include <mutex>
 #include <boost/version.hpp>
 
 using namespace ::boost::unit_test;
@@ -104,8 +104,8 @@ const InvokeResult CukeBoostLogInterceptor::getResult() const {
 }
 
 const InvokeResult BoostStep::invokeStepBody() {
-    static boost::once_flag initialized;
-    boost::call_once(initialized, BoostStep::initBoostTest);
+    static std::once_flag initialized;
+    std::call_once(initialized, BoostStep::initBoostTest);
 
     logInterceptor->reset();
     runWithMasterSuite();
