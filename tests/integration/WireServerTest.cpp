@@ -17,7 +17,6 @@ using namespace boost::asio::ip;
 using namespace boost::asio::local;
 #endif
 using namespace testing;
-using boost::bind;
 using boost::thread;
 namespace fs = boost::filesystem;
 

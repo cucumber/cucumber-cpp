@@ -2,7 +2,6 @@
 
 #include <sstream>
 
-#include <boost/bind.hpp>
 #include <boost/function.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/test/unit_test.hpp>
@@ -129,7 +128,7 @@ void BoostStep::initBoostTest() {
 }
 
 void BoostStep::runWithMasterSuite() {
-    currentTestBody = boost::bind(&BoostStep::body, this);
+    currentTestBody = std::bind(&BoostStep::body, this);
     
     ::boost::unit_test::framework::run(testCase, false);
 
