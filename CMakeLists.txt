@@ -30,11 +30,11 @@ set(GMOCK_SRC_DIR "" CACHE STRING "Google Mock framework sources path (otherwise
 set(GMOCK_VER "1.11.0" CACHE STRING "Google Mock framework version to be used")
 
 if(NOT DEFINED CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 14)
+    set(CMAKE_CXX_STANDARD 17)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
     set(CMAKE_CXX_EXTENSIONS OFF)
-elseif(CMAKE_CXX_STANDARD LESS 14)
-    message(FATAL_ERROR "C++14 (above) is required")
+elseif(CMAKE_CXX_STANDARD LESS 17)
+    message(FATAL_ERROR "C++17 (above) is required")
 endif()
 
 if(CUKE_CODE_COVERAGE)
@@ -122,7 +122,7 @@ else()
 endif()
 
 set(Boost_USE_STATIC_RUNTIME OFF)
-set(CUKE_CORE_BOOST_LIBS system regex program_options filesystem)
+set(CUKE_CORE_BOOST_LIBS system regex program_options)
 if(CUKE_ENABLE_BOOST_TEST)
     # "An external test runner utility is required to link with dynamic library" (Boost User's Guide)
     set(Boost_USE_STATIC_LIBS OFF)
@@ -162,13 +162,6 @@ if(Boost_SYSTEM_LIBRARY AND NOT TARGET Boost::system)
             "COMPILE_DEFINITIONS" BOOST_ERROR_CODE_HEADER_ONLY=1
         )
     endif()
-endif()
-if(Boost_FILESYSTEM_LIBRARY AND NOT TARGET Boost::filesystem)
-    add_library(Boost::filesystem ${LIBRARY_TYPE} IMPORTED)
-    set_target_properties(Boost::filesystem PROPERTIES
-        "IMPORTED_LOCATION" "${Boost_FILESYSTEM_LIBRARY}"
-        "INTERFACE_LINK_LIBRARIES" "Boost::system;Boost::boost"
-    )
 endif()
 if(Boost_REGEX_LIBRARY AND NOT TARGET Boost::regex)
     add_library(Boost::regex ${LIBRARY_TYPE} IMPORTED)

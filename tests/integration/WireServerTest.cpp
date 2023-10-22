@@ -2,7 +2,7 @@
 
 #include <gmock/gmock.h>
 
-#include <boost/filesystem/operations.hpp>
+#include <filesystem>
 #include <memory>
 #include <thread>
 #include <chrono>
@@ -16,7 +16,6 @@ using namespace boost::asio::ip;
 using namespace boost::asio::local;
 #endif
 using namespace testing;
-namespace fs = boost::filesystem;
 
 static const auto THREAD_TEST_TIMEOUT = std::chrono::milliseconds(4000);
 
@@ -172,9 +171,12 @@ protected:
     std::unique_ptr<UnixSocketServer> server;
 
     virtual SocketServer* createListeningServer() {
-        fs::path socket = fs::temp_directory_path() / fs::unique_path();
+      char filename[L_tmpnam];
+      if (!std::tmpnam(filename)) {
+          throw std::runtime_error("unable to create name for temporary file");
+      }
         server.reset(new UnixSocketServer(&protocolHandler));
-        server->listen(socket.string());
+        server->listen(filename);
         return server.get();
     }
 
@@ -195,7 +197,7 @@ TEST_F(UnixSocketServerTest, fullLifecycle) {
     EXPECT_CALL(protocolHandler, handle("X")).WillRepeatedly(Return("Y"));
 
     // socket created at startup
-    ASSERT_TRUE(fs::exists(socketName.path()));
+    ASSERT_TRUE(std::filesystem::exists(socketName.path()));
 
     // traffic flows
     stream_protocol::iostream client(socketName);
@@ -208,6 +210,6 @@ TEST_F(UnixSocketServerTest, fullLifecycle) {
 
     // socket removed by destructor
     TearDown();
-    EXPECT_FALSE(fs::exists(socketName.path()));
+    EXPECT_FALSE(std::filesystem::exists(socketName.path()));
 }
 #endif

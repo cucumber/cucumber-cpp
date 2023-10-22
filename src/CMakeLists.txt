@@ -85,7 +85,6 @@ foreach(TARGET
             Boost::boost
             Boost::regex
         PRIVATE
-            Boost::filesystem
             ${CUKE_EXTRA_PRIVATE_LIBRARIES}
     )
     # Don't export or import symbols for statically linked libraries

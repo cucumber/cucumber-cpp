@@ -1,5 +1,5 @@
 #include <cucumber-cpp/internal/connectors/wire/WireServer.hpp>
-#include <boost/filesystem/operations.hpp>
+#include <filesystem>
 
 namespace cucumber {
 namespace internal {
@@ -80,8 +80,8 @@ UnixSocketServer::UnixSocketServer(const ProtocolHandler *protocolHandler) :
 }
 
 void UnixSocketServer::listen(const std::string& unixPath) {
-    if (boost::filesystem::status(unixPath).type() == boost::filesystem::socket_file)
-        boost::filesystem::remove(unixPath);
+    if (std::filesystem::status(unixPath).type() == std::filesystem::file_type::socket)
+        std::filesystem::remove(unixPath);
 
     doListen(acceptor, stream_protocol::endpoint(unixPath));
 }
@@ -99,7 +99,7 @@ UnixSocketServer::~UnixSocketServer() {
         return;
     std::string path = acceptor.local_endpoint().path();
     // NOTE: this will fail if this path got deleted manually or represents an abstract-namespace socket
-    boost::filesystem::remove(path);
+    std::filesystem::remove(path);
 }
 #endif
 

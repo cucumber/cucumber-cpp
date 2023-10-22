@@ -22,7 +22,6 @@ jobs:
         g++ \
         gcovr \
         git \
-        libboost-filesystem-dev \
         libboost-program-options-dev \
         libboost-regex-dev \
         libboost-system-dev \
