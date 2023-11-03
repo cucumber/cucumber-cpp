@@ -3,9 +3,6 @@
 #include "../utils/HookRegistrationFixture.hpp"
 #include <cucumber-cpp/internal/hook/HookMacros.hpp>
 
-#include <boost/assign.hpp>
-using boost::assign::list_of;
-
 BEFORE("@a") { beforeHookCallMarker << "A"; }
 BEFORE("@a","@b") { beforeHookCallMarker << "B"; }
 BEFORE("@a,@b") { beforeHookCallMarker << "C"; }
@@ -34,7 +31,7 @@ TEST_F(HookRegistrationTest, noTaggedHooksAreInvokedIfNoScenarioTag) {
 }
 
 TEST_F(HookRegistrationTest, orTagsAreEnforced) {
-    const TagExpression::tag_list tags = list_of("b");
+    const TagExpression::tag_list tags = {"b"};
     beginScenario(tags);
     invokeStep();
     endScenario();
@@ -45,7 +42,7 @@ TEST_F(HookRegistrationTest, orTagsAreEnforced) {
 }
 
 TEST_F(HookRegistrationTest, andTagsAreEnforced) {
-    const TagExpression::tag_list tags = list_of("a")("b");
+    const TagExpression::tag_list tags = {"a", "b"};
     beginScenario(tags);
     invokeStep();
     endScenario();

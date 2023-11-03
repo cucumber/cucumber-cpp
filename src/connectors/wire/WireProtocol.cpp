@@ -5,8 +5,6 @@
 #include <json_spirit/json_spirit_writer_template.h>
 #include <json_spirit/json_spirit_writer_options.h>
 
-#include <boost/assign/list_of.hpp>
-
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -167,14 +165,13 @@ namespace {
     }
 }
 
-static const std::map<std::string, CommandDecoder> commandDecodersMap =
-  boost::assign::map_list_of<std::string, CommandDecoder>
-    ("begin_scenario", BeginScenarioDecoder)
-    ("end_scenario"  , EndScenarioDecoder  )
-    ("step_matches"  , StepMatchesDecoder  )
-    ("invoke"        , InvokeDecoder       )
-    ("snippet_text"  , SnippetTextDecoder  )
-  ;
+static const std::map<std::string, CommandDecoder> commandDecodersMap = {
+    {"begin_scenario", BeginScenarioDecoder},
+    {"end_scenario"  , EndScenarioDecoder  },
+    {"step_matches"  , StepMatchesDecoder  },
+    {"invoke"        , InvokeDecoder       },
+    {"snippet_text"  , SnippetTextDecoder  },
+};
 
 JsonSpiritWireMessageCodec::JsonSpiritWireMessageCodec() {}
 

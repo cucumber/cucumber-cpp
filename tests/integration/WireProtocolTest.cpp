@@ -2,16 +2,12 @@
 #include <cucumber-cpp/internal/connectors/wire/WireProtocolCommands.hpp>
 
 #include <gmock/gmock.h>
-#include <boost/assign/list_of.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <typeinfo>
 
 using namespace cucumber::internal;
 using namespace std;
 using namespace testing;
-
-using boost::assign::list_of;
 
 class MockCukeEngine : public CukeEngine {
 public:

@@ -1,8 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <boost/assign/list_of.hpp>
-using namespace boost::assign;
-
 #include <cucumber-cpp/internal/utils/Regex.hpp>
 using namespace cucumber::internal;
 

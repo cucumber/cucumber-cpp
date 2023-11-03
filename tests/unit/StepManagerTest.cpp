@@ -2,11 +2,9 @@
 
 #include "../utils/StepManagerTestDouble.hpp"
 
-#include <boost/assign/list_of.hpp>
 #include <map>
 
 using namespace std;
-using namespace boost::assign;
 using namespace cucumber::internal;
 
 
@@ -113,11 +111,11 @@ TEST_F(StepManagerTest, extractsParamsFromRegExMatchers) {
     StepManager::addStepDefinition("match no params");
     EXPECT_TRUE(extractedParamsAre("match no params", no_params));
     StepManager::addStepDefinition("match the (\\w+) param");
-    EXPECT_TRUE(extractedParamsAre("match the first param", map_list_of(10, "first")));
+    EXPECT_TRUE(extractedParamsAre("match the first param", {{10, "first"}}));
     StepManager::addStepDefinition("match a (.+)$");
-    EXPECT_TRUE(extractedParamsAre("match a  string  with  spaces  ", map_list_of(8, " string  with  spaces  ")));
+    EXPECT_TRUE(extractedParamsAre("match a  string  with  spaces  ", {{8, " string  with  spaces  "}}));
     StepManager::addStepDefinition("match params (\\w+), (\\w+) and (\\w+)");
-    EXPECT_TRUE(extractedParamsAre("match params A, B and C", map_list_of(13, "A")(16, "B")(22, "C")));
+    EXPECT_TRUE(extractedParamsAre("match params A, B and C", {{13, "A"},{16, "B"},{22, "C"}}));
 }
 
 TEST_F(StepManagerTest, handlesMultipleMatches) {
