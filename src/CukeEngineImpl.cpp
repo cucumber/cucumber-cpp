@@ -1,6 +1,5 @@
 #include "cucumber-cpp/internal/CukeEngineImpl.hpp"
 
-#include <boost/foreach.hpp>
 
 namespace cucumber {
 namespace internal {
@@ -24,12 +23,12 @@ namespace {
 std::vector<StepMatch> CukeEngineImpl::stepMatches(const std::string & name) const {
     std::vector<StepMatch> engineResult;
     MatchResult commandResult = cukeCommands.stepMatches(name);
-    BOOST_FOREACH(const SingleStepMatch commandMatch, commandResult.getResultSet()) {
+    for(const SingleStepMatch & commandMatch : commandResult.getResultSet()) {
         StepMatch engineMatch;
         engineMatch.id = convertId(commandMatch.stepInfo->id);
         engineMatch.source = commandMatch.stepInfo->source;
         engineMatch.regexp = commandMatch.stepInfo->regex.str();
-        BOOST_FOREACH(const RegexSubmatch commandMatchArg, commandMatch.submatches) {
+        for(const RegexSubmatch & commandMatchArg : commandMatch.submatches) {
             StepMatchArg engineMatchArg;
             engineMatchArg.value = commandMatchArg.value;
             engineMatchArg.position = commandMatchArg.position;
@@ -49,7 +48,7 @@ void CukeEngineImpl::invokeStep(const std::string & id, const invoke_args_type &
 
     InvokeArgs commandArgs;
     try {
-        BOOST_FOREACH(const std::string a, args) {
+        for(const std::string & a : args) {
             commandArgs.addArg(a);
         }
 

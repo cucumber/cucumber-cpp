@@ -6,7 +6,6 @@
 #include <json_spirit/json_spirit_writer_options.h>
 
 #include <boost/assign/list_of.hpp>
-#include <boost/foreach.hpp>
 
 #include <iostream>
 #include <string>
@@ -260,11 +259,11 @@ namespace {
 
         void visit(const StepMatchesResponse& response) {
             mArray jsonMatches;
-            BOOST_FOREACH(StepMatch m, response.getMatchingSteps()) {
+            for(const StepMatch & m : response.getMatchingSteps()) {
                 mObject jsonM;
                 jsonM["id"] = m.id;
                 mArray jsonArgs;
-                BOOST_FOREACH(StepMatchArg ma, m.args) {
+                for(const StepMatchArg & ma : m.args) {
                     mObject jsonMa;
                     jsonMa["val"] = ma.value;
                     jsonMa["pos"] = static_cast<boost::int64_t>(ma.position);
