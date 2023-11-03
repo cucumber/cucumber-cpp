@@ -47,11 +47,11 @@ const std::string CukeCommands::snippetText(const std::string stepKeyword, const
 }
 
 const std::string CukeCommands::escapeRegex(const std::string reg) const {
-    return regex_replace(reg, boost::regex("[\\|\\(\\)\\[\\]\\{\\}\\^\\$\\*\\+\\?\\.\\\\]"), "\\\\&", boost::match_default | boost::format_sed);
+    return regex_replace(reg, std::regex("[\\|\\(\\)\\[\\]\\{\\}\\^\\$\\*\\+\\?\\.\\\\]"), "\\\\&", std::regex_constants::match_default | std::regex_constants::format_sed);
 }
 
 const std::string CukeCommands::escapeCString(const std::string str) const {
-    return regex_replace(str, boost::regex("[\"\\\\]"), "\\\\&", boost::match_default | boost::format_sed);
+    return regex_replace(str, std::regex("[\"\\\\]"), "\\\\&", std::regex_constants::match_default | std::regex_constants::format_sed);
 }
 
 MatchResult CukeCommands::stepMatches(const std::string description) const {
