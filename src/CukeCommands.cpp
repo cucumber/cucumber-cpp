@@ -2,7 +2,6 @@
 #include "cucumber-cpp/internal/hook/HookRegistrar.hpp"
 
 #include <sstream>
-#include <boost/algorithm/string.hpp>
 
 namespace cucumber {
 namespace internal {
@@ -36,7 +35,9 @@ void CukeCommands::endScenario() {
 
 const std::string CukeCommands::snippetText(const std::string stepKeyword, const std::string stepName) const {
     std::stringstream text;
-    text << boost::to_upper_copy(stepKeyword)
+    std::string stepKeywordUpperCase;
+    std::transform(stepKeyword.begin(), stepKeyword.end(), std::back_inserter(stepKeywordUpperCase), ::toupper);
+    text << stepKeywordUpperCase
         << "(\""
         << escapeCString("^" + escapeRegex(stepName) + "$")
         << "\") {\n"
