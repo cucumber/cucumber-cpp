@@ -22,6 +22,7 @@ cmake -E make_directory build
 cmake -E chdir build cmake \
     -G Ninja \
     -DCUKE_ENABLE_EXAMPLES=on \
+    -DCUKE_CODE_COVERAGE=on \
     -DBUILD_SHARED_LIBS="${BUILD_SHARED_LIBS:-OFF}" \
     -DCMAKE_INSTALL_PREFIX=${HOME}/.local \
     ${CMAKE_PREFIX_PATH:+"-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"} \
@@ -82,5 +83,8 @@ echo "unix: ${SOCK}" > examples/FeatureShowcase/features/step_definitions/cucumb
 "${TEST}" --unix "${SOCK}" > /dev/null &
 (cd examples/FeatureShowcase; cucumber)
 wait %
+
+mkdir -p coverage
+gcovr build/ --html-details --output coverage/index.html --xml coverage/cobertura.xml
 
 cmake --build build --target install
