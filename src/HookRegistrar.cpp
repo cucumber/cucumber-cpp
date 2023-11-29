@@ -36,7 +36,7 @@ void UnconditionalHook::invokeHook(Scenario*, CallableStep *) {
     body();
 }
 
-void HookRegistrar::addBeforeHook(boost::shared_ptr<BeforeHook> beforeHook) {
+void HookRegistrar::addBeforeHook(std::shared_ptr<BeforeHook> beforeHook) {
     beforeHooks().push_back(beforeHook);
 }
 
@@ -50,7 +50,7 @@ void HookRegistrar::execBeforeHooks(Scenario *scenario) {
 }
 
 
-void HookRegistrar::addAroundStepHook(boost::shared_ptr<AroundStepHook> aroundStepHook) {
+void HookRegistrar::addAroundStepHook(std::shared_ptr<AroundStepHook> aroundStepHook) {
     aroundStepHooks().push_front(aroundStepHook);
 }
 
@@ -64,7 +64,7 @@ InvokeResult HookRegistrar::execStepChain(Scenario *scenario, const StepInfo* co
     return scc.exec();
 }
 
-void HookRegistrar::addAfterStepHook(boost::shared_ptr<AfterStepHook> afterStepHook) {
+void HookRegistrar::addAfterStepHook(std::shared_ptr<AfterStepHook> afterStepHook) {
     afterStepHooks().push_front(afterStepHook);
 }
 
@@ -78,7 +78,7 @@ void HookRegistrar::execAfterStepHooks(Scenario *scenario) {
 }
 
 
-void HookRegistrar::addAfterHook(boost::shared_ptr<AfterHook> afterHook) {
+void HookRegistrar::addAfterHook(std::shared_ptr<AfterHook> afterHook) {
     afterHooks().push_front(afterHook);
 }
 
@@ -103,7 +103,7 @@ HookRegistrar::hook_list_type& HookRegistrar::beforeAllHooks() {
     return beforeAllHooks;
 }
 
-void HookRegistrar::addBeforeAllHook(boost::shared_ptr<BeforeAllHook> beforeAllHook) {
+void HookRegistrar::addBeforeAllHook(std::shared_ptr<BeforeAllHook> beforeAllHook) {
     beforeAllHooks().push_back(beforeAllHook);
 }
 
@@ -116,7 +116,7 @@ HookRegistrar::hook_list_type& HookRegistrar::afterAllHooks() {
     return afterAllHooks;
 }
 
-void HookRegistrar::addAfterAllHook(boost::shared_ptr<AfterAllHook> afterAllHook) {
+void HookRegistrar::addAfterAllHook(std::shared_ptr<AfterAllHook> afterAllHook) {
     afterAllHooks().push_back(afterAllHook);
 }
 

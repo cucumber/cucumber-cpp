@@ -4,7 +4,6 @@
 #include <cstddef>
 #include <vector>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/regex.hpp>
 
 namespace cucumber {
@@ -48,8 +47,8 @@ private:
 public:
     Regex(std::string expr);
 
-    boost::shared_ptr<RegexMatch> find(const std::string &expression) const;
-    boost::shared_ptr<RegexMatch> findAll(const std::string &expression) const;
+    std::shared_ptr<RegexMatch> find(const std::string &expression) const;
+    std::shared_ptr<RegexMatch> findAll(const std::string &expression) const;
 
     std::string str() const;
 };

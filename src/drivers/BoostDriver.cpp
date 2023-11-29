@@ -2,12 +2,10 @@
 
 #include <sstream>
 
-#include <boost/bind.hpp>
 #include <boost/function.hpp>
-#include <boost/scoped_ptr.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/unit_test_log_formatter.hpp>
-#include <boost/thread/once.hpp>
+#include <mutex>
 #include <boost/version.hpp>
 
 using namespace ::boost::unit_test;
@@ -106,8 +104,8 @@ const InvokeResult CukeBoostLogInterceptor::getResult() const {
 }
 
 const InvokeResult BoostStep::invokeStepBody() {
-    static boost::once_flag initialized;
-    boost::call_once(initialized, BoostStep::initBoostTest);
+    static std::once_flag initialized;
+    std::call_once(initialized, BoostStep::initBoostTest);
 
     logInterceptor->reset();
     runWithMasterSuite();
@@ -129,7 +127,7 @@ void BoostStep::initBoostTest() {
 }
 
 void BoostStep::runWithMasterSuite() {
-    currentTestBody = boost::bind(&BoostStep::body, this);
+    currentTestBody = std::bind(&BoostStep::body, this);
     
     ::boost::unit_test::framework::run(testCase, false);
 

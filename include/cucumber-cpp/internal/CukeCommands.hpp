@@ -11,12 +11,10 @@
 #include <string>
 #include <sstream>
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace cucumber {
 namespace internal {
-
-using boost::shared_ptr;
 
 /**
  * Legacy class to be removed when feature #31 is complete, substituted by CukeEngineImpl.
@@ -41,7 +39,7 @@ private:
     bool hasStarted;
 
 private:
-    static shared_ptr<Scenario> currentScenario;
+    static std::shared_ptr<Scenario> currentScenario;
 };
 
 }

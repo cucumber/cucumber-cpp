@@ -1,5 +1,4 @@
 #include <cucumber-cpp/internal/utils/Regex.hpp>
-#include <boost/make_shared.hpp>
 
 #include <algorithm>
 
@@ -22,8 +21,8 @@ std::string Regex::str() const {
     return regexImpl.str();
 }
 
-boost::shared_ptr<RegexMatch> Regex::find(const std::string &expression) const {
-    return boost::make_shared<FindRegexMatch>(regexImpl, expression);
+std::shared_ptr<RegexMatch> Regex::find(const std::string &expression) const {
+    return std::make_shared<FindRegexMatch>(regexImpl, expression);
 }
 
 namespace {
@@ -57,8 +56,8 @@ FindRegexMatch::FindRegexMatch(const boost::regex& regexImpl, const std::string&
     }
 }
 
-boost::shared_ptr<RegexMatch> Regex::findAll(const std::string &expression) const {
-    return boost::make_shared<FindAllRegexMatch>(regexImpl, expression);
+std::shared_ptr<RegexMatch> Regex::findAll(const std::string &expression) const {
+    return std::make_shared<FindAllRegexMatch>(regexImpl, expression);
 }
 
 FindAllRegexMatch::FindAllRegexMatch(const boost::regex &regexImpl, const std::string &expression) {

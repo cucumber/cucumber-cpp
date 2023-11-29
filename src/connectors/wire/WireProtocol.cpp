@@ -5,11 +5,6 @@
 #include <json_spirit/json_spirit_writer_template.h>
 #include <json_spirit/json_spirit_writer_options.h>
 
-#include <boost/make_shared.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/assign/list_of.hpp>
-#include <boost/foreach.hpp>
-
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -89,7 +84,7 @@ void SnippetTextResponse::accept(WireResponseVisitor& visitor) const {
 
 
 namespace {
-    typedef boost::shared_ptr<WireCommand> (*CommandDecoder)(const mValue& jsonArgs);
+    typedef std::shared_ptr<WireCommand> (*CommandDecoder)(const mValue& jsonArgs);
 
     CukeEngine::tags_type getScenarioTags(const mValue& jsonArgs) {
         CukeEngine::tags_type tags;
@@ -102,18 +97,18 @@ namespace {
         return tags;
     }
 
-    boost::shared_ptr<WireCommand> BeginScenarioDecoder(const mValue& jsonArgs) {
-        return boost::make_shared<BeginScenarioCommand>(getScenarioTags(jsonArgs));
+    std::shared_ptr<WireCommand> BeginScenarioDecoder(const mValue& jsonArgs) {
+        return std::make_shared<BeginScenarioCommand>(getScenarioTags(jsonArgs));
     }
 
-    boost::shared_ptr<WireCommand> EndScenarioDecoder(const mValue& jsonArgs) {
-        return boost::make_shared<EndScenarioCommand>(getScenarioTags(jsonArgs));
+    std::shared_ptr<WireCommand> EndScenarioDecoder(const mValue& jsonArgs) {
+        return std::make_shared<EndScenarioCommand>(getScenarioTags(jsonArgs));
     }
 
-    boost::shared_ptr<WireCommand> StepMatchesDecoder(const mValue& jsonArgs) {
+    std::shared_ptr<WireCommand> StepMatchesDecoder(const mValue& jsonArgs) {
         mObject stepMatchesArgs(jsonArgs.get_obj());
         const std::string& nameToMatch(stepMatchesArgs["name_to_match"].get_str());
-        return boost::make_shared<StepMatchesCommand>(nameToMatch);
+        return std::make_shared<StepMatchesCommand>(nameToMatch);
     }
 
     void fillTableArg(const mArray& jsonTableArg, CukeEngine::invoke_table_type& tableArg) {
@@ -151,37 +146,36 @@ namespace {
         }
     }
 
-    boost::shared_ptr<WireCommand> InvokeDecoder(const mValue& jsonArgs) {
+    std::shared_ptr<WireCommand> InvokeDecoder(const mValue& jsonArgs) {
         mObject invokeParams(jsonArgs.get_obj());
 
         CukeEngine::invoke_args_type args;
         CukeEngine::invoke_table_type tableArg;
         const std::string & id(invokeParams["id"].get_str());
         fillInvokeArgs(invokeParams, args, tableArg);
-        return boost::make_shared<InvokeCommand>(id, args, tableArg);
+        return std::make_shared<InvokeCommand>(id, args, tableArg);
     }
 
-    boost::shared_ptr<WireCommand> SnippetTextDecoder(const mValue& jsonArgs) {
+    std::shared_ptr<WireCommand> SnippetTextDecoder(const mValue& jsonArgs) {
         mObject snippetTextArgs(jsonArgs.get_obj());
         const std::string & stepKeyword(snippetTextArgs["step_keyword"].get_str());
         const std::string & stepName(snippetTextArgs["step_name"].get_str());
         const std::string & multilineArgClass(snippetTextArgs["multiline_arg_class"].get_str());
-        return boost::make_shared<SnippetTextCommand>(stepKeyword, stepName, multilineArgClass);
+        return std::make_shared<SnippetTextCommand>(stepKeyword, stepName, multilineArgClass);
     }
 }
 
-static const std::map<std::string, CommandDecoder> commandDecodersMap =
-  boost::assign::map_list_of<std::string, CommandDecoder>
-    ("begin_scenario", BeginScenarioDecoder)
-    ("end_scenario"  , EndScenarioDecoder  )
-    ("step_matches"  , StepMatchesDecoder  )
-    ("invoke"        , InvokeDecoder       )
-    ("snippet_text"  , SnippetTextDecoder  )
-  ;
+static const std::map<std::string, CommandDecoder> commandDecodersMap = {
+    {"begin_scenario", BeginScenarioDecoder},
+    {"end_scenario"  , EndScenarioDecoder  },
+    {"step_matches"  , StepMatchesDecoder  },
+    {"invoke"        , InvokeDecoder       },
+    {"snippet_text"  , SnippetTextDecoder  },
+};
 
 JsonSpiritWireMessageCodec::JsonSpiritWireMessageCodec() {}
 
-boost::shared_ptr<WireCommand> JsonSpiritWireMessageCodec::decode(const std::string &request) const {
+std::shared_ptr<WireCommand> JsonSpiritWireMessageCodec::decode(const std::string &request) const {
     std::istringstream is(request);
     mValue json;
     try {
@@ -202,7 +196,7 @@ boost::shared_ptr<WireCommand> JsonSpiritWireMessageCodec::decode(const std::str
     } catch (...) {
         // LOG Error decoding wire protocol command
     }
-    return boost::make_shared<FailingCommand>();
+    return std::make_shared<FailingCommand>();
 }
 
 namespace {
@@ -262,11 +256,11 @@ namespace {
 
         void visit(const StepMatchesResponse& response) {
             mArray jsonMatches;
-            BOOST_FOREACH(StepMatch m, response.getMatchingSteps()) {
+            for(const StepMatch & m : response.getMatchingSteps()) {
                 mObject jsonM;
                 jsonM["id"] = m.id;
                 mArray jsonArgs;
-                BOOST_FOREACH(StepMatchArg ma, m.args) {
+                for(const StepMatchArg & ma : m.args) {
                     mObject jsonMa;
                     jsonMa["val"] = ma.value;
                     jsonMa["pos"] = static_cast<boost::int64_t>(ma.position);
@@ -311,8 +305,8 @@ std::string WireProtocolHandler::handle(const std::string &request) const {
     std::string response;
     // LOG request
     try {
-        boost::shared_ptr<const WireCommand> command = codec.decode(request);
-        boost::shared_ptr<const WireResponse> wireResponse = command->run(engine);
+        std::shared_ptr<const WireCommand> command = codec.decode(request);
+        std::shared_ptr<const WireResponse> wireResponse = command->run(engine);
         response = codec.encode(*wireResponse);
     } catch (...) {
         response = "[\"fail\"]";

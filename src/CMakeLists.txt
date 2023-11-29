@@ -85,9 +85,6 @@ foreach(TARGET
             Boost::boost
             Boost::regex
         PRIVATE
-            Boost::date_time
-            Boost::filesystem
-            Boost::thread
             ${CUKE_EXTRA_PRIVATE_LIBRARIES}
     )
     # Don't export or import symbols for statically linked libraries

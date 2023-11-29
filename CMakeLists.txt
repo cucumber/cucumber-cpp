@@ -30,11 +30,11 @@ set(GMOCK_SRC_DIR "" CACHE STRING "Google Mock framework sources path (otherwise
 set(GMOCK_VER "1.11.0" CACHE STRING "Google Mock framework version to be used")
 
 if(NOT DEFINED CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 14)
+    set(CMAKE_CXX_STANDARD 17)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
     set(CMAKE_CXX_EXTENSIONS OFF)
-elseif(CMAKE_CXX_STANDARD LESS 14)
-    message(FATAL_ERROR "C++14 (above) is required")
+elseif(CMAKE_CXX_STANDARD LESS 17)
+    message(FATAL_ERROR "C++17 (above) is required")
 endif()
 
 if(CUKE_CODE_COVERAGE)
@@ -122,7 +122,7 @@ else()
 endif()
 
 set(Boost_USE_STATIC_RUNTIME OFF)
-set(CUKE_CORE_BOOST_LIBS thread system regex date_time program_options filesystem)
+set(CUKE_CORE_BOOST_LIBS system regex program_options)
 if(CUKE_ENABLE_BOOST_TEST)
     # "An external test runner utility is required to link with dynamic library" (Boost User's Guide)
     set(Boost_USE_STATIC_LIBS OFF)
@@ -151,14 +151,6 @@ if(Boost_INCLUDE_DIRS AND NOT TARGET Boost::boost)
     set_target_properties(Boost::boost PROPERTIES
         "INTERFACE_INCLUDE_DIRECTORIES" "${Boost_INCLUDE_DIRS}")
 endif()
-if(Boost_THREAD_LIBRARY AND NOT TARGET Boost::thread)
-    find_package(Threads REQUIRED)
-    add_library(Boost::thread ${LIBRARY_TYPE} IMPORTED)
-    set_target_properties(Boost::thread PROPERTIES
-        "IMPORTED_LOCATION" "${Boost_THREAD_LIBRARY}"
-        "INTERFACE_LINK_LIBRARIES" "Threads::Threads;Boost::boost"
-    )
-endif()
 if(Boost_SYSTEM_LIBRARY AND NOT TARGET Boost::system)
     add_library(Boost::system ${LIBRARY_TYPE} IMPORTED)
     set_target_properties(Boost::system PROPERTIES
@@ -171,24 +163,10 @@ if(Boost_SYSTEM_LIBRARY AND NOT TARGET Boost::system)
         )
     endif()
 endif()
-if(Boost_FILESYSTEM_LIBRARY AND NOT TARGET Boost::filesystem)
-    add_library(Boost::filesystem ${LIBRARY_TYPE} IMPORTED)
-    set_target_properties(Boost::filesystem PROPERTIES
-        "IMPORTED_LOCATION" "${Boost_FILESYSTEM_LIBRARY}"
-        "INTERFACE_LINK_LIBRARIES" "Boost::system;Boost::boost"
-    )
-endif()
 if(Boost_REGEX_LIBRARY AND NOT TARGET Boost::regex)
     add_library(Boost::regex ${LIBRARY_TYPE} IMPORTED)
     set_target_properties(Boost::regex PROPERTIES
         "IMPORTED_LOCATION" "${Boost_REGEX_LIBRARY}"
-        "INTERFACE_LINK_LIBRARIES" "Boost::boost"
-    )
-endif()
-if(Boost_DATE_TIME_LIBRARY AND NOT TARGET Boost::date_time)
-    add_library(Boost::date_time ${LIBRARY_TYPE} IMPORTED)
-    set_target_properties(Boost::date_time PROPERTIES
-        "IMPORTED_LOCATION" "${Boost_DATE_TIME_LIBRARY}"
         "INTERFACE_LINK_LIBRARIES" "Boost::boost"
     )
 endif()

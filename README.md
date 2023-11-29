@@ -25,7 +25,7 @@ It relies on a few executables:
 It relies on a few libraries:
 
 * [Boost](http://www.boost.org/) 1.46 or later (1.51+ on Windows).
-  Required libraries: *thread*, *system*, *regex*, *date_time* and *program_options*.
+  Required libraries: *system*, *regex* and *program_options*.
   Optional library for Boost Test driver: *test*.
 * [GTest](http://code.google.com/p/googletest/) 1.6 or later.
   Optional for the GTest driver. By default downloaded and built by CMake.

@@ -5,7 +5,7 @@
 #include "ProtocolHandler.hpp"
 #include "../../CukeEngine.hpp"
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace cucumber {
 namespace internal {
@@ -102,7 +102,7 @@ public:
      *
      * @return The command response (ownership passed to the caller)
      */
-    virtual boost::shared_ptr<WireResponse> run(CukeEngine& engine) const = 0;
+    virtual std::shared_ptr<WireResponse> run(CukeEngine& engine) const = 0;
 
     virtual ~WireCommand() {};
 };
@@ -136,7 +136,7 @@ public:
      *
      * @throws WireMessageCodecException
      */
-    virtual boost::shared_ptr<WireCommand> decode(const std::string &request) const = 0;
+    virtual std::shared_ptr<WireCommand> decode(const std::string &request) const = 0;
 
     /**
      * Encodes a response to wire format.
@@ -156,7 +156,7 @@ public:
 class CUCUMBER_CPP_EXPORT JsonSpiritWireMessageCodec : public WireMessageCodec {
 public:
     JsonSpiritWireMessageCodec();
-    boost::shared_ptr<WireCommand> decode(const std::string &request) const;
+    std::shared_ptr<WireCommand> decode(const std::string &request) const;
     const std::string encode(const WireResponse& response) const;
 };
 

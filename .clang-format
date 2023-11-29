@@ -10,7 +10,6 @@ BreakBeforeBinaryOperators: All
 BreakBeforeBraces: Attach
 ColumnLimit:     100
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
-ForEachMacros:   [ BOOST_FOREACH ]
 IncludeCategories: 
   # The autodetect header should always be included last
   - Regex:           '^<cucumber-cpp/autodetect\.hpp>$'

@@ -2,16 +2,12 @@
 #include <cucumber-cpp/internal/connectors/wire/WireProtocolCommands.hpp>
 
 #include <gmock/gmock.h>
-#include <boost/assign/list_of.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <typeinfo>
 
 using namespace cucumber::internal;
 using namespace std;
 using namespace testing;
-
-using boost::assign::list_of;
 
 class MockCukeEngine : public CukeEngine {
 public:
@@ -30,7 +26,7 @@ public:
     WireMessageCodecTest() {};
 
 protected:
-    boost::shared_ptr<WireCommand> commandAutoPtr;
+    std::shared_ptr<WireCommand> commandAutoPtr;
 
     WireCommand& decode(const char *jsonStr) {
         commandAutoPtr = codec.decode(jsonStr);
@@ -298,7 +294,7 @@ TEST(WireCommandsTest, succesfulInvokeReturnsSuccess) {
     EXPECT_CALL(engine, invokeStep(_, _, _))
             .Times(1);
 
-    boost::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
+    std::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
     EXPECT_PTRTYPE(SuccessResponse, response.get());
 }
 
@@ -309,7 +305,7 @@ TEST(WireCommandsTest, throwingFailureInvokeReturnsFailure) {
             .Times(1)
             .WillOnce(Throw(InvokeFailureException("A", "B")));
 
-    boost::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
+    std::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
     EXPECT_PTRTYPE(FailureResponse, response.get());
     // TODO Test A and B
 }
@@ -321,7 +317,7 @@ TEST(WireCommandsTest, throwingPendingStepReturnsPending) {
             .Times(1)
             .WillOnce(Throw(PendingStepException("S")));
 
-    boost::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
+    std::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
     EXPECT_PTRTYPE(PendingResponse, response.get());
     // TODO Test S
 }
@@ -333,7 +329,7 @@ TEST(WireCommandsTest, throwingAnythingInvokeReturnsFailure) {
             .Times(1)
             .WillOnce(Throw(string("something")));
 
-    boost::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
+    std::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
     EXPECT_PTRTYPE(FailureResponse, response.get());
     // TODO Test empty
 }
