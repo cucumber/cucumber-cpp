@@ -4,6 +4,7 @@
 
 #include <filesystem>
 #include <memory>
+#include <random>
 #include <thread>
 #include <chrono>
 
@@ -171,10 +172,7 @@ protected:
     std::unique_ptr<UnixSocketServer> server;
 
     virtual SocketServer* createListeningServer() {
-      char filename[L_tmpnam];
-      if (!std::tmpnam(filename)) {
-          throw std::runtime_error("unable to create name for temporary file");
-      }
+        const std::string filename = std::filesystem::temp_directory_path() / randomString();
         server.reset(new UnixSocketServer(&protocolHandler));
         server->listen(filename);
         return server.get();
@@ -182,6 +180,18 @@ protected:
 
     virtual void destroyListeningServer() {
         server.reset();
+    }
+
+private:
+    std::random_device rd{};
+    std::mt19937 gen{rd()};
+    std::uniform_int_distribution<> distrib{0, 15};
+
+    std::string randomString() {
+        std::stringstream out{};
+        for (std::size_t i = 0; i < 16; i++)
+            out << std::hex << distrib(gen);
+        return out.str();
     }
 };
 
