@@ -10,7 +10,6 @@ using namespace cucumber::internal;
 
 class StepManagerTest : public ::testing::Test {
 public:
-    virtual ~StepManagerTest() {}
     typedef StepManagerTestDouble StepManager;
 
 protected:

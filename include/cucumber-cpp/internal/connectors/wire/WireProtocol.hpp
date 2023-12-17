@@ -22,7 +22,7 @@ public:
 
     virtual void accept(WireResponseVisitor& visitor) const = 0;
 
-    virtual ~WireResponse() {};
+    virtual ~WireResponse() = default;
 };
 
 class CUCUMBER_CPP_EXPORT SuccessResponse : public WireResponse {
@@ -86,7 +86,7 @@ public:
     virtual void visit(const StepMatchesResponse& response) = 0;
     virtual void visit(const SnippetTextResponse& response) = 0;
 
-    virtual ~WireResponseVisitor() {};
+    virtual ~WireResponseVisitor() = default;
 };
 
 
@@ -104,7 +104,7 @@ public:
      */
     virtual std::shared_ptr<WireResponse> run(CukeEngine& engine) const = 0;
 
-    virtual ~WireCommand() {};
+    virtual ~WireCommand() = default;
 };
 
 class CUCUMBER_CPP_EXPORT WireMessageCodecException : public std::exception {
@@ -147,7 +147,7 @@ public:
      */
     virtual const std::string encode(const WireResponse& response) const = 0;
 
-    virtual ~WireMessageCodec() {};
+    virtual ~WireMessageCodec() = default;
 };
 
 /**
@@ -155,7 +155,7 @@ public:
  */
 class CUCUMBER_CPP_EXPORT JsonSpiritWireMessageCodec : public WireMessageCodec {
 public:
-    JsonSpiritWireMessageCodec();
+    JsonSpiritWireMessageCodec() = default;
     std::shared_ptr<WireCommand> decode(const std::string &request) const override;
     const std::string encode(const WireResponse& response) const override;
 };

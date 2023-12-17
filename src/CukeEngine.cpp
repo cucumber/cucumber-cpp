@@ -41,6 +41,5 @@ PendingStepException::PendingStepException(const PendingStepException &rhs) :
 
 CukeEngine::CukeEngine() {}
 
-CukeEngine::~CukeEngine() {}
 }
 }

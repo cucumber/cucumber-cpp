@@ -24,7 +24,6 @@ class QtTestObject : public QObject {
     Q_OBJECT
 public:
     QtTestObject(QtTestStep* qtTestStep) : step(qtTestStep) {}
-    virtual ~QtTestObject() {}
 
 protected:
     QtTestStep* step;

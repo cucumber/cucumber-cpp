@@ -21,7 +21,7 @@ public:
 
 class CUCUMBER_CPP_EXPORT Hook {
 public:
-    virtual ~Hook() {}
+    virtual ~Hook() = default;
 
     void setTags(const std::string &csvTagNotation);
     virtual void invokeHook(Scenario *scenario, CallableStep *step);

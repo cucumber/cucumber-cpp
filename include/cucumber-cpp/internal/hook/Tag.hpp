@@ -14,7 +14,7 @@ class CUCUMBER_CPP_EXPORT TagExpression {
 public:
     typedef std::vector<std::string> tag_list;
 
-    virtual ~TagExpression() { }
+    virtual ~TagExpression() = default;
     virtual bool matches(const tag_list &tags) const = 0;
 };
 
@@ -33,7 +33,7 @@ private:
 
 class CUCUMBER_CPP_EXPORT AndTagExpression : public TagExpression {
 public:
-    AndTagExpression();
+    AndTagExpression() = default;
     AndTagExpression(const std::string &csvTagNotation);
     bool matches(const tag_list &tags) const override;
 

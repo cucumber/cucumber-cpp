@@ -22,9 +22,6 @@ public:
     EXPECT_NE(dynamic_cast<const classname*>(expression), (void*)NULL)
 
 class WireMessageCodecTest : public Test {
-public:
-    WireMessageCodecTest() {};
-
 protected:
     std::shared_ptr<WireCommand> commandAutoPtr;
 

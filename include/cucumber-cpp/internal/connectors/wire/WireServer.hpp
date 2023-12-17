@@ -20,7 +20,7 @@ public:
       * Constructor for DI
       */
     SocketServer(const ProtocolHandler *protocolHandler);
-    virtual ~SocketServer() {}
+    virtual ~SocketServer() = default;
 
     /**
      * Accept one connection

@@ -19,7 +19,7 @@ class RegexMatch {
 public:
     typedef std::vector<RegexSubmatch> submatches_type;
 
-    virtual ~RegexMatch() {};
+    virtual ~RegexMatch() = default;
 
     bool matches();
     const submatches_type & getSubmatches();

@@ -36,7 +36,7 @@ public:
 
     const std::string getMessage() const;
 
-    virtual ~InvokeException() {}
+    virtual ~InvokeException() = default;
 };
 
 class CUCUMBER_CPP_EXPORT InvokeFailureException : public InvokeException {
@@ -99,7 +99,7 @@ public:
     virtual std::string snippetText(const std::string & keyword, const std::string & name, const std::string & multilineArgClass) const = 0;
 
     CUCUMBER_CPP_EXPORT CukeEngine();
-    CUCUMBER_CPP_EXPORT virtual ~CukeEngine();
+    CUCUMBER_CPP_EXPORT virtual ~CukeEngine() = default;
 };
 
 }
