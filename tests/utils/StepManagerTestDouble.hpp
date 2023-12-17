@@ -10,7 +10,7 @@ namespace internal {
 class StepInfoNoOp : public StepInfo {
 public:
     StepInfoNoOp(const std::string &stepMatcher, const std::string source) : StepInfo(stepMatcher, source) {}
-    InvokeResult invokeStep(const InvokeArgs*) const {
+    InvokeResult invokeStep(const InvokeArgs*) const override {
         return InvokeResult::success();
     }
 };
@@ -24,7 +24,7 @@ public:
         description(description) {
     }
 
-    InvokeResult invokeStep(const InvokeArgs*) const {
+    InvokeResult invokeStep(const InvokeArgs*) const override {
         return InvokeResult::pending(description);
     }
 };
@@ -40,7 +40,7 @@ public:
         expectedSize(expectedSize) {
     }
 
-    InvokeResult invokeStep(const InvokeArgs *pArgs) const {
+    InvokeResult invokeStep(const InvokeArgs *pArgs) const override {
         if (pArgs->getTableArg().hashes().size() == expectedSize) {
             return InvokeResult::success();
         } else {

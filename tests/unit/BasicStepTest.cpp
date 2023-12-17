@@ -7,13 +7,13 @@ using namespace cucumber::internal;
 #define PENDING_STEP_DESCRIPTION "A description"
 
 class PendingStep : public GenericStep {
-    void body() {
+    void body() override {
         pending();
     }
 };
 
 class PendingStepWithDescription : public GenericStep {
-    void body() {
+    void body() override {
         pending(PENDING_STEP_DESCRIPTION);
     }
 };

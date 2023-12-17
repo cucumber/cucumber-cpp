@@ -9,7 +9,7 @@ namespace internal {
 
 class CUCUMBER_CPP_EXPORT GenericStep : public BasicStep {
 protected:
-    virtual const InvokeResult invokeStepBody();
+    const InvokeResult invokeStepBody() override;
 };
 
 #define STEP_INHERITANCE(step_name) virtual ::cucumber::internal::GenericStep

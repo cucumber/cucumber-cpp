@@ -11,7 +11,7 @@ namespace internal {
 
 class CUCUMBER_CPP_EXPORT GTestStep : public BasicStep {
 protected:
-    const InvokeResult invokeStepBody();
+    const InvokeResult invokeStepBody() override;
 
 private:
     void initGTest();

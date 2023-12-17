@@ -171,7 +171,7 @@ class StepInvoker : public StepInfo {
 public:
     StepInvoker(const std::string &stepMatcher, const std::string source);
 
-    InvokeResult invokeStep(const InvokeArgs *args) const;
+    InvokeResult invokeStep(const InvokeArgs *args) const override;
 };
 
 class CUCUMBER_CPP_EXPORT StepManager {

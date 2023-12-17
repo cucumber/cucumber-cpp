@@ -21,7 +21,7 @@ public:
 class CUCUMBER_CPP_EXPORT OrTagExpression : public TagExpression {
 public:
     OrTagExpression(const std::string &csvTagNotation);
-    bool matches(const tag_list &tags) const;
+    bool matches(const tag_list &tags) const override;
 
 private:
     bool orTagMatchesTagList(const std::string &currentOrTag, const tag_list &tags) const;
@@ -35,7 +35,7 @@ class CUCUMBER_CPP_EXPORT AndTagExpression : public TagExpression {
 public:
     AndTagExpression();
     AndTagExpression(const std::string &csvTagNotation);
-    bool matches(const tag_list &tags) const;
+    bool matches(const tag_list &tags) const override;
 
 private:
     typedef std::vector<OrTagExpression> or_expressions_type;

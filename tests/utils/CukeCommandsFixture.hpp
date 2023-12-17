@@ -11,7 +11,7 @@
 using namespace cucumber::internal;
 
 class EmptyStep : public GenericStep {
-    void body() {}
+    void body() override {}
 };
 
 class CukeCommandsFixture : public ::testing::Test, public CukeCommands {
@@ -35,7 +35,7 @@ protected:
         stepId = StepManager::addStep(std::make_shared<StepInvoker<T> >(matcher, ""));
     }
 
-    virtual void TearDown() {
+    void TearDown() override {
         StepManager::clearSteps();
     }
 };

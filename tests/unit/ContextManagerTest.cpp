@@ -15,7 +15,7 @@ public:
     }
 protected:
 private:
-    void TearDown() {
+    void TearDown() override {
         contextManager.purgeContexts();
     }
 };

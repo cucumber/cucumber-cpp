@@ -81,7 +81,7 @@ public:
      */
     boost::asio::ip::tcp::endpoint listenEndpoint() const;
 
-    virtual void acceptOnce();
+    void acceptOnce() override;
 
 private:
     boost::asio::ip::tcp::acceptor acceptor;
@@ -111,9 +111,9 @@ public:
      */
     boost::asio::local::stream_protocol::endpoint listenEndpoint() const;
 
-    virtual void acceptOnce();
+    void acceptOnce() override;
 
-    ~UnixSocketServer();
+    ~UnixSocketServer() override;
 
 private:
     boost::asio::local::stream_protocol::acceptor acceptor;

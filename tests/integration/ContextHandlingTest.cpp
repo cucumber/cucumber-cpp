@@ -14,7 +14,7 @@ protected:
     ContextManagerTestDouble contextManager;
 
 private:
-    void TearDown() {
+    void TearDown() override {
         contextManager.purgeContexts();
     }
 };

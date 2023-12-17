@@ -19,7 +19,7 @@ class BeginScenarioCommand : public ScenarioCommand {
 public:
     BeginScenarioCommand(const CukeEngine::tags_type& tags);
 
-    std::shared_ptr<WireResponse> run(CukeEngine& engine) const;
+    std::shared_ptr<WireResponse> run(CukeEngine& engine) const override;
 };
 
 
@@ -27,7 +27,7 @@ class EndScenarioCommand : public ScenarioCommand {
 public:
     EndScenarioCommand(const CukeEngine::tags_type& tags);
 
-    std::shared_ptr<WireResponse> run(CukeEngine& engine) const;
+    std::shared_ptr<WireResponse> run(CukeEngine& engine) const override;
 };
 
 
@@ -38,7 +38,7 @@ private:
 public:
     StepMatchesCommand(const std::string & stepName);
 
-    std::shared_ptr<WireResponse> run(CukeEngine& engine) const;
+    std::shared_ptr<WireResponse> run(CukeEngine& engine) const override;
 };
 
 
@@ -53,7 +53,7 @@ public:
                   const CukeEngine::invoke_args_type& args,
                   const CukeEngine::invoke_table_type& tableArg);
 
-    std::shared_ptr<WireResponse> run(CukeEngine& engine) const;
+    std::shared_ptr<WireResponse> run(CukeEngine& engine) const override;
 };
 
 
@@ -66,13 +66,13 @@ public:
                        const std::string & name,
                        const std::string & multilineArgClass);
 
-    std::shared_ptr<WireResponse> run(CukeEngine& engine) const;
+    std::shared_ptr<WireResponse> run(CukeEngine& engine) const override;
 };
 
 
 class FailingCommand : public WireCommand {
 public:
-    std::shared_ptr<WireResponse> run(CukeEngine& engine) const;
+    std::shared_ptr<WireResponse> run(CukeEngine& engine) const override;
 };
 
 }

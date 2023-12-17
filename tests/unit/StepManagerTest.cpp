@@ -65,7 +65,7 @@ private:
     MatchResult::match_results_type getResultSetFor(const string &stepMatch) {
         return StepManager::stepMatches(stepMatch).getResultSet();
     }
-    void TearDown() {
+    void TearDown() override {
         StepManager::clearSteps();
     }
 };

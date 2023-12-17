@@ -27,7 +27,7 @@ public:
 
 class CUCUMBER_CPP_EXPORT SuccessResponse : public WireResponse {
 public:
-    void accept(WireResponseVisitor& visitor) const;
+    void accept(WireResponseVisitor& visitor) const override;
 };
 
 class CUCUMBER_CPP_EXPORT FailureResponse : public WireResponse {
@@ -40,7 +40,7 @@ public:
     const std::string getMessage() const;
     const std::string getExceptionType() const;
 
-    void accept(WireResponseVisitor& visitor) const;
+    void accept(WireResponseVisitor& visitor) const override;
 };
 
 class CUCUMBER_CPP_EXPORT PendingResponse : public WireResponse {
@@ -52,7 +52,7 @@ public:
 
     const std::string getMessage() const;
 
-    void accept(WireResponseVisitor& visitor) const;
+    void accept(WireResponseVisitor& visitor) const override;
 };
 
 class CUCUMBER_CPP_EXPORT StepMatchesResponse : public WireResponse {
@@ -63,7 +63,7 @@ public:
     StepMatchesResponse(const std::vector<StepMatch> & matchingSteps);
     const std::vector<StepMatch>& getMatchingSteps() const;
 
-    void accept(WireResponseVisitor& visitor) const;
+    void accept(WireResponseVisitor& visitor) const override;
 };
 
 class CUCUMBER_CPP_EXPORT SnippetTextResponse : public WireResponse {
@@ -75,7 +75,7 @@ public:
 
     const std::string getStepSnippet() const;
 
-    void accept(WireResponseVisitor& visitor) const;
+    void accept(WireResponseVisitor& visitor) const override;
 };
 
 class CUCUMBER_CPP_EXPORT WireResponseVisitor {
@@ -116,7 +116,7 @@ public:
         description(description) {
     }
 
-    const char* what() const throw() {
+    const char* what() const throw() override {
         return description;
     }
 };
@@ -156,8 +156,8 @@ public:
 class CUCUMBER_CPP_EXPORT JsonSpiritWireMessageCodec : public WireMessageCodec {
 public:
     JsonSpiritWireMessageCodec();
-    std::shared_ptr<WireCommand> decode(const std::string &request) const;
-    const std::string encode(const WireResponse& response) const;
+    std::shared_ptr<WireCommand> decode(const std::string &request) const override;
+    const std::string encode(const WireResponse& response) const override;
 };
 
 /**
@@ -172,7 +172,7 @@ private:
 public:
     WireProtocolHandler(const WireMessageCodec& codec, CukeEngine& engine);
 
-    std::string handle(const std::string &request) const;
+    std::string handle(const std::string &request) const override;
 };
 
 }

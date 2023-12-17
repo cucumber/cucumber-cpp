@@ -13,7 +13,7 @@ public:
         result(result) {
     }
 
-    InvokeResult invokeStep(const InvokeArgs *pArgs) const {
+    InvokeResult invokeStep(const InvokeArgs *pArgs) const override {
         latestArgsPtr = pArgs;
         (*markersPtr) << "S";
         return result;
@@ -36,7 +36,7 @@ public:
 
     MarkingAroundStepHook() : id(""), markersPtr(0) {};
 
-    void body() {
+    void body() override {
         if (markersPtr) {
             (*markersPtr) << "B" << id;
         }
@@ -61,7 +61,7 @@ public:
     BlockingAroundStepHook(std::string id, std::stringstream *markersPtr) :
         MarkingAroundStepHook(id, markersPtr) {};
 protected:
-    virtual void doCall() {
+    void doCall() override {
     }
 };
 

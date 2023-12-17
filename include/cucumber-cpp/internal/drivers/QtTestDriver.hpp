@@ -15,7 +15,7 @@ public:
     QtTestStep() : BasicStep() {}
 
 protected:
-    const InvokeResult invokeStepBody();
+    const InvokeResult invokeStepBody() override;
 };
 
 #define STEP_INHERITANCE(step_name) ::cucumber::internal::QtTestStep

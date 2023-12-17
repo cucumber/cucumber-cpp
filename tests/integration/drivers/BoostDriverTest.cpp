@@ -40,16 +40,16 @@ namespace boost {
 
 class BoostStepDouble : public BoostStep {
 public:
-    const InvokeResult invokeStepBody() {
+    const InvokeResult invokeStepBody() override {
         return BoostStep::invokeStepBody();
     };
 
-    void body() {};
+    void body() override {};
 };
 
 class BoostDriverTest : public DriverTest {
 public:
-    virtual void runAllTests() {
+    void runAllTests() override {
         stepInvocationInitsBoostTest();
         DriverTest::runAllTests();
     }
