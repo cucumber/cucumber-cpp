@@ -10,19 +10,21 @@ using namespace boost::asio::ip;
 using namespace boost::asio::local;
 #endif
 
-SocketServer::SocketServer(const ProtocolHandler *protocolHandler) :
+SocketServer::SocketServer(const ProtocolHandler* protocolHandler) :
     protocolHandler(protocolHandler),
     ios() {
 }
 
 #if BOOST_VERSION <= 106500
-template <typename Protocol, typename Service>
-void SocketServer::doListen(basic_socket_acceptor<Protocol, Service>& acceptor,
-                            const typename Protocol::endpoint& endpoint) {
+template<typename Protocol, typename Service>
+void SocketServer::doListen(
+    basic_socket_acceptor<Protocol, Service>& acceptor, const typename Protocol::endpoint& endpoint
+) {
 #else
-template <typename Protocol>
-void SocketServer::doListen(basic_socket_acceptor<Protocol>& acceptor,
-                            const typename Protocol::endpoint& endpoint) {
+template<typename Protocol>
+void SocketServer::doListen(
+    basic_socket_acceptor<Protocol>& acceptor, const typename Protocol::endpoint& endpoint
+) {
 #endif
     if (acceptor.is_open())
         throw boost::system::system_error(boost::asio::error::already_open);
@@ -33,10 +35,10 @@ void SocketServer::doListen(basic_socket_acceptor<Protocol>& acceptor,
 }
 
 #if BOOST_VERSION <= 106500
-template <typename Protocol, typename Service>
+template<typename Protocol, typename Service>
 void SocketServer::doAcceptOnce(basic_socket_acceptor<Protocol, Service>& acceptor) {
 #else
-template <typename Protocol>
+template<typename Protocol>
 void SocketServer::doAcceptOnce(basic_socket_acceptor<Protocol>& acceptor) {
 #endif
     typename Protocol::iostream stream;
@@ -51,7 +53,7 @@ void SocketServer::processStream(std::iostream& stream) {
     }
 }
 
-TCPSocketServer::TCPSocketServer(const ProtocolHandler *protocolHandler) :
+TCPSocketServer::TCPSocketServer(const ProtocolHandler* protocolHandler) :
     SocketServer(protocolHandler),
     acceptor(ios) {
 }
@@ -74,7 +76,7 @@ void TCPSocketServer::acceptOnce() {
 }
 
 #if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
-UnixSocketServer::UnixSocketServer(const ProtocolHandler *protocolHandler) :
+UnixSocketServer::UnixSocketServer(const ProtocolHandler* protocolHandler) :
     SocketServer(protocolHandler),
     acceptor(ios) {
 }
@@ -98,7 +100,8 @@ UnixSocketServer::~UnixSocketServer() {
     if (!acceptor.is_open())
         return;
     std::string path = acceptor.local_endpoint().path();
-    // NOTE: this will fail if this path got deleted manually or represents an abstract-namespace socket
+    // NOTE: this will fail if this path got deleted manually or represents an abstract-namespace
+    // socket
     std::filesystem::remove(path);
 }
 #endif

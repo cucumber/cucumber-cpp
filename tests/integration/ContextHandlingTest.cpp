@@ -10,6 +10,7 @@ public:
     ContextHandlingTest() :
         contextManager() {
     }
+
 protected:
     ContextManagerTestDouble contextManager;
 
@@ -51,12 +52,10 @@ TEST_F(ContextHandlingTest, contextsArePurgedExplicitlyOnly) {
     ASSERT_EQ(0, contextManager.countContexts());
     ::cucumber::ScenarioScope<Context1> context1_a;
     ASSERT_EQ(1, contextManager.countContexts());
-    ::cucumber::ScenarioScope<Context2> *context1_b =
-        new ::cucumber::ScenarioScope<Context2>();
+    ::cucumber::ScenarioScope<Context2>* context1_b = new ::cucumber::ScenarioScope<Context2>();
     ASSERT_EQ(2, contextManager.countContexts());
     delete context1_b;
     ASSERT_EQ(2, contextManager.countContexts());
     contextManager.purgeContexts();
     ASSERT_EQ(0, contextManager.countContexts());
 }
-

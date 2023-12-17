@@ -2,7 +2,7 @@
 
 #include "CalculatorWidget.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
     app.setApplicationName("Qt Calculator");
     CalculatorWidget widget;

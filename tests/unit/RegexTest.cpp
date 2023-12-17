@@ -5,7 +5,6 @@ using namespace cucumber::internal;
 
 #include <memory>
 
-
 TEST(RegexTest, matchesSimpleRegex) {
     Regex exact("^cde$");
 
@@ -82,7 +81,7 @@ TEST(RegexTest, findAllExtractsTheFirstGroupOfEveryToken) {
 
     EXPECT_TRUE(match->matches());
     EXPECT_EQ(3, match->getSubmatches().size());
-    //EXPECT_THAT(match.getSubmatches(), ElementsAre("a", "b", "cc"));
+    // EXPECT_THAT(match.getSubmatches(), ElementsAre("a", "b", "cc"));
 }
 
 /*

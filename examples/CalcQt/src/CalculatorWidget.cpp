@@ -6,8 +6,9 @@
 #include <QPushButton>
 #include <QSignalMapper>
 
-CalculatorWidget::CalculatorWidget(QWidget *parent) : QWidget(parent) {
-    QGridLayout *layout = new QGridLayout(this);
+CalculatorWidget::CalculatorWidget(QWidget* parent) :
+    QWidget(parent) {
+    QGridLayout* layout = new QGridLayout(this);
     layout->setSizeConstraint(QLayout::SetFixedSize);
     setLayout(layout);
 
@@ -24,16 +25,16 @@ CalculatorWidget::CalculatorWidget(QWidget *parent) : QWidget(parent) {
     displayLabel->setSizePolicy(policy);
 
     signalMapper = new QSignalMapper(this);
-    QPushButton *button = new QPushButton(QString::number(0), this);
+    QPushButton* button = new QPushButton(QString::number(0), this);
     QObject::connect(button, SIGNAL(clicked()), signalMapper, SLOT(map()));
     signalMapper->setMapping(button, 0);
     layout->addWidget(button, 4, 1);
     digitButtons.push_back(button);
     for (unsigned int i = 1; i < 10; ++i) {
-        QPushButton *button = new QPushButton(QString::number(i), this);
+        QPushButton* button = new QPushButton(QString::number(i), this);
         QObject::connect(button, SIGNAL(clicked()), signalMapper, SLOT(map()));
         signalMapper->setMapping(button, i);
-        layout->addWidget(button, 1+(9-i)/3, (i-1)%3);
+        layout->addWidget(button, 1 + (9 - i) / 3, (i - 1) % 3);
         digitButtons.push_back(button);
     }
     QObject::connect(signalMapper, SIGNAL(mapped(int)), SLOT(buttonClicked(int)));
@@ -63,8 +64,12 @@ int CalculatorWidget::calculate(const QString& expression) {
     while ((pos = regexp.indexIn(expression, pos)) != -1) {
         int value = regexp.cap(1).toInt();
         switch (operation) {
-        case '+': result += value; break;
-        case '-': result -= value; break;
+        case '+':
+            result += value;
+            break;
+        case '-':
+            result -= value;
+            break;
         }
         pos += regexp.matchedLength();
         if (pos < expression.length()) {
@@ -78,21 +83,27 @@ QString CalculatorWidget::display() {
     return displayLabel->text();
 }
 
-void CalculatorWidget::keyPressEvent(QKeyEvent *event) {
+void CalculatorWidget::keyPressEvent(QKeyEvent* event) {
     keyclickedButton = 0;
     int key = event->key();
     if (key >= Qt::Key_0 && key <= Qt::Key_9) {
         keyclickedButton = digitButtons[key - Qt::Key_0];
-    }
-    else {
-        switch(key)
-        {
-        case Qt::Key_Plus: keyclickedButton = additionButton; break;
-        case Qt::Key_Minus: keyclickedButton = subtractionButton; break;
+    } else {
+        switch (key) {
+        case Qt::Key_Plus:
+            keyclickedButton = additionButton;
+            break;
+        case Qt::Key_Minus:
+            keyclickedButton = subtractionButton;
+            break;
         case Qt::Key_Return:
         case Qt::Key_Enter:
-        case Qt::Key_Equal: keyclickedButton = calculateButton; break;
-        case Qt::Key_Escape: keyclickedButton = clearButton; break;
+        case Qt::Key_Equal:
+            keyclickedButton = calculateButton;
+            break;
+        case Qt::Key_Escape:
+            keyclickedButton = clearButton;
+            break;
         }
     }
     if (0 != keyclickedButton) {
@@ -101,7 +112,7 @@ void CalculatorWidget::keyPressEvent(QKeyEvent *event) {
     }
 }
 
-void CalculatorWidget::keyReleaseEvent(QKeyEvent *event) {
+void CalculatorWidget::keyReleaseEvent(QKeyEvent* event) {
     Q_UNUSED(event)
     if (0 != keyclickedButton) {
         keyclickedButton->setDown(false);
@@ -110,11 +121,11 @@ void CalculatorWidget::keyReleaseEvent(QKeyEvent *event) {
 }
 
 void CalculatorWidget::addButtonClicked() {
-    displayLabel->setText(displayLabel->text()+"+");
+    displayLabel->setText(displayLabel->text() + "+");
 }
 
 void CalculatorWidget::buttonClicked(int index) {
-    displayLabel->setText(displayLabel->text()+QString::number(index));
+    displayLabel->setText(displayLabel->text() + QString::number(index));
 }
 
 void CalculatorWidget::calculateButtonClicked() {
@@ -126,5 +137,5 @@ void CalculatorWidget::clearButtonClicked() {
 }
 
 void CalculatorWidget::subtractButtonClicked() {
-    displayLabel->setText(displayLabel->text()+"-");
+    displayLabel->setText(displayLabel->text() + "-");
 }

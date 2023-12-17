@@ -8,10 +8,10 @@
 /// Helper class to ensure that QApplication gets destroyed before main() returns
 /// and that CalculatorWidget gets destroyed before QApplication gets destroyed.
 struct CalculatorCtx {
-    CalculatorCtx()
-      : argc(0)
-      , app(argc, NULL)
-    {}
+    CalculatorCtx() :
+        argc(0),
+        app(argc, NULL) {
+    }
 
     int argc;
     QApplication app;
@@ -21,16 +21,23 @@ struct CalculatorCtx {
 static int milliseconds = -1;
 
 int millisecondsToWait() {
-    if (milliseconds < 0)
-    {
+    if (milliseconds < 0) {
         char* envVariable = getenv("CALCQT_STEP_DELAY");
         milliseconds = (0 != envVariable) ? atoi(envVariable) : 0;
     }
     return milliseconds;
 }
 
-std::istream& operator>> (std::istream& in, QString& val) { std::string s; in >> s; val = s.c_str(); return in; }
-std::ostream& operator<< (std::ostream& out, const QString& val) { out << val.toLatin1().data(); return out; }
+std::istream& operator>>(std::istream& in, QString& val) {
+    std::string s;
+    in >> s;
+    val = s.c_str();
+    return in;
+}
+std::ostream& operator<<(std::ostream& out, const QString& val) {
+    out << val.toLatin1().data();
+    return out;
+}
 
 GIVEN("^I just turned on the calculator$") {
     cucumber::ScenarioScope<CalculatorCtx> ctx;

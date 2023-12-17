@@ -15,7 +15,7 @@ const InvokeResult GTestStep::invokeStepBody() {
     try {
         body();
         return InvokeResult::success();
-    } catch (const ::std::runtime_error &e) {
+    } catch (const ::std::runtime_error& e) {
         // ::testing::GoogleTestFailureException inherits from ::std::runtime_error
         return InvokeResult::failure(e.what());
     }
@@ -23,8 +23,8 @@ const InvokeResult GTestStep::invokeStepBody() {
 
 void GTestStep::initGTest() {
     int fake_argc = 1;
-    char *fake_argv[1];
-    fake_argv[0] = (char *) "cucumber-cpp";
+    char* fake_argv[1];
+    fake_argv[0] = (char*)"cucumber-cpp";
     ::testing::InitGoogleTest(&fake_argc, fake_argv);
     initialized = true;
 }

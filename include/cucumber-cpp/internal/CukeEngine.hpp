@@ -31,8 +31,8 @@ private:
     const std::string message;
 
 public:
-    InvokeException(const std::string & message);
-    InvokeException(const InvokeException &rhs);
+    InvokeException(const std::string& message);
+    InvokeException(const InvokeException& rhs);
 
     const std::string getMessage() const;
 
@@ -44,16 +44,16 @@ private:
     const std::string exceptionType;
 
 public:
-    InvokeFailureException(const std::string & message, const std::string & exceptionType);
-    InvokeFailureException(const InvokeFailureException &rhs);
+    InvokeFailureException(const std::string& message, const std::string& exceptionType);
+    InvokeFailureException(const InvokeFailureException& rhs);
 
     const std::string getExceptionType() const;
 };
 
 class CUCUMBER_CPP_EXPORT PendingStepException : public InvokeException {
 public:
-    PendingStepException(const std::string & message);
-    PendingStepException(const PendingStepException &rhs);
+    PendingStepException(const std::string& message);
+    PendingStepException(const PendingStepException& rhs);
 };
 
 /**
@@ -66,6 +66,7 @@ class CukeEngine {
 private:
     typedef std::vector<std::string> string_array;
     typedef boost::multi_array<std::string, 2> string_2d_array;
+
 public:
     typedef string_array tags_type;
     typedef string_array invoke_args_type;
@@ -74,29 +75,34 @@ public:
     /**
      * Finds steps whose regexp match some text.
      */
-    virtual std::vector<StepMatch> stepMatches(const std::string & name) const = 0;
+    virtual std::vector<StepMatch> stepMatches(const std::string& name) const = 0;
 
     /**
      * Starts a scenario.
      */
-    virtual void beginScenario(const tags_type & tags) = 0;
+    virtual void beginScenario(const tags_type& tags) = 0;
 
     /**
      * Invokes a step passing arguments to it.
      *
      * @throws InvokeException if the test fails or it is pending
      */
-    virtual void invokeStep(const std::string & id, const invoke_args_type & args, const invoke_table_type & tableArg) = 0;
+    virtual void invokeStep(
+        const std::string& id, const invoke_args_type& args, const invoke_table_type& tableArg
+    ) = 0;
 
     /**
      * Ends a scenario.
      */
-    virtual void endScenario(const tags_type & tags) = 0;
+    virtual void endScenario(const tags_type& tags) = 0;
 
     /**
      * Returns the step definition for a pending step.
      */
-    virtual std::string snippetText(const std::string & keyword, const std::string & name, const std::string & multilineArgClass) const = 0;
+    virtual std::string snippetText(
+        const std::string& keyword, const std::string& name, const std::string& multilineArgClass
+    ) const
+        = 0;
 
     CUCUMBER_CPP_EXPORT CukeEngine();
     CUCUMBER_CPP_EXPORT virtual ~CukeEngine() = default;

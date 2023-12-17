@@ -11,7 +11,7 @@ void Table::addColumn(const std::string column) {
     }
 }
 
-void Table::addRow(const row_type &row) {
+void Table::addRow(const row_type& row) {
     const basic_type::size_type colSize = columns.size();
     if (colSize == 0) {
         throw std::runtime_error("No column defined yet");
@@ -22,7 +22,7 @@ void Table::addRow(const row_type &row) {
     }
 }
 
-Table::hash_row_type Table::buildHashRow(const row_type &row) {
+Table::hash_row_type Table::buildHashRow(const row_type& row) {
     hash_row_type hashRow;
     for (columns_type::size_type i = 0; i < columns.size(); ++i) {
         hashRow[columns[i]] = row[i];
@@ -30,7 +30,7 @@ Table::hash_row_type Table::buildHashRow(const row_type &row) {
     return hashRow;
 }
 
-const Table::hashes_type & Table::hashes() const {
+const Table::hashes_type& Table::hashes() const {
     return rows;
 }
 

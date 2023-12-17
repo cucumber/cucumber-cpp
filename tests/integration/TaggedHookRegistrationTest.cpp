@@ -3,22 +3,48 @@
 #include "../utils/HookRegistrationFixture.hpp"
 #include <cucumber-cpp/internal/hook/HookMacros.hpp>
 
-BEFORE("@a") { beforeHookCallMarker << "A"; }
-BEFORE("@a","@b") { beforeHookCallMarker << "B"; }
-BEFORE("@a,@b") { beforeHookCallMarker << "C"; }
+BEFORE("@a") {
+    beforeHookCallMarker << "A";
+}
+BEFORE("@a", "@b") {
+    beforeHookCallMarker << "B";
+}
+BEFORE("@a,@b") {
+    beforeHookCallMarker << "C";
+}
 
-AROUND_STEP("@a") { afterAroundStepHookCallMarker << "D"; step->call(); }
-AROUND_STEP("@a","@b") { afterAroundStepHookCallMarker << "E"; step->call(); }
-AROUND_STEP("@a,@b") { afterAroundStepHookCallMarker << "F"; step->call(); }
+AROUND_STEP("@a") {
+    afterAroundStepHookCallMarker << "D";
+    step->call();
+}
+AROUND_STEP("@a", "@b") {
+    afterAroundStepHookCallMarker << "E";
+    step->call();
+}
+AROUND_STEP("@a,@b") {
+    afterAroundStepHookCallMarker << "F";
+    step->call();
+}
 
-AFTER_STEP("@a") { afterStepHookCallMarker << "G"; }
-AFTER_STEP("@a","@b") { afterStepHookCallMarker << "H"; }
-AFTER_STEP("@a,@b") { afterStepHookCallMarker << "I"; }
+AFTER_STEP("@a") {
+    afterStepHookCallMarker << "G";
+}
+AFTER_STEP("@a", "@b") {
+    afterStepHookCallMarker << "H";
+}
+AFTER_STEP("@a,@b") {
+    afterStepHookCallMarker << "I";
+}
 
-AFTER("@a") { afterHookCallMarker << "J"; }
-AFTER("@a","@b") { afterHookCallMarker << "K"; }
-AFTER("@a,@b") { afterHookCallMarker << "L"; }
-
+AFTER("@a") {
+    afterHookCallMarker << "J";
+}
+AFTER("@a", "@b") {
+    afterHookCallMarker << "K";
+}
+AFTER("@a,@b") {
+    afterHookCallMarker << "L";
+}
 
 TEST_F(HookRegistrationTest, noTaggedHooksAreInvokedIfNoScenarioTag) {
     beginScenario();

@@ -34,7 +34,6 @@ TEST(TagTest, orExpressionsAllowSpaces) {
     EXPECT_FALSE(tagExpr.matches({"x"}));
 }
 
-
 TEST(TagTest, emptyAndExpressionMatchesAnyTag) {
     AndTagExpression tagExpr("");
     EXPECT_TRUE(tagExpr.matches({"x"}));

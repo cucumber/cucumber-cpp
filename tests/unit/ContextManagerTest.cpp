@@ -13,6 +13,7 @@ public:
     ContextManagerTest() :
         contextManager() {
     }
+
 protected:
 private:
     void TearDown() override {
@@ -24,7 +25,7 @@ class Context1 {};
 class Context2 {};
 
 TEST_F(ContextManagerTest, createsValidContextPointers) {
-    std::weak_ptr<Context1> ctx1 = contextManager.addContext<Context1> ();
+    std::weak_ptr<Context1> ctx1 = contextManager.addContext<Context1>();
     ASSERT_EQ(1, contextManager.countContexts());
     ASSERT_FALSE(ctx1.expired());
     std::weak_ptr<Context2> ctx2 = contextManager.addContext<Context2>();
@@ -33,7 +34,7 @@ TEST_F(ContextManagerTest, createsValidContextPointers) {
 }
 
 TEST_F(ContextManagerTest, allowsCreatingTheSameContextTypeTwice) {
-    std::weak_ptr<Context1> ctx1 = contextManager.addContext<Context1> ();
+    std::weak_ptr<Context1> ctx1 = contextManager.addContext<Context1>();
     ASSERT_EQ(1, contextManager.countContexts());
     ASSERT_FALSE(ctx1.expired());
     std::weak_ptr<Context1> ctx2 = contextManager.addContext<Context1>();
@@ -43,7 +44,7 @@ TEST_F(ContextManagerTest, allowsCreatingTheSameContextTypeTwice) {
 }
 
 TEST_F(ContextManagerTest, purgesContexts) {
-    std::weak_ptr<Context1> ctx1 = contextManager.addContext<Context1> ();
+    std::weak_ptr<Context1> ctx1 = contextManager.addContext<Context1>();
     ASSERT_EQ(1, contextManager.countContexts());
     ASSERT_FALSE(ctx1.expired());
     contextManager.purgeContexts();

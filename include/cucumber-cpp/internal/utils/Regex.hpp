@@ -14,7 +14,6 @@ struct RegexSubmatch {
     std::ptrdiff_t position;
 };
 
-
 class RegexMatch {
 public:
     typedef std::vector<RegexSubmatch> submatches_type;
@@ -22,7 +21,7 @@ public:
     virtual ~RegexMatch() = default;
 
     bool matches();
-    const submatches_type & getSubmatches();
+    const submatches_type& getSubmatches();
 
 protected:
     bool regexMatched;
@@ -31,14 +30,13 @@ protected:
 
 class FindRegexMatch : public RegexMatch {
 public:
-    FindRegexMatch(const std::regex &regexImpl, const std::string &expression);
+    FindRegexMatch(const std::regex& regexImpl, const std::string& expression);
 };
 
 class FindAllRegexMatch : public RegexMatch {
 public:
-    FindAllRegexMatch(const std::regex &regexImpl, const std::string &expression);
+    FindAllRegexMatch(const std::regex& regexImpl, const std::string& expression);
 };
-
 
 class Regex {
 private:
@@ -48,8 +46,8 @@ private:
 public:
     Regex(std::string expr);
 
-    std::shared_ptr<RegexMatch> find(const std::string &expression) const;
-    std::shared_ptr<RegexMatch> findAll(const std::string &expression) const;
+    std::shared_ptr<RegexMatch> find(const std::string& expression) const;
+    std::shared_ptr<RegexMatch> findAll(const std::string& expression) const;
 
     std::string str() const;
 };
@@ -58,4 +56,3 @@ public:
 }
 
 #endif /* CUKE_REGEX_HPP_ */
-

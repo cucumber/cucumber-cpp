@@ -27,7 +27,10 @@ using namespace cucumber::internal;
 
 class QtTestStepDouble : public QtTestStep {
 public:
-    QtTestStepDouble() : QtTestStep(), testRun(false) {}
+    QtTestStepDouble() :
+        QtTestStep(),
+        testRun(false) {
+    }
 
     const InvokeResult invokeStepBody() override {
         return QtTestStep::invokeStepBody();
