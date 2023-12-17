@@ -1,0 +1,26 @@
+name: check format
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: setup environment
+      run: |
+        sudo apt-get install --no-install-recommends \
+        clang-format-15
+
+    - name: check code format
+      run: |
+        clang-format-15 --style=file --Werror --dry-run --verbose `find . -type d \( -name '3rdparty' \) -prune -o -regex '.*\.\(cpp\|hpp\)' -print`
+
