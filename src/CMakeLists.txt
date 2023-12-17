@@ -83,7 +83,6 @@ foreach(TARGET
     target_link_libraries(${TARGET}
         PUBLIC
             Boost::boost
-            Boost::regex
         PRIVATE
             ${CUKE_EXTRA_PRIVATE_LIBRARIES}
     )

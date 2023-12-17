@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <vector>
 
-#include <boost/regex.hpp>
+#include <regex>
 
 namespace cucumber {
 namespace internal {
@@ -31,18 +31,19 @@ protected:
 
 class FindRegexMatch : public RegexMatch {
 public:
-    FindRegexMatch(const boost::regex &regexImpl, const std::string &expression);
+    FindRegexMatch(const std::regex &regexImpl, const std::string &expression);
 };
 
 class FindAllRegexMatch : public RegexMatch {
 public:
-    FindAllRegexMatch(const boost::regex &regexImpl, const std::string &expression);
+    FindAllRegexMatch(const std::regex &regexImpl, const std::string &expression);
 };
 
 
 class Regex {
 private:
-    boost::regex regexImpl;
+    std::regex regexImpl;
+    const std::string regexString;
 
 public:
     Regex(std::string expr);

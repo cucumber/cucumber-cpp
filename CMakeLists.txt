@@ -122,7 +122,7 @@ else()
 endif()
 
 set(Boost_USE_STATIC_RUNTIME OFF)
-set(CUKE_CORE_BOOST_LIBS system regex program_options)
+set(CUKE_CORE_BOOST_LIBS system program_options)
 if(CUKE_ENABLE_BOOST_TEST)
     # "An external test runner utility is required to link with dynamic library" (Boost User's Guide)
     set(Boost_USE_STATIC_LIBS OFF)
@@ -162,13 +162,6 @@ if(Boost_SYSTEM_LIBRARY AND NOT TARGET Boost::system)
             "COMPILE_DEFINITIONS" BOOST_ERROR_CODE_HEADER_ONLY=1
         )
     endif()
-endif()
-if(Boost_REGEX_LIBRARY AND NOT TARGET Boost::regex)
-    add_library(Boost::regex ${LIBRARY_TYPE} IMPORTED)
-    set_target_properties(Boost::regex PROPERTIES
-        "IMPORTED_LOCATION" "${Boost_REGEX_LIBRARY}"
-        "INTERFACE_LINK_LIBRARIES" "Boost::boost"
-    )
 endif()
 if(Boost_PROGRAM_OPTIONS_LIBRARY AND NOT TARGET Boost::program_options)
     add_library(Boost::program_options ${LIBRARY_TYPE} IMPORTED)
