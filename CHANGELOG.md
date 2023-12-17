@@ -8,6 +8,16 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/main/CONT
 
 ### Fixed
 
+## [0.6](https://github.com/cucumber/cucumber-cpp/compare/v0.5...v0.6) (17 December 2023)
+
+### Added
+
+### Changed
+
+* Using C++ standard library where possible instead of boost ([#264](https://github.com/cucumber/cucumber-cpp/pull/264) Urs Fässler)
+
+### Fixed
+
 * Statically linking `boost_system` ([#197](https://github.com/cucumber/cucumber-cpp/pull/197) Matthieu Longo)
 * Unable to `add_subdirectory(cucumber-cpp)` ([#211](https://github.com/cucumber/cucumber-cpp/pull/211) Sergey Bon)
 * Warning C4265 on Visual Studio ([#195](https://github.com/cucumber/cucumber-cpp/pull/195) Matthieu Longo)
@@ -15,6 +25,13 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/main/CONT
 * Fix compilation with Boost 1.70.0 ([#225](https://github.com/cucumber/cucumber-cpp/pull/225) Krystian Młynarczyk)
 * Support step definitions with multi-byte characters ([#224](https://github.com/cucumber/cucumber-cpp/pull/224) Spencer Rudnick)
 * Supress warning about deprecated QSignalMapper ([#228](https://github.com/cucumber/cucumber-cpp/pull/228) Lukas Woodtli)
+* Remove CACHE FORCE arguments from CMAKE_CXX_FLAG on colored terminal output ([#232](https://github.com/cucumber/cucumber-cpp/pull/232)  Alex Cani)
+* Enable compiling with clang's -Wsuggest-override ([#244](https://github.com/cucumber/cucumber-cpp/pull/244) Tobias Hahn)
+* Add posibility to build with sanitizers enabled ([#247](https://github.com/cucumber/cucumber-cpp/pull/247) Lukas Woodtli)
+* Add support for latest GoogleTest and Boost ([#249](https://github.com/cucumber/cucumber-cpp/pull/249) Canmor Lam)
+* add file extensions to adhere to policy CMP0115 ([#250](https://github.com/cucumber/cucumber-cpp/pull/250) Urs Fässler)
+* Support latest Qt and test on Ubuntu 22.04 ([#253](https://github.com/cucumber/cucumber-cpp/pull/253) Urs Fässler)
+* Update table.feature ([#258](https://github.com/cucumber/cucumber-cpp/pull/258) mbed101)
 
 ## [0.5](https://github.com/cucumber/cucumber-cpp/compare/v0.4...v0.5) (2 July 2018)
 
