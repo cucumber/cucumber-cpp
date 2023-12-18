@@ -9,8 +9,6 @@ Regex & AndTagExpression::csvTagNotationRegex() {
     return r;
 }
 
-AndTagExpression::AndTagExpression() {}
-
 AndTagExpression::AndTagExpression(const std::string &csvTagNotation) {
     const std::shared_ptr<RegexMatch> match(csvTagNotationRegex().findAll(csvTagNotation));
     const RegexMatch::submatches_type submatches = match->getSubmatches();

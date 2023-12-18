@@ -10,7 +10,6 @@ using namespace cucumber::internal;
 
 class StepManagerTest : public ::testing::Test {
 public:
-    virtual ~StepManagerTest() {}
     typedef StepManagerTestDouble StepManager;
 
 protected:
@@ -65,7 +64,7 @@ private:
     MatchResult::match_results_type getResultSetFor(const string &stepMatch) {
         return StepManager::stepMatches(stepMatch).getResultSet();
     }
-    void TearDown() {
+    void TearDown() override {
         StepManager::clearSteps();
     }
 };

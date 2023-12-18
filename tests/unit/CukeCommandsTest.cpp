@@ -41,7 +41,7 @@ const string CheckAllParameters::arg_3_string_with_spaces("forty two");
 
 class CheckAllParametersWithoutMacro : public CheckAllParameters {
 public:
-    void body() {
+    void body() override {
         EXPECT_EQ(arg_0_int, getArgs()->getInvokeArg<int>(0));
         EXPECT_EQ((double)arg_0_int, getArgs()->getInvokeArg<double>(0));
         EXPECT_NO_THROW(getArgs()->getInvokeArg<string>(0));
@@ -62,7 +62,7 @@ public:
 
 class CheckAllParametersWithMacro : public CheckAllParameters {
 public:
-    void body() {
+    void body() override {
         REGEX_PARAM(int, got_arg_0_int);
         EXPECT_EQ(arg_0_int, got_arg_0_int);
 
@@ -92,7 +92,7 @@ public:
         EXPECT_EQ(arg_3_string_with_spaces, got_arg_3_string_with_spaces);
     }
 
-    void body() {
+    void body() override {
         return invokeWithArgs(*this, &CheckAllParametersWithFuncArgs::bodyWithArgs);
     }
 };

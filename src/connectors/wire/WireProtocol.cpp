@@ -173,8 +173,6 @@ static const std::map<std::string, CommandDecoder> commandDecodersMap = {
     {"snippet_text"  , SnippetTextDecoder  },
 };
 
-JsonSpiritWireMessageCodec::JsonSpiritWireMessageCodec() {}
-
 std::shared_ptr<WireCommand> JsonSpiritWireMessageCodec::decode(const std::string &request) const {
     std::istringstream is(request);
     mValue json;
@@ -229,11 +227,11 @@ namespace {
             return write_string(v, ::raw_utf8);
         }
 
-        void visit(const SuccessResponse& /*response*/) {
+        void visit(const SuccessResponse& /*response*/) override {
             success();
         }
 
-        void visit(const FailureResponse& response) {
+        void visit(const FailureResponse& response) override {
             mObject detailObject;
             if (!response.getMessage().empty()) {
                 detailObject["message"] = response.getMessage();
@@ -249,12 +247,12 @@ namespace {
             }
         }
 
-        void visit(const PendingResponse& response) {
+        void visit(const PendingResponse& response) override {
             mValue jsonReponse(response.getMessage());
             output("pending", &jsonReponse);
         }
 
-        void visit(const StepMatchesResponse& response) {
+        void visit(const StepMatchesResponse& response) override {
             mArray jsonMatches;
             for(const StepMatch & m : response.getMatchingSteps()) {
                 mObject jsonM;
@@ -279,7 +277,7 @@ namespace {
             output("success", &jsonReponse);
         }
 
-        void visit(const SnippetTextResponse& response) {
+        void visit(const SnippetTextResponse& response) override {
             mValue jsonReponse(response.getStepSnippet());
             success(&jsonReponse);
         }

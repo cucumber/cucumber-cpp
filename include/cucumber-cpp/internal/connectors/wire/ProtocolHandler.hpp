@@ -12,7 +12,7 @@ namespace internal {
 class ProtocolHandler {
 public:
     virtual std::string handle(const std::string &request) const = 0;
-    virtual ~ProtocolHandler() {};
+    virtual ~ProtocolHandler() = default;
 };
 
 }

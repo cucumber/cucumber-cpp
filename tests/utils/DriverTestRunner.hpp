@@ -68,6 +68,8 @@ public:
     DriverTest() {
         failedTests = 0;
     }
+
+    virtual ~DriverTest() = default;
 protected:
     void expectTrue(const char *description, bool condition) {
         updateState(description, condition);

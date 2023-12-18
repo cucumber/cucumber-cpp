@@ -29,11 +29,11 @@ class QtTestStepDouble : public QtTestStep {
 public:
     QtTestStepDouble() : QtTestStep(), testRun(false) {}
 
-    const InvokeResult invokeStepBody() {
+    const InvokeResult invokeStepBody() override {
         return QtTestStep::invokeStepBody();
     }
 
-    void body() {
+    void body() override {
         testRun = true;
     }
 
@@ -42,7 +42,7 @@ public:
 
 class QtTestDriverTest : public DriverTest {
 public:
-    virtual void runAllTests() {
+    void runAllTests() override {
         stepInvocationRunsStepBody();
         DriverTest::runAllTests();
     }

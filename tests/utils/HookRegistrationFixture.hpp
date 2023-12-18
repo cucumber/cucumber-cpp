@@ -46,7 +46,7 @@ std::string getHookCallMarkers() {
 
 class EmptyCallableStep : public CallableStep {
 public:
-    void call() {};
+    void call() override {};
 };
 
 class HookRegistrarDouble : public HookRegistrar {
@@ -115,7 +115,7 @@ protected:
         return str;
     }
 
-    void SetUp() {
+    void SetUp() override {
         CukeCommandsFixture::SetUp();
         clearHookCallMarkers();
         addStepToManager<EmptyStep>(STATIC_MATCHER);

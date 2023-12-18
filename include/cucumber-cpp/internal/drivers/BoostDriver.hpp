@@ -11,7 +11,7 @@ class CukeBoostLogInterceptor;
 
 class CUCUMBER_CPP_EXPORT BoostStep : public BasicStep {
 protected:
-    const InvokeResult invokeStepBody();
+    const InvokeResult invokeStepBody() override;
 
 private:
     static void initBoostTest();

@@ -21,7 +21,7 @@ public:
 
 class CUCUMBER_CPP_EXPORT Hook {
 public:
-    virtual ~Hook() {}
+    virtual ~Hook() = default;
 
     void setTags(const std::string &csvTagNotation);
     virtual void invokeHook(Scenario *scenario, CallableStep *step);
@@ -42,8 +42,8 @@ class CUCUMBER_CPP_EXPORT BeforeHook : public Hook {};
 
 class CUCUMBER_CPP_EXPORT AroundStepHook : public Hook {
 public:
-    virtual void invokeHook(Scenario *scenario, CallableStep *step);
-    virtual void skipHook();
+    void invokeHook(Scenario *scenario, CallableStep *step) override;
+    void skipHook() override;
 protected:
     CallableStep *step;
 };
@@ -54,7 +54,7 @@ class CUCUMBER_CPP_EXPORT AfterHook : public Hook {};
 
 class CUCUMBER_CPP_EXPORT UnconditionalHook : public Hook {
 public:
-    virtual void invokeHook(Scenario *scenario, CallableStep *step);
+    void invokeHook(Scenario *scenario, CallableStep *step) override;
 };
 
 class CUCUMBER_CPP_EXPORT BeforeAllHook : public UnconditionalHook {};
@@ -124,7 +124,7 @@ private:
 class CUCUMBER_CPP_EXPORT CallableStepChain : public CallableStep {
 public:
     CallableStepChain(StepCallChain *scc);
-    void call();
+    void call() override;
 private:
     StepCallChain *scc;
 };

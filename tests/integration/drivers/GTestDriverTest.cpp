@@ -31,16 +31,16 @@ public:
         return GTestStep::initialized;
     }
 
-    const InvokeResult invokeStepBody() {
+    const InvokeResult invokeStepBody() override {
         return GTestStep::invokeStepBody();
     };
 
-    void body() {};
+    void body() override {};
 };
 
 class GTestDriverTest : public DriverTest {
 public:
-    virtual void runAllTests() {
+    void runAllTests() override {
         stepInvocationInitsGTest();
         DriverTest::runAllTests();
     }

@@ -11,20 +11,17 @@ using namespace testing;
 
 class MockCukeEngine : public CukeEngine {
 public:
-    MOCK_CONST_METHOD1(stepMatches, std::vector<StepMatch>(const std::string & name));
-    MOCK_METHOD1(endScenario, void(const tags_type & tags));
-    MOCK_METHOD3(invokeStep, void(const std::string & id, const invoke_args_type & args, const invoke_table_type & tableArg));
-    MOCK_METHOD1(beginScenario, void(const tags_type & tags));
-    MOCK_CONST_METHOD3(snippetText, std::string(const std::string & keyword, const std::string & name, const std::string & multilineArgClass));
+    MOCK_METHOD(std::vector<StepMatch>, stepMatches, (const std::string & name), (const, override));
+    MOCK_METHOD(void, endScenario, (const tags_type & tags), (override));
+    MOCK_METHOD(void, invokeStep, (const std::string & id, const invoke_args_type & args, const invoke_table_type & tableArg), (override));
+    MOCK_METHOD(void, beginScenario, (const tags_type & tags), (override));
+    MOCK_METHOD(std::string, snippetText, (const std::string & keyword, const std::string & name, const std::string & multilineArgClass), (const, override));
 };
 
 #define EXPECT_PTRTYPE(classname, expression) \
     EXPECT_NE(dynamic_cast<const classname*>(expression), (void*)NULL)
 
 class WireMessageCodecTest : public Test {
-public:
-    WireMessageCodecTest() {};
-
 protected:
     std::shared_ptr<WireCommand> commandAutoPtr;
 

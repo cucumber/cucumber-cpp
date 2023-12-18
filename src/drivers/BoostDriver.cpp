@@ -46,33 +46,33 @@ public:
     void reset();
 
     // Formatter
-    void log_start( std::ostream&, counter_t /*test_cases_amount*/) {};
-    void log_finish( std::ostream&) {};
+    void log_start( std::ostream&, counter_t /*test_cases_amount*/) override {};
+    void log_finish( std::ostream&) override {};
 #if BOOST_VERSION >= 107000
-    void log_build_info(std::ostream&, bool /*log_build_info*/){};
+    void log_build_info(std::ostream&, bool /*log_build_info*/) override {};
 #else
-    void log_build_info( std::ostream&) {};
+    void log_build_info( std::ostream&) override {};
 #endif
 
-    void test_unit_start( std::ostream&, test_unit const& /*tu*/) {};
-    void test_unit_finish( std::ostream&, test_unit const& /*tu*/, unsigned long /*elapsed*/) {};
-    void test_unit_skipped( std::ostream&, test_unit const& /*tu*/) {};
+    void test_unit_start( std::ostream&, test_unit const& /*tu*/) override {};
+    void test_unit_finish( std::ostream&, test_unit const& /*tu*/, unsigned long /*elapsed*/) override {};
+    void test_unit_skipped( std::ostream&, test_unit const& /*tu*/) override {};
 
-    void log_exception_start( std::ostream&, log_checkpoint_data const&, execution_exception const&) {};
-    void log_exception_finish( std::ostream& ) {};
+    void log_exception_start( std::ostream&, log_checkpoint_data const&, execution_exception const&) override {};
+    void log_exception_finish( std::ostream& ) override {};
 
-    void log_entry_start( std::ostream&, log_entry_data const&, log_entry_types /*let*/) {};
-    void log_entry_value( std::ostream&, const_string value);
-    void log_entry_value( std::ostream&, lazy_ostream const& value);
-    void log_entry_finish( std::ostream&) {};
+    void log_entry_start( std::ostream&, log_entry_data const&, log_entry_types /*let*/) override {};
+    void log_entry_value( std::ostream&, const_string value) override;
+    void log_entry_value( std::ostream&, lazy_ostream const& value) override;
+    void log_entry_finish( std::ostream&) override {};
 
-    void entry_context_start( std::ostream&, log_level /*l*/) {}
+    void entry_context_start( std::ostream&, log_level /*l*/) override {}
 #if BOOST_VERSION >= 106500
-    void log_entry_context( std::ostream&, log_level /*l*/, const_string /*value*/) {}
-    void entry_context_finish( std::ostream&, log_level /*l*/ ) {}
+    void log_entry_context( std::ostream&, log_level /*l*/, const_string /*value*/) override {}
+    void entry_context_finish( std::ostream&, log_level /*l*/ ) override {}
 #else
-    void log_entry_context( std::ostream&, const_string /*value*/) {}
-    void entry_context_finish( std::ostream& ) {}
+    void log_entry_context( std::ostream&, const_string /*value*/) override {}
+    void entry_context_finish( std::ostream& ) override {}
 #endif
 
 private:

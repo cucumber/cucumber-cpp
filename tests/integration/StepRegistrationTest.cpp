@@ -10,7 +10,7 @@ using namespace cucumber::internal;
 
 class ManualStep : public GenericStep {
 public:
-    void body() {};
+    void body() override {};
 //private:
     static const int cukeRegId;
 };

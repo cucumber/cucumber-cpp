@@ -53,7 +53,7 @@ MATCHER_P(EventuallyReceives, value, "") {
 
 class MockProtocolHandler : public ProtocolHandler {
 public:
-    MOCK_CONST_METHOD1(handle, std::string(const std::string& request));
+    MOCK_METHOD(std::string, handle, (const std::string& request), (const, override));
 };
 
 class SocketServerTest : public Test {
@@ -62,12 +62,12 @@ protected:
     StrictMock<MockProtocolHandler> protocolHandler;
     std::future<void> serverThread{};
 
-    virtual void SetUp() {
+    void SetUp() override {
         SocketServer* server = createListeningServer();
         serverThread = std::async(std::launch::async, &SocketServer::acceptOnce, server);
     }
 
-    virtual void TearDown() {
+    void TearDown() override {
         serverThread.wait_for(THREAD_TEST_TIMEOUT);
         destroyListeningServer();
     }
@@ -80,13 +80,13 @@ class TCPSocketServerTest : public SocketServerTest {
 protected:
     std::unique_ptr<TCPSocketServer> server;
 
-    virtual SocketServer* createListeningServer() {
+    SocketServer* createListeningServer() override {
         server.reset(new TCPSocketServer(&protocolHandler));
         server->listen(0);
         return server.get();
     }
 
-    virtual void destroyListeningServer() {
+    void destroyListeningServer() override {
         server.reset();
     }
 };
@@ -142,13 +142,13 @@ class TCPSocketServerLocalhostTest : public SocketServerTest {
 protected:
   std::unique_ptr<TCPSocketServer> server;
 
-  virtual SocketServer* createListeningServer() {
+  SocketServer* createListeningServer() override {
       server.reset(new TCPSocketServer(&protocolHandler));
       server->listen(tcp::endpoint(boost::asio::ip::address::from_string("127.0.0.1"), 0));
       return server.get();
   }
 
-  virtual void destroyListeningServer() {
+  void destroyListeningServer() override {
       server.reset();
   }
 };
@@ -171,14 +171,14 @@ class UnixSocketServerTest : public SocketServerTest {
 protected:
     std::unique_ptr<UnixSocketServer> server;
 
-    virtual SocketServer* createListeningServer() {
+    SocketServer* createListeningServer() override {
         const std::string filename = std::filesystem::temp_directory_path() / randomString();
         server.reset(new UnixSocketServer(&protocolHandler));
         server->listen(filename);
         return server.get();
     }
 
-    virtual void destroyListeningServer() {
+    void destroyListeningServer() override {
         server.reset();
     }
 

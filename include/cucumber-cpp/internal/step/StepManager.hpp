@@ -57,7 +57,7 @@ class CUCUMBER_CPP_EXPORT InvokeArgs {
 public:
     typedef args_type::size_type size_type;
     
-    InvokeArgs() { }
+    InvokeArgs() = default;
  
     void addArg(const std::string arg);
     Table & getVariableTableArg();
@@ -101,7 +101,7 @@ class CUCUMBER_CPP_EXPORT StepInfo : public std::enable_shared_from_this<StepInf
 public:
     StepInfo(const std::string &stepMatcher, const std::string source);
 
-    virtual ~StepInfo() {}
+    virtual ~StepInfo() = default;
 
     SingleStepMatch matches(const std::string &stepDescription) const;
     virtual InvokeResult invokeStep(const InvokeArgs * pArgs) const = 0;
@@ -116,7 +116,7 @@ private:
 
 class CUCUMBER_CPP_EXPORT BasicStep {
 public:
-    virtual ~BasicStep() {}
+    virtual ~BasicStep() = default;
 
     InvokeResult invoke(const InvokeArgs *pArgs);
 
@@ -171,7 +171,7 @@ class StepInvoker : public StepInfo {
 public:
     StepInvoker(const std::string &stepMatcher, const std::string source);
 
-    InvokeResult invokeStep(const InvokeArgs *args) const;
+    InvokeResult invokeStep(const InvokeArgs *args) const override;
 };
 
 class CUCUMBER_CPP_EXPORT StepManager {
