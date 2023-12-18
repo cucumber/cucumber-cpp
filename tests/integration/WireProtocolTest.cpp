@@ -11,11 +11,21 @@ using namespace testing;
 
 class MockCukeEngine : public CukeEngine {
 public:
-    MOCK_METHOD(std::vector<StepMatch>, stepMatches, (const std::string & name), (const, override));
-    MOCK_METHOD(void, endScenario, (const tags_type & tags), (override));
-    MOCK_METHOD(void, invokeStep, (const std::string & id, const invoke_args_type & args, const invoke_table_type & tableArg), (override));
-    MOCK_METHOD(void, beginScenario, (const tags_type & tags), (override));
-    MOCK_METHOD(std::string, snippetText, (const std::string & keyword, const std::string & name, const std::string & multilineArgClass), (const, override));
+    MOCK_METHOD(std::vector<StepMatch>, stepMatches, (const std::string& name), (const, override));
+    MOCK_METHOD(void, endScenario, (const tags_type& tags), (override));
+    MOCK_METHOD(
+        void,
+        invokeStep,
+        (const std::string& id, const invoke_args_type& args, const invoke_table_type& tableArg),
+        (override)
+    );
+    MOCK_METHOD(void, beginScenario, (const tags_type& tags), (override));
+    MOCK_METHOD(
+        std::string,
+        snippetText,
+        (const std::string& keyword, const std::string& name, const std::string& multilineArgClass),
+        (const, override)
+    );
 };
 
 #define EXPECT_PTRTYPE(classname, expression) \
@@ -25,7 +35,7 @@ class WireMessageCodecTest : public Test {
 protected:
     std::shared_ptr<WireCommand> commandAutoPtr;
 
-    WireCommand& decode(const char *jsonStr) {
+    WireCommand& decode(const char* jsonStr) {
         commandAutoPtr = codec.decode(jsonStr);
         return *commandAutoPtr;
     }
@@ -37,7 +47,6 @@ protected:
 protected:
     const JsonSpiritWireMessageCodec codec;
 };
-
 
 /*
  * Request decoding
@@ -56,12 +65,12 @@ TEST_F(WireMessageCodecTest, decodesUnknownOrMalformedMessage) {
 TEST_F(WireMessageCodecTest, handlesStepMatchesMessage) {
     MockCukeEngine engine;
     EXPECT_CALL(engine, stepMatches("name to match"))
-            .Times(1)
-            .WillRepeatedly(Return(std::vector<StepMatch>(0)));
+        .Times(1)
+        .WillRepeatedly(Return(std::vector<StepMatch>(0)));
 
     decode("[\"step_matches\","
            "{\"name_to_match\":\"name to match\"}]")
-            .run(engine);
+        .run(engine);
 }
 
 TEST_F(WireMessageCodecTest, handlesBeginScenarioMessageWithoutArgument) {
@@ -73,14 +82,15 @@ TEST_F(WireMessageCodecTest, handlesBeginScenarioMessageWithoutArgument) {
 
 TEST_F(WireMessageCodecTest, handlesBeginScenarioMessageWithTagsArgument) {
     MockCukeEngine engine;
-    EXPECT_CALL(engine, beginScenario(ElementsAre("bar","baz","foo"))).Times(1);
+    EXPECT_CALL(engine, beginScenario(ElementsAre("bar", "baz", "foo"))).Times(1);
 
     decode("[\"begin_scenario\","
            "{\"tags\":["
-                "\"bar\","
-                "\"baz\","
-                "\"foo\""
-           "]}]").run(engine);
+           "\"bar\","
+           "\"baz\","
+           "\"foo\""
+           "]}]")
+        .run(engine);
 }
 
 TEST_F(WireMessageCodecTest, handlesBeginScenarioMessageWithNullArgument) {
@@ -99,41 +109,47 @@ TEST_F(WireMessageCodecTest, handlesInvokeMessageWithNoArgs) {
 
 TEST_F(WireMessageCodecTest, handlesInvokeMessageWithoutTableArgs) {
     MockCukeEngine engine;
-    EXPECT_CALL(engine, invokeStep("42", ElementsAre("p1","p2","p3"), ElementsAre())).Times(1);
+    EXPECT_CALL(engine, invokeStep("42", ElementsAre("p1", "p2", "p3"), ElementsAre())).Times(1);
 
     decode("[\"invoke\",{"
            "\"id\":\"42\","
            "\"args\":["
-                "\"p1\","
-                "\"p2\","
-                "\"p3\""
-           "}]").run(engine);
+           "\"p1\","
+           "\"p2\","
+           "\"p3\""
+           "}]")
+        .run(engine);
 }
 
 TEST_F(WireMessageCodecTest, handlesInvokeMessageWithTableArgs) {
     MockCukeEngine engine;
-    EXPECT_CALL(engine, invokeStep(
+    EXPECT_CALL(
+        engine,
+        invokeStep(
             "42",
             ElementsAre("p1"),
             ElementsAre(
-                ElementsAre("col1","col2"),
-                ElementsAre("r1c1","r1c2"),
-                ElementsAre("r2c1","r2c2"),
-                ElementsAre("r3c1","r3c2")
+                ElementsAre("col1", "col2"),
+                ElementsAre("r1c1", "r1c2"),
+                ElementsAre("r2c1", "r2c2"),
+                ElementsAre("r3c1", "r3c2")
             )
-        )).Times(1);
+        )
+    )
+        .Times(1);
 
     decode("[\"invoke\",{"
            "\"id\":\"42\","
            "\"args\":["
-                "\"p1\","
-                "["
-                    "[\"col1\",\"col2\"],"
-                    "[\"r1c1\",\"r1c2\"],"
-                    "[\"r2c1\",\"r2c2\"],"
-                    "[\"r3c1\",\"r3c2\"]"
-                "]"
-           "}]").run(engine);
+           "\"p1\","
+           "["
+           "[\"col1\",\"col2\"],"
+           "[\"r1c1\",\"r1c2\"],"
+           "[\"r2c1\",\"r2c2\"],"
+           "[\"r3c1\",\"r3c2\"]"
+           "]"
+           "}]")
+        .run(engine);
 }
 
 TEST_F(WireMessageCodecTest, handlesInvokeMessageWithNullArg) {
@@ -159,25 +175,26 @@ TEST_F(WireMessageCodecTest, handlesEndScenarioMessageWithNullArgument) {
 
 TEST_F(WireMessageCodecTest, handlesEndScenarioMessageWithTagsArgument) {
     MockCukeEngine engine;
-    EXPECT_CALL(engine, endScenario(ElementsAre("cu","cum","ber"))).Times(1);
+    EXPECT_CALL(engine, endScenario(ElementsAre("cu", "cum", "ber"))).Times(1);
 
     decode("[\"end_scenario\","
            "{\"tags\":["
-                "\"cu\","
-                "\"cum\","
-                "\"ber\""
-           "]}]").run(engine);
+           "\"cu\","
+           "\"cum\","
+           "\"ber\""
+           "]}]")
+        .run(engine);
 }
 
 TEST_F(WireMessageCodecTest, handlesSnippetTextMessage) {
     MockCukeEngine engine;
-    EXPECT_CALL(engine, snippetText("Keyword", "step description","Some::Class")).Times(1);
+    EXPECT_CALL(engine, snippetText("Keyword", "step description", "Some::Class")).Times(1);
 
     decode("[\"snippet_text\","
            "{\"step_keyword\":\"Keyword\","
-             "\"multiline_arg_class\":\"Some::Class\","
-             "\"step_name\":\"step description\"}]")
-            .run(engine);
+           "\"multiline_arg_class\":\"Some::Class\","
+           "\"step_name\":\"step description\"}]")
+        .run(engine);
 }
 
 /*
@@ -195,12 +212,14 @@ TEST_F(WireMessageCodecTest, handlesSimpleFailureResponse) {
 }
 
 TEST_F(WireMessageCodecTest, handlesDetailedFailureResponse) {
-    FailureResponse response("My message","ExceptionClassName");
-    EXPECT_THAT(codec.encode(response), StrEq(
-            "[\"fail\",{"
-                "\"exception\":\"ExceptionClassName\","
-                "\"message\":\"My message\""
-            "}]"));
+    FailureResponse response("My message", "ExceptionClassName");
+    EXPECT_THAT(
+        codec.encode(response),
+        StrEq("[\"fail\",{"
+              "\"exception\":\"ExceptionClassName\","
+              "\"message\":\"My message\""
+              "}]")
+    );
 }
 
 TEST_F(WireMessageCodecTest, handlesPendingResponse) {
@@ -229,19 +248,21 @@ TEST_F(WireMessageCodecTest, handlesStepMatchesResponse) {
     matches.push_back(sm2);
     StepMatchesResponse response(matches);
 
-    EXPECT_THAT(codec.encode(response), StrEq(
-            "[\"success\",[{"
-                "\"args\":[],"
-                "\"id\":\"1234\","
-                "\"regexp\":\"Some (.*) regexp\","
-                "\"source\":\"MyClass.cpp:56\""
-            "},{"
-                "\"args\":[{"
-                    "\"pos\":5,"
-                    "\"val\":\"odd\""
-                "}],"
-                "\"id\":\"9876\""
-            "}]]"));
+    EXPECT_THAT(
+        codec.encode(response),
+        StrEq("[\"success\",[{"
+              "\"args\":[],"
+              "\"id\":\"1234\","
+              "\"regexp\":\"Some (.*) regexp\","
+              "\"source\":\"MyClass.cpp:56\""
+              "},{"
+              "\"args\":[{"
+              "\"pos\":5,"
+              "\"val\":\"odd\""
+              "}],"
+              "\"id\":\"9876\""
+              "}]]")
+    );
 }
 
 TEST_F(WireMessageCodecTest, handlesSnippetTextResponse) {
@@ -287,9 +308,10 @@ TEST_F(WireMessageCodecTest, encodesResponseUsingRawUtf8) {
 
 TEST(WireCommandsTest, succesfulInvokeReturnsSuccess) {
     MockCukeEngine engine;
-    InvokeCommand invokeCommand("x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type());
-    EXPECT_CALL(engine, invokeStep(_, _, _))
-            .Times(1);
+    InvokeCommand invokeCommand(
+        "x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type()
+    );
+    EXPECT_CALL(engine, invokeStep(_, _, _)).Times(1);
 
     std::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
     EXPECT_PTRTYPE(SuccessResponse, response.get());
@@ -297,10 +319,12 @@ TEST(WireCommandsTest, succesfulInvokeReturnsSuccess) {
 
 TEST(WireCommandsTest, throwingFailureInvokeReturnsFailure) {
     MockCukeEngine engine;
-    InvokeCommand invokeCommand("x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type());
+    InvokeCommand invokeCommand(
+        "x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type()
+    );
     EXPECT_CALL(engine, invokeStep(_, _, _))
-            .Times(1)
-            .WillOnce(Throw(InvokeFailureException("A", "B")));
+        .Times(1)
+        .WillOnce(Throw(InvokeFailureException("A", "B")));
 
     std::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
     EXPECT_PTRTYPE(FailureResponse, response.get());
@@ -309,10 +333,10 @@ TEST(WireCommandsTest, throwingFailureInvokeReturnsFailure) {
 
 TEST(WireCommandsTest, throwingPendingStepReturnsPending) {
     MockCukeEngine engine;
-    InvokeCommand invokeCommand("x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type());
-    EXPECT_CALL(engine, invokeStep(_, _, _))
-            .Times(1)
-            .WillOnce(Throw(PendingStepException("S")));
+    InvokeCommand invokeCommand(
+        "x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type()
+    );
+    EXPECT_CALL(engine, invokeStep(_, _, _)).Times(1).WillOnce(Throw(PendingStepException("S")));
 
     std::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
     EXPECT_PTRTYPE(PendingResponse, response.get());
@@ -321,18 +345,12 @@ TEST(WireCommandsTest, throwingPendingStepReturnsPending) {
 
 TEST(WireCommandsTest, throwingAnythingInvokeReturnsFailure) {
     MockCukeEngine engine;
-    InvokeCommand invokeCommand("x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type());
-    EXPECT_CALL(engine, invokeStep(_, _, _))
-            .Times(1)
-            .WillOnce(Throw(string("something")));
+    InvokeCommand invokeCommand(
+        "x", CukeEngine::invoke_args_type(), CukeEngine::invoke_table_type()
+    );
+    EXPECT_CALL(engine, invokeStep(_, _, _)).Times(1).WillOnce(Throw(string("something")));
 
     std::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
     EXPECT_PTRTYPE(FailureResponse, response.get());
     // TODO Test empty
 }
-
-
-
-
-
-

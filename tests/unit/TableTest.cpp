@@ -7,27 +7,29 @@ TEST(TableTest, forbidsRowsNotMatchingTableColumnsSize) {
     Table t;
     t.addColumn("C1");
 
-    EXPECT_THROW({
-        Table::row_type row;
-        t.addRow(row);
-    }, std::range_error);
+    EXPECT_THROW(
+        {
+            Table::row_type row;
+            t.addRow(row);
+        },
+        std::range_error
+    );
 
-    EXPECT_NO_THROW({
-        t.addRow({"R1"});
-    });
+    EXPECT_NO_THROW({ t.addRow({"R1"}); });
 
-    EXPECT_THROW({
-        t.addRow({"R1", "R2"});
-    }, std::range_error);
+    EXPECT_THROW({ t.addRow({"R1", "R2"}); }, std::range_error);
 }
 
 TEST(TableTest, rowsCannotBeAddedBeforeColumnsAreSet) {
     Table t;
 
-    EXPECT_THROW({
-        Table::row_type row;
-        t.addRow(row);
-    }, std::runtime_error);
+    EXPECT_THROW(
+        {
+            Table::row_type row;
+            t.addRow(row);
+        },
+        std::runtime_error
+    );
 }
 
 TEST(TableTest, columnsCannotBeChangesAfterRowsAreAdded) {
@@ -35,9 +37,7 @@ TEST(TableTest, columnsCannotBeChangesAfterRowsAreAdded) {
     t.addColumn("C1");
     t.addRow({"R1"});
 
-    EXPECT_THROW({
-        t.addColumn("C2");
-    }, std::runtime_error);
+    EXPECT_THROW({ t.addColumn("C2"); }, std::runtime_error);
 }
 
 TEST(TableTest, addedRowsMatchColumnDefinition) {

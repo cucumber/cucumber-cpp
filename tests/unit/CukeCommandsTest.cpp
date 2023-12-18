@@ -11,7 +11,7 @@ using std::string;
 
 class CukeCommandsTest : public CukeCommandsFixture {
 protected:
-    void addStepWithMatcher(const std::string &matcher) {
+    void addStepWithMatcher(const std::string& matcher) {
         addStepToManager<EmptyStep>(matcher);
     }
 };
@@ -81,11 +81,11 @@ public:
 class CheckAllParametersWithFuncArgs : public CheckAllParameters {
 public:
     void bodyWithArgs(
-            const int          got_arg_0_int
-          , const double       got_arg_1_double
-          , const std::string  got_arg_2_string
-          , const std::string& got_arg_3_string_with_spaces
-          ) {
+        const int got_arg_0_int,
+        const double got_arg_1_double,
+        const std::string got_arg_2_string,
+        const std::string& got_arg_3_string_with_spaces
+    ) {
         EXPECT_EQ(arg_0_int, got_arg_0_int);
         EXPECT_EQ(arg_1_double, got_arg_1_double);
         EXPECT_EQ(arg_2_string, got_arg_2_string);
@@ -120,15 +120,19 @@ TEST_F(CukeCommandsTest, invokeHandlesParametersWithMacro) {
 }
 
 TEST_F(CukeCommandsTest, producesSnippetsEscapingTitle) {
-    EXPECT_EQ("THEN(\"^x\\\\|y\\\"z$\") {\n"
-              "    pending();\n"
-              "}\n",
-              snippetText("then","x|y\"z"));
+    EXPECT_EQ(
+        "THEN(\"^x\\\\|y\\\"z$\") {\n"
+        "    pending();\n"
+        "}\n",
+        snippetText("then", "x|y\"z")
+    );
 }
 
 TEST_F(CukeCommandsTest, escapesCaractersInRegexes) {
     //  abc|()[]{}^$*+?.\def  <=  abc\|\(\)\[\]\{\}\^\$\*\+\?\.\\def
-    EXPECT_EQ("abc\\|\\(\\)\\[\\]\\{\\}\\^\\$\\*\\+\\?\\.\\\\def", escapeRegex("abc|()[]{}^$*+?.\\def"));
+    EXPECT_EQ(
+        "abc\\|\\(\\)\\[\\]\\{\\}\\^\\$\\*\\+\\?\\.\\\\def", escapeRegex("abc|()[]{}^$*+?.\\def")
+    );
 }
 
 TEST_F(CukeCommandsTest, escapesCharactersInCStrings) {

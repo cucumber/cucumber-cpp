@@ -3,26 +3,26 @@
 #include <boost/math/constants/constants.hpp>
 #include <boost/format.hpp>
 
-using std::string;
 using cucumber::ScenarioScope;
+using std::string;
 
 namespace {
 
-    bool isCloseEnough(double value, double expected) {
-        return (std::abs(value - expected) > 0.00001);
-    }
+bool isCloseEnough(double value, double expected) {
+    return (std::abs(value - expected) > 0.00001);
+}
 
-    void verifyEqual(double value, double expected) {
-        if (isCloseEnough(value, expected)) {
-            throw (boost::format("Value %1% not equal to %2%") % value % expected).str();
-        }
+void verifyEqual(double value, double expected) {
+    if (isCloseEnough(value, expected)) {
+        throw(boost::format("Value %1% not equal to %2%") % value % expected).str();
     }
+}
 
-    void verifyNotEqual(double value, double expected) {
-        if (!isCloseEnough(value, expected)) {
-            throw (boost::format("Value %1% equal to %2%") % value % expected).str();
-        }
+void verifyNotEqual(double value, double expected) {
+    if (!isCloseEnough(value, expected)) {
+        throw(boost::format("Value %1% equal to %2%") % value % expected).str();
     }
+}
 }
 
 GIVEN("^a calculator") {
@@ -72,9 +72,9 @@ WHEN("^the calculator adds up the following numbers:$") {
 
     ScenarioScope<RpnCalculator> calc;
     vector<string> numbers;
-    boost::split(numbers, numberString,boost::is_any_of("\n"));
+    boost::split(numbers, numberString, boost::is_any_of("\n"));
 
-    for (size_t i=0; i < numbers.size(); ++i) {
+    for (size_t i = 0; i < numbers.size(); ++i) {
         calc->push(numbers[i]);
         if (i != 0) {
             calc->push("+");
@@ -100,4 +100,3 @@ THEN("^the calculator does not return ([\\d\\.]+)$") {
     ScenarioScope<RpnCalculator> calc;
     verifyNotEqual(calc->value(), expected);
 }
-

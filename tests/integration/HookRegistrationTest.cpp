@@ -7,23 +7,35 @@
 #define BEFORE_ALL_MARKER_1 "A"
 #define BEFORE_ALL_MARKER_2 "B"
 #define BEFORE_ALL_MARKER_3 "C"
-BEFORE_ALL() { beforeAllHookCallMarker << BEFORE_ALL_MARKER_1; }
-BEFORE_ALL() { beforeAllHookCallMarker << BEFORE_ALL_MARKER_2; }
-BEFORE_ALL() { beforeAllHookCallMarker << BEFORE_ALL_MARKER_3; }
+BEFORE_ALL() {
+    beforeAllHookCallMarker << BEFORE_ALL_MARKER_1;
+}
+BEFORE_ALL() {
+    beforeAllHookCallMarker << BEFORE_ALL_MARKER_2;
+}
+BEFORE_ALL() {
+    beforeAllHookCallMarker << BEFORE_ALL_MARKER_3;
+}
 
 #define BEFORE_MARKER_1 "D"
 #define BEFORE_MARKER_2 "E"
 #define BEFORE_MARKER_3 "F"
-BEFORE() { beforeHookCallMarker << BEFORE_MARKER_1; }
-BEFORE() { beforeHookCallMarker << BEFORE_MARKER_2; }
-BEFORE() { beforeHookCallMarker << BEFORE_MARKER_3; }
+BEFORE() {
+    beforeHookCallMarker << BEFORE_MARKER_1;
+}
+BEFORE() {
+    beforeHookCallMarker << BEFORE_MARKER_2;
+}
+BEFORE() {
+    beforeHookCallMarker << BEFORE_MARKER_3;
+}
 
 #define AROUND_STEP_MARKER_BEFORE_1 "G"
 #define AROUND_STEP_MARKER_BEFORE_2 "H"
 #define AROUND_STEP_MARKER_BEFORE_3 "I"
-#define AROUND_STEP_MARKER_AFTER_3  "g"
-#define AROUND_STEP_MARKER_AFTER_2  "h"
-#define AROUND_STEP_MARKER_AFTER_1  "i"
+#define AROUND_STEP_MARKER_AFTER_3 "g"
+#define AROUND_STEP_MARKER_AFTER_2 "h"
+#define AROUND_STEP_MARKER_AFTER_1 "i"
 AROUND_STEP() {
     beforeAroundStepHookCallMarker << AROUND_STEP_MARKER_BEFORE_1;
     globalStepHookCallMarker << AROUND_STEP_MARKER_BEFORE_1;
@@ -65,17 +77,28 @@ AFTER_STEP() {
 #define AFTER_MARKER_1 "M"
 #define AFTER_MARKER_2 "N"
 #define AFTER_MARKER_3 "O"
-AFTER() { afterHookCallMarker << AFTER_MARKER_1; }
-AFTER() { afterHookCallMarker << AFTER_MARKER_2; }
-AFTER() { afterHookCallMarker << AFTER_MARKER_3; }
+AFTER() {
+    afterHookCallMarker << AFTER_MARKER_1;
+}
+AFTER() {
+    afterHookCallMarker << AFTER_MARKER_2;
+}
+AFTER() {
+    afterHookCallMarker << AFTER_MARKER_3;
+}
 
 #define AFTER_ALL_MARKER_1 "P"
 #define AFTER_ALL_MARKER_2 "Q"
 #define AFTER_ALL_MARKER_3 "R"
-AFTER_ALL() { afterAllHookCallMarker << AFTER_ALL_MARKER_1; }
-AFTER_ALL() { afterAllHookCallMarker << AFTER_ALL_MARKER_2; }
-AFTER_ALL() { afterAllHookCallMarker << AFTER_ALL_MARKER_3; }
-
+AFTER_ALL() {
+    afterAllHookCallMarker << AFTER_ALL_MARKER_1;
+}
+AFTER_ALL() {
+    afterAllHookCallMarker << AFTER_ALL_MARKER_2;
+}
+AFTER_ALL() {
+    afterAllHookCallMarker << AFTER_ALL_MARKER_3;
+}
 
 #define CONTEXT_MARKER "X"
 BEFORE() {
@@ -87,15 +110,18 @@ AFTER() {
     contextContents = *context;
 }
 
-
 const std::string correctBeforeOrder(BEFORE_MARKER_1 BEFORE_MARKER_2 BEFORE_MARKER_3);
-const std::string correctBeforeAroundStepOrder(AROUND_STEP_MARKER_BEFORE_1 AROUND_STEP_MARKER_BEFORE_2 AROUND_STEP_MARKER_BEFORE_3);
-const std::string correctAfterAroundStepOrder(AROUND_STEP_MARKER_AFTER_3 AROUND_STEP_MARKER_AFTER_2 AROUND_STEP_MARKER_AFTER_1);
-const std::string correctAfterStepOrder(AFTER_STEP_MARKER_1 AFTER_STEP_MARKER_2 AFTER_STEP_MARKER_3);
+const std::string correctBeforeAroundStepOrder(
+    AROUND_STEP_MARKER_BEFORE_1 AROUND_STEP_MARKER_BEFORE_2 AROUND_STEP_MARKER_BEFORE_3
+);
+const std::string correctAfterAroundStepOrder(AROUND_STEP_MARKER_AFTER_3 AROUND_STEP_MARKER_AFTER_2
+                                                  AROUND_STEP_MARKER_AFTER_1);
+const std::string correctAfterStepOrder(AFTER_STEP_MARKER_1 AFTER_STEP_MARKER_2 AFTER_STEP_MARKER_3
+);
 const std::string correctAfterOrder(AFTER_MARKER_1 AFTER_MARKER_2 AFTER_MARKER_3);
-const std::string correctBeforeAllOrder(BEFORE_ALL_MARKER_1 BEFORE_ALL_MARKER_2 BEFORE_ALL_MARKER_3);
+const std::string correctBeforeAllOrder(BEFORE_ALL_MARKER_1 BEFORE_ALL_MARKER_2 BEFORE_ALL_MARKER_3
+);
 const std::string correctAfterAllOrder(AFTER_ALL_MARKER_1 AFTER_ALL_MARKER_2 AFTER_ALL_MARKER_3);
-
 
 TEST_F(HookRegistrationTest, hooksAreRegisteredByTheMacros) {
     beginScenario();
@@ -154,10 +180,11 @@ TEST_F(HookRegistrationTest, afterStepHooksAreInvokedAfterAroundStepHooks) {
     beginScenario();
     EXPECT_EQ("", globalStepHookCallMarker.str());
     invokeStep();
-    EXPECT_EQ(beforeAroundStepHookCallMarker.str() +
-              afterAroundStepHookCallMarker.str() +
-              afterStepHookCallMarker.str(),
-              globalStepHookCallMarker.str());
+    EXPECT_EQ(
+        beforeAroundStepHookCallMarker.str() + afterAroundStepHookCallMarker.str()
+            + afterStepHookCallMarker.str(),
+        globalStepHookCallMarker.str()
+    );
     endScenario();
 }
 
@@ -165,7 +192,7 @@ TEST_F(HookRegistrationTest, beforeAllHooksAreInvokedInAnyOrderDuringFirstScenar
     EXPECT_EQ("", afterAllHookCallMarker.str());
     beginScenario();
     EXPECT_EQ(correctBeforeAllOrder, sort(beforeAllHookCallMarker.str()));
-    
+
     clearHookCallMarkers();
     invokeStep();
     endScenario();

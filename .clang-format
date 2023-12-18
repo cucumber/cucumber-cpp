@@ -1,15 +1,18 @@
 ---
-Language:        Cpp
+Language: Cpp
 AccessModifierOffset: -4
+AlignAfterOpenBracket: BlockIndent
 AlignEscapedNewlinesLeft: true
-AllowShortFunctionsOnASingleLine: Empty
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
 AlwaysBreakTemplateDeclarations: true
 BinPackArguments: false
 BinPackParameters: false
 BreakBeforeBinaryOperators: All
 BreakBeforeBraces: Attach
-ColumnLimit:     100
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
+BreakConstructorInitializers: AfterColon
+ColumnLimit: 100
+FixNamespaceComments: true
 IncludeCategories: 
   # The autodetect header should always be included last
   - Regex:           '^<cucumber-cpp/autodetect\.hpp>$'
@@ -18,14 +21,19 @@ IncludeCategories:
     Priority:        1
   - Regex:           '.*'
     Priority:        2
-IndentWidth:     4
+IndentPPDirectives: BeforeHash
+IndentWidth: 4
 NamespaceIndentation: None
+PackConstructorInitializers: Never
 PenaltyBreakString: 1000
 PenaltyExcessCharacter: 10000
+PenaltyReturnTypeOnItsOwnLine: 1000
 PointerAlignment: Left
-SortIncludes:    false
+ShortNamespaceLines: 200
+SortIncludes: false
+SpaceAfterTemplateKeyword: false
 SpaceBeforeAssignmentOperators: true
 SpaceBeforeParens: ControlStatements
-Standard:        Cpp03
+Standard: Cpp11
 ...
 

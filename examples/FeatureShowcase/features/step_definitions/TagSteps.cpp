@@ -3,17 +3,15 @@
 
 #include <iostream>
 
-using std::string;
 using std::cout;
 using std::endl;
+using std::string;
 
-BEFORE_ALL()
-{
+BEFORE_ALL() {
     cout << "-------------------- (Before all scenarios)" << endl;
 }
 
-AFTER_ALL()
-{
+AFTER_ALL() {
     cout << "-------------------- (After all scenarios)" << endl;
 }
 
@@ -21,7 +19,7 @@ BEFORE() {
     cout << "-------------------- (Before any scenario)" << endl;
 }
 
-BEFORE("@foo,@bar","@baz") {
+BEFORE("@foo,@bar", "@baz") {
     cout << "Before scenario (\"@foo,@baz\",\"@bar\")" << endl;
 }
 
@@ -42,7 +40,6 @@ AFTER("@foo") {
 AFTER("@gherkin") {
     cout << "After scenario (\"@gherkin\")" << endl;
 }
-
 
 /*
  * CUKE_STEP_ is used just because the feature does not convey any

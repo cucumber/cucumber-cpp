@@ -34,20 +34,21 @@ MATCHER(EventuallyTerminates, "") {
 }
 
 MATCHER_P(EventuallyReceives, value, "") {
-    std::basic_iostream<char> *stream = const_cast<std::basic_iostream<char> *>(
-            static_cast<const std::basic_iostream<char> *>(&arg));
+    std::basic_iostream<char>* stream
+        = const_cast<std::basic_iostream<char>*>(static_cast<const std::basic_iostream<char>*>(&arg)
+        );
     std::string output;
-// FIXME It should not block
+    // FIXME It should not block
     (*stream) >> output;
-//    boost::timer timer;
-//    double timeout = THREAD_TEST_TIMEOUT.total_milliseconds() / 1000.0;
-//    while (timer.elapsed() < timeout) {
-//        if (stream->rdbuf()->available() > 0) { // it is zero even if it doesn't block!
-//            (*stream) >> output;
-//            break;
-//        }
-//        boost::this_thread::yield();
-//    }
+    //    boost::timer timer;
+    //    double timeout = THREAD_TEST_TIMEOUT.total_milliseconds() / 1000.0;
+    //    while (timer.elapsed() < timeout) {
+    //        if (stream->rdbuf()->available() > 0) { // it is zero even if it doesn't block!
+    //            (*stream) >> output;
+    //            break;
+    //        }
+    //        boost::this_thread::yield();
+    //    }
     return (output == value);
 }
 
@@ -112,7 +113,7 @@ TEST_F(TCPSocketServerTest, moreThanOneClientCanConnect) {
     // when
     tcp::iostream client2(server->listenEndpoint());
 
-    //then
+    // then
     ASSERT_THAT(client2, IsConnected());
 }
 
@@ -140,17 +141,17 @@ TEST_F(TCPSocketServerTest, receiveAndSendsSingleLineMassages) {
 
 class TCPSocketServerLocalhostTest : public SocketServerTest {
 protected:
-  std::unique_ptr<TCPSocketServer> server;
+    std::unique_ptr<TCPSocketServer> server;
 
-  SocketServer* createListeningServer() override {
-      server.reset(new TCPSocketServer(&protocolHandler));
-      server->listen(tcp::endpoint(boost::asio::ip::address::from_string("127.0.0.1"), 0));
-      return server.get();
-  }
+    SocketServer* createListeningServer() override {
+        server.reset(new TCPSocketServer(&protocolHandler));
+        server->listen(tcp::endpoint(boost::asio::ip::address::from_string("127.0.0.1"), 0));
+        return server.get();
+    }
 
-  void destroyListeningServer() override {
-      server.reset();
-  }
+    void destroyListeningServer() override {
+        server.reset();
+    }
 };
 
 TEST_F(TCPSocketServerLocalhostTest, listensOnLocalhost) {

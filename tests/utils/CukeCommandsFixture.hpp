@@ -1,4 +1,4 @@
-#ifndef CUKE_CUKECOMMANDSFIXTURE_HPP_ 
+#ifndef CUKE_CUKECOMMANDSFIXTURE_HPP_
 #define CUKE_CUKECOMMANDSFIXTURE_HPP_
 
 #include <cucumber-cpp/internal/CukeCommands.hpp>
@@ -11,7 +11,8 @@
 using namespace cucumber::internal;
 
 class EmptyStep : public GenericStep {
-    void body() override {}
+    void body() override {
+    }
 };
 
 class CukeCommandsFixture : public ::testing::Test, public CukeCommands {
@@ -31,8 +32,8 @@ protected:
     }
 
     template<class T>
-    void addStepToManager(const std::string &matcher) {
-        stepId = StepManager::addStep(std::make_shared<StepInvoker<T> >(matcher, ""));
+    void addStepToManager(const std::string& matcher) {
+        stepId = StepManager::addStep(std::make_shared<StepInvoker<T>>(matcher, ""));
     }
 
     void TearDown() override {
@@ -43,4 +44,3 @@ protected:
 const std::string CukeCommandsFixture::STATIC_MATCHER("MATCHER");
 
 #endif /* CUKE_CUKECOMMANDSFIXTURE_HPP_ */
-

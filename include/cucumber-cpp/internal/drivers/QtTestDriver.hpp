@@ -12,7 +12,9 @@ class CUCUMBER_CPP_EXPORT QtTestStep : public BasicStep {
     friend class QtTestObject;
 
 public:
-    QtTestStep() : BasicStep() {}
+    QtTestStep() :
+        BasicStep() {
+    }
 
 protected:
     const InvokeResult invokeStepBody() override;
@@ -23,7 +25,9 @@ protected:
 class QtTestObject : public QObject {
     Q_OBJECT
 public:
-    QtTestObject(QtTestStep* qtTestStep) : step(qtTestStep) {}
+    QtTestObject(QtTestStep* qtTestStep) :
+        step(qtTestStep) {
+    }
 
 protected:
     QtTestStep* step;

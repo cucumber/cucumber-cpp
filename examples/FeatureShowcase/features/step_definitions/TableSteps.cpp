@@ -10,10 +10,12 @@ class ActiveActors {
 public:
     typedef std::string actor_name_type;
     typedef unsigned short actor_year_type;
+
 private:
     typedef std::map<actor_name_type, actor_year_type> actors_type;
 
     actors_type actors;
+
 public:
     void addActor(const actor_name_type name, const actor_year_type year) {
         actors[name] = year;
@@ -27,7 +29,7 @@ public:
         actors_type::iterator it = actors.begin();
         actor_name_type name = it->first;
         actor_year_type year = it->second;
-        while(++it != actors.end()) {
+        while (++it != actors.end()) {
             actor_year_type currentYear = it->second;
             if (year > currentYear) {
                 name = it->first;
@@ -41,11 +43,12 @@ GIVEN("^the following actors are still active") {
     TABLE_PARAM(actorsParam);
     ScenarioScope<ActiveActors> context;
 
-    const table_hashes_type & actors = actorsParam.hashes();
+    const table_hashes_type& actors = actorsParam.hashes();
     for (table_hashes_type::const_iterator ait = actors.begin(); ait != actors.end(); ++ait) {
         std::string name(ait->at("name"));
         std::string yearString(ait->at("born"));
-        const ActiveActors::actor_year_type year = ::cucumber::internal::fromString<ActiveActors::actor_year_type>(yearString);
+        const ActiveActors::actor_year_type year
+            = ::cucumber::internal::fromString<ActiveActors::actor_year_type>(yearString);
         context->addActor(name, year);
     }
 }

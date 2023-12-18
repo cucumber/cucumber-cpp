@@ -10,7 +10,8 @@ class Scenario {
 public:
     Scenario(const TagExpression::tag_list& tags = TagExpression::tag_list());
 
-    const TagExpression::tag_list & getTags();
+    const TagExpression::tag_list& getTags();
+
 private:
     const TagExpression::tag_list tags;
 };

@@ -14,7 +14,7 @@ bool RegexMatch::matches() {
     return regexMatched;
 }
 
-const RegexMatch::submatches_type & RegexMatch::getSubmatches() {
+const RegexMatch::submatches_type& RegexMatch::getSubmatches() {
     return submatches;
 }
 
@@ -22,7 +22,7 @@ std::string Regex::str() const {
     return regexString;
 }
 
-std::shared_ptr<RegexMatch> Regex::find(const std::string &expression) const {
+std::shared_ptr<RegexMatch> Regex::find(const std::string& expression) const {
     return std::make_shared<FindRegexMatch>(regexImpl, expression);
 }
 
@@ -31,8 +31,9 @@ bool isUtf8CodeUnitStartOfCodepoint(unsigned int i) {
     return (i & 0xc0) != 0x80;
 }
 
-std::ptrdiff_t utf8CodepointOffset(const std::string& expression,
-                                   const std::string::const_iterator& it) {
+std::ptrdiff_t utf8CodepointOffset(
+    const std::string& expression, const std::string::const_iterator& it
+) {
     return count_if(expression.begin(), it, &isUtf8CodeUnitStartOfCodepoint);
 }
 } // namespace
@@ -56,12 +57,14 @@ FindRegexMatch::FindRegexMatch(const std::regex& regexImpl, const std::string& e
     }
 }
 
-std::shared_ptr<RegexMatch> Regex::findAll(const std::string &expression) const {
+std::shared_ptr<RegexMatch> Regex::findAll(const std::string& expression) const {
     return std::make_shared<FindAllRegexMatch>(regexImpl, expression);
 }
 
-FindAllRegexMatch::FindAllRegexMatch(const std::regex &regexImpl, const std::string &expression) {
-    std::sregex_token_iterator i(expression.begin(), expression.end(), regexImpl, 1, std::regex_constants::match_continuous);
+FindAllRegexMatch::FindAllRegexMatch(const std::regex& regexImpl, const std::string& expression) {
+    std::sregex_token_iterator i(
+        expression.begin(), expression.end(), regexImpl, 1, std::regex_constants::match_continuous
+    );
     const std::sregex_token_iterator end;
     for (; i != end; ++i) {
         RegexSubmatch s = {*i, -1};

@@ -19,11 +19,15 @@ private:
     CukeCommands cukeCommands;
 
 public:
-    std::vector<StepMatch> stepMatches(const std::string & name) const override;
-    void beginScenario(const tags_type & tags) override;
-    void invokeStep(const std::string & id, const invoke_args_type & args, const invoke_table_type & tableArg) override;
-    void endScenario(const tags_type & tags) override;
-    std::string snippetText(const std::string & keyword, const std::string & name, const std::string & multilineArgClass) const override;
+    std::vector<StepMatch> stepMatches(const std::string& name) const override;
+    void beginScenario(const tags_type& tags) override;
+    void invokeStep(
+        const std::string& id, const invoke_args_type& args, const invoke_table_type& tableArg
+    ) override;
+    void endScenario(const tags_type& tags) override;
+    std::string snippetText(
+        const std::string& keyword, const std::string& name, const std::string& multilineArgClass
+    ) const override;
 };
 
 }

@@ -15,10 +15,11 @@ const InvokeResult QtTestStep::invokeStepBody() {
     file.close();
 
     QtTestObject testObject(this);
-    int returnValue = QTest::qExec(&testObject,
-                                   QStringList() << "test"
-                                                 << "-o"
-                                                 << file.fileName());
+    int returnValue = QTest::qExec(
+        &testObject,
+        QStringList() << "test"
+                      << "-o" << file.fileName()
+    );
     if (returnValue == 0) {
         return InvokeResult::success();
     } else {
@@ -30,4 +31,3 @@ const InvokeResult QtTestStep::invokeStepBody() {
 
 }
 }
-

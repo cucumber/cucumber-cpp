@@ -7,20 +7,20 @@
 using namespace std;
 using namespace cucumber::internal;
 
-
 class StepManagerTest : public ::testing::Test {
 public:
     typedef StepManagerTestDouble StepManager;
 
 protected:
-    StepManagerTest() {}
-    const static char *a_matcher;
-    const static char *another_matcher;
-    const static char *no_match;
-    const static char *a_third_matcher;
+    StepManagerTest() {
+    }
+    const static char* a_matcher;
+    const static char* another_matcher;
+    const static char* no_match;
+    const static char* a_third_matcher;
     const map<std::ptrdiff_t, string> no_params;
 
-    int getUniqueMatchIdOrZeroFor(const string &stepMatch) {
+    int getUniqueMatchIdOrZeroFor(const string& stepMatch) {
         MatchResult::match_results_type resultSet = getResultSetFor(stepMatch);
         if (resultSet.size() != 1) {
             return 0;
@@ -29,15 +29,15 @@ protected:
         }
     }
 
-    size_t countMatches(const string &stepMatch) {
+    size_t countMatches(const string& stepMatch) {
         return getResultSetFor(stepMatch).size();
     }
 
-    bool matchesOnce(const string &stepMatch) {
+    bool matchesOnce(const string& stepMatch) {
         return (countMatches(stepMatch) == 1);
     }
 
-    bool matchesAtLeastOnce(const string &stepMatch) {
+    bool matchesAtLeastOnce(const string& stepMatch) {
         return (countMatches(stepMatch) > 0);
     }
 
@@ -60,8 +60,9 @@ protected:
         }
         return true;
     }
+
 private:
-    MatchResult::match_results_type getResultSetFor(const string &stepMatch) {
+    MatchResult::match_results_type getResultSetFor(const string& stepMatch) {
         return StepManager::stepMatches(stepMatch).getResultSet();
     }
     void TearDown() override {
@@ -69,10 +70,10 @@ private:
     }
 };
 
-const char *StepManagerTest::a_matcher = "a matcher";
-const char *StepManagerTest::another_matcher = "another matcher";
-const char *StepManagerTest::a_third_matcher = "a third matcher";
-const char *StepManagerTest::no_match = "no match";
+const char* StepManagerTest::a_matcher = "a matcher";
+const char* StepManagerTest::another_matcher = "another matcher";
+const char* StepManagerTest::a_third_matcher = "a third matcher";
+const char* StepManagerTest::no_match = "no match";
 
 TEST_F(StepManagerTest, holdsNonConflictingSteps) {
     ASSERT_EQ(0, StepManager::count());
@@ -112,9 +113,11 @@ TEST_F(StepManagerTest, extractsParamsFromRegExMatchers) {
     StepManager::addStepDefinition("match the (\\w+) param");
     EXPECT_TRUE(extractedParamsAre("match the first param", {{10, "first"}}));
     StepManager::addStepDefinition("match a (.+)$");
-    EXPECT_TRUE(extractedParamsAre("match a  string  with  spaces  ", {{8, " string  with  spaces  "}}));
+    EXPECT_TRUE(
+        extractedParamsAre("match a  string  with  spaces  ", {{8, " string  with  spaces  "}})
+    );
     StepManager::addStepDefinition("match params (\\w+), (\\w+) and (\\w+)");
-    EXPECT_TRUE(extractedParamsAre("match params A, B and C", {{13, "A"},{16, "B"},{22, "C"}}));
+    EXPECT_TRUE(extractedParamsAre("match params A, B and C", {{13, "A"}, {16, "B"}, {22, "C"}}));
 }
 
 TEST_F(StepManagerTest, handlesMultipleMatches) {

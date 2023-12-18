@@ -35,7 +35,7 @@ public:
         return GTestStep::invokeStepBody();
     };
 
-    void body() override {};
+    void body() override{};
 };
 
 class GTestDriverTest : public DriverTest {
@@ -49,7 +49,9 @@ private:
     void stepInvocationInitsGTest() {
         std::cout << "= Init =" << std::endl;
         GTestStepDouble framework;
-        expectFalse("Framework is not initialized before the first test", framework.isInitialized());
+        expectFalse(
+            "Framework is not initialized before the first test", framework.isInitialized()
+        );
         framework.invokeStepBody();
         expectTrue("Framework is initialized after the first test", framework.isInitialized());
     }

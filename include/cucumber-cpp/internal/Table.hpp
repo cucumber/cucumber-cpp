@@ -14,8 +14,9 @@ namespace internal {
 class CUCUMBER_CPP_EXPORT Table {
 private:
     typedef std::vector<std::string> basic_type;
+
 public:
-    typedef std::map<std::string,std::string> hash_row_type;
+    typedef std::map<std::string, std::string> hash_row_type;
     typedef basic_type columns_type;
     typedef basic_type row_type;
     typedef std::vector<hash_row_type> hashes_type;
@@ -35,11 +36,11 @@ public:
      * @throws std::range_error
      * @throws std::runtime_error
      */
-    void addRow(const row_type &row);
-    const hashes_type & hashes() const;
+    void addRow(const row_type& row);
+    const hashes_type& hashes() const;
 
 private:
-    hash_row_type buildHashRow(const row_type &row);
+    hash_row_type buildHashRow(const row_type& row);
 
     columns_type columns;
     hashes_type rows;

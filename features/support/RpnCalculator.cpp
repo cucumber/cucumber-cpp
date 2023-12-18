@@ -45,4 +45,3 @@ private:
         stack.push_back(v);
     }
 };
-

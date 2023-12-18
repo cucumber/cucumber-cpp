@@ -11,12 +11,13 @@ namespace cucumber {
 
 namespace internal {
 
-typedef std::vector<std::shared_ptr<void> > contexts_type;
+typedef std::vector<std::shared_ptr<void>> contexts_type;
 
 class CUCUMBER_CPP_EXPORT ContextManager {
 public:
     void purgeContexts();
-    template<class T> std::weak_ptr<T> addContext();
+    template<class T>
+    std::weak_ptr<T> addContext();
 
 protected:
     static contexts_type contexts;
@@ -26,7 +27,7 @@ template<class T>
 std::weak_ptr<T> ContextManager::addContext() {
     std::shared_ptr<T> shared(std::make_shared<T>());
     contexts.push_back(shared);
-    return std::weak_ptr<T> (shared);
+    return std::weak_ptr<T>(shared);
 }
 
 }
@@ -51,10 +52,10 @@ std::weak_ptr<T> ScenarioScope<T>::contextReference;
 
 template<class T>
 ScenarioScope<T>::ScenarioScope() {
-     if (contextReference.expired()) {
-          contextReference = contextManager.addContext<T> ();
-     }
-     context = contextReference.lock();
+    if (contextReference.expired()) {
+        contextReference = contextManager.addContext<T>();
+    }
+    context = contextReference.lock();
 }
 
 template<class T>

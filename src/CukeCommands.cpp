@@ -8,7 +8,8 @@ namespace internal {
 
 std::shared_ptr<Scenario> CukeCommands::currentScenario;
 
-CukeCommands::CukeCommands() : hasStarted(false) {
+CukeCommands::CukeCommands() :
+    hasStarted(false) {
 }
 
 CukeCommands::~CukeCommands() {
@@ -33,32 +34,44 @@ void CukeCommands::endScenario() {
     currentScenario.reset();
 }
 
-const std::string CukeCommands::snippetText(const std::string stepKeyword, const std::string stepName) const {
+const std::string CukeCommands::snippetText(
+    const std::string stepKeyword, const std::string stepName
+) const {
     std::stringstream text;
     std::string stepKeywordUpperCase;
-    std::transform(stepKeyword.begin(), stepKeyword.end(), std::back_inserter(stepKeywordUpperCase), ::toupper);
-    text << stepKeywordUpperCase
-        << "(\""
-        << escapeCString("^" + escapeRegex(stepName) + "$")
-        << "\") {\n"
-        << "    pending();\n"
-        << "}\n";
+    std::transform(
+        stepKeyword.begin(), stepKeyword.end(), std::back_inserter(stepKeywordUpperCase), ::toupper
+    );
+    text << stepKeywordUpperCase << "(\"" << escapeCString("^" + escapeRegex(stepName) + "$")
+         << "\") {\n"
+         << "    pending();\n"
+         << "}\n";
     return text.str();
 }
 
 const std::string CukeCommands::escapeRegex(const std::string reg) const {
-    return regex_replace(reg, std::regex("[\\|\\(\\)\\[\\]\\{\\}\\^\\$\\*\\+\\?\\.\\\\]"), "\\\\&", std::regex_constants::match_default | std::regex_constants::format_sed);
+    return regex_replace(
+        reg,
+        std::regex("[\\|\\(\\)\\[\\]\\{\\}\\^\\$\\*\\+\\?\\.\\\\]"),
+        "\\\\&",
+        std::regex_constants::match_default | std::regex_constants::format_sed
+    );
 }
 
 const std::string CukeCommands::escapeCString(const std::string str) const {
-    return regex_replace(str, std::regex("[\"\\\\]"), "\\\\&", std::regex_constants::match_default | std::regex_constants::format_sed);
+    return regex_replace(
+        str,
+        std::regex("[\"\\\\]"),
+        "\\\\&",
+        std::regex_constants::match_default | std::regex_constants::format_sed
+    );
 }
 
 MatchResult CukeCommands::stepMatches(const std::string description) const {
     return StepManager::stepMatches(description);
 }
 
-InvokeResult CukeCommands::invoke(step_id_type id, const InvokeArgs *pArgs) {
+InvokeResult CukeCommands::invoke(step_id_type id, const InvokeArgs* pArgs) {
     const StepInfo* const stepInfo = StepManager::getStep(id);
     InvokeResult result = HookRegistrar::execStepChain(currentScenario.get(), stepInfo, pArgs);
     HookRegistrar::execAfterStepHooks(currentScenario.get());
