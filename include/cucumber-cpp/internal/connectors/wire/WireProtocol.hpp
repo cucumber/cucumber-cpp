@@ -149,11 +149,11 @@ public:
 };
 
 /**
- * WireMessageCodec implementation with JsonSpirit.
+ * WireMessageCodec implementation with Json.
  */
-class CUCUMBER_CPP_EXPORT JsonSpiritWireMessageCodec : public WireMessageCodec {
+class CUCUMBER_CPP_EXPORT JsonWireMessageCodec : public WireMessageCodec {
 public:
-    JsonSpiritWireMessageCodec() = default;
+    JsonWireMessageCodec() = default;
     std::shared_ptr<WireCommand> decode(const std::string& request) const override;
     const std::string encode(const WireResponse& response) const override;
 };

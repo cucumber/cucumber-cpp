@@ -1,5 +1,7 @@
 include(GenerateExportHeader)
 
+find_package(nlohmann_json 3.10.5 REQUIRED)
+
 set(CUKE_SOURCES
     drivers/GenericDriver.cpp
     ContextManager.cpp
@@ -74,11 +76,6 @@ foreach(TARGET
             $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
             $<BUILD_INTERFACE:${CUKE_INCLUDE_DIR}>
             $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
-    )
-    # Declaring json_spirit.header to be a direct dependency with target_link_libraries breaks installation
-    target_include_directories(${TARGET} SYSTEM
-        PRIVATE
-            $<TARGET_PROPERTY:json_spirit.header,INTERFACE_INCLUDE_DIRECTORIES>
     )
     target_link_libraries(${TARGET}
         PUBLIC

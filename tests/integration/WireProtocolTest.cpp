@@ -45,7 +45,7 @@ protected:
     }
 
 protected:
-    const JsonSpiritWireMessageCodec codec;
+    const JsonWireMessageCodec codec;
 };
 
 /*

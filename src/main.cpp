@@ -13,7 +13,7 @@ void acceptWireProtocol(
 ) {
     using namespace ::cucumber::internal;
     CukeEngineImpl cukeEngine;
-    JsonSpiritWireMessageCodec wireCodec;
+    JsonWireMessageCodec wireCodec;
     WireProtocolHandler protocolHandler(wireCodec, cukeEngine);
     std::unique_ptr<SocketServer> server;
 #if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)

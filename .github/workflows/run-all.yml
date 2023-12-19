@@ -27,6 +27,7 @@ jobs:
         libboost-test-dev \
         make \
         ninja-build \
+        nlohmann-json3-dev \
         qtbase5-dev \
         ruby \
         ruby-dev \
