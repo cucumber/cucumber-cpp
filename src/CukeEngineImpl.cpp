@@ -45,24 +45,22 @@ void CukeEngineImpl::beginScenario(const tags_type& tags) {
 void CukeEngineImpl::invokeStep(
     const std::string& id, const invoke_args_type& args, const invoke_table_type& tableArg
 ) {
-    typedef invoke_table_type::index table_index;
-
     InvokeArgs commandArgs;
     try {
         for (const std::string& a : args) {
             commandArgs.addArg(a);
         }
 
-        if (tableArg.shape()[0] > 1 && tableArg.shape()[1] > 0) {
+        if (!tableArg.empty() && !tableArg.front().empty()) {
             Table& commandTableArg = commandArgs.getVariableTableArg();
-            for (table_index j = 0; j < table_index(tableArg.shape()[1]); ++j) {
-                commandTableArg.addColumn(tableArg[0][j]);
+            for (const auto& arg : tableArg[0]) {
+                commandTableArg.addColumn(arg);
             }
 
-            for (table_index i = 1; i < table_index(tableArg.shape()[0]); ++i) {
+            for (std::size_t i = 1; i < tableArg.size(); ++i) {
                 Table::row_type row;
-                for (table_index j = 0; j < table_index(tableArg.shape()[1]); ++j) {
-                    row.push_back(tableArg[i][j]);
+                for (const auto& arg : tableArg[i]) {
+                    row.push_back(arg);
                 }
                 commandTableArg.addRow(row);
             }
