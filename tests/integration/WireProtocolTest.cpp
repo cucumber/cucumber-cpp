@@ -68,8 +68,11 @@ TEST_F(WireMessageCodecTest, handlesStepMatchesMessage) {
         .Times(1)
         .WillRepeatedly(Return(std::vector<StepMatch>(0)));
 
-    decode("[\"step_matches\","
-           "{\"name_to_match\":\"name to match\"}]")
+    decode(R"json([
+        "step_matches", {
+            "name_to_match": "name to match"
+        }
+    ])json")
         .run(engine);
 }
 
@@ -77,19 +80,21 @@ TEST_F(WireMessageCodecTest, handlesBeginScenarioMessageWithoutArgument) {
     MockCukeEngine engine;
     EXPECT_CALL(engine, beginScenario(ElementsAre())).Times(1);
 
-    decode("[\"begin_scenario\"]").run(engine);
+    decode(R"json([
+        "begin_scenario"
+    ])json")
+        .run(engine);
 }
 
 TEST_F(WireMessageCodecTest, handlesBeginScenarioMessageWithTagsArgument) {
     MockCukeEngine engine;
     EXPECT_CALL(engine, beginScenario(ElementsAre("bar", "baz", "foo"))).Times(1);
 
-    decode("[\"begin_scenario\","
-           "{\"tags\":["
-           "\"bar\","
-           "\"baz\","
-           "\"foo\""
-           "]}]")
+    decode(R"json([
+        "begin_scenario", {
+            "tags": ["bar", "baz", "foo"]
+        }
+    ])json")
         .run(engine);
 }
 
@@ -97,27 +102,36 @@ TEST_F(WireMessageCodecTest, handlesBeginScenarioMessageWithNullArgument) {
     MockCukeEngine engine;
     EXPECT_CALL(engine, beginScenario(ElementsAre())).Times(1);
 
-    decode("[\"begin_scenario\",null]").run(engine);
+    decode(R"json([
+        "begin_scenario",
+        null
+    ])json")
+        .run(engine);
 }
 
 TEST_F(WireMessageCodecTest, handlesInvokeMessageWithNoArgs) {
     MockCukeEngine engine;
     EXPECT_CALL(engine, invokeStep("42", ElementsAre(), ElementsAre())).Times(1);
 
-    decode("[\"invoke\",{\"id\":\"42\",\"args\":[]}]").run(engine);
+    decode(R"json([
+        "invoke", {
+            "id": "42",
+            "args": []
+        }
+    ])json")
+        .run(engine);
 }
 
 TEST_F(WireMessageCodecTest, handlesInvokeMessageWithoutTableArgs) {
     MockCukeEngine engine;
     EXPECT_CALL(engine, invokeStep("42", ElementsAre("p1", "p2", "p3"), ElementsAre())).Times(1);
 
-    decode("[\"invoke\",{"
-           "\"id\":\"42\","
-           "\"args\":["
-           "\"p1\","
-           "\"p2\","
-           "\"p3\""
-           "]}]")
+    decode(R"json([
+        "invoke", {
+            "id": "42",
+            "args": ["p1", "p2", "p3"]
+        }
+    ])json")
         .run(engine);
 }
 
@@ -138,17 +152,20 @@ TEST_F(WireMessageCodecTest, handlesInvokeMessageWithTableArgs) {
     )
         .Times(1);
 
-    decode("[\"invoke\",{"
-           "\"id\":\"42\","
-           "\"args\":["
-           "\"p1\","
-           "["
-           "[\"col1\",\"col2\"],"
-           "[\"r1c1\",\"r1c2\"],"
-           "[\"r2c1\",\"r2c2\"],"
-           "[\"r3c1\",\"r3c2\"]"
-           "]"
-           "]}]")
+    decode(R"json([
+        "invoke", {
+            "id": "42",
+            "args": [
+                "p1",
+                [
+                    ["col1", "col2"],
+                    ["r1c1", "r1c2"],
+                    ["r2c1", "r2c2"],
+                    ["r3c1", "r3c2"]
+                ]
+            ]
+        }
+    ])json")
         .run(engine);
 }
 
@@ -156,33 +173,49 @@ TEST_F(WireMessageCodecTest, handlesInvokeMessageWithNullArg) {
     MockCukeEngine engine;
     EXPECT_CALL(engine, invokeStep("42", ElementsAre(), ElementsAre())).Times(1);
 
-    decode("[\"invoke\",{\"id\":\"42\",\"args\":[null]}]").run(engine);
+    decode(R"json([
+        "invoke", {
+            "id": "42",
+            "args": [null]
+        }
+    ])json")
+        .run(engine);
 }
 
 TEST_F(WireMessageCodecTest, handlesEndScenarioMessageWithoutArgument) {
     MockCukeEngine engine;
     EXPECT_CALL(engine, endScenario(ElementsAre())).Times(1);
 
-    decode("[\"end_scenario\"]").run(engine);
+    decode(R"json([
+        "end_scenario"
+    ])json")
+        .run(engine);
 }
 
 TEST_F(WireMessageCodecTest, handlesEndScenarioMessageWithNullArgument) {
     MockCukeEngine engine;
     EXPECT_CALL(engine, endScenario(ElementsAre())).Times(1);
 
-    decode("[\"end_scenario\",null]").run(engine);
+    decode(R"json([
+        "end_scenario",
+        null
+    ])json")
+        .run(engine);
 }
 
 TEST_F(WireMessageCodecTest, handlesEndScenarioMessageWithTagsArgument) {
     MockCukeEngine engine;
     EXPECT_CALL(engine, endScenario(ElementsAre("cu", "cum", "ber"))).Times(1);
 
-    decode("[\"end_scenario\","
-           "{\"tags\":["
-           "\"cu\","
-           "\"cum\","
-           "\"ber\""
-           "]}]")
+    decode(R"json([
+        "end_scenario", {
+            "tags": [
+                "cu",
+                "cum",
+                "ber"
+            ]
+        }
+    ])json")
         .run(engine);
 }
 
@@ -190,10 +223,13 @@ TEST_F(WireMessageCodecTest, handlesSnippetTextMessage) {
     MockCukeEngine engine;
     EXPECT_CALL(engine, snippetText("Keyword", "step description", "Some::Class")).Times(1);
 
-    decode("[\"snippet_text\","
-           "{\"step_keyword\":\"Keyword\","
-           "\"multiline_arg_class\":\"Some::Class\","
-           "\"step_name\":\"step description\"}]")
+    decode(R"json([
+        "snippet_text", {
+            "step_keyword": "Keyword",
+            "multiline_arg_class": "Some::Class",
+            "step_name": "step description"
+        }
+    ])json")
         .run(engine);
 }
 
@@ -248,21 +284,22 @@ TEST_F(WireMessageCodecTest, handlesStepMatchesResponse) {
     matches.push_back(sm2);
     StepMatchesResponse response(matches);
 
-    EXPECT_THAT(
-        codec.encode(response),
-        StrEq("[\"success\",[{"
-              "\"args\":[],"
-              "\"id\":\"1234\","
-              "\"regexp\":\"Some (.*) regexp\","
-              "\"source\":\"MyClass.cpp:56\""
-              "},{"
-              "\"args\":[{"
-              "\"pos\":5,"
-              "\"val\":\"odd\""
-              "}],"
-              "\"id\":\"9876\""
-              "}]]")
+    // clang-format off
+    EXPECT_THAT(codec.encode(response), StrEq(
+        "[\"success\",[{"
+            "\"args\":[],"
+            "\"id\":\"1234\","
+            "\"regexp\":\"Some (.*) regexp\","
+            "\"source\":\"MyClass.cpp:56\""
+        "},{"
+            "\"args\":[{"
+                "\"pos\":5,"
+                "\"val\":\"odd\""
+            "}],"
+            "\"id\":\"9876\""
+        "}]]")
     );
+    // clang-format on
 }
 
 TEST_F(WireMessageCodecTest, handlesSnippetTextResponse) {
@@ -288,17 +325,17 @@ TEST_F(WireMessageCodecTest, encodesResponseUsingRawUtf8) {
 
     // clang-format off
     EXPECT_THAT(codec.encode(response), StrEq(
-            "[\"success\",[{"
-                "\"args\":[{"
-                    "\"pos\":5,"
-                    "\"val\":\"カラオケ機\""
-                "},{"
-                    "\"pos\":18,"
-                    "\"val\":\"ASCII\""
-                "}],"
-                "\"id\":\"1234\","
-                "\"regexp\":\"Some (.+) regexp (.+)\""
-            "}]]"));
+        "[\"success\",[{"
+            "\"args\":[{"
+                "\"pos\":5,"
+                "\"val\":\"カラオケ機\""
+            "},{"
+                "\"pos\":18,"
+                "\"val\":\"ASCII\""
+            "}],"
+            "\"id\":\"1234\","
+            "\"regexp\":\"Some (.+) regexp (.+)\""
+        "}]]"));
     // clang-format on
 }
 
