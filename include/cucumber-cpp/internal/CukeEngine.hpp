@@ -5,8 +5,6 @@
 #include <string>
 #include <vector>
 
-#include <boost/multi_array.hpp>
-
 #include <cucumber-cpp/internal/CukeExport.hpp>
 
 namespace cucumber {
@@ -65,7 +63,7 @@ public:
 class CukeEngine {
 private:
     typedef std::vector<std::string> string_array;
-    typedef boost::multi_array<std::string, 2> string_2d_array;
+    typedef std::vector<std::vector<std::string>> string_2d_array;
 
 public:
     typedef string_array tags_type;

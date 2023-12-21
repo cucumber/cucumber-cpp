@@ -112,12 +112,12 @@ void fillTableArg(const mArray& jsonTableArg, CukeEngine::invoke_table_type& tab
     size_type rows = jsonTableArg.size();
     if (rows > 0) {
         size_type columns = jsonTableArg[0].get_array().size();
-        tableArg.resize(boost::extents[rows][columns]);
+        tableArg.resize(rows);
         for (size_type i = 0; i < rows; ++i) {
             const mArray& jsonRow(jsonTableArg[i].get_array());
             if (jsonRow.size() == columns) {
                 for (size_type j = 0; j < columns; ++j) {
-                    tableArg[i][j] = jsonRow[j].get_str();
+                    tableArg[i].push_back(jsonRow[j].get_str());
                 }
             } else {
                 // TODO: Invalid row
@@ -257,7 +257,7 @@ public:
             for (const StepMatchArg& ma : m.args) {
                 mObject jsonMa;
                 jsonMa["val"] = ma.value;
-                jsonMa["pos"] = static_cast<boost::int64_t>(ma.position);
+                jsonMa["pos"] = static_cast<int64_t>(ma.position);
                 jsonArgs.push_back(jsonMa);
             }
             jsonM["args"] = jsonArgs;
