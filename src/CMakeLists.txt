@@ -37,14 +37,41 @@ if(TARGET Qt5::Test)
     list(APPEND CUKE_EXTRA_PRIVATE_LIBRARIES Qt5::Test)
 endif()
 
-if(CMAKE_EXTRA_GENERATOR OR MSVC_IDE)
-    message(STATUS "Adding header files to project")
-    file(GLOB_RECURSE CUKE_HEADERS "${CUKE_INCLUDE_DIR}/cucumber-cpp/*.hpp")
-    if(MSVC_IDE)
-        source_group("Header Files" FILES ${CUKE_HEADERS})
-    endif()
-    list(APPEND CUKE_SOURCES ${CUKE_HEADERS})
+message(STATUS "Adding header files to project")
+set(CUKE_HEADERS
+    ../include/cucumber-cpp/autodetect.hpp
+    ../include/cucumber-cpp/defs.hpp
+    ../include/cucumber-cpp/generic.hpp
+    ../include/cucumber-cpp/internal/ContextManager.hpp
+    ../include/cucumber-cpp/internal/CukeCommands.hpp
+    ../include/cucumber-cpp/internal/CukeEngine.hpp
+    ../include/cucumber-cpp/internal/CukeEngineImpl.hpp
+    ../include/cucumber-cpp/internal/Macros.hpp
+    ../include/cucumber-cpp/internal/RegistrationMacros.hpp
+    ../include/cucumber-cpp/internal/Scenario.hpp
+    ../include/cucumber-cpp/internal/Table.hpp
+    ../include/cucumber-cpp/internal/connectors/wire/ProtocolHandler.hpp
+    ../include/cucumber-cpp/internal/connectors/wire/WireProtocol.hpp
+    ../include/cucumber-cpp/internal/connectors/wire/WireProtocolCommands.hpp
+    ../include/cucumber-cpp/internal/connectors/wire/WireServer.hpp
+    ../include/cucumber-cpp/internal/defs.hpp
+    ../include/cucumber-cpp/internal/drivers/BoostDriver.hpp
+    ../include/cucumber-cpp/internal/drivers/DriverSelector.hpp
+    ../include/cucumber-cpp/internal/drivers/GTestDriver.hpp
+    ../include/cucumber-cpp/internal/drivers/GenericDriver.hpp
+    ../include/cucumber-cpp/internal/drivers/QtTestDriver.hpp
+    ../include/cucumber-cpp/internal/hook/HookMacros.hpp
+    ../include/cucumber-cpp/internal/hook/HookRegistrar.hpp
+    ../include/cucumber-cpp/internal/hook/Tag.hpp
+    ../include/cucumber-cpp/internal/step/StepMacros.hpp
+    ../include/cucumber-cpp/internal/step/StepManager.hpp
+    ../include/cucumber-cpp/internal/utils/IndexSequence.hpp
+    ../include/cucumber-cpp/internal/utils/Regex.hpp
+)
+if(MSVC_IDE)
+    source_group("Header Files" FILES ${CUKE_HEADERS})
 endif()
+list(APPEND CUKE_SOURCES ${CUKE_HEADERS})
 
 # Library for unit tests relying on internals
 add_library(cucumber-cpp-internal STATIC ${CUKE_SOURCES})
