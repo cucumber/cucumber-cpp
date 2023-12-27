@@ -117,7 +117,7 @@ TEST_F(WireMessageCodecTest, handlesInvokeMessageWithoutTableArgs) {
            "\"p1\","
            "\"p2\","
            "\"p3\""
-           "}]")
+           "]}]")
         .run(engine);
 }
 
@@ -148,7 +148,7 @@ TEST_F(WireMessageCodecTest, handlesInvokeMessageWithTableArgs) {
            "[\"r2c1\",\"r2c2\"],"
            "[\"r3c1\",\"r3c2\"]"
            "]"
-           "}]")
+           "]}]")
         .run(engine);
 }
 
