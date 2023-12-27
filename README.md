@@ -57,10 +57,6 @@ bundle install
 Building Cucumber-Cpp with tests and samples:
 
 ```
-# Download test suite
-git submodule init
-git submodule update
-
 # Create build directory
 cmake -E make_directory build
 
@@ -75,9 +71,6 @@ cmake --build build --target test
 
 # Run install
 cmake --build build --target install
-
-# Check implementation against common cucumber test suite
-cmake --build build --target features
 ```
 
 Running the Calc example on Unix:
