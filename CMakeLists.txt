@@ -20,7 +20,6 @@ option(CUKE_ENABLE_BOOST_TEST   "Enable Boost.Test framework" ON)
 option(CUKE_ENABLE_EXAMPLES     "Build examples" OFF)
 option(CUKE_ENABLE_GTEST        "Enable Google Test framework" ON)
 option(CUKE_ENABLE_QT           "Enable Qt framework" ON)
-option(CUKE_TESTS_E2E           "Enable end-to-end tests" ON)
 option(CUKE_TESTS_UNIT          "Enable unit tests" ON)
 option(CUKE_CODE_COVERAGE       "Enable instrumentation for code coverage" OFF)
 set(CUKE_ENABLE_SANITIZER       "OFF" CACHE STRING "Sanitizer to use for checking")
@@ -70,7 +69,6 @@ endfunction()
 option_depr_invert (CUKE_DISABLE_BOOST_TEST   CUKE_ENABLE_BOOST_TEST)
 option_depr_invert (CUKE_DISABLE_GTEST        CUKE_ENABLE_GTEST)
 option_depr_invert (CUKE_DISABLE_QT           CUKE_ENABLE_QT)
-option_depr_invert (CUKE_DISABLE_E2E_TESTS    CUKE_TESTS_E2E)
 option_depr_invert (CUKE_DISABLE_UNIT_TESTS   CUKE_TESTS_UNIT)
 option_depr        (VALGRIND_TESTS            CUKE_TESTS_VALGRIND)
 
@@ -311,71 +309,6 @@ if(CUKE_TESTS_UNIT)
     add_subdirectory(tests)
 else()
     message(STATUS "Skipping unit tests")
-endif()
-
-if(NOT CUKE_TESTS_E2E)
-    message(STATUS "Skipping end-to-end tests")
-else()
-    find_program(CUCUMBER_RUBY cucumber)
-    if(CUCUMBER_RUBY)
-        message(STATUS "Found Cucumber")
-        set(CUKE_FEATURES_DIR "${CMAKE_SOURCE_DIR}/features")
-        set(CUKE_FEATURES_TMP "${CMAKE_BINARY_DIR}/tmp")
-        set(CUKE_TEST_FEATURES_DIR "${CUKE_FEATURES_TMP}/test_features")
-        set(CUKE_DYNAMIC_CPP_STEPS "${CUKE_TEST_FEATURES_DIR}/step_definitions/cpp_steps.cpp")
-        string(REPLACE "/tmp" "${CMAKE_FILES_DIRECTORY}/e2e-steps.dir/tmp" CUKE_DYNAMIC_CPP_STEPS_OBJ "${CUKE_DYNAMIC_CPP_STEPS}${CMAKE_CXX_OUTPUT_EXTENSION}")
-
-        add_executable(e2e-steps EXCLUDE_FROM_ALL ${CUKE_DYNAMIC_CPP_STEPS})
-        # Mark this file as generated so it isn't required at CMake generation time (it is necessary when the target gets built though)
-        set_source_files_properties(${CUKE_DYNAMIC_CPP_STEPS} PROPERTIES GENERATED TRUE)
-        target_link_libraries(e2e-steps PRIVATE cucumber-cpp)
-        #Boost test lib required for boost specific scenario "Predicate Message"
-        if(TARGET Boost::unit_test_framework)
-            target_link_libraries(e2e-steps PRIVATE Boost::unit_test_framework)
-        else()
-            set(CUKE_E2E_TAGS "--tags ~@boost")
-        endif()
-
-        set(CUKE_COMPILE_DYNAMIC_CPP_STEPS '"${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}" --target e2e-steps')
-
-        function(add_feature_target TARGET_NAME)
-            # Ensure we get colored output from cucumber and give it direct terminal access if
-            # possible. Direct terminal access would cause the output to be displayed as it's being
-            # produced instead of when cucumber is finished.
-            if(CMAKE_GENERATOR STREQUAL "Ninja")
-                list(APPEND ARGN --color)
-            endif()
-            set(USES_TERMINAL)
-            if(NOT CMAKE_VERSION VERSION_LESS 3.2)
-                set(USES_TERMINAL USES_TERMINAL)
-            endif()
-            add_custom_target(${TARGET_NAME}
-                COMMAND ${CUCUMBER_RUBY}
-                TEST_FEATURES_DIR=${CUKE_TEST_FEATURES_DIR}
-                TMP_DIR=${CUKE_FEATURES_TMP}
-                DYNAMIC_CPP_STEPS_SRC=${CUKE_DYNAMIC_CPP_STEPS}
-                DYNAMIC_CPP_STEPS_EXE=${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/e2e-steps
-                DYNAMIC_CPP_STEPS_OBJ=${CUKE_DYNAMIC_CPP_STEPS_OBJ}
-                COMPILE_DYNAMIC_CPP_STEPS=${CUKE_COMPILE_DYNAMIC_CPP_STEPS}
-                CUCUMBER_RUBY=${CUCUMBER_RUBY}
-                --format=junit "--out=${CMAKE_BINARY_DIR}/features"
-                ${CUKE_E2E_TAGS}
-                ${ARGN}
-                ${CUKE_FEATURES_DIR}
-                ${USES_TERMINAL}
-                # Execute in same directory as where DLLs appear on Windows
-                WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src
-                )
-        endfunction(add_feature_target)
-
-        add_feature_target(features         --format progress)
-        add_feature_target(features-pretty  --format pretty)
-        add_feature_target(features-wip     --format pretty --tags @wip)
-
-    else()
-        message(WARNING "Could not find Cucumber: skipping end-to-end tests")
-    endif()
-
 endif()
 
 #

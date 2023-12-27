@@ -35,9 +35,6 @@ cmake -E chdir build cmake \
 cmake --build build --parallel
 cmake --build build --parallel --target test
 
-#TODO fix feature tests
-#cmake --build build --target features
-
 #
 # Execute Calc examples
 #
