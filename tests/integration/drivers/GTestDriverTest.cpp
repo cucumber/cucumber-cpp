@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <cucumber-cpp/autodetect.hpp>
 
-#include "../../utils/DriverTestRunner.hpp"
+#include "utils/DriverTestRunner.hpp"
 
 using namespace cucumber;
 

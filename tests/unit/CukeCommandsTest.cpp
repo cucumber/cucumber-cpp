@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <cucumber-cpp/internal/step/StepMacros.hpp>
-#include "../utils/CukeCommandsFixture.hpp"
+#include "utils/CukeCommandsFixture.hpp"
 
 #include <boost/config.hpp>
 

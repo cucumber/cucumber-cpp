@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../utils/ContextManagerTestDouble.hpp"
+#include "utils/ContextManagerTestDouble.hpp"
 
 #include <memory>
 

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../utils/HookRegistrationFixture.hpp"
+#include "utils/HookRegistrationFixture.hpp"
 #include <cucumber-cpp/internal/hook/HookMacros.hpp>
 
 BEFORE("@a") {

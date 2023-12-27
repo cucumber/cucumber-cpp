@@ -1,6 +1,6 @@
 #include <cucumber-cpp/generic.hpp>
 
-#include "../../utils/DriverTestRunner.hpp"
+#include "utils/DriverTestRunner.hpp"
 
 using namespace cucumber;
 
