@@ -13,8 +13,7 @@ If you need to ask a question, don't open a ticket on GitHub! Please post
 your question on the Cucumber discussion group instead, prefixing the title
 with [CPP].
 
-If you want to contribute code to the project, guidelines are in the
-[`CONTRIBUTING.md` file](https://github.com/cucumber/cucumber-cpp/blob/main/CONTRIBUTING.md).
+If you want to contribute code to the project, guidelines are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 It relies on a few executables:
 
@@ -30,11 +29,11 @@ It relies on a few libraries:
   Optional for the GTest driver. By default downloaded and built by CMake.
 * [GMock](http://code.google.com/p/googlemock/) 1.6 or later.
   Optional for the internal test suite. By default downloaded and built by CMake.
-* [nlohmann-json](https://github.com/nlohmann/json) 3.10.5 or later
+* [nlohmann-json](https://github.com/nlohmann/json) 3.10.5 or later.
 * [Qt 4 or 5](http://qt-project.org/). Optional for the CalcQt example and QtTest driver (only Qt 5).
 
-It might work with earlier versions of the libraries, but it was not
-tested with them.
+It might work with earlier versions of the libraries, but it was not tested with them.
+See the [CI scripts](.github/workflows/run-all.yml) for details about dependency installation.
 
 Cucumber-Cpp uses the wire protocol at the moment, so you will need
 Cucumber-Ruby installed and available on the path. It is also needed
