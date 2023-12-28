@@ -1,22 +1,25 @@
 #ifndef CUKE_REGISTRATIONMACROS_HPP_
 #define CUKE_REGISTRATIONMACROS_HPP_
 
-#include <boost/config/helper_macros.hpp>
-
 // ************************************************************************** //
 // **************            OBJECT NAMING MACROS              ************** //
 // ************************************************************************** //
+
+// from https://www.boost.org/doc/libs/1_84_0/boost/config/helper_macros.hpp
+#define CUKE_JOIN(X, Y) CUKE_DO_JOIN(X, Y)
+#define CUKE_DO_JOIN(X, Y) CUKE_DO_JOIN2(X, Y)
+#define CUKE_DO_JOIN2(X, Y) X##Y
 
 #ifndef CUKE_OBJECT_PREFIX
     #define CUKE_OBJECT_PREFIX CukeObject
 #endif
 
 #ifdef __COUNTER__
-    #define CUKE_GEN_OBJECT_NAME_ BOOST_JOIN(CUKE_OBJECT_PREFIX, __COUNTER__)
+    #define CUKE_GEN_OBJECT_NAME_ CUKE_JOIN(CUKE_OBJECT_PREFIX, __COUNTER__)
 #else
     // Use a counter to be incremented every time cucumber-cpp is included
     // in case this does not suffice (possible with multiple files only)
-    #define CUKE_GEN_OBJECT_NAME_ BOOST_JOIN(CUKE_OBJECT_PREFIX, __LINE__)
+    #define CUKE_GEN_OBJECT_NAME_ CUKE_JOIN(CUKE_OBJECT_PREFIX, __LINE__)
 #endif
 
 // ************************************************************************** //
