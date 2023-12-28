@@ -1,15 +1,13 @@
 #include <cucumber-cpp/internal/connectors/wire/WireProtocol.hpp>
 #include <cucumber-cpp/internal/connectors/wire/WireProtocolCommands.hpp>
 
-#include <json_spirit/json_spirit_reader_template.h>
-#include <json_spirit/json_spirit_writer_template.h>
-#include <json_spirit/json_spirit_writer_options.h>
+#include <nlohmann/json.hpp>
 
 #include <iostream>
 #include <string>
 #include <sstream>
 
-using namespace json_spirit;
+using json = nlohmann::json;
 
 namespace cucumber {
 namespace internal {
@@ -80,44 +78,42 @@ void SnippetTextResponse::accept(WireResponseVisitor& visitor) const {
  */
 
 namespace {
-typedef std::shared_ptr<WireCommand> (*CommandDecoder)(const mValue& jsonArgs);
+typedef std::shared_ptr<WireCommand> (*CommandDecoder)(const json& jsonArgs);
 
-CukeEngine::tags_type getScenarioTags(const mValue& jsonArgs) {
+CukeEngine::tags_type getScenarioTags(const json& jsonArgs) {
     CukeEngine::tags_type tags;
     if (!jsonArgs.is_null()) {
-        const mArray& jsonTags = jsonArgs.get_obj().find("tags")->second.get_array();
-        for (mArray::const_iterator i = jsonTags.begin(); i != jsonTags.end(); ++i) {
-            tags.push_back(i->get_str());
+        const auto& jsonTags = jsonArgs.at("tags");
+        for (const auto& tag : jsonTags) {
+            tags.push_back(tag.get<std::string>());
         }
     }
     return tags;
 }
 
-std::shared_ptr<WireCommand> BeginScenarioDecoder(const mValue& jsonArgs) {
+std::shared_ptr<WireCommand> BeginScenarioDecoder(const json& jsonArgs) {
     return std::make_shared<BeginScenarioCommand>(getScenarioTags(jsonArgs));
 }
 
-std::shared_ptr<WireCommand> EndScenarioDecoder(const mValue& jsonArgs) {
+std::shared_ptr<WireCommand> EndScenarioDecoder(const json& jsonArgs) {
     return std::make_shared<EndScenarioCommand>(getScenarioTags(jsonArgs));
 }
 
-std::shared_ptr<WireCommand> StepMatchesDecoder(const mValue& jsonArgs) {
-    mObject stepMatchesArgs(jsonArgs.get_obj());
-    const std::string& nameToMatch(stepMatchesArgs["name_to_match"].get_str());
+std::shared_ptr<WireCommand> StepMatchesDecoder(const json& jsonArgs) {
+    const std::string& nameToMatch = jsonArgs.at("name_to_match");
     return std::make_shared<StepMatchesCommand>(nameToMatch);
 }
 
-void fillTableArg(const mArray& jsonTableArg, CukeEngine::invoke_table_type& tableArg) {
-    typedef mArray::size_type size_type;
-    size_type rows = jsonTableArg.size();
+void fillTableArg(const json& jsonTableArg, CukeEngine::invoke_table_type& tableArg) {
+    const std::size_t rows = jsonTableArg.size();
     if (rows > 0) {
-        size_type columns = jsonTableArg[0].get_array().size();
+        const std::size_t columns = jsonTableArg[0].get<std::vector<std::string>>().size();
         tableArg.resize(rows);
-        for (size_type i = 0; i < rows; ++i) {
-            const mArray& jsonRow(jsonTableArg[i].get_array());
+        for (std::size_t i = 0; i < rows; ++i) {
+            const auto& jsonRow(jsonTableArg[i].get<std::vector<std::string>>());
             if (jsonRow.size() == columns) {
-                for (size_type j = 0; j < columns; ++j) {
-                    tableArg[i].push_back(jsonRow[j].get_str());
+                for (std::size_t j = 0; j < columns; ++j) {
+                    tableArg[i].push_back(jsonRow[j]);
                 }
             } else {
                 // TODO: Invalid row
@@ -129,35 +125,35 @@ void fillTableArg(const mArray& jsonTableArg, CukeEngine::invoke_table_type& tab
 }
 
 void fillInvokeArgs(
-    const mObject& invokeParams,
+    const json& invokeParams,
     CukeEngine::invoke_args_type& args,
     CukeEngine::invoke_table_type& tableArg
 ) {
-    const mArray& jsonArgs(invokeParams.find("args")->second.get_array());
-    for (mArray::const_iterator i = jsonArgs.begin(); i != jsonArgs.end(); ++i) {
-        if (i->type() == str_type) {
-            args.push_back(i->get_str());
-        } else if (i->type() == array_type) {
-            fillTableArg(i->get_array(), tableArg);
+    const auto& jsonArgs = invokeParams.at("args");
+    for (const auto& arg : jsonArgs) {
+        if (arg.is_string()) {
+            args.push_back(arg.get<std::string>());
+        } else if (arg.is_array()) {
+            fillTableArg(arg, tableArg);
         }
     }
 }
 
-std::shared_ptr<WireCommand> InvokeDecoder(const mValue& jsonArgs) {
-    mObject invokeParams(jsonArgs.get_obj());
+std::shared_ptr<WireCommand> InvokeDecoder(const json& jsonArgs) {
+    const auto& invokeParams = jsonArgs.get<json::object_t>();
 
     CukeEngine::invoke_args_type args;
     CukeEngine::invoke_table_type tableArg;
-    const std::string& id(invokeParams["id"].get_str());
+    const std::string& id = invokeParams.at("id");
     fillInvokeArgs(invokeParams, args, tableArg);
     return std::make_shared<InvokeCommand>(id, args, tableArg);
 }
 
-std::shared_ptr<WireCommand> SnippetTextDecoder(const mValue& jsonArgs) {
-    mObject snippetTextArgs(jsonArgs.get_obj());
-    const std::string& stepKeyword(snippetTextArgs["step_keyword"].get_str());
-    const std::string& stepName(snippetTextArgs["step_name"].get_str());
-    const std::string& multilineArgClass(snippetTextArgs["multiline_arg_class"].get_str());
+std::shared_ptr<WireCommand> SnippetTextDecoder(const json& jsonArgs) {
+    const auto& snippetTextArgs = jsonArgs.get<json::object_t>();
+    const std::string& stepKeyword = snippetTextArgs.at("step_keyword");
+    const std::string& stepName = snippetTextArgs.at("step_name");
+    const std::string& multilineArgClass = snippetTextArgs.at("multiline_arg_class");
     return std::make_shared<SnippetTextCommand>(stepKeyword, stepName, multilineArgClass);
 }
 }
@@ -170,20 +166,16 @@ static const std::map<std::string, CommandDecoder> commandDecodersMap = {
     {"snippet_text", SnippetTextDecoder},
 };
 
-std::shared_ptr<WireCommand> JsonSpiritWireMessageCodec::decode(const std::string& request) const {
-    std::istringstream is(request);
-    mValue json;
+std::shared_ptr<WireCommand> JsonWireMessageCodec::decode(const std::string& request) const {
     try {
-        read_stream(is, json);
-        mArray& jsonRequest = json.get_array();
-        mValue& jsonCommand = jsonRequest[0];
+        json jsonRequest = json::parse(request);
+        const auto& jsonCommand = jsonRequest.at(0);
 
-        const std::map<std::string, CommandDecoder>::const_iterator commandDecoder
-            = commandDecodersMap.find(jsonCommand.get_str());
+        const auto& commandDecoder = commandDecodersMap.find(jsonCommand.get<std::string>());
         if (commandDecoder != commandDecodersMap.end() && commandDecoder->second) {
-            mValue jsonArgs;
+            json jsonArgs;
             if (jsonRequest.size() > 1) {
-                jsonArgs = jsonRequest[1];
+                jsonArgs = jsonRequest.at(1);
             }
             return commandDecoder->second(jsonArgs);
         }
@@ -197,19 +189,19 @@ namespace {
 
 class WireResponseEncoder : public WireResponseVisitor {
 private:
-    mArray jsonOutput;
+    json jsonOutput = json::array();
 
-    void success(const mValue* detail = 0) {
+    void success(const json* detail = nullptr) {
         output("success", detail);
     }
 
-    void fail(const mValue* detail = 0) {
+    void fail(const json* detail = nullptr) {
         output("fail", detail);
     }
 
-    void output(const char* responseType, const mValue* detail = 0) {
+    void output(const std::string& responseType, const json* detail = nullptr) {
         jsonOutput.push_back(responseType);
-        if (detail == 0 || detail->is_null()) {
+        if (detail == nullptr || detail->is_null()) {
             return;
         }
         jsonOutput.push_back(*detail);
@@ -219,8 +211,7 @@ public:
     std::string encode(const WireResponse& response) {
         jsonOutput.clear();
         response.accept(*this);
-        const mValue v(jsonOutput);
-        return write_string(v, ::raw_utf8);
+        return jsonOutput.dump();
     }
 
     void visit(const SuccessResponse& /*response*/) override {
@@ -228,7 +219,7 @@ public:
     }
 
     void visit(const FailureResponse& response) override {
-        mObject detailObject;
+        json detailObject;
         if (!response.getMessage().empty()) {
             detailObject["message"] = response.getMessage();
         }
@@ -238,24 +229,24 @@ public:
         if (detailObject.empty()) {
             fail();
         } else {
-            const mValue detail(detailObject);
+            const json detail(detailObject);
             fail(&detail);
         }
     }
 
     void visit(const PendingResponse& response) override {
-        mValue jsonReponse(response.getMessage());
+        json jsonReponse(response.getMessage());
         output("pending", &jsonReponse);
     }
 
     void visit(const StepMatchesResponse& response) override {
-        mArray jsonMatches;
+        json jsonMatches = json::array();
         for (const StepMatch& m : response.getMatchingSteps()) {
-            mObject jsonM;
+            json jsonM;
             jsonM["id"] = m.id;
-            mArray jsonArgs;
+            json jsonArgs = json::array();
             for (const StepMatchArg& ma : m.args) {
-                mObject jsonMa;
+                json jsonMa;
                 jsonMa["val"] = ma.value;
                 jsonMa["pos"] = static_cast<int64_t>(ma.position);
                 jsonArgs.push_back(jsonMa);
@@ -263,26 +254,25 @@ public:
             jsonM["args"] = jsonArgs;
             if (!m.source.empty()) {
                 jsonM["source"] = m.source;
-                ;
             }
             if (!m.regexp.empty()) {
                 jsonM["regexp"] = m.regexp;
             }
             jsonMatches.push_back(jsonM);
         }
-        mValue jsonReponse(jsonMatches);
+        json jsonReponse(jsonMatches);
         output("success", &jsonReponse);
     }
 
     void visit(const SnippetTextResponse& response) override {
-        mValue jsonReponse(response.getStepSnippet());
+        json jsonReponse(response.getStepSnippet());
         success(&jsonReponse);
     }
 };
 
 }
 
-const std::string JsonSpiritWireMessageCodec::encode(const WireResponse& response) const {
+const std::string JsonWireMessageCodec::encode(const WireResponse& response) const {
     try {
         WireResponseEncoder encoder;
         return encoder.encode(response);
