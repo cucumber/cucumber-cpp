@@ -3,8 +3,8 @@
 #include <cucumber-cpp/internal/connectors/wire/WireServer.hpp>
 #include <cucumber-cpp/internal/connectors/wire/WireProtocol.hpp>
 #include <iostream>
-#include <boost/program_options.hpp>
 #include <memory>
+#include <tclap/CmdLine.h>
 
 namespace {
 
@@ -43,58 +43,45 @@ void acceptWireProtocol(
 }
 
 int CUCUMBER_CPP_EXPORT main(int argc, char** argv) {
-    using boost::program_options::value;
-    boost::program_options::options_description optionDescription("Allowed options");
-    optionDescription.add_options()("help,h", "help for cucumber-cpp")(
-        "verbose,v", "verbose output"
-    )("version", "version of cucumber-cpp"
-    )("listen,l", value<std::string>(), "listening address of wireserver"
-    )("port,p",
-      value<int>(),
-      "listening port of wireserver, use '0' (zero) to select an ephemeral port")
-#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
-        ("unix,u",
-         value<std::string>(),
-         "listening unix socket of wireserver (disables listening on port)")
-#endif
-        ;
-    boost::program_options::variables_map optionVariableMap;
-    boost::program_options::store(
-        boost::program_options::parse_command_line(argc, argv, optionDescription), optionVariableMap
+    TCLAP::CmdLine cmd("C++ Cucumber wireserver", ' ', CUKE_VERSION);
+
+    TCLAP::SwitchArg verboseArg("v", "verbose", "Verbose output", cmd, false);
+    TCLAP::ValueArg<std::string> listenArg(
+        "l", "listen", "Listening address of wireserver", false, "127.0.0.1", "string"
     );
-    boost::program_options::notify(optionVariableMap);
+    cmd.add(listenArg);
+    TCLAP::ValueArg<int> portArg(
+        "p",
+        "port",
+        "Listening port of wireserver, use '0' (zero) to select an ephemeral port",
+        false,
+        3902,
+        "int"
+    );
+    cmd.add(portArg);
 
-    if (optionVariableMap.count("help")) {
-        std::cerr << optionDescription << std::endl;
-        exit(1);
-    }
+#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
+    TCLAP::ValueArg<std::string> unixArg(
+        "u",
+        "unix",
+        "Listening unix socket of wireserver (disables listening on port)",
+        false,
+        "",
+        "string"
+    );
+    cmd.add(unixArg);
+#endif
 
-    if (optionVariableMap.count("version")) {
-        std::cout << CUKE_VERSION << std::endl;
-        exit(0);
-    }
-
-    std::string listenHost("127.0.0.1");
-    if (optionVariableMap.count("listen")) {
-        listenHost = optionVariableMap["listen"].as<std::string>();
-    }
-
-    int port = 3902;
-    if (optionVariableMap.count("port")) {
-        port = optionVariableMap["port"].as<int>();
-    }
+    cmd.parse(argc, argv);
 
     std::string unixPath;
+    std::string listenHost = listenArg.getValue();
+    int port = portArg.getValue();
 #if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
-    if (optionVariableMap.count("unix")) {
-        unixPath = optionVariableMap["unix"].as<std::string>();
-    }
+    unixPath = unixArg.getValue();
 #endif
 
-    bool verbose = false;
-    if (optionVariableMap.count("verbose")) {
-        verbose = true;
-    }
+    bool verbose = verboseArg.getValue();
 
     try {
         acceptWireProtocol(listenHost, port, unixPath, verbose);

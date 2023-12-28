@@ -1,0 +1,10 @@
+find_path(TCLAP_INCLUDE_DIR tclap/CmdLine.h)
+
+if (TCLAP_INCLUDE_DIR)
+    set(TCLAP_FOUND TRUE)
+else ()
+    set(TCLAP_FOUND FALSE)
+endif ()
+
+include(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(TCLAP REQUIRED_VARS TCLAP_INCLUDE_DIR)

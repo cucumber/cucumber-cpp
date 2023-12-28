@@ -23,7 +23,7 @@ It relies on a few executables:
 It relies on a few libraries:
 
 * [Boost](http://www.boost.org/) 1.70.
-  Required libraries: *system* and *program_options*.
+  Required libraries: *system*.
   Optional library for Boost Test driver: *test*.
 * [GTest](http://code.google.com/p/googletest/) 1.6 or later.
   Optional for the GTest driver. By default downloaded and built by CMake.
@@ -31,6 +31,7 @@ It relies on a few libraries:
   Optional for the internal test suite. By default downloaded and built by CMake.
 * [nlohmann-json](https://github.com/nlohmann/json) 3.10.5 or later.
 * [Qt 4 or 5](http://qt-project.org/). Optional for the CalcQt example and QtTest driver (only Qt 5).
+* [TCLAP](https://tclap.sourceforge.net/) 1.2.5 or later.
 
 It might work with earlier versions of the libraries, but it was not tested with them.
 See the [CI scripts](.github/workflows/run-all.yml) for details about dependency installation.

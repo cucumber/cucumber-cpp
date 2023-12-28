@@ -1,6 +1,7 @@
 include(GenerateExportHeader)
 
 find_package(nlohmann_json 3.10.5 REQUIRED)
+find_package(TCLAP REQUIRED)
 include(../cmake/modules/GitVersion.cmake)
 
 set(CUKE_SOURCES
@@ -128,11 +129,6 @@ git_get_version(CUKE_VERSION)
 message(STATUS "Version: ${CUKE_VERSION}")
 target_compile_definitions(cucumber-cpp PRIVATE
     CUKE_VERSION="${CUKE_VERSION}"
-)
-
-target_link_libraries(cucumber-cpp
-    PRIVATE
-        Boost::program_options
 )
 
 include(GNUInstallDirs)

@@ -114,7 +114,7 @@ endif()
 set(BOOST_MIN_VERSION "1.70")
 
 set(Boost_USE_STATIC_RUNTIME OFF)
-set(CUKE_CORE_BOOST_LIBS system program_options)
+set(CUKE_CORE_BOOST_LIBS system)
 if(CUKE_ENABLE_BOOST_TEST)
     # "An external test runner utility is required to link with dynamic library" (Boost User's Guide)
     set(Boost_USE_STATIC_LIBS OFF)
@@ -154,13 +154,6 @@ if(Boost_SYSTEM_LIBRARY AND NOT TARGET Boost::system)
             "COMPILE_DEFINITIONS" BOOST_ERROR_CODE_HEADER_ONLY=1
         )
     endif()
-endif()
-if(Boost_PROGRAM_OPTIONS_LIBRARY AND NOT TARGET Boost::program_options)
-    add_library(Boost::program_options ${LIBRARY_TYPE} IMPORTED)
-    set_target_properties(Boost::program_options PROPERTIES
-        "IMPORTED_LOCATION" "${Boost_PROGRAM_OPTIONS_LIBRARY}"
-        "INTERFACE_LINK_LIBRARIES" "Boost::boost"
-    )
 endif()
 if(Boost_UNIT_TEST_FRAMEWORK_LIBRARY AND NOT TARGET Boost::unit_test_framework)
     add_library(Boost::unit_test_framework ${LIBRARY_TYPE} IMPORTED)
