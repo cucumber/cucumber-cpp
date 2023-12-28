@@ -1,6 +1,8 @@
 #ifndef CUKE_REGISTRATIONMACROS_HPP_
 #define CUKE_REGISTRATIONMACROS_HPP_
 
+#include <boost/config/helper_macros.hpp>
+
 // ************************************************************************** //
 // **************            OBJECT NAMING MACROS              ************** //
 // ************************************************************************** //

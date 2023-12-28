@@ -6,13 +6,8 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-
-#include <boost/config.hpp>
 #include <memory>
-
-#ifndef BOOST_NO_VARIADIC_TEMPLATES
-    #include <type_traits>
-#endif
+#include <type_traits>
 
 #include <cucumber-cpp/internal/CukeExport.hpp>
 #include "../Table.hpp"
@@ -43,10 +38,7 @@ public:
     const match_results_type& getResultSet();
     void addMatch(SingleStepMatch match);
 
-#ifndef BOOST_NO_EXPLICIT_CONVERSION_OPERATORS
-    explicit
-#endif
-    operator bool() const;
+    explicit operator bool() const;
 
 private:
     match_results_type resultSet;
@@ -139,13 +131,6 @@ protected:
     const T getInvokeArg();
     const InvokeArgs* getArgs();
 
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
-    // Special case for zero arguments, only thing we bother to support on C++98
-    template<typename Derived, typename R>
-    static R invokeWithArgs(Derived& that, R (Derived::*f)()) {
-        return (that.*f)();
-    }
-#else
     template<typename Derived, typename R, typename... Args, std::size_t... N>
     static R invokeWithIndexedArgs(Derived& that, R (Derived::*f)(Args...), index_sequence<N...>) {
         return (that.*f)(that.pArgs->template getInvokeArg<typename std::decay<Args>::type>(N)...);
@@ -156,7 +141,6 @@ protected:
         that.currentArgIndex = sizeof...(Args);
         return invokeWithIndexedArgs(that, f, index_sequence_for<Args...>{});
     }
-#endif
 
 private:
     // FIXME: awful hack because of Boost::Test
@@ -188,11 +172,7 @@ protected:
 
 private:
     // We're a singleton so don't allow instances
-    StepManager()
-#ifndef BOOST_NO_DELETED_FUNCTIONS
-        = delete
-#endif
-        ;
+    StepManager() = delete;
 };
 
 static inline std::string toSourceString(const char* filePath, const int line) {

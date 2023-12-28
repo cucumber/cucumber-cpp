@@ -3,8 +3,6 @@
 #include <cucumber-cpp/internal/step/StepMacros.hpp>
 #include "utils/CukeCommandsFixture.hpp"
 
-#include <boost/config.hpp>
-
 using namespace cucumber::internal;
 
 using std::string;
@@ -77,7 +75,6 @@ public:
     }
 };
 
-#ifndef BOOST_NO_VARIADIC_TEMPLATES
 class CheckAllParametersWithFuncArgs : public CheckAllParameters {
 public:
     void bodyWithArgs(
@@ -101,7 +98,6 @@ TEST_F(CukeCommandsTest, invokeHandlesParametersWithFuncArgs) {
     // The real test is in TestClass::body()
     runStepBodyTest<CheckAllParametersWithFuncArgs>();
 }
-#endif
 
 TEST_F(CukeCommandsTest, matchesCorrectly) {
     addStepWithMatcher(STATIC_MATCHER);
