@@ -20,7 +20,7 @@ void SocketServer::doListen(
     basic_socket_acceptor<Protocol>& acceptor, const typename Protocol::endpoint& endpoint
 ) {
     if (acceptor.is_open())
-        throw boost::system::system_error(boost::asio::error::already_open);
+        throw std::system_error(asio::error::already_open);
     acceptor.open(endpoint.protocol());
     acceptor.set_option(typename Protocol::acceptor::reuse_address(true));
     acceptor.bind(endpoint);
