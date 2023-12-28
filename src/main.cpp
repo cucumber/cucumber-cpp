@@ -47,6 +47,7 @@ int CUCUMBER_CPP_EXPORT main(int argc, char** argv) {
     boost::program_options::options_description optionDescription("Allowed options");
     optionDescription.add_options()("help,h", "help for cucumber-cpp")(
         "verbose,v", "verbose output"
+    )("version", "version of cucumber-cpp"
     )("listen,l", value<std::string>(), "listening address of wireserver"
     )("port,p",
       value<int>(),
@@ -66,6 +67,11 @@ int CUCUMBER_CPP_EXPORT main(int argc, char** argv) {
     if (optionVariableMap.count("help")) {
         std::cerr << optionDescription << std::endl;
         exit(1);
+    }
+
+    if (optionVariableMap.count("version")) {
+        std::cout << CUKE_VERSION << std::endl;
+        exit(0);
     }
 
     std::string listenHost("127.0.0.1");
