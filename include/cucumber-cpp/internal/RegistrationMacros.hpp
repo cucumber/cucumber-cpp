@@ -1,12 +1,6 @@
 #ifndef CUKE_REGISTRATIONMACROS_HPP_
 #define CUKE_REGISTRATIONMACROS_HPP_
 
-#if __cplusplus >= 201103L
-    #define CUKE_OVERRIDE override
-#else
-    #define CUKE_OVERRIDE
-#endif
-
 // ************************************************************************** //
 // **************            OBJECT NAMING MACROS              ************** //
 // ************************************************************************** //
@@ -27,16 +21,16 @@
 // **************                 CUKE OBJECTS                 ************** //
 // ************************************************************************** //
 
-#define CUKE_OBJECT_(class_name, parent_class, registration_fn, args)                          \
-    class class_name : public parent_class {                                                   \
-    public:                                                                                    \
-        void body() CUKE_OVERRIDE { return invokeWithArgs(*this, &class_name::bodyWithArgs); } \
-        void bodyWithArgs args;                                                                \
-                                                                                               \
-    private:                                                                                   \
-        static const int cukeRegId;                                                            \
-    };                                                                                         \
-    const int class_name ::cukeRegId = registration_fn;                                        \
+#define CUKE_OBJECT_(class_name, parent_class, registration_fn, args)                     \
+    class class_name : public parent_class {                                              \
+    public:                                                                               \
+        void body() override { return invokeWithArgs(*this, &class_name::bodyWithArgs); } \
+        void bodyWithArgs args;                                                           \
+                                                                                          \
+    private:                                                                              \
+        static const int cukeRegId;                                                       \
+    };                                                                                    \
+    const int class_name ::cukeRegId = registration_fn;                                   \
     void class_name ::bodyWithArgs args /**/
 
 #endif /* CUKE_REGISTRATIONMACROS_HPP_ */
