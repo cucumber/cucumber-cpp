@@ -22,7 +22,7 @@ It relies on a few executables:
 
 It relies on a few libraries:
 
-* [Boost](http://www.boost.org/) 1.46 or later (1.51+ on Windows).
+* [Boost](http://www.boost.org/) 1.70.
   Required libraries: *system* and *program_options*.
   Optional library for Boost Test driver: *test*.
 * [GTest](http://code.google.com/p/googletest/) 1.6 or later.

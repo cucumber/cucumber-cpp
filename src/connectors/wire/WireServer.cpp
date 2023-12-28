@@ -15,17 +15,10 @@ SocketServer::SocketServer(const ProtocolHandler* protocolHandler) :
     ios() {
 }
 
-#if BOOST_VERSION <= 106500
-template<typename Protocol, typename Service>
-void SocketServer::doListen(
-    basic_socket_acceptor<Protocol, Service>& acceptor, const typename Protocol::endpoint& endpoint
-) {
-#else
 template<typename Protocol>
 void SocketServer::doListen(
     basic_socket_acceptor<Protocol>& acceptor, const typename Protocol::endpoint& endpoint
 ) {
-#endif
     if (acceptor.is_open())
         throw boost::system::system_error(boost::asio::error::already_open);
     acceptor.open(endpoint.protocol());
@@ -34,13 +27,8 @@ void SocketServer::doListen(
     acceptor.listen(1);
 }
 
-#if BOOST_VERSION <= 106500
-template<typename Protocol, typename Service>
-void SocketServer::doAcceptOnce(basic_socket_acceptor<Protocol, Service>& acceptor) {
-#else
 template<typename Protocol>
 void SocketServer::doAcceptOnce(basic_socket_acceptor<Protocol>& acceptor) {
-#endif
     typename Protocol::iostream stream;
     acceptor.accept(*stream.rdbuf());
     processStream(stream);

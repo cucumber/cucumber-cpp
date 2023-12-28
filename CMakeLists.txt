@@ -111,13 +111,7 @@ endif()
 # Boost
 #
 
-if(MSVC11)
-    # Boost 1.51 fixed a bug with MSVC11
-    message(STATUS "Forcing Boost 1.51+ on MSVC11")
-    set(BOOST_MIN_VERSION "1.51")
-else()
-    set(BOOST_MIN_VERSION "1.46")
-endif()
+set(BOOST_MIN_VERSION "1.70")
 
 set(Boost_USE_STATIC_RUNTIME OFF)
 set(CUKE_CORE_BOOST_LIBS system program_options)

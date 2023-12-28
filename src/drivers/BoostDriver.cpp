@@ -45,11 +45,7 @@ public:
     // Formatter
     void log_start(std::ostream&, counter_t /*test_cases_amount*/) override{};
     void log_finish(std::ostream&) override{};
-#if BOOST_VERSION >= 107000
     void log_build_info(std::ostream&, bool /*log_build_info*/) override{};
-#else
-    void log_build_info(std::ostream&) override{};
-#endif
 
     void test_unit_start(std::ostream&, test_unit const& /*tu*/) override{};
     void test_unit_finish(std::ostream&, test_unit const& /*tu*/, unsigned long /*elapsed*/)
@@ -67,17 +63,10 @@ public:
 
     void entry_context_start(std::ostream&, log_level /*l*/) override {
     }
-#if BOOST_VERSION >= 106500
     void log_entry_context(std::ostream&, log_level /*l*/, const_string /*value*/) override {
     }
     void entry_context_finish(std::ostream&, log_level /*l*/) override {
     }
-#else
-    void log_entry_context(std::ostream&, const_string /*value*/) override {
-    }
-    void entry_context_finish(std::ostream&) override {
-    }
-#endif
 
 private:
     std::stringstream description;
@@ -121,9 +110,7 @@ void BoostStep::initBoostTest() {
     char dummyArg[] = "dummy";
     char* argv[] = {dummyArg};
     framework::init(&boost_test_init, argc, argv);
-#if BOOST_VERSION >= 105900
     framework::finalize_setup_phase();
-#endif
 
     logInterceptor = new CukeBoostLogInterceptor;
     ::boost::unit_test::unit_test_log.set_formatter(logInterceptor);
