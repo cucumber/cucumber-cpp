@@ -1,8 +1,19 @@
+add_library(utils INTERFACE
+    utils/HookRegistrationFixture.hpp
+    utils/ContextManagerTestDouble.hpp
+    utils/DriverTestRunner.hpp
+    utils/CukeCommandsFixture.hpp
+    utils/StepManagerTestDouble.hpp
+)
+target_include_directories(utils INTERFACE
+    .
+)
+
 function(cuke_add_driver_test TEST_FILE)
     get_filename_component(TEST_NAME ${TEST_FILE} NAME)
     message(STATUS "Adding " ${TEST_NAME})
     add_executable(${TEST_NAME} ${TEST_FILE}.cpp)
-    target_link_libraries(${TEST_NAME} PRIVATE cucumber-cpp-internal ${ARGN})
+    target_link_libraries(${TEST_NAME} PRIVATE cucumber-cpp-internal utils ${ARGN})
     add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
 endfunction()
 
@@ -11,7 +22,7 @@ if(TARGET GMock::Main)
         get_filename_component(TEST_NAME ${TEST_FILE} NAME)
         message(STATUS "Adding " ${TEST_NAME})
         add_executable(${TEST_NAME} ${TEST_FILE}.cpp)
-        target_link_libraries(${TEST_NAME} PRIVATE cucumber-cpp-internal ${ARGN} GMock::Main)
+        target_link_libraries(${TEST_NAME} PRIVATE cucumber-cpp-internal utils ${ARGN} GMock::Main)
         gtest_add_tests(${TEST_NAME} "" ${TEST_FILE}.cpp)
         # Run all tests in executable at once too. This ensures that the used fixtures get tested
         # properly too. Additionally gather the output in jUnit compatible output for CI.

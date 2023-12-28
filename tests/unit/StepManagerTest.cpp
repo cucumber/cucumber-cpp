@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../utils/StepManagerTestDouble.hpp"
+#include "utils/StepManagerTestDouble.hpp"
 
 #include <map>
 
