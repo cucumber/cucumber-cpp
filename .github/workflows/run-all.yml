@@ -22,7 +22,7 @@ jobs:
         g++ \
         gcovr \
         git \
-        libboost-system-dev \
+        libasio-dev \
         libboost-test-dev \
         libtclap-dev \
         make \

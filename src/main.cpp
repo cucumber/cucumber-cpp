@@ -16,7 +16,7 @@ void acceptWireProtocol(
     JsonWireMessageCodec wireCodec;
     WireProtocolHandler protocolHandler(wireCodec, cukeEngine);
     std::unique_ptr<SocketServer> server;
-#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
+#if defined(ASIO_HAS_LOCAL_SOCKETS)
     if (!unixPath.empty()) {
         UnixSocketServer* const unixServer = new UnixSocketServer(&protocolHandler);
         server.reset(unixServer);
@@ -31,9 +31,7 @@ void acceptWireProtocol(
     {
         TCPSocketServer* const tcpServer = new TCPSocketServer(&protocolHandler);
         server.reset(tcpServer);
-        tcpServer->listen(
-            boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(host), port)
-        );
+        tcpServer->listen(asio::ip::tcp::endpoint(asio::ip::address::from_string(host), port));
         if (verbose)
             std::clog << "Listening on " << tcpServer->listenEndpoint() << std::endl;
     }
@@ -60,7 +58,7 @@ int CUCUMBER_CPP_EXPORT main(int argc, char** argv) {
     );
     cmd.add(portArg);
 
-#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
+#if defined(ASIO_HAS_LOCAL_SOCKETS)
     TCLAP::ValueArg<std::string> unixArg(
         "u",
         "unix",
@@ -77,7 +75,7 @@ int CUCUMBER_CPP_EXPORT main(int argc, char** argv) {
     std::string unixPath;
     std::string listenHost = listenArg.getValue();
     int port = portArg.getValue();
-#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
+#if defined(ASIO_HAS_LOCAL_SOCKETS)
     unixPath = unixArg.getValue();
 #endif
 

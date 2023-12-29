@@ -4,12 +4,6 @@
 namespace cucumber {
 namespace internal {
 
-using namespace boost::asio;
-using namespace boost::asio::ip;
-#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
-using namespace boost::asio::local;
-#endif
-
 SocketServer::SocketServer(const ProtocolHandler* protocolHandler) :
     protocolHandler(protocolHandler),
     ios() {
@@ -17,7 +11,7 @@ SocketServer::SocketServer(const ProtocolHandler* protocolHandler) :
 
 template<typename Protocol>
 void SocketServer::doListen(
-    basic_socket_acceptor<Protocol>& acceptor, const typename Protocol::endpoint& endpoint
+    asio::basic_socket_acceptor<Protocol>& acceptor, const typename Protocol::endpoint& endpoint
 ) {
     if (acceptor.is_open())
         throw std::system_error(asio::error::already_open);
@@ -28,7 +22,7 @@ void SocketServer::doListen(
 }
 
 template<typename Protocol>
-void SocketServer::doAcceptOnce(basic_socket_acceptor<Protocol>& acceptor) {
+void SocketServer::doAcceptOnce(asio::basic_socket_acceptor<Protocol>& acceptor) {
     typename Protocol::iostream stream;
     acceptor.accept(*stream.rdbuf());
     processStream(stream);
@@ -47,15 +41,15 @@ TCPSocketServer::TCPSocketServer(const ProtocolHandler* protocolHandler) :
 }
 
 void TCPSocketServer::listen(const port_type port) {
-    listen(tcp::endpoint(tcp::v4(), port));
+    listen(asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port));
 }
 
-void TCPSocketServer::listen(const tcp::endpoint endpoint) {
+void TCPSocketServer::listen(const asio::ip::tcp::endpoint endpoint) {
     doListen(acceptor, endpoint);
-    acceptor.set_option(tcp::no_delay(true));
+    acceptor.set_option(asio::ip::tcp::no_delay(true));
 }
 
-tcp::endpoint TCPSocketServer::listenEndpoint() const {
+asio::ip::tcp::endpoint TCPSocketServer::listenEndpoint() const {
     return acceptor.local_endpoint();
 }
 
@@ -63,7 +57,7 @@ void TCPSocketServer::acceptOnce() {
     doAcceptOnce(acceptor);
 }
 
-#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
+#if defined(ASIO_HAS_LOCAL_SOCKETS)
 UnixSocketServer::UnixSocketServer(const ProtocolHandler* protocolHandler) :
     SocketServer(protocolHandler),
     acceptor(ios) {
@@ -73,10 +67,10 @@ void UnixSocketServer::listen(const std::string& unixPath) {
     if (std::filesystem::status(unixPath).type() == std::filesystem::file_type::socket)
         std::filesystem::remove(unixPath);
 
-    doListen(acceptor, stream_protocol::endpoint(unixPath));
+    doListen(acceptor, asio::local::stream_protocol::endpoint(unixPath));
 }
 
-stream_protocol::endpoint UnixSocketServer::listenEndpoint() const {
+asio::local::stream_protocol::endpoint UnixSocketServer::listenEndpoint() const {
     return acceptor.local_endpoint();
 }
 

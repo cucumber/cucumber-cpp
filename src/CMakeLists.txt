@@ -1,6 +1,7 @@
 include(GenerateExportHeader)
 
 find_package(nlohmann_json 3.10.5 REQUIRED)
+find_package(Asio REQUIRED)
 find_package(TCLAP REQUIRED)
 include(../cmake/modules/GitVersion.cmake)
 
@@ -107,8 +108,6 @@ foreach(TARGET
             $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
     )
     target_link_libraries(${TARGET}
-        PUBLIC
-            Boost::boost
         PRIVATE
             ${CUKE_EXTRA_PRIVATE_LIBRARIES}
     )

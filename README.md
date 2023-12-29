@@ -22,9 +22,8 @@ It relies on a few executables:
 
 It relies on a few libraries:
 
-* [Boost](http://www.boost.org/) 1.70.
-  Required libraries: *system*.
-  Optional library for Boost Test driver: *test*.
+* [Asio](https://think-async.com/Asio/) 1.18.1 or later.
+* [Boost.Test](http://www.boost.org/) 1.70. Optional for the Boost Test driver.
 * [GTest](http://code.google.com/p/googletest/) 1.6 or later.
   Optional for the GTest driver. By default downloaded and built by CMake.
 * [GMock](http://code.google.com/p/googlemock/) 1.6 or later.
