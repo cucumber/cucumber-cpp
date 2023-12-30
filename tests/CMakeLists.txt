@@ -50,11 +50,6 @@ endif()
 
 if(TARGET GTest::Main)
     cuke_add_driver_test(integration/drivers/GTestDriverTest GTest::Main)
-
-    list(FIND CMAKE_CXX_COMPILE_FEATURES cxx_variadic_templates HAS_VARIADIC_TEMPLATES)
-    if(HAS_VARIADIC_TEMPLATES GREATER -1)
-	target_compile_features(CukeCommandsTest PRIVATE cxx_variadic_templates)
-    endif()
 endif()
 
 if(TARGET Boost::unit_test_framework)
