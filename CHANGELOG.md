@@ -8,6 +8,33 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/main/CONT
 
 ### Fixed
 
+## [0.7.0](https://github.com/cucumber/cucumber-cpp/compare/v0.6...v0.7.0) (30 December 2023)
+
+### Added
+
+* add version info to cucumber-cpp-main ([8a0d16b8](https://github.com/cucumber/cucumber-cpp/pull/275/commits/8a0d16b8f59dd1c9d75045aa016d9ce235257311) Urs Fässler)
+* Remove dependency to Boost ([#275](https://github.com/cucumber/cucumber-cpp/pull/275) Urs Fässler)
+* List headers in cmake ([#274](https://github.com/cucumber/cucumber-cpp/pull/274) Urs Fässler)
+* Check code format on PR and main branch ([#268](https://github.com/cucumber/cucumber-cpp/pull/268) Urs Fässler)
+
+### Changed
+
+* use semantic versioning ([#280](https://github.com/cucumber/cucumber-cpp/pull/280) Urs Fässler)
+* No googletest auto-download ([#279](https://github.com/cucumber/cucumber-cpp/pull/279) Urs Fässler)
+* Remove dependency to Boost ([#275](https://github.com/cucumber/cucumber-cpp/pull/275) Urs Fässler)
+  * use asio without boost  ([d131ae39](https://github.com/cucumber/cucumber-cpp/pull/275/commits/d131ae3951b9aeb03dd787bf6fee4a06a81c1f04))
+  * use TCLAP to parse program options ([b688cf41](https://github.com/cucumber/cucumber-cpp/pull/275/commits/b688cf41647803daa8a7656595b0d1bcbabf2310))
+* use nlohmann/json library ([#273](https://github.com/cucumber/cucumber-cpp/pull/273) Urs Fässler)
+* remove boost::multi_array ([#269](https://github.com/cucumber/cucumber-cpp/pull/269) Urs Fässler)
+* Modernize overloading ([#267](https://github.com/cucumber/cucumber-cpp/pull/267) Urs Fässler)
+* refactoring: use stl regex instead of boost::regex ([#266](https://github.com/cucumber/cucumber-cpp/pull/266) Urs Fässler)
+
+### Fixed
+
+* mention CI scripts for details about dependency installation ([#278](https://github.com/cucumber/cucumber-cpp/pull/278) Urs Fässler)
+* remove broken E2E tests ([#272](https://github.com/cucumber/cucumber-cpp/pull/272) Urs Fässler)
+* remove broken AppVeyor build ([#271](https://github.com/cucumber/cucumber-cpp/pull/271) Urs Fässler)
+
 ## [0.6](https://github.com/cucumber/cucumber-cpp/compare/v0.5...v0.6) (17 December 2023)
 
 ### Added
