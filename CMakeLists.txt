@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.9)
 
 if(NOT CMAKE_VERSION VERSION_LESS "3.3")
     # Don't ignore visibility related properties for non-SHARED targets
@@ -14,7 +14,6 @@ endif()
 project(Cucumber-Cpp)
 
 option(BUILD_SHARED_LIBS        "Generate shared libraries" OFF)
-option(CUKE_USE_STATIC_GTEST    "Statically link Google Test" ON)
 option(CUKE_ENABLE_BOOST_TEST   "Enable Boost.Test framework" ON)
 option(CUKE_ENABLE_EXAMPLES     "Build examples" OFF)
 option(CUKE_ENABLE_GTEST        "Enable Google Test framework" ON)
@@ -24,8 +23,6 @@ option(CUKE_CODE_COVERAGE       "Enable instrumentation for code coverage" OFF)
 set(CUKE_ENABLE_SANITIZER       "OFF" CACHE STRING "Sanitizer to use for checking")
 set_property(CACHE CUKE_ENABLE_SANITIZER PROPERTY STRINGS OFF "address" "thread" "undefined")
 option(CUKE_TESTS_VALGRIND      "Enable tests within Valgrind" OFF)
-set(GMOCK_SRC_DIR "" CACHE STRING "Google Mock framework sources path (otherwise downloaded)")
-set(GMOCK_VER "1.11.0" CACHE STRING "Google Mock framework version to be used")
 
 if(NOT DEFINED CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 17)
@@ -122,11 +119,7 @@ endif()
 #
 
 if(CUKE_ENABLE_GTEST)
-    set(GTEST_USE_STATIC_LIBS ${CUKE_USE_STATIC_GTEST})
-    if(NOT GMOCK_ROOT)
-        set(GMOCK_ROOT "${CMAKE_CURRENT_BINARY_DIR}/gmock")
-    endif()
-    find_package(GMock REQUIRED)
+    find_package(GTest 1.11.0)
 endif()
 
 #

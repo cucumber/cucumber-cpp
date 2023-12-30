@@ -26,11 +26,7 @@ cmake -E chdir build cmake \
     -DBUILD_SHARED_LIBS="${BUILD_SHARED_LIBS:-OFF}" \
     -DCMAKE_INSTALL_PREFIX=${HOME}/.local \
     ${CMAKE_PREFIX_PATH:+"-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"} \
-    ${COVERALLS_SERVICE_NAME:+"-DCMAKE_BUILD_TYPE=Debug"} \
-    ${COVERALLS_SERVICE_NAME:+"-DCMAKE_CXX_FLAGS='--coverage'"} \
     ${VALGRIND_TESTS:+"-DVALGRIND_TESTS=${VALGRIND_TESTS}"} \
-    ${GMOCK_PATH:-"-DGMOCK_VER=${GMOCK_VER}"} \
-    ${GMOCK_PATH:+"-DGMOCK_SRC_DIR=${GMOCK_PATH}"} \
     ..
 cmake --build build --parallel
 cmake --build build --parallel --target test

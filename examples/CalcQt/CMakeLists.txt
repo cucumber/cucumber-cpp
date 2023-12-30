@@ -24,9 +24,9 @@ if(TARGET Qt::Core AND TARGET Qt::Gui AND TARGET Qt::Widgets AND TARGET Qt::Test
         target_link_libraries(BoostCalculatorQtSteps PRIVATE libcalcqt Boost::unit_test_framework cucumber-cpp Qt::Test)
     endif()
 
-    if(TARGET GTest::GTest)
+    if(TARGET GTest::gtest)
         add_executable(GTestCalculatorQtSteps features/step_definitions/GTestCalculatorQtSteps.cpp)
-        target_link_libraries(GTestCalculatorQtSteps PRIVATE libcalcqt cucumber-cpp GTest::GTest Qt::Test)
+        target_link_libraries(GTestCalculatorQtSteps PRIVATE libcalcqt cucumber-cpp GTest::gtest Qt::Test)
     endif()
 
 endif()
