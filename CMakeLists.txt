@@ -14,7 +14,6 @@ endif()
 project(Cucumber-Cpp)
 
 option(BUILD_SHARED_LIBS        "Generate shared libraries" OFF)
-option(CUKE_USE_STATIC_BOOST    "Statically link Boost (except boost::test)" ${WIN32})
 option(CUKE_USE_STATIC_GTEST    "Statically link Google Test" ON)
 option(CUKE_ENABLE_BOOST_TEST   "Enable Boost.Test framework" ON)
 option(CUKE_ENABLE_EXAMPLES     "Build examples" OFF)
@@ -111,69 +110,11 @@ endif()
 # Boost
 #
 
-if(MSVC11)
-    # Boost 1.51 fixed a bug with MSVC11
-    message(STATUS "Forcing Boost 1.51+ on MSVC11")
-    set(BOOST_MIN_VERSION "1.51")
-else()
-    set(BOOST_MIN_VERSION "1.46")
-endif()
-
 set(Boost_USE_STATIC_RUNTIME OFF)
-set(CUKE_CORE_BOOST_LIBS system program_options)
 if(CUKE_ENABLE_BOOST_TEST)
     # "An external test runner utility is required to link with dynamic library" (Boost User's Guide)
-    set(Boost_USE_STATIC_LIBS OFF)
     set(CMAKE_CXX_FLAGS "-DBOOST_TEST_DYN_LINK ${CMAKE_CXX_FLAGS}")
-    find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS unit_test_framework)
-endif()
-
-if(CUKE_USE_STATIC_BOOST)
-    set(Boost_USE_STATIC_LIBS ON)
-    find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS ${CUKE_CORE_BOOST_LIBS} REQUIRED)
-else()
-    set(CMAKE_CXX_FLAGS "-DBOOST_ALL_DYN_LINK ${CMAKE_CXX_FLAGS}")
-    set(Boost_USE_STATIC_LIBS OFF)
-    find_package(Boost ${BOOST_MIN_VERSION} COMPONENTS ${CUKE_CORE_BOOST_LIBS} REQUIRED)
-endif()
-
-# Create import targets for CMake versions older than 3.5 (actually older FindBoost.cmake)
-if(Boost_USE_STATIC_LIBS)
-    set(LIBRARY_TYPE STATIC)
-else()
-    # Just because we don't ask for static doesn't mean we're not getting static
-    set(LIBRARY_TYPE UNKNOWN)
-endif()
-if(Boost_INCLUDE_DIRS AND NOT TARGET Boost::boost)
-    add_library(Boost::boost INTERFACE IMPORTED)
-    set_target_properties(Boost::boost PROPERTIES
-        "INTERFACE_INCLUDE_DIRECTORIES" "${Boost_INCLUDE_DIRS}")
-endif()
-if(Boost_SYSTEM_LIBRARY AND NOT TARGET Boost::system)
-    add_library(Boost::system ${LIBRARY_TYPE} IMPORTED)
-    set_target_properties(Boost::system PROPERTIES
-        "IMPORTED_LOCATION" "${Boost_SYSTEM_LIBRARY}"
-        "INTERFACE_LINK_LIBRARIES" "Boost::boost"
-    )
-    if(Boost_USE_STATIC_LIBS)
-        set_target_properties(Boost::system PROPERTIES
-            "COMPILE_DEFINITIONS" BOOST_ERROR_CODE_HEADER_ONLY=1
-        )
-    endif()
-endif()
-if(Boost_PROGRAM_OPTIONS_LIBRARY AND NOT TARGET Boost::program_options)
-    add_library(Boost::program_options ${LIBRARY_TYPE} IMPORTED)
-    set_target_properties(Boost::program_options PROPERTIES
-        "IMPORTED_LOCATION" "${Boost_PROGRAM_OPTIONS_LIBRARY}"
-        "INTERFACE_LINK_LIBRARIES" "Boost::boost"
-    )
-endif()
-if(Boost_UNIT_TEST_FRAMEWORK_LIBRARY AND NOT TARGET Boost::unit_test_framework)
-    add_library(Boost::unit_test_framework ${LIBRARY_TYPE} IMPORTED)
-    set_target_properties(Boost::unit_test_framework PROPERTIES
-        "IMPORTED_LOCATION" "${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}"
-        "INTERFACE_LINK_LIBRARIES" "Boost::boost"
-    )
+    find_package(Boost 1.70 COMPONENTS unit_test_framework)
 endif()
 
 #

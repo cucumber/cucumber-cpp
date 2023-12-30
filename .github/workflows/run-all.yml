@@ -22,9 +22,9 @@ jobs:
         g++ \
         gcovr \
         git \
-        libboost-program-options-dev \
-        libboost-system-dev \
+        libasio-dev \
         libboost-test-dev \
+        libtclap-dev \
         make \
         ninja-build \
         nlohmann-json3-dev \

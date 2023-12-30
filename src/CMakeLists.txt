@@ -1,6 +1,9 @@
 include(GenerateExportHeader)
 
 find_package(nlohmann_json 3.10.5 REQUIRED)
+find_package(Asio REQUIRED)
+find_package(TCLAP REQUIRED)
+include(../cmake/modules/GitVersion.cmake)
 
 set(CUKE_SOURCES
     drivers/GenericDriver.cpp
@@ -105,8 +108,6 @@ foreach(TARGET
             $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
     )
     target_link_libraries(${TARGET}
-        PUBLIC
-            Boost::boost
         PRIVATE
             ${CUKE_EXTRA_PRIVATE_LIBRARIES}
     )
@@ -123,9 +124,10 @@ foreach(TARGET
     endif(MINGW)
 endforeach()
 
-target_link_libraries(cucumber-cpp
-    PRIVATE
-        Boost::program_options
+git_get_version(CUKE_VERSION)
+message(STATUS "Version: ${CUKE_VERSION}")
+target_compile_definitions(cucumber-cpp PRIVATE
+    CUKE_VERSION="${CUKE_VERSION}"
 )
 
 include(GNUInstallDirs)

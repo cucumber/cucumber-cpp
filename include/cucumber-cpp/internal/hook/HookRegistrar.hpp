@@ -6,9 +6,7 @@
 #include "../Scenario.hpp"
 #include "../step/StepManager.hpp"
 
-#include <boost/config.hpp>
 #include <memory>
-
 #include <list>
 
 namespace cucumber {
@@ -102,11 +100,7 @@ protected:
 
 private:
     // We're a singleton so don't allow instances
-    HookRegistrar()
-#ifndef BOOST_NO_DELETED_FUNCTIONS
-        = delete
-#endif
-        ;
+    HookRegistrar() = delete;
 };
 
 class CUCUMBER_CPP_EXPORT StepCallChain {

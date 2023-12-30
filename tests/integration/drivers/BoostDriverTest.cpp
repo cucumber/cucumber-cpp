@@ -26,7 +26,6 @@ THEN(PENDING_MATCHER_2) {
 
 using namespace cucumber::internal;
 
-#if BOOST_VERSION >= 105900
 namespace boost {
 namespace unit_test {
 namespace framework {
@@ -36,7 +35,6 @@ bool is_initialized() {
 }
 }
 }
-#endif
 
 class BoostStepDouble : public BoostStep {
 public:

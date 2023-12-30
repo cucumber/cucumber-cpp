@@ -6,7 +6,7 @@
 
 #include <string>
 
-#include <boost/asio.hpp>
+#include <asio.hpp>
 
 namespace cucumber {
 namespace internal {
@@ -29,25 +29,14 @@ public:
 
 protected:
     const ProtocolHandler* protocolHandler;
-    boost::asio::io_service ios;
+    asio::io_service ios;
 
-#if BOOST_VERSION <= 106500
-    template<typename Protocol, typename Service>
-    void doListen(
-        boost::asio::basic_socket_acceptor<Protocol, Service>& acceptor,
-        const typename Protocol::endpoint& endpoint
-    );
-    template<typename Protocol, typename Service>
-    void doAcceptOnce(boost::asio::basic_socket_acceptor<Protocol, Service>& acceptor);
-#else
     template<typename Protocol>
     void doListen(
-        boost::asio::basic_socket_acceptor<Protocol>& acceptor,
-        const typename Protocol::endpoint& endpoint
+        asio::basic_socket_acceptor<Protocol>& acceptor, const typename Protocol::endpoint& endpoint
     );
     template<typename Protocol>
-    void doAcceptOnce(boost::asio::basic_socket_acceptor<Protocol>& acceptor);
-#endif
+    void doAcceptOnce(asio::basic_socket_acceptor<Protocol>& acceptor);
     void processStream(std::iostream& stream);
 };
 
@@ -74,24 +63,24 @@ public:
     /**
      * Bind and listen to a TCP port on the given endpoint
      */
-    void listen(const boost::asio::ip::tcp::endpoint endpoint);
+    void listen(const asio::ip::tcp::endpoint endpoint);
 
     /**
      * Endpoint (IP address and port number) that this server is currently
      * listening on.
      *
-     * @throw boost::system::system_error when not listening on any socket or
+     * @throw std::system_error when not listening on any socket or
      *        the endpoint cannot be determined.
      */
-    boost::asio::ip::tcp::endpoint listenEndpoint() const;
+    asio::ip::tcp::endpoint listenEndpoint() const;
 
     void acceptOnce() override;
 
 private:
-    boost::asio::ip::tcp::acceptor acceptor;
+    asio::ip::tcp::acceptor acceptor;
 };
 
-#if defined(BOOST_ASIO_HAS_LOCAL_SOCKETS)
+#if defined(ASIO_HAS_LOCAL_SOCKETS)
 /**
  * Socket server that calls a protocol handler line by line
  */
@@ -110,17 +99,17 @@ public:
     /**
      * Port number that this server is currently listening on.
      *
-     * @throw boost::system::system_error when not listening on any socket or
+     * @throw std::system_error when not listening on any socket or
      *        the endpoint cannot be determined.
      */
-    boost::asio::local::stream_protocol::endpoint listenEndpoint() const;
+    asio::local::stream_protocol::endpoint listenEndpoint() const;
 
     void acceptOnce() override;
 
     ~UnixSocketServer() override;
 
 private:
-    boost::asio::local::stream_protocol::acceptor acceptor;
+    asio::local::stream_protocol::acceptor acceptor;
 };
 #endif
 
