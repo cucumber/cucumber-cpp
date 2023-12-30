@@ -22,8 +22,8 @@ set(CUKE_SOURCES
     connectors/wire/WireProtocolCommands.cpp
     )
 
-if(TARGET GTest::GTest)
-    list(APPEND CUKE_EXTRA_PRIVATE_LIBRARIES GTest::GTest)
+if(TARGET GTest::gtest)
+    list(APPEND CUKE_EXTRA_PRIVATE_LIBRARIES GTest::gtest)
     list(APPEND CUKE_SOURCES drivers/GTestDriver.cpp)
 endif()
 

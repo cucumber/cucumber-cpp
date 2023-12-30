@@ -3,13 +3,12 @@ project(Calc)
 add_library(Calc STATIC src/Calculator.cpp)
 target_include_directories(Calc INTERFACE src)
 
-if(TARGET GTest::GTest)
+if(TARGET GTest::gtest)
     add_executable(GTestCalculatorSteps features/step_definitions/GTestCalculatorSteps.cpp)
-    target_link_libraries(GTestCalculatorSteps PRIVATE Calc cucumber-cpp GTest::GTest)
+    target_link_libraries(GTestCalculatorSteps PRIVATE Calc cucumber-cpp GTest::gtest)
 
     add_executable(FuncArgsCalculatorSteps features/step_definitions/FuncArgsCalculatorSteps.cpp)
-    target_link_libraries(FuncArgsCalculatorSteps PRIVATE Calc cucumber-cpp GTest::GTest)
-    endif()
+    target_link_libraries(FuncArgsCalculatorSteps PRIVATE Calc cucumber-cpp GTest::gtest)
 endif()
 
 if(TARGET Boost::unit_test_framework)

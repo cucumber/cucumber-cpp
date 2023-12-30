@@ -17,17 +17,15 @@ If you want to contribute code to the project, guidelines are in [CONTRIBUTING.m
 
 It relies on a few executables:
 
-* [cmake](https://cmake.org/download/) 3.5 or later.
+* [cmake](https://cmake.org/download/) 3.9 or later.
   Required to setup environment and build software
 
 It relies on a few libraries:
 
 * [Asio](https://think-async.com/Asio/) 1.18.1 or later.
 * [Boost.Test](http://www.boost.org/) 1.70. Optional for the Boost Test driver.
-* [GTest](http://code.google.com/p/googletest/) 1.6 or later.
-  Optional for the GTest driver. By default downloaded and built by CMake.
-* [GMock](http://code.google.com/p/googlemock/) 1.6 or later.
-  Optional for the internal test suite. By default downloaded and built by CMake.
+* [GTest](https://github.com/google/googletest) 1.11.0 or later. Optional for the GTest driver.
+* [GMock](https://github.com/google/googletest) 1.11.0 or later. Optional for the internal test suite.
 * [nlohmann-json](https://github.com/nlohmann/json) 3.10.5 or later.
 * [Qt 4 or 5](http://qt-project.org/). Optional for the CalcQt example and QtTest driver (only Qt 5).
 * [TCLAP](https://tclap.sourceforge.net/) 1.2.5 or later.
