@@ -1,3 +1,5 @@
+find_package(GTest REQUIRED)
+
 add_library(utils INTERFACE
     utils/HookRegistrationFixture.hpp
     utils/ContextManagerTestDouble.hpp
