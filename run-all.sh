@@ -21,15 +21,20 @@ export CTEST_OUTPUT_ON_FAILURE
 cmake -E make_directory build
 cmake -E chdir build cmake \
     -G Ninja \
+    -DCUKE_ENABLE_BOOST_TEST=on \
+    -DCUKE_ENABLE_GTEST=on \
+    -DCUKE_ENABLE_QT=on \
     -DCUKE_ENABLE_EXAMPLES=on \
+    -DCUKE_TESTS_UNIT=on \
     -DCUKE_CODE_COVERAGE=on \
-    -DBUILD_SHARED_LIBS="${BUILD_SHARED_LIBS:-OFF}" \
-    -DCMAKE_INSTALL_PREFIX=${HOME}/.local \
-    ${CMAKE_PREFIX_PATH:+"-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}"} \
-    ${VALGRIND_TESTS:+"-DVALGRIND_TESTS=${VALGRIND_TESTS}"} \
     ..
 cmake --build build --parallel
-cmake --build build --parallel --target test
+
+#
+# Run tests
+#
+
+cmake --build build --target test
 
 #
 # Execute Calc examples
@@ -80,4 +85,4 @@ wait %
 mkdir -p coverage
 gcovr build/ --html-details --output coverage/index.html --xml coverage/cobertura.xml
 
-cmake --build build --target install
+sudo cmake --install build

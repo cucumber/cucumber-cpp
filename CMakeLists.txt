@@ -13,12 +13,14 @@ endif()
 
 project(Cucumber-Cpp)
 
-option(BUILD_SHARED_LIBS        "Generate shared libraries" OFF)
-option(CUKE_ENABLE_BOOST_TEST   "Enable Boost.Test framework" ON)
+option(CUKE_ENABLE_BOOST_TEST   "Enable Boost.Test framework" OFF)
+option(CUKE_ENABLE_GTEST        "Enable Google Test framework" OFF)
+option(CUKE_ENABLE_QT           "Enable Qt framework" OFF)
+
 option(CUKE_ENABLE_EXAMPLES     "Build examples" OFF)
-option(CUKE_ENABLE_GTEST        "Enable Google Test framework" ON)
-option(CUKE_ENABLE_QT           "Enable Qt framework" ON)
-option(CUKE_TESTS_UNIT          "Enable unit tests" ON)
+option(CUKE_TESTS_UNIT          "Enable unit tests" OFF)
+
+option(BUILD_SHARED_LIBS        "Generate shared libraries" OFF)
 option(CUKE_CODE_COVERAGE       "Enable instrumentation for code coverage" OFF)
 set(CUKE_ENABLE_SANITIZER       "OFF" CACHE STRING "Sanitizer to use for checking")
 set_property(CACHE CUKE_ENABLE_SANITIZER PROPERTY STRINGS OFF "address" "thread" "undefined")
@@ -68,6 +70,26 @@ option_depr_invert (CUKE_DISABLE_QT           CUKE_ENABLE_QT)
 option_depr_invert (CUKE_DISABLE_UNIT_TESTS   CUKE_TESTS_UNIT)
 option_depr        (VALGRIND_TESTS            CUKE_TESTS_VALGRIND)
 
+#
+# Check that at least one test framework is enabled
+#
+
+set(CUKE_TEST_FRAMEWORKS
+    CUKE_ENABLE_BOOST_TEST
+    CUKE_ENABLE_GTEST
+    CUKE_ENABLE_QT
+)
+
+set(TEST_FRAMEWORK_FOUND FALSE)
+foreach(test_framework ${CUKE_TEST_FRAMEWORKS})
+    if(${test_framework})
+        set(TEST_FRAMEWORK_FOUND TRUE)
+    endif()
+endforeach()
+
+if(NOT TEST_FRAMEWORK_FOUND)
+    message(WARNING "No test framework enabled. At least one should be enabled. Options are: ${CUKE_TEST_FRAMEWORKS}.")
+endif()
 
 #
 # Generic Compiler Flags
