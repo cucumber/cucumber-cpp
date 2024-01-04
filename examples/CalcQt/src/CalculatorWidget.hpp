@@ -2,7 +2,6 @@
 
 class QLabel;
 class QPushButton;
-class QSignalMapper;
 
 #include <QString>
 #include <QWidget>
@@ -28,8 +27,6 @@ private:
     QPushButton* subtractionButton;
 
     QPushButton* keyclickedButton;
-
-    QSignalMapper* signalMapper;
 
     int calculate(const QString& expression);
 

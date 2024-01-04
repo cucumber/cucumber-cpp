@@ -4,7 +4,6 @@
 #include <QKeyEvent>
 #include <QLabel>
 #include <QPushButton>
-#include <QSignalMapper>
 
 CalculatorWidget::CalculatorWidget(QWidget* parent) :
     QWidget(parent) {
@@ -23,36 +22,40 @@ CalculatorWidget::CalculatorWidget(QWidget* parent) :
     policy.setVerticalPolicy(QSizePolicy::Fixed);
     displayLabel->setSizePolicy(policy);
 
-    signalMapper = new QSignalMapper(this);
     QPushButton* button = new QPushButton(QString::number(0), this);
-    QObject::connect(button, SIGNAL(clicked()), signalMapper, SLOT(map()));
-    signalMapper->setMapping(button, 0);
+    QObject::connect(button, &QPushButton::clicked, this, [this] { buttonClicked(0); });
     layout->addWidget(button, 4, 1);
     digitButtons.push_back(button);
     for (unsigned int i = 1; i < 10; ++i) {
         QPushButton* button = new QPushButton(QString::number(i), this);
-        QObject::connect(button, SIGNAL(clicked()), signalMapper, SLOT(map()));
-        signalMapper->setMapping(button, i);
+        QObject::connect(button, &QPushButton::clicked, this, [i, this] { buttonClicked(i); });
         layout->addWidget(button, 1 + (9 - i) / 3, (i - 1) % 3);
         digitButtons.push_back(button);
     }
-    QObject::connect(signalMapper, SIGNAL(mapped(int)), SLOT(buttonClicked(int)));
 
     clearButton = new QPushButton("C", this);
     layout->addWidget(clearButton, 1, 4);
-    QObject::connect(clearButton, SIGNAL(clicked()), SLOT(clearButtonClicked()));
+    QObject::connect(
+        clearButton, &QPushButton::clicked, this, &CalculatorWidget::clearButtonClicked
+    );
 
     additionButton = new QPushButton("+", this);
     layout->addWidget(additionButton, 2, 4);
-    QObject::connect(additionButton, SIGNAL(clicked()), SLOT(addButtonClicked()));
+    QObject::connect(
+        additionButton, &QPushButton::clicked, this, &CalculatorWidget::addButtonClicked
+    );
 
     subtractionButton = new QPushButton("-", this);
     layout->addWidget(subtractionButton, 3, 4);
-    QObject::connect(subtractionButton, SIGNAL(clicked()), SLOT(subtractButtonClicked()));
+    QObject::connect(
+        subtractionButton, &QPushButton::clicked, this, &CalculatorWidget::subtractButtonClicked
+    );
 
     calculateButton = new QPushButton("=", this);
     layout->addWidget(calculateButton, 4, 4);
-    QObject::connect(calculateButton, SIGNAL(clicked()), SLOT(calculateButtonClicked()));
+    QObject::connect(
+        calculateButton, &QPushButton::clicked, this, &CalculatorWidget::calculateButtonClicked
+    );
 }
 
 int CalculatorWidget::calculate(const QString& expression) {
