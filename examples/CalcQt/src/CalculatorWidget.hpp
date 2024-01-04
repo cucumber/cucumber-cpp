@@ -2,6 +2,7 @@
 
 class QLabel;
 class QPushButton;
+class Calculator;
 
 #include <QString>
 #include <QWidget>
@@ -10,9 +11,7 @@ class CalculatorWidget : public QWidget {
     Q_OBJECT
 
 public:
-    CalculatorWidget(QWidget* parent = 0);
-
-    QString display();
+    CalculatorWidget(Calculator* calculator, QWidget* parent = 0);
 
 protected:
     void keyPressEvent(QKeyEvent* event) override;
@@ -26,15 +25,8 @@ private:
     QPushButton* clearButton;
     QPushButton* subtractionButton;
 
-    QPushButton* keyclickedButton;
-
-    int calculate(const QString& expression);
+    QPushButton* keyclickedButton{};
 
 private Q_SLOTS:
-
-    void addButtonClicked();
-    void buttonClicked(int index);
-    void calculateButtonClicked();
-    void clearButtonClicked();
-    void subtractButtonClicked();
+    void updateDisplay(QString);
 };

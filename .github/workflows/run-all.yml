@@ -30,8 +30,7 @@ jobs:
         nlohmann-json3-dev \
         qtbase5-dev \
         ruby \
-        ruby-dev \
-        xvfb
+        ruby-dev
 
     - name: install ruby tools
       run: |
@@ -50,7 +49,6 @@ jobs:
 
     - name: build and run
       run: |
-        export DISPLAY=:99
         ./run-all.sh
 
     - name: code coverage summary report
