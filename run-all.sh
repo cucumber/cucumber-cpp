@@ -10,7 +10,7 @@ cmake -E chdir build cmake \
     -G Ninja \
     -DCUKE_ENABLE_BOOST_TEST=on \
     -DCUKE_ENABLE_GTEST=on \
-    -DCUKE_ENABLE_QT=on \
+    -DCUKE_ENABLE_QT_6=on \
     -DCUKE_ENABLE_EXAMPLES=on \
     -DCUKE_TESTS_UNIT=on \
     -DCUKE_CODE_COVERAGE=on \

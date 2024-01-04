@@ -17,7 +17,7 @@ If you want to contribute code to the project, guidelines are in [CONTRIBUTING.m
 
 It relies on a few executables:
 
-* [cmake](https://cmake.org/download/) 3.9 or later.
+* [cmake](https://cmake.org/download/) 3.16 or later.
   Required to setup environment and build software
 
 It relies on a few libraries:
@@ -27,7 +27,7 @@ It relies on a few libraries:
 * [GTest](https://github.com/google/googletest) 1.11.0 or later. Optional for the GTest driver.
 * [GMock](https://github.com/google/googletest) 1.11.0 or later. Optional for the internal test suite.
 * [nlohmann-json](https://github.com/nlohmann/json) 3.10.5 or later.
-* [Qt5](http://qt-project.org/). Optional for the CalcQt example and QtTest driver.
+* [Qt6 or Qt5](http://qt-project.org/). Optional for the CalcQt example and QtTest driver.
 * [TCLAP](https://tclap.sourceforge.net/) 1.2.5 or later.
 
 It might work with earlier versions of the libraries, but it was not tested with them.
@@ -58,7 +58,7 @@ cmake -E make_directory build
 cmake -E chdir build cmake \
     -DCUKE_ENABLE_BOOST_TEST=on \
     -DCUKE_ENABLE_GTEST=on \
-    -DCUKE_ENABLE_QT=on \
+    -DCUKE_ENABLE_QT_6=on \
     -DCUKE_TESTS_UNIT=on \
     -DCUKE_ENABLE_EXAMPLES=on \
     ..

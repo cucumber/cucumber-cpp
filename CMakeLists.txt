@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.16)
 
 if(NOT CMAKE_VERSION VERSION_LESS "3.3")
     # Don't ignore visibility related properties for non-SHARED targets
@@ -15,7 +15,8 @@ project(Cucumber-Cpp)
 
 option(CUKE_ENABLE_BOOST_TEST   "Enable Boost.Test framework" OFF)
 option(CUKE_ENABLE_GTEST        "Enable Google Test framework" OFF)
-option(CUKE_ENABLE_QT           "Enable Qt framework" OFF)
+option(CUKE_ENABLE_QT_5         "Enable Qt5 framework" OFF)
+option(CUKE_ENABLE_QT_6         "Enable Qt6 framework" OFF)
 
 option(CUKE_ENABLE_EXAMPLES     "Build examples" OFF)
 option(CUKE_TESTS_UNIT          "Enable unit tests" OFF)
@@ -66,7 +67,8 @@ endfunction()
 
 option_depr_invert (CUKE_DISABLE_BOOST_TEST   CUKE_ENABLE_BOOST_TEST)
 option_depr_invert (CUKE_DISABLE_GTEST        CUKE_ENABLE_GTEST)
-option_depr_invert (CUKE_DISABLE_QT           CUKE_ENABLE_QT)
+option_depr_invert (CUKE_DISABLE_QT_5         CUKE_ENABLE_QT_5)
+option_depr_invert (CUKE_DISABLE_QT_6         CUKE_ENABLE_QT_6)
 option_depr_invert (CUKE_DISABLE_UNIT_TESTS   CUKE_TESTS_UNIT)
 option_depr        (VALGRIND_TESTS            CUKE_TESTS_VALGRIND)
 
@@ -77,7 +79,8 @@ option_depr        (VALGRIND_TESTS            CUKE_TESTS_VALGRIND)
 set(CUKE_TEST_FRAMEWORKS
     CUKE_ENABLE_BOOST_TEST
     CUKE_ENABLE_GTEST
-    CUKE_ENABLE_QT
+    CUKE_ENABLE_QT_5
+    CUKE_ENABLE_QT_6
 )
 
 set(TEST_FRAMEWORK_FOUND FALSE)
@@ -148,27 +151,41 @@ endif()
 # Qt
 #
 
-if(CUKE_ENABLE_QT)
-    find_package(Qt5Core)
-    find_package(Qt5Gui)
-    find_package(Qt5Widgets)
-    find_package(Qt5Test)
+if(CUKE_ENABLE_QT_5 AND CUKE_ENABLE_QT_6)
+    message(FATAL_ERROR "Qt version 5 and 6 enabled, please select at most one")
+endif()
 
-    if(Qt5Core_FOUND AND Qt5Gui_FOUND AND Qt5Widgets_FOUND AND Qt5Test_FOUND)
-        message(STATUS "Found Qt version: ${Qt5Core_VERSION_STRING}")
-        if(Qt5Core_VERSION_STRING VERSION_LESS 5.15.0)
-            add_library(Qt::Core    INTERFACE IMPORTED)
-            add_library(Qt::Gui     INTERFACE IMPORTED)
-            add_library(Qt::Widgets INTERFACE IMPORTED)
-            add_library(Qt::Test    INTERFACE IMPORTED)
-            set_target_properties(Qt::Core    PROPERTIES INTERFACE_LINK_LIBRARIES Qt5::Core   )
-            set_target_properties(Qt::Gui     PROPERTIES INTERFACE_LINK_LIBRARIES Qt5::Gui    )
-            set_target_properties(Qt::Widgets PROPERTIES INTERFACE_LINK_LIBRARIES Qt5::Widgets)
-            set_target_properties(Qt::Test    PROPERTIES INTERFACE_LINK_LIBRARIES Qt5::Test   )
-        endif()
-    else()
-        message(FATAL_ERROR "Qt not found")
+
+if(CUKE_ENABLE_QT_5)
+    find_package(Qt5 REQUIRED COMPONENTS
+        Core
+        Gui
+        Widgets
+        Test
+    )
+
+    message(STATUS "Found Qt version: ${Qt5Core_VERSION_STRING}")
+    if(Qt5Core_VERSION_STRING VERSION_LESS 5.15.0)
+        add_library(Qt::Core    INTERFACE IMPORTED)
+        add_library(Qt::Gui     INTERFACE IMPORTED)
+        add_library(Qt::Widgets INTERFACE IMPORTED)
+        add_library(Qt::Test    INTERFACE IMPORTED)
+        set_target_properties(Qt::Core    PROPERTIES INTERFACE_LINK_LIBRARIES Qt5::Core   )
+        set_target_properties(Qt::Gui     PROPERTIES INTERFACE_LINK_LIBRARIES Qt5::Gui    )
+        set_target_properties(Qt::Widgets PROPERTIES INTERFACE_LINK_LIBRARIES Qt5::Widgets)
+        set_target_properties(Qt::Test    PROPERTIES INTERFACE_LINK_LIBRARIES Qt5::Test   )
     endif()
+endif()
+
+if(CUKE_ENABLE_QT_6)
+    find_package(Qt6 REQUIRED COMPONENTS
+        Core
+        Gui
+        Widgets
+        Test
+    )
+
+    message(STATUS "Found Qt version: ${Qt6Core_VERSION}")
 endif()
 
 
