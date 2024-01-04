@@ -1,0 +1,70 @@
+name: Linux build
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        cpp-compiler:
+          - g++
+          - clang++-15
+        cpp-standard:
+          - 17
+          - 20
+
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: setup environment
+      run: |
+        sudo apt-get install --no-install-recommends \
+          clang-15 \
+          cmake \
+          g++ \
+          git \
+          libasio-dev \
+          libboost-test-dev \
+          libtclap-dev \
+          ninja-build \
+          nlohmann-json3-dev \
+          qtbase5-dev
+
+    - name: install gtest
+      run: |
+        git clone https://github.com/google/googletest.git
+        cd googletest
+        mkdir build
+        cd build
+        cmake \
+          ..
+        cmake --build . --parallel
+        sudo cmake --install .
+
+    - name: build
+      run: |
+        cmake -E make_directory build
+        cmake -E chdir build cmake \
+          -DCMAKE_CXX_COMPILER=${{ matrix.cpp-compiler }} \
+          -DCMAKE_CXX_STANDARD=${{ matrix.cpp-standard }} \
+          -G Ninja \
+          -DCUKE_ENABLE_BOOST_TEST=on \
+          -DCUKE_ENABLE_GTEST=on \
+          -DCUKE_ENABLE_QT=on \
+          -DCUKE_ENABLE_EXAMPLES=on \
+          -DCUKE_TESTS_UNIT=on \
+          ..
+        cmake --build build --parallel --verbose
+
+    - name: unit tests
+      run: |
+        cmake --build build --target test
+
