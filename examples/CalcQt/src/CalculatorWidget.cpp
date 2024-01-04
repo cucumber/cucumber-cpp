@@ -19,7 +19,6 @@ CalculatorWidget::CalculatorWidget(QWidget* parent) :
     displayLabel->setAutoFillBackground(true);
     displayLabel->setBackgroundRole(QPalette::Base);
     displayLabel->setAlignment(Qt::AlignRight);
-    displayLabel->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     policy = displayLabel->sizePolicy();
     policy.setVerticalPolicy(QSizePolicy::Fixed);
     displayLabel->setSizePolicy(policy);
