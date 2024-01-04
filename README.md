@@ -55,23 +55,29 @@ Building Cucumber-Cpp with tests and samples:
 cmake -E make_directory build
 
 # Generate Makefiles
-cmake -E chdir build cmake -DCUKE_ENABLE_EXAMPLES=on -DCMAKE_INSTALL_PREFIX=${prefix} ..
+cmake -E chdir build cmake \
+    -DCUKE_ENABLE_BOOST_TEST=on \
+    -DCUKE_ENABLE_GTEST=on \
+    -DCUKE_ENABLE_QT=on \
+    -DCUKE_TESTS_UNIT=on \
+    -DCUKE_ENABLE_EXAMPLES=on \
+    ..
 
-# Build cucumber-cpp and tests
+# Build cucumber-cpp
 cmake --build build
 
 # Run unit tests
 cmake --build build --target test
 
 # Run install
-cmake --build build --target install
+cmake --install build
 ```
 
 Running the Calc example on Unix:
 
 ```
 build/examples/Calc/BoostCalculatorSteps >/dev/null &
-cucumber examples/Calc
+(cd examples/Calc; cucumber)
 ```
 
 Running the Calc example on Windows (NMake):
