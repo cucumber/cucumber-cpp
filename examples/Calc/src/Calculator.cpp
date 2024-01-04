@@ -1,5 +1,5 @@
 #include <limits>
-#include "Calculator.h"
+#include "Calculator.hpp"
 
 void Calculator::push(double n) {
     values.push_back(n);

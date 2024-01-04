@@ -1,3 +1,5 @@
+#pragma once
+
 class QLabel;
 class QPushButton;
 class QSignalMapper;
@@ -9,28 +11,25 @@ class CalculatorWidget : public QWidget {
     Q_OBJECT
 
 public:
-
-    CalculatorWidget(QWidget *parent = 0);
+    CalculatorWidget(QWidget* parent = 0);
 
     QString display();
 
 protected:
-
-    void keyPressEvent(QKeyEvent *event) override;
-    void keyReleaseEvent(QKeyEvent *event) override;
+    void keyPressEvent(QKeyEvent* event) override;
+    void keyReleaseEvent(QKeyEvent* event) override;
 
 private:
-
-    QLabel *displayLabel;
+    QLabel* displayLabel;
     QVector<QPushButton*> digitButtons;
-    QPushButton *additionButton;
-    QPushButton *calculateButton;
-    QPushButton *clearButton;
-    QPushButton *subtractionButton;
+    QPushButton* additionButton;
+    QPushButton* calculateButton;
+    QPushButton* clearButton;
+    QPushButton* subtractionButton;
 
-    QPushButton *keyclickedButton;
-   
-    QSignalMapper *signalMapper;
+    QPushButton* keyclickedButton;
+
+    QSignalMapper* signalMapper;
 
     int calculate(const QString& expression);
 
@@ -42,4 +41,3 @@ private Q_SLOTS:
     void clearButtonClicked();
     void subtractButtonClicked();
 };
-

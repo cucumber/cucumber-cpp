@@ -1,6 +1,6 @@
 #include <QApplication>
 
-#include "CalculatorWidget.h"
+#include "CalculatorWidget.hpp"
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);

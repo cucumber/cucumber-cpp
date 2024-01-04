@@ -1,4 +1,4 @@
-#include "CalculatorWidget.h"
+#include "CalculatorWidget.hpp"
 
 #include <QGridLayout>
 #include <QKeyEvent>

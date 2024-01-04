@@ -3,7 +3,7 @@
 #include <QApplication>
 #include <QTest>
 
-#include "CalculatorWidget.h"
+#include "CalculatorWidget.hpp"
 
 /// Helper class to ensure that QApplication gets destroyed before main() returns
 /// and that CalculatorWidget gets destroyed before QApplication gets destroyed.
