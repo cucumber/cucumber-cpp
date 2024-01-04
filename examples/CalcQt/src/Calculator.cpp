@@ -1,12 +1,17 @@
 #include "Calculator.hpp"
 
+#include <QRegularExpression>
+
 QString Calculator::calculate(const QString& expression) const {
     int result = 0;
     char operation = '+';
-    QRegExp regexp("(\\d+)");
-    int pos = 0;
-    while ((pos = regexp.indexIn(expression, pos)) != -1) {
-        int value = regexp.cap(1).toInt();
+    const QRegularExpression regexp("(\\d+)");
+    QRegularExpressionMatchIterator matches = regexp.globalMatch(expression);
+
+    while (matches.hasNext()) {
+        const auto match = matches.next();
+        const int value = match.captured(1).toInt();
+
         switch (operation) {
         case '+':
             result += value;
@@ -15,11 +20,13 @@ QString Calculator::calculate(const QString& expression) const {
             result -= value;
             break;
         }
-        pos += regexp.matchedLength();
+
+        const int pos = match.capturedEnd();
         if (pos < expression.length()) {
             operation = expression.at(pos).toLatin1();
         }
     }
+
     return QString::number(result);
 }
 
