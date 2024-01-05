@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <cucumber-cpp/autodetect.hpp>
 
-#include <Calculator.h>
+#include <Calculator.hpp>
 
 using cucumber::ScenarioScope;
 

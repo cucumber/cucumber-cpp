@@ -1,12 +1,12 @@
-#include "CalculatorWidget.h"
+#include "CalculatorWidget.hpp"
 
+#include "Calculator.hpp"
 #include <QGridLayout>
 #include <QKeyEvent>
 #include <QLabel>
 #include <QPushButton>
-#include <QSignalMapper>
 
-CalculatorWidget::CalculatorWidget(QWidget* parent) :
+CalculatorWidget::CalculatorWidget(Calculator* calculator, QWidget* parent) :
     QWidget(parent) {
     QGridLayout* layout = new QGridLayout(this);
     layout->setSizeConstraint(QLayout::SetFixedSize);
@@ -22,68 +22,50 @@ CalculatorWidget::CalculatorWidget(QWidget* parent) :
     policy = displayLabel->sizePolicy();
     policy.setVerticalPolicy(QSizePolicy::Fixed);
     displayLabel->setSizePolicy(policy);
+    QObject::connect(calculator, &Calculator::updateDisplay, displayLabel, &QLabel::setText);
 
-    signalMapper = new QSignalMapper(this);
     QPushButton* button = new QPushButton(QString::number(0), this);
-    QObject::connect(button, SIGNAL(clicked()), signalMapper, SLOT(map()));
-    signalMapper->setMapping(button, 0);
+    QObject::connect(button, &QPushButton::clicked, calculator, [calculator] {
+        calculator->number(0);
+    });
     layout->addWidget(button, 4, 1);
     digitButtons.push_back(button);
     for (unsigned int i = 1; i < 10; ++i) {
         QPushButton* button = new QPushButton(QString::number(i), this);
-        QObject::connect(button, SIGNAL(clicked()), signalMapper, SLOT(map()));
-        signalMapper->setMapping(button, i);
+        QObject::connect(button, &QPushButton::clicked, calculator, [i, calculator] {
+            calculator->number(i);
+        });
         layout->addWidget(button, 1 + (9 - i) / 3, (i - 1) % 3);
         digitButtons.push_back(button);
     }
-    QObject::connect(signalMapper, SIGNAL(mapped(int)), SLOT(buttonClicked(int)));
 
     clearButton = new QPushButton("C", this);
     layout->addWidget(clearButton, 1, 4);
-    QObject::connect(clearButton, SIGNAL(clicked()), SLOT(clearButtonClicked()));
+    QObject::connect(clearButton, &QPushButton::clicked, calculator, [calculator] {
+        calculator->clear();
+    });
 
     additionButton = new QPushButton("+", this);
     layout->addWidget(additionButton, 2, 4);
-    QObject::connect(additionButton, SIGNAL(clicked()), SLOT(addButtonClicked()));
+    QObject::connect(additionButton, &QPushButton::clicked, calculator, [calculator] {
+        calculator->add();
+    });
 
     subtractionButton = new QPushButton("-", this);
     layout->addWidget(subtractionButton, 3, 4);
-    QObject::connect(subtractionButton, SIGNAL(clicked()), SLOT(subtractButtonClicked()));
+    QObject::connect(subtractionButton, &QPushButton::clicked, calculator, [calculator] {
+        calculator->subtract();
+    });
 
     calculateButton = new QPushButton("=", this);
     layout->addWidget(calculateButton, 4, 4);
-    QObject::connect(calculateButton, SIGNAL(clicked()), SLOT(calculateButtonClicked()));
-}
-
-int CalculatorWidget::calculate(const QString& expression) {
-    int result = 0;
-    char operation = '+';
-    QRegExp regexp("(\\d+)");
-    int pos = 0;
-    while ((pos = regexp.indexIn(expression, pos)) != -1) {
-        int value = regexp.cap(1).toInt();
-        switch (operation) {
-        case '+':
-            result += value;
-            break;
-        case '-':
-            result -= value;
-            break;
-        }
-        pos += regexp.matchedLength();
-        if (pos < expression.length()) {
-            operation = expression.at(pos).toLatin1();
-        }
-    }
-    return result;
-}
-
-QString CalculatorWidget::display() {
-    return displayLabel->text();
+    QObject::connect(calculateButton, &QPushButton::clicked, calculator, [calculator] {
+        calculator->calculate();
+    });
 }
 
 void CalculatorWidget::keyPressEvent(QKeyEvent* event) {
-    keyclickedButton = 0;
+    keyclickedButton = nullptr;
     int key = event->key();
     if (key >= Qt::Key_0 && key <= Qt::Key_9) {
         keyclickedButton = digitButtons[key - Qt::Key_0];
@@ -105,7 +87,7 @@ void CalculatorWidget::keyPressEvent(QKeyEvent* event) {
             break;
         }
     }
-    if (0 != keyclickedButton) {
+    if (keyclickedButton) {
         keyclickedButton->click();
         keyclickedButton->setDown(true);
     }
@@ -113,28 +95,12 @@ void CalculatorWidget::keyPressEvent(QKeyEvent* event) {
 
 void CalculatorWidget::keyReleaseEvent(QKeyEvent* event) {
     Q_UNUSED(event)
-    if (0 != keyclickedButton) {
+    if (keyclickedButton) {
         keyclickedButton->setDown(false);
-        keyclickedButton = 0;
+        keyclickedButton = nullptr;
     }
 }
 
-void CalculatorWidget::addButtonClicked() {
-    displayLabel->setText(displayLabel->text() + "+");
-}
-
-void CalculatorWidget::buttonClicked(int index) {
-    displayLabel->setText(displayLabel->text() + QString::number(index));
-}
-
-void CalculatorWidget::calculateButtonClicked() {
-    displayLabel->setText(QString::number(calculate(displayLabel->text())));
-}
-
-void CalculatorWidget::clearButtonClicked() {
-    displayLabel->setText("");
-}
-
-void CalculatorWidget::subtractButtonClicked() {
-    displayLabel->setText(displayLabel->text() + "-");
+void CalculatorWidget::updateDisplay(QString text) {
+    displayLabel->setText(text);
 }

@@ -2,19 +2,6 @@
 set -e #break script on non-zero exitcode from any command
 set -x #display command being executed
 
-startXvfb () {
-    Xvfb $DISPLAY -screen 0 640x480x8 -nolisten tcp > /dev/null 2>&1 &
-    XVFBPID=$!
-    sleep 5
-}
-
-killXvfb () {
-    if [ -n "${XVFBPID:-}" ]; then
-        # Stop virtual X display server
-        kill $XVFBPID
-    fi
-}
-
 CTEST_OUTPUT_ON_FAILURE=ON
 export CTEST_OUTPUT_ON_FAILURE
 
@@ -23,7 +10,7 @@ cmake -E chdir build cmake \
     -G Ninja \
     -DCUKE_ENABLE_BOOST_TEST=on \
     -DCUKE_ENABLE_GTEST=on \
-    -DCUKE_ENABLE_QT=on \
+    -DCUKE_ENABLE_QT_6=on \
     -DCUKE_ENABLE_EXAMPLES=on \
     -DCUKE_TESTS_UNIT=on \
     -DCUKE_CODE_COVERAGE=on \
@@ -56,8 +43,6 @@ done
 # Execute QtCalc examples
 #
 
-startXvfb # Start virtual X display server
-
 for TEST in \
     build/examples/CalcQt/GTestCalculatorQtSteps \
     build/examples/CalcQt/QtTestCalculatorQtSteps \
@@ -68,8 +53,6 @@ for TEST in \
     (cd examples/CalcQt; cucumber)
     wait %
 done
-
-killXvfb
 
 #
 # Execute feature showcase on Unix socket

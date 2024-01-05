@@ -18,20 +18,19 @@ jobs:
     - name: setup environment
       run: |
         sudo apt-get install --no-install-recommends \
-        cmake \
-        g++ \
-        gcovr \
-        git \
-        libasio-dev \
-        libboost-test-dev \
-        libtclap-dev \
-        make \
-        ninja-build \
-        nlohmann-json3-dev \
-        qtbase5-dev \
-        ruby \
-        ruby-dev \
-        xvfb
+          cmake \
+          g++ \
+          gcovr \
+          git \
+          libasio-dev \
+          libboost-test-dev \
+          libgl1-mesa-dev \
+          libtclap-dev \
+          ninja-build \
+          nlohmann-json3-dev \
+          qt6-base-dev \
+          ruby \
+          ruby-dev
 
     - name: install ruby tools
       run: |
@@ -50,7 +49,6 @@ jobs:
 
     - name: build and run
       run: |
-        export DISPLAY=:99
         ./run-all.sh
 
     - name: code coverage summary report
