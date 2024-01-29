@@ -2,6 +2,8 @@
 
 [![Join the chat at https://gitter.im/cucumber/cucumber-cpp](https://badges.gitter.im/cucumber/cucumber-cpp.svg)](https://gitter.im/cucumber/cucumber-cpp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+## Overview
+
 Cucumber-Cpp allows Cucumber to support step definitions written in C++.
 
 * [Cucumber-Cpp Website](http://github.com/cucumber/cucumber-cpp)
@@ -14,6 +16,8 @@ your question on the Cucumber discussion group instead, prefixing the title
 with [CPP].
 
 If you want to contribute code to the project, guidelines are in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Dependencies
 
 It relies on a few executables:
 
@@ -47,6 +51,14 @@ To install the Ruby prerequisites:
 gem install bundler // For windows: gem install bundle
 bundle install
 ```
+
+### Windows vs. Linux
+
+To get an inspiration on how to set up the dependencies on your specific system (Windows or Linux), you may want to have a look at the
+workflow files [for Windows](.github/workflows/windows-build.yml) and [for Linux](.github/workflows/linux-build.yml).
+
+
+## Build
 
 Building Cucumber-Cpp with tests and samples:
 
