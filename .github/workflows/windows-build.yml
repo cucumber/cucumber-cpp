@@ -1,0 +1,85 @@
+name: Windows build
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        cpp-standard:
+          - 17
+          - 20
+    # You can find specific tool versions for Windows builds in the Runner specification:
+    # https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md
+    # In particular, this build uses:
+    # cmake: 3.27.9
+    # VSCode: 2022 Enterprise Edition (corresponding C++ version: https://blog.knatten.org/2022/08/26/microsoft-c-versions-explained/)
+    # Ruby: 3.0.6p216
+    # boost: 1.82.0
+    runs-on: windows-2022
+    env:
+      BOOST_VERSION: 1.82.0
+      NLOHMANN_CLONE_DIR: nlohmann
+      NLOHMANN_TAG: v3.11.3
+      ASIO_CLONE_DIR: asio
+      ASIO_TAG: asio-1-29-0
+      TCLAP_CLONE_DIR: tclap
+      TCLAP_TAG: v1.2.5
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: install ruby tools
+      run: |
+        gem install bundler
+        bundle install
+
+    # - name: Install Google Test
+    #   uses: MarkusJx/googletest-installer@v1.1
+
+    - name: Restore cached boost dependencies
+      id: cache-boost-deps
+      uses: actions/cache@v3
+      with:
+        path: |
+          boost_1_82_0
+        key: ${{ runner.os }}-boost-1820
+
+    - name: install boost
+      if: steps.cache-boost-deps.outputs.cache-hit != 'true'
+      run: |
+        $boost_version_str = ${Env:BOOST_VERSION}.Replace(".","_")
+        $ProgressPreference = 'SilentlyContinue'
+        Invoke-WebRequest -Uri https://boostorg.jfrog.io/artifactory/main/release/${Env:BOOST_VERSION}/source/boost_${boost_version_str}.zip -OutFile boost_${boost_version_str}.zip
+        7z x boost_${boost_version_str}.zip
+        cd boost_${boost_version_str}
+        cmd /C bootstrap
+        ./b2.exe --build-type=complete toolset=msvc --with-regex --with-program_options --with-system --with-test
+
+    - name: Get and build nlohmann-json
+      run: |
+        Start-Process "git" -ArgumentList "clone https://github.com/nlohmann/json.git $Env:NLOHMANN_CLONE_DIR --depth 1 --branch $Env:NLOHMANN_TAG" -PassThru -NoNewWindow -Wait
+        cd $Env:NLOHMANN_CLONE_DIR
+        cmake -B build -S .
+        cd ..
+
+    - name: Get ASIO
+      run: Start-Process "git" -ArgumentList "clone https://github.com/chriskohlhoff/asio.git $Env:ASIO_CLONE_DIR --depth 1 --branch $Env:ASIO_TAG" -PassThru -NoNewWindow -Wait
+
+    - name: Get TCLAP
+      run: Start-Process "git" -ArgumentList "clone https://github.com/mirror/tclap.git $Env:TCLAP_CLONE_DIR --depth 1 --branch $Env:TCLAP_TAG" -PassThru -NoNewWindow -Wait
+
+    - name: build and run
+      run: |
+        $current_script_dir = Get-Location | Select-Object -Expand "Path"
+        $Env:nlohmann_json_DIR = "${current_script_dir}/$Env:NLOHMANN_CLONE_DIR/build"
+        $Env:Asio_ROOT = "${current_script_dir}/$Env:ASIO_CLONE_DIR/asio"
+        $Env:TCLAP_ROOT = "${current_script_dir}/$Env:TCLAP_CLONE_DIR"
+        $Env:cpp_standard = ${{ matrix.cpp-standard }}
+        ./run-windows.ps1

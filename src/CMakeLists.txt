@@ -105,11 +105,14 @@ foreach(TARGET
         PUBLIC
             $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
             $<BUILD_INTERFACE:${CUKE_INCLUDE_DIR}>
+            $<BUILD_INTERFACE:${ASIO_INCLUDE_DIR}>
+            $<BUILD_INTERFACE:${TCLAP_INCLUDE_DIR}>
             $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
     )
     target_link_libraries(${TARGET}
         PRIVATE
             ${CUKE_EXTRA_PRIVATE_LIBRARIES}
+            nlohmann_json::nlohmann_json
     )
     # Don't export or import symbols for statically linked libraries
     get_property(type TARGET ${TARGET} PROPERTY TYPE)
