@@ -9,11 +9,14 @@ on:
       - main
 
 jobs:
-  build:
+  build-linux:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
+
+    - name: update package index
+      run: sudo apt-get -y update
 
     - name: setup environment
       run: |
@@ -49,7 +52,7 @@ jobs:
 
     - name: build and run
       run: |
-        ./run-all.sh
+        ./run-linux.sh
 
     - name: code coverage summary report
       uses: irongut/CodeCoverageSummary@v1.3.0
@@ -64,4 +67,3 @@ jobs:
       run: |
         echo '# Code Coverage Report' >> $GITHUB_STEP_SUMMARY
         cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
-
