@@ -20,3 +20,5 @@
 # Qt Creator
 /CMakeLists.txt.user
 
+# build folder
+build

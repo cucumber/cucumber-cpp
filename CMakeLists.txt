@@ -1,15 +1,14 @@
 cmake_minimum_required(VERSION 3.16)
 
-if(NOT CMAKE_VERSION VERSION_LESS "3.3")
-    # Don't ignore visibility related properties for non-SHARED targets
-    cmake_policy(SET CMP0063 NEW)
-endif()
+cmake_policy(SET CMP0063 NEW)
 
-if (NOT CMAKE_VERSION VERSION_LESS "3.13")
-    # CMP0077: option() honors normal variables
-    # https://cmake.org/cmake/help/latest/policy/CMP0077.html
-    cmake_policy(SET CMP0077 NEW)
-endif()
+# CMP0077: option() honors normal variables
+# https://cmake.org/cmake/help/latest/policy/CMP0077.html
+cmake_policy(SET CMP0077 NEW)
+
+# CMP0074: find_package() makes use of <PackageName>_ROOT variables
+# https://cmake.org/cmake/help/latest/policy/CMP0074.html
+cmake_policy(SET CMP0074 NEW)
 
 project(Cucumber-Cpp)
 
