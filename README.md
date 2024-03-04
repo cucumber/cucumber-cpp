@@ -99,6 +99,27 @@ start build\examples\Calc\BoostCalculatorSteps.exe
 cucumber examples\Calc
 ```
 
+## The way it works
+(This is a great explanation by [paoloambrosio](https://github.com/paoloambrosio) copied from [stackoverflow](https://stackoverflow.com/questions/50760865/cucumber-cpp-required-software-for-running-example))
+
+The way Cucumber-CPP currently works is by having Cucumber-Ruby connecting to a TCP port where the C++ implementation is listening. When the wire protocol is defined in the cucumber.wire file, with host and port where your C++ wire protocol server is listening, Cucumber-Ruby will try and run them with Cucumber-CPP.
+
+C++ is a compiled language, so step definitions must be compiled first. The examples provided use CMake, as described in the README. Cucumber-CPP needs to be linked to the step definitions and to everything that they use (usually the application under test), creating an executable file that will listen to the wire protocol port (defaults to localhost:3902) for Cucumber-Ruby to connect to (and exiting when it disconnects).
+
+```
+                    +------------------------------------------+
+                    |                                          |
++----------+        | +----------+  +----------+  +----------+ |
+|          |        | |          |  |          |  |          | |
+| Cucumber |        | | Cucumber |  | C++ Step |  | Your     | |
+| Ruby     |--------->| CPP Wire |--| Defs     |--| CPP App  | |
+|          |        | | Server   |  |          |  |          | |
+|          |        | |          |  |          |  |          | |
++----------+        | +----------+  +----------+  +----------+ |
+                    |                                          |
+                    +------------------------------------------+
+```
+
 ## Getting started
 
 Here is a basic example on how to get started with *cucumber-cpp*. First you need to create the basic feature structure:
