@@ -1,43 +1,19 @@
 #include "cucumber-cpp/internal/drivers/QtTestDriver.hpp"
 
+#include <QTest>
 #include <QTemporaryFile>
 #include <QTextStream>
-#include <QtTest/QtTest>
 
 namespace cucumber {
 namespace internal {
 
 /**
- * Wraps the QTemporaryFile creation
+ * Wraps the QTemporaryFile for Windows.
  *
- * On Windows the file could not be written as long as QTemporaryFile owner of the file.
+ * On Windows. the file can not be written as long as QTemporaryFile keeps it open.
  */
 class TemporaryFileWrapper {
 public:
-    static TemporaryFileWrapper create() {
-        QTemporaryFile tempFile(QString("%1/%2_%3")
-                                    .arg(
-                                        QDir::tempPath(),
-                                        qApp->applicationName().isEmpty() ? "qt_temp"
-                                                                          : qApp->applicationName()
-                                    )
-                                    .arg(qApp->applicationPid()));
-
-        if (!tempFile.open()) {
-            return {};
-        }
-
-        return {tempFile.fileName() + ".txt"};
-    }
-
-    TemporaryFileWrapper() :
-        filename{} {
-    }
-
-    TemporaryFileWrapper(QString filename) :
-        filename{filename} {
-    }
-
     ~TemporaryFileWrapper() {
         QFile::remove(filename);
     }
@@ -59,11 +35,19 @@ public:
     }
 
 private:
-    QString filename;
+    const QString filename{getTmpFileName()};
+
+    static QString getTmpFileName() {
+        QTemporaryFile tempFile{};
+        if (!tempFile.open()) {
+            return {};
+        }
+        return tempFile.fileName() + ".txt";
+    }
 };
 
 const InvokeResult QtTestStep::invokeStepBody() {
-    const auto file = TemporaryFileWrapper::create();
+    const TemporaryFileWrapper file{};
     if (!file.exists()) {
         return InvokeResult::failure("Unable to open temporary file needed for this test");
     }
