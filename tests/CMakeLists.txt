@@ -11,6 +11,37 @@ target_include_directories(utils INTERFACE
     .
 )
 
+function(cuke_set_environment environment)
+    set(options)
+    set(oneValueArgs )
+    set(multiValueArgs RUNPATH BINPATH)
+    
+    cmake_parse_arguments(CUKE_ENV "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    
+    if(NOT "${CUKE_ENV_UNPARSED_ARGUMENTS}" STREQUAL "")
+        message(
+            FATAL_ERROR
+                "unparsed arguments in call to cuke_set_environment: ${CUKE_ENV_UNPARSED_ARGUMENTS} from ${CMAKE_CURRENT_LIST_FILE}"
+        )
+    endif()
+
+    if( NOT "${CUKE_ENV_RUNPATH}" STREQUAL "")
+        if(WIN32)
+            string(REPLACE ";" "\;" runpath "${CUKE_ENV_RUNPATH}")
+        endif()
+        set(RUNPATH "$<IF:$<PLATFORM_ID:Windows>,PATH,LD_LIBRARY_PATH>")
+        list(APPEND environment "$<IF:$<PLATFORM_ID:Windows>,PATH,LD_LIBRARY_PATH>=path_list_prepend:$<SHELL_PATH:${runpath}>")
+    endif()
+    if( NOT "${CUKE_ENV_BINPATH}" STREQUAL "")
+        if(WIN32)
+            string(REPLACE ";" "\;" binpath "${CUKE_ENV_BINPATH}")
+        endif()
+        list(APPEND environment "PATH=path_list_prepend:$<SHELL_PATH:${binpath}>")
+    endif()
+    
+    set(${environment} ${${environment}} PARENT_SCOPE)
+endfunction()
+
 function(cuke_add_driver_test TEST_FILE)
     get_filename_component(TEST_NAME ${TEST_FILE} NAME)
     message(STATUS "Adding " ${TEST_NAME})
@@ -63,6 +94,8 @@ if((TARGET Qt::Test)
     AND (NOT VALGRIND_TESTS)
     )
     cuke_add_driver_test(integration/drivers/QtTestDriverTest Qt::Test)
+    cuke_set_environment( QTTEST_ENVIRONMENT RUNPATH "$<TARGET_FILE_DIR:Qt5::Core>" )
+    set_tests_properties(QtTestDriverTest PROPERTIES ENVIRONMENT_MODIFICATION ${QTTEST_ENVIRONMENT})
 endif()
 
 cuke_add_driver_test(integration/drivers/GenericDriverTest)

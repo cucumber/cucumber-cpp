@@ -49,10 +49,11 @@ $cmake_params = "-E chdir build cmake",
 $cmake_params += "-DCMAKE_CXX_STANDARD=${cpp_standard}"
 
 $cmake_params += "-DCUKE_ENABLE_BOOST_TEST=OFF"
-$cmake_params += "-DCUKE_ENABLE_GTEST=OFF"
+$cmake_params += "-DCUKE_ENABLE_GTEST=ON"
 $cmake_params += "-DCUKE_ENABLE_QT_6=OFF"
-$cmake_params += "-DCUKE_ENABLE_EXAMPLES=OFF"
-$cmake_params += "-DCUKE_TESTS_UNIT=OFF"
+$cmake_params += "-DCUKE_ENABLE_QT_5=ON"
+$cmake_params += "-DCUKE_ENABLE_EXAMPLES=ON"
+$cmake_params += "-DCUKE_TESTS_UNIT=ON"
 $cmake_params += "-DCUKE_CODE_COVERAGE=OFF"
 
 $cmake_params += "-Dnlohmann_json_DIR=${nlohmann_json_DIR}"
@@ -61,6 +62,56 @@ $cmake_params += "-DTCLAP_ROOT=${TCLAP_ROOT}"
 
 $cmake_params += ".."
 
-
 Invoke-CMake "$cmake_params"
-Invoke-CMake "--build","build" #,"--parallel"
+Invoke-CMake "--build","build","--config","Release" #,"--parallel"
+Invoke-CMake "--build","build","--config","Release","--target","RUN_TESTS"
+
+#
+# Execute Calc examples
+#
+
+$CalcTests = @("build\examples\Calc\Release\GTestCalculatorSteps.exe",
+"build\examples\Calc\Release\QtTestCalculatorSteps.exe",
+"build\examples\Calc\Release\BoostCalculatorSteps.exe",
+"build\examples\Calc\Release\FuncArgsCalculatorSteps.exe")
+
+If (Test-Path -path $CalcTests[$i] -PathType Leaf) {
+    Start-Process -NoNewWindow $CalcTests[$i]
+    Start-Sleep -Seconds 1.0
+    Set-Location -Path 'examples/Calc'
+    Start-Process cucumber -NoNewWindow -Wait
+    set-Location -Path $PSScriptRoot
+} Else {
+    Write-Host "Skipping $($CalcTests[$i]): file not exisiting"  -f Yellow
+}    
+
+#
+# Execute QtCalc examples
+# 
+
+If ((Get-Command "qmake.exe" -ErrorAction SilentlyContinue) -eq $null) 
+{ 
+   Write-Host "Qt not found in PATH, skipping QtCalc Tests" -f Yellow
+}
+Else
+{
+    $QtCalcTests = @("build\examples\CalcQt\Release\GTestCalculatorQtSteps.exe",
+    "build\examples\CalcQt\Release\QtTestCalculatorQtSteps.exe",
+    "build\examples\CalcQt\Release\BoostCalculatorQtSteps.exe")
+
+    For ($i=0; $i -lt $QtCalcTests.Length; $i++) {
+        If (Test-Path -path $QtCalcTests[$i] -PathType Leaf) {
+            Start-Process -NoNewWindow $QtCalcTests[$i]
+            Start-Sleep -Seconds 1.0
+            Set-Location -Path 'examples/CalcQt'
+            Start-Process cucumber -NoNewWindow -Wait
+            set-Location -Path $PSScriptRoot
+        } Else {
+            Write-Host "Skipping $($QtCalcTests[$i]): file not exisiting"  -f Yellow
+        }    
+    }
+}
+
+Invoke-CMake "--build","build","--config","Release","--target","INSTALL"
+
+
