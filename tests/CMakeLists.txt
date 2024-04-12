@@ -94,7 +94,7 @@ if((TARGET Qt::Test)
     AND (NOT VALGRIND_TESTS)
     )
     cuke_add_driver_test(integration/drivers/QtTestDriverTest Qt::Test)
-    cuke_set_environment( QTTEST_ENVIRONMENT RUNPATH "$<TARGET_FILE_DIR:Qt::Core>" )
+    cuke_set_environment( QTTEST_ENVIRONMENT RUNPATH "${CUKE_QT_RUNTIME_PATH}" )
     set_tests_properties(QtTestDriverTest PROPERTIES ENVIRONMENT_MODIFICATION ${QTTEST_ENVIRONMENT})
 endif()
 

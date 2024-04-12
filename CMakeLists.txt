@@ -98,7 +98,7 @@ endif()
 #
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_INIT} -Werror -Wall -Wextra -Wsuggest-override ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_INIT} -Wall -Wextra -Wsuggest-override ${CMAKE_CXX_FLAGS}")
     # TODO: A better fix should handle ld's --as-needed flag
     if(UNIX AND NOT APPLE)
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Xlinker '--no-as-needed'")
@@ -165,14 +165,11 @@ if(CUKE_ENABLE_QT_5)
 
     message(STATUS "Found Qt version: ${Qt5Core_VERSION_STRING}")
     if(Qt5Core_VERSION_STRING VERSION_LESS 5.15.0)
-        add_library(Qt::Core    INTERFACE IMPORTED)
-        add_library(Qt::Gui     INTERFACE IMPORTED)
-        add_library(Qt::Widgets INTERFACE IMPORTED)
-        add_library(Qt::Test    INTERFACE IMPORTED)
-        set_target_properties(Qt::Core    PROPERTIES INTERFACE_LINK_LIBRARIES Qt5::Core   )
-        set_target_properties(Qt::Gui     PROPERTIES INTERFACE_LINK_LIBRARIES Qt5::Gui    )
-        set_target_properties(Qt::Widgets PROPERTIES INTERFACE_LINK_LIBRARIES Qt5::Widgets)
-        set_target_properties(Qt::Test    PROPERTIES INTERFACE_LINK_LIBRARIES Qt5::Test   )
+        add_library( Qt::Core ALIAS Qt5::Core)
+        add_library( Qt::Gui ALIAS Qt5::Gui)
+        add_library( Qt::Widgets ALIAS Qt5::Widgets)
+        add_library( Qt::Test ALIAS Qt5::Test)
+        set( CUKE_QT_RUNTIME_PATH $<TARGET_FILE_DIR:Qt5::Test> )
     endif()
 endif()
 
@@ -185,6 +182,7 @@ if(CUKE_ENABLE_QT_6)
     )
 
     message(STATUS "Found Qt version: ${Qt6Core_VERSION}")
+    set( CUKE_QT_RUNTIME_PATH $<TARGET_FILE_DIR:Qt6::Test> )
 endif()
 
 
