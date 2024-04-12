@@ -9,41 +9,43 @@
 namespace cucumber {
 namespace internal {
 
-
 // wraps the QTemporaryFile creation
 // on Windows the file could not be written as long as QTemporaryFile owner of the file.
-    
+
 class TemporaryFileWrapper {
 public:
-    static TemporaryFileWrapper create()
-    {
+    static TemporaryFileWrapper create() {
         QTemporaryFile tempFile{};
 
-        if(!tempFile.open()) {
+        if (!tempFile.open()) {
             return {};
         }
 
         return {tempFile.fileName() + ".txt"};
     }
 
-    TemporaryFileWrapper(): filename{} {
+    TemporaryFileWrapper() :
+        filename{} {
     }
 
-    TemporaryFileWrapper(QString filename): filename{filename} {
+    TemporaryFileWrapper(QString filename) :
+        filename{filename} {
     }
 
     ~TemporaryFileWrapper() {
         auto ok = QFile::remove(filename);
     }
-    
-    bool TemporaryFileWrapper::exists() const { return !filename.isEmpty(); }
+
+    bool TemporaryFileWrapper::exists() const {
+        return !filename.isEmpty();
+    }
 
     QString name() const {
         return filename;
     }
 
     QString read() const {
-        QFile file{ filename };
+        QFile file{filename};
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
             return QString();
         QTextStream in(&file);
@@ -52,7 +54,7 @@ public:
 
 private:
     QString filename;
-};    
+};
 
 const InvokeResult QtTestStep::invokeStepBody() {
     const auto file = TemporaryFileWrapper::create();
