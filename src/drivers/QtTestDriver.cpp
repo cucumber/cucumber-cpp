@@ -33,10 +33,10 @@ public:
     }
 
     ~TemporaryFileWrapper() {
-        auto ok = QFile::remove(filename);
+        QFile::remove(filename);
     }
 
-    bool TemporaryFileWrapper::exists() const {
+    bool exists() const {
         return !filename.isEmpty();
     }
 
