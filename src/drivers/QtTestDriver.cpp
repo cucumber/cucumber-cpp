@@ -15,15 +15,13 @@ namespace internal {
 class TemporaryFileWrapper {
 public:
     static TemporaryFileWrapper create() {
-        QTemporaryFile tempFile(
-            QString("%1/%2_%3")
-                .arg(
-                    QDir::tempPath(),
-                    qApp->applicationName().isEmpty() ? "qt_temp"
-                                                      : qApp->applicationName()
-                )
-                .arg(qApp->applicationPid())
-        );
+        QTemporaryFile tempFile(QString("%1/%2_%3")
+                                    .arg(
+                                        QDir::tempPath(),
+                                        qApp->applicationName().isEmpty() ? "qt_temp"
+                                                                          : qApp->applicationName()
+                                    )
+                                    .arg(qApp->applicationPid()));
 
         if (!tempFile.open()) {
             return {};
