@@ -71,20 +71,26 @@ Invoke-CMake "--build","build","--config","Release","--target","RUN_TESTS"
 #
 
 $CalcTests = @("build\examples\Calc\Release\GTestCalculatorSteps.exe",
-"build\examples\Calc\Release\QtTestCalculatorSteps.exe",
 "build\examples\Calc\Release\BoostCalculatorSteps.exe",
 "build\examples\Calc\Release\FuncArgsCalculatorSteps.exe")
 
-If (Test-Path -path $CalcTests[$i] -PathType Leaf) {
-    Start-Process -NoNewWindow $CalcTests[$i]
-    Start-Sleep -Seconds 1.0
-    Set-Location -Path 'examples/Calc'
-    Start-Process cucumber -NoNewWindow -Wait
-    set-Location -Path $PSScriptRoot
-} Else {
-    Write-Host "Skipping $($CalcTests[$i]): file not exisiting"  -f Yellow
-}    
+If ((Get-Command "qmake.exe" -ErrorAction SilentlyContinue) -ne $null) 
+{ 
+   $CalcTests += "build\examples\Calc\Release\QtTestCalculatorSteps.exe"
+}
 
+For ($i=0; $i -lt $CalcTests.Length; $i++) {
+    If (Test-Path -path $CalcTests[$i] -PathType Leaf) {
+        Write-Host "Start Test $($CalcTests[$i])"  -f Green
+        Start-Process -NoNewWindow $CalcTests[$i]
+        Start-Sleep -Seconds 1.0
+        Set-Location -Path 'examples/Calc'
+        Start-Process cucumber -NoNewWindow -Wait
+        set-Location -Path $PSScriptRoot
+    } Else {
+        Write-Host "Skipping $($CalcTests[$i]): file not exisiting"  -f Yellow
+    }    
+}
 #
 # Execute QtCalc examples
 # 
@@ -101,6 +107,7 @@ Else
 
     For ($i=0; $i -lt $QtCalcTests.Length; $i++) {
         If (Test-Path -path $QtCalcTests[$i] -PathType Leaf) {
+            Write-Host "Start Test $($QtCalcTests[$i])"  -f Green
             Start-Process -NoNewWindow $QtCalcTests[$i]
             Start-Sleep -Seconds 1.0
             Set-Location -Path 'examples/CalcQt'
