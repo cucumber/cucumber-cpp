@@ -14,7 +14,7 @@ target_include_directories(utils INTERFACE
 function(cuke_set_environment environment)
     set(options)
     set(oneValueArgs )
-    set(multiValueArgs RUNPATH BINPATH)
+    set(multiValueArgs RUNPATH)
     
     cmake_parse_arguments(CUKE_ENV "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     
@@ -32,13 +32,6 @@ function(cuke_set_environment environment)
         set(RUNPATH "$<IF:$<PLATFORM_ID:Windows>,PATH,LD_LIBRARY_PATH>")
         list(APPEND environment "$<IF:$<PLATFORM_ID:Windows>,PATH,LD_LIBRARY_PATH>=path_list_prepend:$<SHELL_PATH:${CUKE_ENV_RUNPATH}>")
     endif()
-    if( NOT "${CUKE_ENV_BINPATH}" STREQUAL "")
-        if(WIN32)
-            string(REPLACE ";" "\;" CUKE_ENV_BINPATH "${CUKE_ENV_BINPATH}")
-        endif()
-        list(APPEND environment "PATH=path_list_prepend:$<SHELL_PATH:${CUKE_ENV_BINPATH}>")
-    endif()
-    
     set(${environment} ${${environment}} PARENT_SCOPE)
 endfunction()
 

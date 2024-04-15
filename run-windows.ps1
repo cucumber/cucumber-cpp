@@ -50,8 +50,7 @@ $cmake_params += "-DCMAKE_CXX_STANDARD=${cpp_standard}"
 
 $cmake_params += "-DCUKE_ENABLE_BOOST_TEST=OFF"
 $cmake_params += "-DCUKE_ENABLE_GTEST=ON"
-$cmake_params += "-DCUKE_ENABLE_QT_6=OFF"
-$cmake_params += "-DCUKE_ENABLE_QT_5=ON"
+$cmake_params += "-DCUKE_ENABLE_QT_6=ON"
 $cmake_params += "-DCUKE_ENABLE_EXAMPLES=ON"
 $cmake_params += "-DCUKE_TESTS_UNIT=ON"
 $cmake_params += "-DCUKE_CODE_COVERAGE=OFF"
@@ -72,51 +71,32 @@ Invoke-CMake "--build","build","--config","Release","--target","RUN_TESTS"
 
 $CalcTests = @("build\examples\Calc\Release\GTestCalculatorSteps.exe",
 "build\examples\Calc\Release\BoostCalculatorSteps.exe",
-"build\examples\Calc\Release\FuncArgsCalculatorSteps.exe")
-
-If ((Get-Command "qmake.exe" -ErrorAction SilentlyContinue) -ne $null) 
-{ 
-   $CalcTests += "build\examples\Calc\Release\QtTestCalculatorSteps.exe"
-}
+"build\examples\Calc\Release\FuncArgsCalculatorSteps.exe",
+"build\examples\Calc\Release\QtTestCalculatorSteps.exe")
 
 For ($i=0; $i -lt $CalcTests.Length; $i++) {
-    If (Test-Path -path $CalcTests[$i] -PathType Leaf) {
-        Write-Host "Start Test $($CalcTests[$i])"  -f Green
-        Start-Process -NoNewWindow $CalcTests[$i]
-        Start-Sleep -Seconds 1.0
-        Set-Location -Path 'examples/Calc'
-        Start-Process cucumber -NoNewWindow -Wait
-        set-Location -Path $PSScriptRoot
-    } Else {
-        Write-Host "Skipping $($CalcTests[$i]): file not exisiting"  -f Yellow
-    }    
+    Write-Host "Start Test $($CalcTests[$i])"  -f Green
+    Start-Process -NoNewWindow $CalcTests[$i]
+    Start-Sleep -Seconds 1.0
+    Set-Location -Path 'examples/Calc'
+    Start-Process cucumber -NoNewWindow -Wait
+    set-Location -Path $PSScriptRoot
 }
 #
 # Execute QtCalc examples
 # 
 
-If ((Get-Command "qmake.exe" -ErrorAction SilentlyContinue) -eq $null) 
-{ 
-   Write-Host "Qt not found in PATH, skipping QtCalc Tests" -f Yellow
-}
-Else
-{
-    $QtCalcTests = @("build\examples\CalcQt\Release\GTestCalculatorQtSteps.exe",
-    "build\examples\CalcQt\Release\QtTestCalculatorQtSteps.exe",
-    "build\examples\CalcQt\Release\BoostCalculatorQtSteps.exe")
+$QtCalcTests = @("build\examples\CalcQt\Release\GTestCalculatorQtSteps.exe",
+"build\examples\CalcQt\Release\QtTestCalculatorQtSteps.exe",
+"build\examples\CalcQt\Release\BoostCalculatorQtSteps.exe")
 
-    For ($i=0; $i -lt $QtCalcTests.Length; $i++) {
-        If (Test-Path -path $QtCalcTests[$i] -PathType Leaf) {
-            Write-Host "Start Test $($QtCalcTests[$i])"  -f Green
-            Start-Process -NoNewWindow $QtCalcTests[$i]
-            Start-Sleep -Seconds 1.0
-            Set-Location -Path 'examples/CalcQt'
-            Start-Process cucumber -NoNewWindow -Wait
-            set-Location -Path $PSScriptRoot
-        } Else {
-            Write-Host "Skipping $($QtCalcTests[$i]): file not exisiting"  -f Yellow
-        }    
-    }
+For ($i=0; $i -lt $QtCalcTests.Length; $i++) {
+    Write-Host "Start Test $($QtCalcTests[$i])"  -f Green
+    Start-Process -NoNewWindow $QtCalcTests[$i]
+    Start-Sleep -Seconds 1.0
+    Set-Location -Path 'examples/CalcQt'
+    Start-Process cucumber -NoNewWindow -Wait
+    set-Location -Path $PSScriptRoot
 }
 
 Invoke-CMake "--build","build","--config","Release","--target","INSTALL"
