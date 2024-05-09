@@ -51,6 +51,7 @@ jobs:
 
     - name: build
       run: |
+        export CXXFLAGS=-Werror
         cmake -E make_directory build
         cmake -E chdir build cmake \
           -G Ninja \
@@ -60,7 +61,7 @@ jobs:
           -DCUKE_ENABLE_EXAMPLES=on \
           -DCUKE_TESTS_UNIT=on \
           ..
-        cmake --build build --parallel
+        cmake --build build --parallel --verbose
 
     - name: unit tests
       run: |
