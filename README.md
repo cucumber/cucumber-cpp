@@ -1,15 +1,13 @@
 # Cucumber-CPP
 
-[![Join the chat at https://gitter.im/cucumber/cucumber-cpp](https://badges.gitter.im/cucumber/cucumber-cpp.svg)](https://gitter.im/cucumber/cucumber-cpp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 ## Overview
 
 Cucumber-Cpp allows Cucumber to support step definitions written in C++.
 
-* [Cucumber-Cpp Website](http://github.com/cucumber/cucumber-cpp)
+* [Cucumber-Cpp Website](https://github.com/cucumber/cucumber-cpp)
 * [Cucumber-Cpp Documentation](https://github.com/cucumber/cucumber-cpp/wiki/)
-* [Cucumber Website](http://cukes.info/)
-* [Cucumber Discussion Group](http://groups.google.com/group/cukes)
+* [Cucumber Website](https://cucumber.io/)
+* [Cucumber Discussion Group](https://cucumber.io/docs/community/get-in-touch/)
 
 If you need to ask a question, don't open a ticket on GitHub! Please post
 your question on the Cucumber discussion group instead, prefixing the title
@@ -27,11 +25,11 @@ It relies on a few executables:
 It relies on a few libraries:
 
 * [Asio](https://think-async.com/Asio/) 1.18.1 or later.
-* [Boost.Test](http://www.boost.org/) 1.70. Optional for the Boost Test driver.
+* [Boost.Test](https://www.boost.org/) 1.70. Optional for the Boost Test driver.
 * [GTest](https://github.com/google/googletest) 1.11.0 or later. Optional for the GTest driver.
 * [GMock](https://github.com/google/googletest) 1.11.0 or later. Optional for the internal test suite.
 * [nlohmann-json](https://github.com/nlohmann/json) 3.10.5 or later.
-* [Qt6 or Qt5](http://qt-project.org/). Optional for the CalcQt example and QtTest driver.
+* [Qt6 or Qt5](https://qt-project.org/). Optional for the CalcQt example and QtTest driver.
 * [TCLAP](https://tclap.sourceforge.net/) 1.2.5 or later.
 
 It might work with earlier versions of the libraries, but it was not tested with them.
