@@ -15,7 +15,7 @@ cmake -E chdir build cmake \
     -DCUKE_TESTS_UNIT=on \
     -DCUKE_CODE_COVERAGE=on \
     ..
-cmake --build build --parallel
+cmake --build build --parallel --verbose
 
 #
 # Run tests

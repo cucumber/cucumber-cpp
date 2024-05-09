@@ -57,6 +57,7 @@ jobs:
 
     - name: build
       run: |
+        export CXXFLAGS=-Werror
         cmake -E make_directory build
         cmake -E chdir build cmake \
           -DCMAKE_CXX_COMPILER=${{ matrix.cpp-compiler }} \
