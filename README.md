@@ -7,11 +7,9 @@ Cucumber-Cpp allows Cucumber to support step definitions written in C++.
 * [Cucumber-Cpp Website](https://github.com/cucumber/cucumber-cpp)
 * [Cucumber-Cpp Documentation](https://github.com/cucumber/cucumber-cpp/wiki/)
 * [Cucumber Website](https://cucumber.io/)
-* [Cucumber Discussion Group](https://cucumber.io/docs/community/get-in-touch/)
+* [Get in touch](https://cucumber.io/docs/community/get-in-touch/)
 
-If you need to ask a question, don't open a ticket on GitHub! Please post
-your question on the Cucumber discussion group instead, prefixing the title
-with [CPP].
+If you need to ask a question, post on the [Cucumber discussion group](https://github.com/orgs/cucumber/discussions).
 
 If you want to contribute code to the project, guidelines are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
