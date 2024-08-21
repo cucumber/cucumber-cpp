@@ -26,8 +26,14 @@ public:
 };
 
 class CUCUMBER_CPP_EXPORT SuccessResponse : public WireResponse {
+private:
+    const size_t duration_ms;
+
 public:
     void accept(WireResponseVisitor& visitor) const;
+    SuccessResponse(const size_t & duration_ms);
+
+    const std::string getDurationMs() const;
 };
 
 class CUCUMBER_CPP_EXPORT FailureResponse : public WireResponse {

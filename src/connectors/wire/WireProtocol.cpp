@@ -1,6 +1,7 @@
 #include <cucumber-cpp/internal/connectors/wire/WireProtocol.hpp>
 #include <cucumber-cpp/internal/connectors/wire/WireProtocolCommands.hpp>
 
+#include <cstddef>
 #include <json_spirit/json_spirit_reader_template.h>
 #include <json_spirit/json_spirit_writer_template.h>
 #include <json_spirit/json_spirit_writer_options.h>
@@ -24,6 +25,14 @@ namespace internal {
  * Responses
  */
 
+
+SuccessResponse::SuccessResponse(const size_t & duration_ms) :
+    duration_ms(duration_ms) {
+}
+
+const std::string SuccessResponse::getDurationMs() const {
+    return std::to_string(duration_ms);
+}
 
 void SuccessResponse::accept(WireResponseVisitor& visitor) const {
     visitor.visit(*this);
@@ -235,8 +244,11 @@ namespace {
             return write_string(v, ::raw_utf8);
         }
 
-        void visit(const SuccessResponse& /*response*/) {
-            success();
+        void visit(const SuccessResponse& response) {
+            mObject detailObject;
+            detailObject["duration_ms"] = response.getDurationMs();
+            mValue detail(detailObject);
+            success(&detail);
         }
 
         void visit(const FailureResponse& response) {
