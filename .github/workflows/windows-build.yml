@@ -59,9 +59,13 @@ jobs:
       if: steps.cache-boost-deps.outputs.cache-hit != 'true'
       run: |
         $boost_version_str = ${Env:BOOST_VERSION}.Replace(".","_")
+        $boost_url = "https://archives.boost.io/release/${Env:BOOST_VERSION}/source/boost_${boost_version_str}.zip"
         $ProgressPreference = 'SilentlyContinue'
-        Invoke-WebRequest -Uri https://boostorg.jfrog.io/artifactory/main/release/${Env:BOOST_VERSION}/source/boost_${boost_version_str}.zip -OutFile boost_${boost_version_str}.zip
+        Write-Host "Downloading Boost from $boost_url"
+        Invoke-WebRequest -Uri $boost_url -OutFile boost_${boost_version_str}.zip
         7z x boost_${boost_version_str}.zip
+        Write-Host "Unzipped directory content:"
+        Get-ChildItem -Directory
         cd boost_${boost_version_str}
         cmd /C bootstrap
         ./b2.exe --build-type=complete toolset=msvc --with-regex --with-program_options --with-system --with-test
