@@ -29,7 +29,7 @@ public:
 
 protected:
     const ProtocolHandler* protocolHandler;
-    asio::io_service ios;
+    asio::io_context ios;
 
     template<typename Protocol>
     void doListen(
