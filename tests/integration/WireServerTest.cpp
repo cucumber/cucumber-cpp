@@ -141,7 +141,7 @@ protected:
 
     SocketServer* createListeningServer() override {
         server.reset(new TCPSocketServer(&protocolHandler));
-        server->listen(asio::ip::tcp::endpoint(asio::ip::address::from_string("127.0.0.1"), 0));
+        server->listen(asio::ip::tcp::endpoint(asio::ip::make_address("127.0.0.1"), 0));
         return server.get();
     }
 
