@@ -8,6 +8,7 @@ export CTEST_OUTPUT_ON_FAILURE
 cmake -E make_directory build
 cmake -E chdir build cmake \
     -G Ninja \
+    -DCUKE_STRICT=on \
     -DCUKE_ENABLE_BOOST_TEST=on \
     -DCUKE_ENABLE_GTEST=on \
     -DCUKE_ENABLE_QT_6=on \

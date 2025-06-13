@@ -56,7 +56,6 @@ jobs:
 
     - name: build and run
       run: |
-        export CXXFLAGS=-Werror
         ./run-linux.sh
 
     - name: code coverage summary report
