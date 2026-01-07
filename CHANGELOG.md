@@ -1,14 +1,6 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/main/CONTRIBUTING.md) on how to contribute to Cucumber.
 
-## In Git
-
-### Added
-
-### Changed
-
-### Fixed
-
-## [0.8.0](https://github.com/cucumber/cucumber-cpp/compare/v0.7.0...v0.8.0) (TBD)
+## [0.8.0](https://github.com/cucumber/cucumber-cpp/compare/v0.7.0...v0.8.0) (07 January 2026)
 
 ### Added
 
