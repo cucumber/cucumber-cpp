@@ -1,12 +1,33 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/main/CONTRIBUTING.md) on how to contribute to Cucumber.
 
-## In Git
+## [0.8.0](https://github.com/cucumber/cucumber-cpp/compare/v0.7.0...v0.8.0) (07 January 2026)
 
 ### Added
 
+* Qt6 support ([#283](https://github.com/cucumber/cucumber-cpp/pull/283) Urs Fässler)
+* Windows CI support ([#288](https://github.com/cucumber/cucumber-cpp/pull/288) Christoph Wellm)
+* Test compilation with different compilers and language standards on Linux ([#282](https://github.com/cucumber/cucumber-cpp/pull/282) Urs Fässler)
+* Test to fail the build for deprecated asio features ([72e5fa9](https://github.com/cucumber/cucumber-cpp/commit/72e5fa9ff643d90a513bff57f7322606ecaf4270) Shirzart Enwer)
+
 ### Changed
 
+* Only enable minimal set of CMake options by default ([#281](https://github.com/cucumber/cucumber-cpp/pull/281) Urs Fässler)
+* Use CMake option for strict checks ([#310](https://github.com/cucumber/cucumber-cpp/pull/310) Joerg Kreuzberger)
+* Only treat compilation warnings as error in CI ([#301](https://github.com/cucumber/cucumber-cpp/pull/301) Joerg Kreuzberger)
+* Remove support for Qt4 ([#283](https://github.com/cucumber/cucumber-cpp/pull/283) Urs Fässler)
+* CalcQt example improvements ([#283](https://github.com/cucumber/cucumber-cpp/pull/283) Urs Fässler)
+* Update README with explanation how it works ([#291](https://github.com/cucumber/cucumber-cpp/pull/291) erichstuder)
+* Adjust links and information regarding where to get help ([#306](https://github.com/cucumber/cucumber-cpp/pull/306) Joerg Kreuzberger)
+* Use https for all links in README ([0911bd2](https://github.com/cucumber/cucumber-cpp/commit/0911bd265bf0b484d5661f4163074714868cc77b) Joerg Kreuzberger)
+
 ### Fixed
+
+* Support asio 1.33 ([#308](https://github.com/cucumber/cucumber-cpp/pull/308) Shirzart Enwer)
+* Boost download source fixed ([#309](https://github.com/cucumber/cucumber-cpp/pull/309) Shirzart Enwer)
+* Windows QtTestDriver ([#305](https://github.com/cucumber/cucumber-cpp/pull/305) Joerg Kreuzberger)
+* Flaky QtTestDriver test ([#296](https://github.com/cucumber/cucumber-cpp/pull/296) Joerg Kreuzberger)
+* Links to website and discussion group in README ([#299](https://github.com/cucumber/cucumber-cpp/pull/299) Joerg Kreuzberger)
+* Compile error with C++20 ([ea089a6](https://github.com/cucumber/cucumber-cpp/commit/ea089a6369641445dc52099298779cef6affdb8f) Urs Fässler)
 
 ## [0.7.0](https://github.com/cucumber/cucumber-cpp/compare/v0.6...v0.7.0) (30 December 2023)
 
