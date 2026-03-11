@@ -1,5 +1,7 @@
 name: Windows build
 
+permissions: {}
+
 on:
   pull_request:
     branches: [ main ]
@@ -51,7 +53,7 @@ jobs:
 
     - name: Restore cached boost dependencies
       id: cache-boost-deps
-      uses: actions/cache@v3
+      uses: actions/cache@6f8efc29b200d32929f49075959781ed54ec270c #v3.5.0
       with:
         path: |
           boost_1_82_0
