@@ -1,5 +1,7 @@
 name: run all
 
+permissions: {}
+
 on:
   pull_request:
     branches: [ main ]
@@ -61,7 +63,7 @@ jobs:
         ./run-linux.sh
 
     - name: code coverage summary report
-      uses: irongut/CodeCoverageSummary@v1.3.0
+      uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95 #v1.3.0
       with:
         filename: coverage/cobertura.xml
         indicators: false
