@@ -1,5 +1,11 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/main/CONTRIBUTING.md) on how to contribute to Cucumber.
 
+## [0.9.0](https://github.com/cucumber/cucumber-cpp/compare/v0.8.0...v0.9.0) (18 September 2026)
+
+### Fixed
+
+* Compile error with clang 23 ([#318](https://github.com/cucumber/cucumber-cpp/pull/318) Martin Altenburg)
+
 ## [0.8.0](https://github.com/cucumber/cucumber-cpp/compare/v0.7.0...v0.8.0) (07 January 2026)
 
 ### Added
