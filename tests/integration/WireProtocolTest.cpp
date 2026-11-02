@@ -1,5 +1,9 @@
 #include <cucumber-cpp/internal/connectors/wire/WireProtocol.hpp>
 #include <cucumber-cpp/internal/connectors/wire/WireProtocolCommands.hpp>
+#include <cucumber-cpp/internal/CukeEngineImpl.hpp>
+#include <cucumber-cpp/internal/drivers/GenericDriver.hpp>
+#include <cucumber-cpp/internal/step/StepMacros.hpp>
+#include "utils/StepManagerTestDouble.hpp"
 
 #include <gmock/gmock.h>
 
@@ -177,6 +181,25 @@ TEST_F(WireMessageCodecTest, handlesInvokeMessageWithNullArg) {
         "invoke", {
             "id": "42",
             "args": [null]
+        }
+    ])json")
+        .run(engine);
+}
+
+TEST_F(WireMessageCodecTest, handlesInvokeMessageWithMultilineDocStringArg) {
+    MockCukeEngine engine;
+    EXPECT_CALL(
+        engine,
+        invokeStep(
+            "42", ElementsAre("p1", "first line\n  \"indented\" line\n\nlast line"), ElementsAre()
+        )
+    )
+        .Times(1);
+
+    decode(R"json([
+        "invoke", {
+            "id": "42",
+            "args": ["p1", "first line\n  \"indented\" line\n\nlast line"]
         }
     ])json")
         .run(engine);
@@ -390,4 +413,55 @@ TEST(WireCommandsTest, throwingAnythingInvokeReturnsFailure) {
     std::shared_ptr<const WireResponse> response(invokeCommand.run(engine));
     EXPECT_PTRTYPE(FailureResponse, response.get());
     // TODO Test empty
+}
+
+/*
+ * Request handling with step definitions
+ */
+
+class StepWithArgAndDocString : public GenericStep {
+public:
+    void body() override {
+        REGEX_PARAM(string, arg);
+        REGEX_PARAM(string, docString);
+        EXPECT_EQ("p1", arg);
+        EXPECT_EQ("first line\n  indented line", docString);
+    }
+};
+
+class WireProtocolHandlerTest : public Test {
+protected:
+    const JsonWireMessageCodec codec;
+    CukeEngineImpl engine;
+    const WireProtocolHandler handler;
+
+    WireProtocolHandlerTest() :
+        handler(codec, engine) {
+    }
+
+    void SetUp() override {
+        std::shared_ptr<StepInfo> stepInfo(
+            std::make_shared<StepInvoker<StepWithArgAndDocString>>("^a step with (.+):$", "")
+        );
+        stepInfo->id = 42;
+        StepManagerTestDouble::addStep(stepInfo);
+    }
+
+    void TearDown() override {
+        StepManagerTestDouble::clearSteps();
+    }
+};
+
+TEST_F(WireProtocolHandlerTest, passesDocStringArgToStepDefinition) {
+    EXPECT_EQ(handler.handle(R"(["begin_scenario"])"), R"(["success"])");
+    EXPECT_EQ(
+        handler.handle(R"json([
+            "invoke", {
+                "id": "42",
+                "args": ["p1", "first line\n  indented line"]
+            }
+        ])json"),
+        R"(["success"])"
+    );
+    EXPECT_EQ(handler.handle(R"(["end_scenario"])"), R"(["success"])");
 }

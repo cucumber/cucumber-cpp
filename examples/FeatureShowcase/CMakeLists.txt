@@ -13,6 +13,7 @@ if(TARGET GTest::gtest)
     add_cucumber_executable(
         features/step_definitions/TagSteps.cpp
         features/step_definitions/TableSteps.cpp
+        features/step_definitions/DocStringSteps.cpp
     )
 endif()
 
