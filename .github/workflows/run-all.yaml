@@ -16,7 +16,20 @@ concurrency:
 
 jobs:
   build-linux:
-    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - cucumber-version: '7.1'
+            os: ubuntu-22.04
+          # Cucumber-Ruby 10 needs Ruby 3.1 or later, Ubuntu 22.04 provides Ruby 3.0
+          - cucumber-version: '10'
+            os: ubuntu-24.04
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      CUCUMBER_VERSION: ${{ matrix.cucumber-version }}
 
     steps:
     - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -46,7 +59,7 @@ jobs:
     - name: install ruby tools
       run: |
         sudo gem install bundler
-        sudo bundle install
+        sudo env CUCUMBER_VERSION="${CUCUMBER_VERSION}" bundle install
 
     - name: install gtest
       run: |

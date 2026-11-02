@@ -80,6 +80,6 @@ jobs:
         ; do
           "${TEST}" 2> /dev/null &
           sleep 1
-          (cd examples/CalcQt; cucumber)
+          (cd examples/CalcQt; cucumber --strict)
           wait %
         done

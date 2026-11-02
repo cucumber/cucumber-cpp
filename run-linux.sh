@@ -36,7 +36,7 @@ for TEST in \
 ; do
     "${TEST}" > /dev/null &
     sleep 1
-    (cd examples/Calc; cucumber)
+    (cd examples/Calc; cucumber --strict)
     wait %
 done
 
@@ -51,7 +51,7 @@ for TEST in \
 ; do
     "${TEST}" 2> /dev/null &
     sleep 1
-    (cd examples/CalcQt; cucumber)
+    (cd examples/CalcQt; cucumber --strict)
     wait %
 done
 
@@ -63,7 +63,7 @@ SOCK=`pwd`/cucumber.wire.sock
 TEST=build/examples/FeatureShowcase/FeatureShowcaseSteps
 echo "unix: ${SOCK}" > examples/FeatureShowcase/features/step_definitions/cucumber.wire
 "${TEST}" --unix "${SOCK}" > /dev/null &
-(cd examples/FeatureShowcase; cucumber)
+(cd examples/FeatureShowcase; cucumber --strict)
 wait %
 
 mkdir -p coverage
