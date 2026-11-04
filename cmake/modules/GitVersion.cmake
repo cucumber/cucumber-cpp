@@ -1,8 +1,12 @@
 function(git_get_version VERSION_VARIABLE)
+    string(TIMESTAMP TODAY "%Y.%m.%d")
+    set(${VERSION_VARIABLE} "0.0.0+${TODAY}" PARENT_SCOPE)
+
     find_program(GIT_EXECUTABLE git)
 
     if(NOT GIT_EXECUTABLE)
-        message(FATAL_ERROR "Git not found. Please install Git and make sure it is in your system's PATH.")
+        message(WARNING "Git not found, using fallback version.")
+        return()
     endif()
 
     execute_process(
@@ -15,7 +19,9 @@ function(git_get_version VERSION_VARIABLE)
     )
 
     if(NOT GIT_DESCRIBE_RESULT EQUAL 0)
-        message(FATAL_ERROR "Error running 'git describe': ${GIT_DESCRIBE_ERROR}")
+        message(INFO "Error running 'git describe': ${GIT_DESCRIBE_ERROR}")
+        message(WARNING "Git failed, using fallback version.")
+        return()
     endif()
 
     string(LENGTH "${VERSION_STRING}" VERSION_STRING_LENGTH)
